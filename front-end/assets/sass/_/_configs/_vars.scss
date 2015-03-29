@@ -1,0 +1,46 @@
+@import "compass";
+
+$site_direction: left;
+$site_direction_ops: opposite-position($site_direction);
+$gray-dark:#000;
+$orange:#f39200;
+$blue:#0097d7;
+$blue-light:scale-lightness($blue,96);
+$blue-light-border:scale-lightness($blue,90);
+$gray:#575757;
+$gray-light:#636363;
+$gray-super-light:#ECECEC;
+$white :#ffffff;
+$green :#93c01f;
+$black :#242520;
+
+$fa-font-path: "../fonts/fa";
+
+$grid-columns:              24;
+//** Padding between columns. Gets divided in half for the left and right.
+$grid-gutter-width:         20px;
+$border-radius-base:        0;
+$panel-heading-padding:       15px 15px;
+$button-padding : 40px;
+
+//product
+$product-color: $gray-dark;
+
+$product-title: 13px;
+$product-description: 12px;
+$product-description-color: scale-lightness($product-color,40);
+
+$navbar-height:                    56px;
+$navbar-margin-bottom: 0;
+$dropdown-link-hover-bg:         scale-lightness($orange,80);
+$navbar-padding-vertical:          10px;
+$navbar-default-color:             $gray;
+$navbar-default-bg:                transparent;
+$navbar-default-border:            transparent;
+$navbar-default-link-color:        $gray;
+$navbar-default-link-hover-color:  white;
+$navbar-default-link-active-bg:    $orange;
+$navbar-default-link-hover-bg:     $navbar-default-link-active-bg;
+$navbar-default-link-active-color:  $navbar-default-link-hover-color;
+
+$main-button-bg :$green;

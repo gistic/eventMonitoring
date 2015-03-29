@@ -1,0 +1,87 @@
+// colors for debugging
+@mixin debug-colors($numbers:20,$format:hex){
+
+  @for $i from 1 through $numbers {
+    .debug-color#{$i} {
+      background-color: getRandomColor($format);
+    }
+  }
+}
+
+
+// Panels
+
+@mixin tm-panel-variant($border, $heading-text-color, $heading-bg-color, $heading-border,$actions-btns-bg,$actions-btns-color,$body-top-border:false) {
+  border-color: $border;
+
+  & > .panel-heading {
+    color: $heading-text-color;
+    background-color: $heading-bg-color;
+    border-color: $heading-border;
+
+    .panel-title-more {
+      color: $actions-btns-bg;
+    }
+
+    .badge {
+      color: $heading-bg-color;
+      background-color: $heading-text-color;
+    }
+
+    //added by ayoub
+    .panel-actions-btn {
+      background: none;
+      &:hover,&.active {
+        background-color: darken($actions-btns-bg,5);
+        color: $actions-btns-color;
+      }
+    }
+
+  }
+  & > .panel-footer {
+    + .panel-collapse > .panel-body {
+      border-bottom-color: $border;
+    }
+  }
+}
+
+// controls
+
+@mixin controls-variation ($normal_color:$orange,$hover_color: darken($normal_color,10),$more_color:$normal_color){
+  & {
+    a,.controls-indicator {
+      &:hover {
+        color: if($hover_color,$hover_color, darken($normal_color,10));
+      }
+    }
+    .controls-nav {
+      color: $normal_color;
+    }
+    .controls-active {
+      color: $normal_color;
+    }
+    .controls-disabled, .controls-disabled:hover {
+      color: $gray-super-light;
+      cursor: default;
+    }
+    .controls-more {
+      color: $more_color;
+      &:hover {
+        color: darken($more_color,10);
+      }
+    }
+  }
+}
+
+//products
+@mixin product-offer($color){
+  & {
+    .thumbnail-product-offer {
+      background-color: $color;
+      border: 1px solid darken($color,10);
+    }
+    .thumbnail-product-price {
+      color: $color;
+    }
+  }
+}
