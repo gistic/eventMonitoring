@@ -1,9 +1,10 @@
 /*
-Requests - We have SIX different request [ Till Now ]
+Requests - [ Till Now ]
 1. Start Event
 2. Stop Event
 3. Update Hashtags [ Add new hashtags to the one we start the event with ]
 4. Update Blocked Users
 5. Update Approved Users
 6. Update Bad Keywords [ In new version Mohamed have discard this option .. ie : we will not implment it ]
+7. Approve tweet
 */
