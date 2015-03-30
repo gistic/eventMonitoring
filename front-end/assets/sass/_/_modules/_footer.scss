@@ -1,0 +1,10 @@
+footer {
+	padding: $padding - 5 0 0;
+	border-top: 1px solid $gray-light;
+	margin: $margin*3 0 $margin;
+	.social-links {
+		a {
+			color: $gray;
+		}
+	}
+}

@@ -1,46 +1,59 @@
-@import "compass";
+.admin-customization {
+	margin: $margin*3 0;
+	background: $gray-white;
+	h6 {
+		margin-bottom: $margin*3;
+		font-size: $font-normal;
+		font-weight: 400;
+	}
+	.custom-option {
+		padding: $padding*2;
+	}
+}
 
-$site_direction: left;
-$site_direction_ops: opposite-position($site_direction);
-$gray-dark:#000;
-$orange:#f39200;
-$blue:#0097d7;
-$blue-light:scale-lightness($blue,96);
-$blue-light-border:scale-lightness($blue,90);
-$gray:#575757;
-$gray-light:#636363;
-$gray-super-light:#ECECEC;
-$white :#ffffff;
-$green :#93c01f;
-$black :#242520;
+.layout-custom-color {
+	li {
+		.color {
+			width: 15px;
+			height: 15px;
+			border-radius: 50%;
+			display: inline-block;
+			cursor: pointer;
+		}
+	}
+}
 
-$fa-font-path: "../fonts/fa";
+.layout-black {
+	@extend .color;
+	background: $layout-black;
+}
 
-$grid-columns:              24;
-//** Padding between columns. Gets divided in half for the left and right.
-$grid-gutter-width:         20px;
-$border-radius-base:        0;
-$panel-heading-padding:       15px 15px;
-$button-padding : 40px;
+.layout-turquoise {
+	@extend .color;
+	background: $layout-turquoise;
+}
 
-//product
-$product-color: $gray-dark;
+.layout-blue {
+	@extend .color;
+	background: $layout-blue;
+}
 
-$product-title: 13px;
-$product-description: 12px;
-$product-description-color: scale-lightness($product-color,40);
+.layout-violet {
+	@extend .color;
+	background: $layout-violet;
+}
 
-$navbar-height:                    56px;
-$navbar-margin-bottom: 0;
-$dropdown-link-hover-bg:         scale-lightness($orange,80);
-$navbar-padding-vertical:          10px;
-$navbar-default-color:             $gray;
-$navbar-default-bg:                transparent;
-$navbar-default-border:            transparent;
-$navbar-default-link-color:        $gray;
-$navbar-default-link-hover-color:  white;
-$navbar-default-link-active-bg:    $orange;
-$navbar-default-link-hover-bg:     $navbar-default-link-active-bg;
-$navbar-default-link-active-color:  $navbar-default-link-hover-color;
+.layout-pink {
+	@extend .color;
+	background: $layout-pink;
+}
 
-$main-button-bg :$green;
+.layout-green {
+	@extend .color;
+	background: $layout-green;
+}
+
+.layout-orange {
+	@extend .color;
+	background: $layout-orange;
+}
