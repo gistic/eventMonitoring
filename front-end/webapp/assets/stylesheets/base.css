@@ -1,0 +1,340 @@
+/* LIVE STREAMING - TAGHREED */
+
+@import url("normalize.css");
+body {
+	background: #1c4161 url(../images/tg-bg.png) repeat center;
+	text-align: center;
+}
+
+body#pg-admin {
+	background: #ffffff;
+	text-align: left;
+}
+
+.cf:before,
+.cf:after {
+	content: " ";
+	/* 1 */
+	
+	display: table;
+	/* 2 */
+}
+
+.cf:after {
+	clear: both;
+}
+
+#intro {
+	background: #0025c0 url(../images/taghreed.jpg) center no-repeat;
+	background-position: center -180px;
+}
+
+.tweet {
+	padding: 20px;
+	margin: 3 p0px 0;
+	background: #ffffff;
+	border-radius: 20px;
+}
+
+.tweet:first-child {
+	opacity: 1;
+}
+
+h2 {
+	color: #ffffff;
+	font-size: 21px;
+}
+
+.tweets-container {
+	margin: 0 auto;
+	width: 90%;
+	padding: 20px;
+}
+
+.media-body {
+	text-align: left;
+}
+
+.media-heading {
+	color: #0009c1;
+	font-family: 'Myriad Arabic';
+	font-size: 36px;
+	line-height: 30px !important;
+}
+
+.user-img {
+	padding-left: 0;
+	padding-right: 10px;
+}
+
+.user-img img {
+	width: 92px;
+	height: 92px;
+	border-radius: 10%;
+}
+
+.twitter-logo {
+	margin: 30px 0;
+}
+
+p {
+	color: #000000;
+	font: 400 24px / 24px 'Myriad Arabic';
+}
+
+.pg-hd {
+	color: #ffffff;
+	margin: 0 0 0 25px;
+	line-height: 42px;
+	font-size: 40px;
+}
+/* IF ARABIC */
+
+.tweet.dir-ar,
+.tweet.dir-ar .media-body {
+	direction: rtl;
+	text-align: right;
+}
+
+.tweet.dir-ar .user-img {
+	padding-left: 10px;
+	padding-right: 0;
+}
+/* IF STARED */
+
+.tweet.stared {
+	border: 5px solid rgba(29, 64, 141, 1);
+}
+/* TOP PEOPLE */
+
+#top-people {
+	direction: ltr;
+}
+
+#top-people .tweet.top-user {
+	width: 100%;
+	margin: 0 0 20px 25px;
+	position: relative;
+	padding: 10px;
+}
+
+#top-people .tweet.top-user .user-img {
+	padding-left: 0;
+	padding-right: 10px;
+}
+
+#top-people .tweet.top-user .user-img img {
+	width: 72px;
+	height: 72px;
+}
+
+#top-people .media-body {
+	text-align: left;
+}
+
+#top-people .media-body h1 {
+	font-size: 36px;
+	line-height: 20px;
+	margin: 20px 0 0 20px;
+	padding: 0;
+}
+
+#top-people .media-body h1.tweets-count {
+	margin-left: 60px;
+}
+
+#tweet-chart h2.tweets-count {
+	font-size: 60px;
+	margin-top: 30px;
+}
+
+#live-tweets .star-tweet {
+	position: absolute;
+	top: -20%;
+	left: -35px;
+}
+
+#live-tweets .media-heading {
+	font-size: 50px;
+}
+
+#live-tweets .tweet-text {
+	font-size: 55px;
+	line-height: 62px;
+}
+
+#live-tweets .tweet.stared {
+	position: relative;
+}
+
+#tweets-container {
+	height: 375px;
+}
+
+#top-people .tweets-container {
+	overflow: visible;
+}
+
+.user-ranks {
+	position: absolute;
+	top: 10px;
+	background: red;
+	border-radius: 50%;
+	right: 20px;
+	width: 70px;
+	height: 70px;
+	line-height: 65px;
+	border: 3px solid #fff;
+	color: #ffffff;
+	font-size: 32px;
+	font-weight: bold;
+}
+
+.media,
+.media-body {
+	overflow: visible;
+}
+/* ADMIN PANEL */
+
+.start-event {
+	margin:0 0 20px;
+	background-color: #f4f4f4;
+	padding: 20px;
+}
+
+.btn {
+	background-color: rgb(78, 207, 207);
+	color: white;
+	padding: 5px 7px;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+}
+
+.admin-option {
+	float: left;
+	width: 35%;
+	margin: 0 15px;
+}
+
+.admin-option .form-group {
+	margin-bottom: 30px;
+}
+
+.admin-option .form-group label {
+	font-size: 13px;
+	color: #575757;
+	float: left;
+	width: 120px;
+	line-height: 15px;
+}
+
+.admin-option .form-group textarea {
+	width: 210px;
+	height: 90px;
+	float: left;
+	padding: 7px;
+	font-size: 13px;
+	border: 1px solid #d5d5d5;
+	border-radius: 5px;
+}
+
+#consoleDiv {
+	overflow: auto;
+	height: 80px;
+	color: #d9d9d9;
+	padding: 10px;
+	font-size: 12px;
+}
+
+#toApproveDiv {
+	float: left;
+	width: 60%;
+	overflow: auto;
+	height: 500px;
+}
+
+.starred {
+	background-color: rgb(148, 244, 148);
+}
+
+.tweet-list {
+	list-style: none;
+	border-bottom: 1px solid white;
+	padding: 10px;
+	margin: 5px;
+	transition: background-color 0.2s ease-out;
+}
+.tweet-list:hover {
+background-color: #f4f4f4;}
+.tweet-list:last-child {
+	border-bottom: none;
+}
+.tweet-screen-name {font-weight: bold;}
+.tweet-user-image {
+	border-radius: 50%;
+	width: 72px;
+	height: 72px;
+	margin-right: 7px;
+	float: left;
+}
+
+.tweet-info {
+	float: left;
+	width: 80%;
+}
+
+.buttonsDiv {
+	float: right;
+}
+
+.buttonsDiv > .btn {
+	margin-right: 5px;
+}
+
+.approveButton {
+	background-color: blue;
+}
+
+.ignoreButton {
+	background-color: red;
+}
+
+.approveStarredButton {
+	background-color: green;
+}
+
+.btn.btn-start {
+	background-color: forestgreen;
+}
+
+.btn.btn-stop {
+	background-color: crimson;
+}
+
+.admin-option .form-group .btn.btn-update {
+	margin: 0;
+	margin-top: 77px;
+	margin-left: 7px;
+	padding: 7px;
+	font-size: 13px;
+	float: left;
+}
+.menu {
+	list-style: none;
+	float: right;
+	margin: 0;
+	padding: 0;
+}
+.menu li {
+	float:left;
+	margin-left: 7px;
+}
+.menu li a {
+	font-size: 14px;
+	text-decoration: none;
+}
+.menu li a:hover {
+	text-decoration:underline;
+}
+.header-tags {float: left;}

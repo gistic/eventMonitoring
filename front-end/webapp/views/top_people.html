@@ -1,0 +1,20 @@
+<img class="twitter-logo" src="assets/images/taghreed.png" alt="">
+<strong class="pg-hd hd-top-people">أنشط المغردين</strong>
+
+<div class="tweets-container row">
+	<div ng-repeat="item in data" class="media tweet clearfix fx-fade-down fx-easing-bounce fx-speed-1000 top-user" ng-class="">
+		<div class="user-ranks">
+			{{$index + 1}}
+		</div>
+		<div class="user-img pull-left">
+			<!--				<img ng-src="{{item.profile_image_url}} " on-error-src="{{defultImage}}" />-->
+		</div>
+		<div class="media-body">
+			<h1 class="media-heading pull-left">
+				{{item.name}}</h1>
+			<h1 class="pull-left tweets-count">{{item.tweets_count}} Tweets</h1>
+		</div>
+	</div>
+
+
+</div>

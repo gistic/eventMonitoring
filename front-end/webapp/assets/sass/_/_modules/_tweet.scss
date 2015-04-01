@@ -1,0 +1,17 @@
+.tweet {
+	background: $white;
+	padding: $padding;
+	border: 1px solid $gray-light;
+	@include border-radius(5px);
+	img {
+		width: 72px;
+		height: 72px;
+	}
+	h6 {
+		font-weight: 400px;
+		font-size: $font-large;
+	}
+	.tweet-content {
+		width: 60%;
+	}
+}
