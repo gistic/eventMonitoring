@@ -1,4 +1,4 @@
-var eventAdminApp = angular.module('eventAdminApp', []);
+var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap']);
 
 /*
  Config to adjust the parameters format for the request
@@ -17,10 +17,42 @@ eventAdminApp.config(function ($httpProvider) {
 	};
 });
 
+// Activate ' ENTER ' keypress to make the same action as click
+eventAdminApp.directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+                event.preventDefault();
+            }
+        });
+    };
+});
+
 // Filter to reverse Tweets Queue
 eventAdminApp.filter('reverseQueue', function () {
 	return function (tweetsQueue) {
 		return tweetsQueue.slice().reverse();
+	};
+});
+
+
+// Angular factory allwos you to share data between controllers and pages
+eventAdminApp.factory('appVar', function ($rootScope) {
+	return {
+		eventHashtag: function () {
+			$rootScope.eventHashtag = $('#eventHashtag').val();
+			if ($rootScope.eventHashtag !== "" || $rootScope.eventHashtag.length >= 3) {
+				return ($rootScope.eventHashtag);
+			} else {
+				return '';
+			}
+		},
+		link : function(){
+			return "http://www.twitter.com"
+		}
 	};
 });
 
@@ -29,25 +61,24 @@ Factory to post the requestes - We have Five different request [ Till Now ]
 1. Start Event
 2. Stop Event
 3. Update Hashtags
-4. Update Blocked Users
+4. Update Blocked Users	
 5. Update Approved Users
 */
-eventAdminApp.factory('getData', ['$http', '$rootScope', function ($http, $rootScope) {
+eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', function ($http, $rootScope, appVar) {
 
 	return {
 		dataRequest: function (requestAction) {
 
-			$rootScope.eventHashtag = eventHashtag.value;
 			var arrayOfBolockedUsers = $('#blockedUsers').val();
 			var arrayOfBadKeywords = $('#badKeywords').val();
 			var arrayOfApprovedUsers = $('#approvedUsers').val();
-
+			
 			return $http({
 				method: 'POST',
 				url: 'do',
 				data: {
 					action: requestAction,
-					"event_hashtags[]": $rootScope.eventHashtag,
+					"event_hashtags[]": appVar.eventHashtag(),
 					"blocked_users[]": arrayOfBolockedUsers,
 					"bad_keywords[]": arrayOfBadKeywords,
 					"approved_users[]": arrayOfApprovedUsers
@@ -63,20 +94,41 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', function ($http, $rootS
 
 }]);
 
-/* Main controller for the application */
-eventAdminApp.controller('startEventCtrl', function ($scope, $http, getData) {
+eventAdminApp.controller('modelHandler', function ($scope, $modal) {
 
+  $scope.open = function () {
+
+    var modalInstance = $modal.open({
+      templateUrl: 'trustedUsers.html',
+      controller: 'ModalInstanceCtrl',
+      size: 'sm'
+    });
+
+  };
+});
+
+eventAdminApp.controller('ModalInstanceCtrl', function ($scope, $modalInstance) {
+
+  $scope.items = ['item1', 'item2', 'item3'];;
+  
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+});
+
+
+/* Main controller for the application */
+eventAdminApp.controller('startEventCtrl', function ($rootScope, $scope, $http, getData, appVar) {
+	
+	// Trusted Users Modal
+
+	
 	// Start New Event Handler
 	$scope.startEventHandler = function (action) {
-
-		if (eventHashtag.value == "" || eventHashtag.value.length < 3) {
-			alert("eventHashtagsInput");
-		} else {
-			getData.dataRequest(action)
-				.success(function (response) {
-					console.log("New Event Started");
-				})
-		}
+		getData.dataRequest(action)
+			.success(function (response) {
+				console.log("New Event Started");
+			})
 	};
 
 
@@ -165,12 +217,10 @@ eventAdminApp.controller('startEventCtrl', function ($scope, $http, getData) {
 		});
 	}
 
-
 	// Stop Event Handler
 	$scope.stopEventHandler = function (action) {
 		getData.dataRequest(action)
 			.then(function (response) {
-				$scope.tweetsCount = 0
 				console.log("Event Stopped");
 			})
 	}

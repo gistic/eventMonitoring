@@ -59,10 +59,9 @@ eventViewsApp.factory('getActivePeople', ['$http', '$rootScope',
 		return {
 			dataRequest: function () {
 
-				var topPeopleUrl = 'active_people';
 				return $http({
 					method: 'GET',
-					url: topPeopleUrl,
+					url: 'active_people',
 					params: {
 						max: 4
 					},
@@ -81,10 +80,9 @@ eventViewsApp.factory('getTweetsOverTime', ['$http', '$rootScope',
 		return {
 			dataRequest: function () {
 
-				var topPeopleUrl = 'tweets_per_time';
 				return $http({
 					method: 'GET',
-					url: topPeopleUrl,
+					url: 'tweets_per_time',
 					params: {
 						sample_rate: 1
 					},
@@ -98,8 +96,11 @@ eventViewsApp.factory('getTweetsOverTime', ['$http', '$rootScope',
 ]);
 
 // liveTweetsCtrl
-eventViewsApp.controller("liveTweetsCtrl", function ($scope) {
-
+eventViewsApp.controller("liveTweetsCtrl", function ($rootScope, $scope, appVar) {
+	
+	$rootScope.eventHashtag = appVar.eventHashtag();
+	
+	
 	$scope.init = function () {
 
 		var source = new EventSource('live_tweets');

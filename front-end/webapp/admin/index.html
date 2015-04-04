@@ -11,17 +11,15 @@
 </head>
 
 <body ng-app="eventAdminApp" ng-controller="startEventCtrl">
-
 	<!-- HEADER	-->
 	<header class="container-fluid clearfix">
 
 		<div class="input-group pull-left start-event col-md-5">
-			<input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag">
+			<input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startEventHandler('new_event')">
 			<span class="input-group-btn">
 				<button class="btn btn-search" type="button" ng-click="startEventHandler('new_event')"><i class="fa fa-search"></i></button>
 		  	</span>
 		</div>
-		<!-- /input-group -->
 
 		<div class="col-md-5 col-md-offset-6">
 			<img src="../assets/images/TweetBoard.png" alt="" class="admin-logo text-center">
@@ -148,8 +146,27 @@
 				<ul class="list-inline pull-right">
 					<li><a href="#">Approve all</a>
 					</li>
-					<li><a href="#">Trusted users</a>
+					<li ng-controller="modelHandler">
+						<a ng-click="open()">Approved Users</a>
+						<!-- Modal -->
+						<script type="text/ng-template" id="trustedUsers.html">
+							<div class="modal-header">
+								<h3 class="modal-title">Trusted users</h3>
+							</div>
+							<div class="modal-body">
+								<ul>
+									<li ng-repeat="item in items">
+										<a>{{ item }}</a>
+									</li>
+								</ul>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+							</div>
+						</script>
 					</li>
+
+
 					<li><a href="#">Blocked users</a>
 					</li>
 				</ul>
@@ -162,7 +179,7 @@
 
 				<article class="media clearfix tweet" id="{{tweet.tweet_id}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit() | reverseQueue">
 					<div class="pull-left">
-<!--						<img ng-src="{{tweet.profile_image_url}}" alt="" class="media-object">-->
+						<!--						<img ng-src="{{tweet.profile_image_url}}" alt="" class="media-object">-->
 					</div>
 					<div class="tweet-content pull-left">
 						<h6 class="tweet-user">
@@ -196,6 +213,10 @@
 		</section>
 	</main>
 
+
+
+	</div>
+
 	<!-- Footer -->
 	<footer class="container clearfix">
 		<small class="text-muted pull-left">TweetBoard © 2015</small>
@@ -212,15 +233,17 @@
 
 	<!-- SCRIPTS -->
 	<script src="../assets/scripts/jquery.min.js"></script>
+
 	<script src="../assets/scripts/angular.min.js"></script>
 	<script src="../assets/scripts/bootstrap.min.js"></script>
 	<script src="../assets/scripts/widgets.js" charset="utf-8"></script>
 
 	<script src="../assets/scripts/angular-animate.min.js"></script>
 	<script src="../assets/scripts/angular-route.min.js"></script>
+	<script src="../assets/vendors/ui-bootstrap-tpls-0.12.1.min.js"></script>
 
-	<script type="text/javascript" src="../assets/scripts/eventAdminApp.js"></script>
-	
+	<script src="../assets/scripts/eventAdminApp.js"></script>
+
 </body>
 
 </html>
