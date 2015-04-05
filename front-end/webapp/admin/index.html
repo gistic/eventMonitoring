@@ -25,7 +25,7 @@
 			<img src="../assets/images/TweetBoard.png" alt="" class="admin-logo text-center">
 		</div>
 
-		<nav class="pull-right">
+		<nav class="pull-right" ng-hide="!eventStarted">
 			<button class="btn">Presentation <i class="fa fa-play"></i>
 			</button>
 			<button class="btn btn-stop" id="stopEvent" ng-click="stopEventHandler('stop_event') "><i class="fa fa-stop"></i>
@@ -34,15 +34,16 @@
 
 
 	</header>
-
+	
+	
 	<!-- Main -->
 	<main class="container">
-
+		
 		<!-- Admin Statistics -->
 		<section class="admin-stats text-center">
 			<div class="row">
 				<article class="col-md-6">
-					<strong>2:19</strong>
+					<strong><timer autostart="false">{{minutes}} : {{seconds}}</timer></strong>
 					<p>Event time</p>
 				</article>
 				<article class="col-md-6">
@@ -146,29 +147,75 @@
 				<ul class="list-inline pull-right">
 					<li><a href="#">Approve all</a>
 					</li>
-					<li ng-controller="modelHandler">
-						<a ng-click="open()">Approved Users</a>
+					<li ng-controller="trustedUsersModalCtrl">
+						<a ng-click="open()">Trusted Users</a>
 						<!-- Modal -->
 						<script type="text/ng-template" id="trustedUsers.html">
-							<div class="modal-header">
-								<h3 class="modal-title">Trusted users</h3>
+							<div class="modal-window">
+								<div class="modal-header">
+									<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span>
+									</button>
+									<h4 class="modal-title">Trusted users</h4>
+								</div>
+								<div class="input-group">
+									<input type="search" class="form-control" placeholder="@Username" value="" ng-model="trustedUsername" ng-enter="addTrustedUsername()">
+									<span class="input-group-btn">
+										<button class="btn btn-search" type="button" ng-click="addTrustedUsername()">Add</button>
+									</span>
+								</div>
+								<div class="modal-body">
+
+									<ul class="users-list">
+										<li ng-repeat="item in items.data" class="clearfix">
+										<strong>
+											<a class="pull-left">
+												<img ng-src="{{item.img}}">
+												{{item.name}}
+											</a>
+											</strong>
+											<a class="pull-right remove-user" ng-click="deleteTrustedUsername($index)">Remove</a>
+										</li>
+									</ul>
+								</div>
 							</div>
-							<div class="modal-body">
-								<ul>
-									<li ng-repeat="item in items">
-										<a>{{ item }}</a>
-									</li>
-								</ul>
-							</div>
-							<div class="modal-footer">
-								<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+						</script>
+					</li>
+					
+					
+					<li ng-controller="blockedUsersModalCtrl">
+						<a ng-click="open()">Blocked Users</a>
+						<!-- Modal -->
+						<script type="text/ng-template" id="blockedUsers.html">
+							<div class="modal-window">
+								<div class="modal-header">
+									<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span>
+									</button>
+									<h4 class="modal-title">Blocked users</h4>
+								</div>
+								<div class="input-group">
+									<input type="search" class="form-control" placeholder="@Username" value="" ng-model="blockedUsername" ng-enter="addBlockedUsername()">
+									<span class="input-group-btn">
+										<button class="btn btn-search" type="button" ng-click="addBlockedUsername()">Add</button>
+									</span>
+								</div>
+								<div class="modal-body">
+
+									<ul class="users-list">
+										<li ng-repeat="item in items.data" class="clearfix">
+										<strong>
+											<a class="pull-left">
+												<img ng-src="{{item.img}}">
+												{{item.name}}
+											</a>
+											</strong>
+											<a class="pull-right remove-user" ng-click="deleteBlockedUsername($index)">Remove</a>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</script>
 					</li>
 
-
-					<li><a href="#">Blocked users</a>
-					</li>
 				</ul>
 			</nav>
 
@@ -213,10 +260,6 @@
 		</section>
 	</main>
 
-
-
-	</div>
-
 	<!-- Footer -->
 	<footer class="container clearfix">
 		<small class="text-muted pull-left">TweetBoard © 2015</small>
@@ -241,6 +284,8 @@
 	<script src="../assets/scripts/angular-animate.min.js"></script>
 	<script src="../assets/scripts/angular-route.min.js"></script>
 	<script src="../assets/vendors/ui-bootstrap-tpls-0.12.1.min.js"></script>
+	
+	<script src="../assets/vendors/angular-timer-all.min.js"></script>
 
 	<script src="../assets/scripts/eventAdminApp.js"></script>
 

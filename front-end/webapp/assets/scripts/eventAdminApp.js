@@ -1,4 +1,4 @@
-var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap']);
+var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer']);
 
 /*
  Config to adjust the parameters format for the request
@@ -19,16 +19,16 @@ eventAdminApp.config(function ($httpProvider) {
 
 // Activate ' ENTER ' keypress to make the same action as click
 eventAdminApp.directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.ngEnter);
-                });
-                event.preventDefault();
-            }
-        });
-    };
+	return function (scope, element, attrs) {
+		element.bind("keydown keypress", function (event) {
+			if (event.which === 13) {
+				scope.$apply(function () {
+					scope.$eval(attrs.ngEnter);
+				});
+				event.preventDefault();
+			}
+		});
+	};
 });
 
 // Filter to reverse Tweets Queue
@@ -50,7 +50,7 @@ eventAdminApp.factory('appVar', function ($rootScope) {
 				return '';
 			}
 		},
-		link : function(){
+		link: function () {
 			return "http://www.twitter.com"
 		}
 	};
@@ -72,7 +72,7 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', function ($ht
 			var arrayOfBolockedUsers = $('#blockedUsers').val();
 			var arrayOfBadKeywords = $('#badKeywords').val();
 			var arrayOfApprovedUsers = $('#approvedUsers').val();
-			
+
 			return $http({
 				method: 'POST',
 				url: 'do',
@@ -94,39 +94,138 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', function ($ht
 
 }]);
 
-eventAdminApp.controller('modelHandler', function ($scope, $modal) {
+// Trusted Users Handlers 
 
-  $scope.open = function () {
-
-    var modalInstance = $modal.open({
-      templateUrl: 'trustedUsers.html',
-      controller: 'ModalInstanceCtrl',
-      size: 'sm'
-    });
-
-  };
+// 1. Factory : Get Trusted Users List Data
+eventAdminApp.factory("getTrustedUsers", function () {
+	var trustedUsers = {};
+	trustedUsers.data = [{
+			name: 'iMomenUI',
+			img: '../assets/images/user-image-1.png'
+  },
+		{
+			name: 'JustSmileDad',
+			img: '../assets/images/user-image-2.png'
+  },
+		{
+			name: 'AngularJS',
+			img: '../assets/images/user-image-3.png'
+  }];
+	return trustedUsers;
 });
 
-eventAdminApp.controller('ModalInstanceCtrl', function ($scope, $modalInstance) {
+// 2. Controller : Create Trusted Users Modal Instance
+eventAdminApp.controller('trustedUsersModalCtrl', function ($scope, $modal) {
+	$scope.open = function () {
+		var modalInstance = $modal.open({
+			templateUrl: 'trustedUsers.html',
+			controller: 'trustedUsersCtrl',
+			size: 'sm'
+		});
 
-  $scope.items = ['item1', 'item2', 'item3'];;
-  
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
+	};
+});
+
+// 3. Controller : Populate Trusted Users Data
+eventAdminApp.controller('trustedUsersCtrl', function ($scope, $modalInstance, getTrustedUsers) {
+
+	$scope.items = getTrustedUsers;
+
+	// Add Approved Users
+	$scope.addTrustedUsername = function () {
+		getTrustedUsers.data.push({
+			name: $scope.trustedUsername,
+			img: '../assets/images/user-image-1.png'
+		});
+	}
+
+	// Remove Approved Users
+	$scope.deleteTrustedUsername = function (index) {
+		getTrustedUsers.data.splice(index, 1);
+	}
+
+	$scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
+});
+
+
+
+
+// Blocked Users Handlers 
+
+// 1. Factory : Get Blocked Users List Data
+eventAdminApp.factory("getBlockedUsers", function () {
+	var blockedUsers = {};
+	blockedUsers.data = [{
+			name: 'UQU',
+			img: '../assets/images/user-image-6.png'
+  },
+		{
+			name: 'OSN',
+			img: '../assets/images/user-image-4.png'
+  },
+		{
+			name: 'GISTIC',
+			img: '../assets/images/user-image-1.png'
+  }];
+	return blockedUsers;
+});
+
+// 2. Controller : Create Trusted Users Modal Instance
+eventAdminApp.controller('blockedUsersModalCtrl', function ($scope, $modal) {
+	$scope.open = function () {
+		var modalInstance = $modal.open({
+			templateUrl: 'blockedUsers.html',
+			controller: 'blockedUsersCtrl',
+			size: 'sm'
+		});
+
+	};
+});
+
+// 3. Controller : Populate Trusted Users Data
+eventAdminApp.controller('blockedUsersCtrl', function ($scope, $modalInstance, getBlockedUsers) {
+
+	$scope.items = getBlockedUsers;
+
+	// Add Approved Users
+	$scope.addBlockedUsername = function () {
+		getBlockedUsers.data.push({
+			name: $scope.blockedUsername,
+			img: '../assets/images/user-image-1.png'
+		});
+	}
+
+	// Remove Approved Users
+	$scope.deleteBlockedUsername = function (index) {
+		getBlockedUsers.data.splice(index, 1);
+	}
+
+	$scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
 });
 
 
 /* Main controller for the application */
 eventAdminApp.controller('startEventCtrl', function ($rootScope, $scope, $http, getData, appVar) {
-	
-	// Trusted Users Modal
 
-	
+	// STATS : Time since event starting 
+
+
 	// Start New Event Handler
+	$scope.eventStarted = false;
+	$scope.timerRunning = false;
+	
 	$scope.startEventHandler = function (action) {
+		
+		$scope.$broadcast('timer-start');
+		$scope.timerRunning = true;
+
 		getData.dataRequest(action)
 			.success(function (response) {
+				$scope.eventStarted = true;
 				console.log("New Event Started");
 			})
 	};
@@ -221,28 +320,18 @@ eventAdminApp.controller('startEventCtrl', function ($rootScope, $scope, $http, 
 	$scope.stopEventHandler = function (action) {
 		getData.dataRequest(action)
 			.then(function (response) {
+			
+				$scope.eventStarted = false;
+			
+				$scope.$broadcast('timer-stop');
+				$scope.timerRunning = false;
+			
+				$scope.$on('timer-stopped', function (event, data) {
+					console.log('Timer Stopped - data = ', data);
+				});
+			
 				console.log("Event Stopped");
 			})
 	}
 
-	// Update Approved Users Handler
-	$scope.updateApprovedUsersHandler = function (action) {
-
-		getData.dataRequest(action)
-			.then(function (response) {
-				console.log("Approved Users Updated");
-				return response.data;
-			})
-	}
-
-	// Update Blocked Users Handler
-	$scope.updateBlockedUsersHandler = function (action) {
-
-		getData.dataRequest(action)
-			.then(function (response) {
-				console.log("Blocked Users Updated");
-				return response.data;
-			})
-
-	}
 });

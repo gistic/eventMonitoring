@@ -12561,6 +12561,75 @@ ol {
   padding: 0;
 }
 
+/* line 1, ../sass/_/_atoms/_modal.scss */
+.modal-dialog {
+  margin: 10% auto;
+}
+
+/* line 4, ../sass/_/_atoms/_modal.scss */
+.modal-backdrop {
+  bottom: 0;
+  position: fixed;
+}
+
+/* line 9, ../sass/_/_atoms/_modal.scss */
+.modal-window .modal-header {
+  padding: 7.5px;
+  background: #fafafa;
+}
+/* line 13, ../sass/_/_atoms/_modal.scss */
+.modal-window .modal-body {
+  padding: 7.5px;
+}
+/* line 16, ../sass/_/_atoms/_modal.scss */
+.modal-window .input-group {
+  background: #fafafa;
+  padding: 10px;
+  border-bottom: 1px solid #e5e5e5;
+}
+/* line 20, ../sass/_/_atoms/_modal.scss */
+.modal-window .input-group input.form-control {
+  background: #ffffff;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+}
+/* line 23, ../sass/_/_atoms/_modal.scss */
+.modal-window .input-group input.form-control .btn.btn-search {
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+/* line 30, ../sass/_/_atoms/_modal.scss */
+.users-list {
+  max-height: 250px;
+  overflow: auto;
+}
+/* line 33, ../sass/_/_atoms/_modal.scss */
+.users-list li {
+  padding: 15px 0;
+  border-bottom: 1px solid #cdd2d4;
+}
+/* line 36, ../sass/_/_atoms/_modal.scss */
+.users-list li:last-child {
+  border-bottom: none;
+}
+/* line 39, ../sass/_/_atoms/_modal.scss */
+.users-list li img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 7px;
+}
+/* line 45, ../sass/_/_atoms/_modal.scss */
+.users-list li a {
+  color: #000000;
+}
+/* line 47, ../sass/_/_atoms/_modal.scss */
+.users-list li a.remove-user {
+  line-height: 45px;
+  color: #ff0000;
+}
+
 /* line 1, ../sass/_/_modules/_header.scss */
 body {
   background: #fafafa;
