@@ -1,4 +1,6 @@
-var eventViewsApp = angular.module('eventViewsApp', ['ngRoute', 'ngAnimate', 'ngFx', 'highcharts-ng', 'eventAdminApp']);
+'use strict';
+
+var eventViewsApp = angular.module('eventViewsApp', ['eventAdminApp', 'ngRoute', 'ngAnimate', 'ngFx', 'highcharts-ng']);
 
 eventViewsApp.directive('lazyLoad', function ($timeout) {
 	return {
@@ -95,12 +97,16 @@ eventViewsApp.factory('getTweetsOverTime', ['$http', '$rootScope',
 	}
 ]);
 
+eventViewsApp.controller('layoutCtrl', function ($scope, $rootScope, $cookies, $cookieStore, $window, shareData) {
+
+	$rootScope.userColor = $cookies.userColor;
+	console.log($cookies.userColor);
+
+});
+
 // liveTweetsCtrl
-eventViewsApp.controller("liveTweetsCtrl", function ($rootScope, $scope, appVar) {
-	
-	$rootScope.eventHashtag = appVar.eventHashtag();
-	
-	
+eventViewsApp.controller("liveTweetsCtrl", function ($rootScope, $scope) {
+
 	$scope.init = function () {
 
 		var source = new EventSource('live_tweets');

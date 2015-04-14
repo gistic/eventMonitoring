@@ -1,0 +1,205 @@
+#live-view {
+	text-align: center;
+	background: $blue;
+	
+	// Layout Sizes
+	&.small {
+		strong {
+			font-size: 12px;
+		}
+	}
+	&.normal {
+		strong {
+			font-size: 21px;
+		}
+	}
+	&.large {
+		strong {
+			font-size: 36px;
+		}
+	}
+	
+	// Layout Colors
+	&.black {
+		background: $black;
+	}
+	&.turquoise {
+		background: $turquoise;
+	}
+	&.violet {
+		background: $violet;
+	}
+	&.pink {
+		background: $pink;
+	}
+	&.green {
+		background: $green;
+	}
+	&.orange {
+		background: $orange;
+	}
+	&.blue {
+		background: $blue;
+	}
+}
+
+#intro {
+	background: #0025c0 url(../images/taghreed.jpg) center no-repeat;
+	background-position: center -180px;
+}
+
+//.tweet {
+//	padding: 20px;
+//	margin: 3 p0px 0;
+//	background: #ffffff;
+//	border-radius: 20px;
+//}
+
+//.tweet:first-child {
+//	opacity: 1;
+//}
+
+.tweets-container {
+	margin: 0 auto;
+	width: 90%;
+	padding: 20px;
+}
+
+.media-body {
+	text-align: left;
+}
+
+.media-heading {
+	color: #0009c1;
+	font-family: 'Myriad Arabic';
+	font-size: 36px;
+	line-height: 30px !important;
+}
+
+.user-img {
+	padding-left: 0;
+	padding-right: 10px;
+}
+
+.user-img img {
+	width: 92px;
+	height: 92px;
+	border-radius: 10%;
+}
+
+.twitter-logo {
+	margin: 30px 0;
+}
+
+.pg-hd {
+	color: #ffffff;
+	margin: 0 0 0 25px;
+	line-height: 42px;
+	font-size: 40px;
+}
+/* IF ARABIC */
+
+.tweet.dir-ar,
+.tweet.dir-ar .media-body {
+	direction: rtl;
+	text-align: right;
+}
+
+.tweet.dir-ar .user-img {
+	padding-left: 10px;
+	padding-right: 0;
+}
+/* IF STARED */
+
+.tweet.stared {
+	border: 5px solid rgba(29, 64, 141, 1);
+}
+/* TOP PEOPLE */
+
+#top-people {
+	direction: ltr;
+}
+
+#top-people .tweet.top-user {
+	width: 100%;
+	margin: 0 0 20px 25px;
+	position: relative;
+	padding: 10px;
+}
+
+#top-people .tweet.top-user .user-img {
+	padding-left: 0;
+	padding-right: 10px;
+}
+
+#top-people .tweet.top-user .user-img img {
+	width: 72px;
+	height: 72px;
+}
+
+#top-people .media-body {
+	text-align: left;
+}
+
+#top-people .media-body h1 {
+	font-size: 36px;
+	line-height: 20px;
+	margin: 20px 0 0 20px;
+	padding: 0;
+}
+
+#top-people .media-body h1.tweets-count {
+	margin-left: 60px;
+}
+
+#tweet-chart h2.tweets-count {
+	font-size: 60px;
+	margin-top: 30px;
+}
+
+#live-tweets .star-tweet {
+	position: absolute;
+	top: -20%;
+	left: -35px;
+}
+
+#live-tweets .media-heading {
+	font-size: 50px;
+}
+
+#live-tweets .tweet-text {
+	font-size: 55px;
+	line-height: 62px;
+}
+
+#live-tweets .tweet.stared {
+	position: relative;
+}
+
+#tweets-container {
+	height: 375px;
+}
+
+#top-people .tweets-container {
+	overflow: visible;
+}
+
+.user-ranks {
+	position: absolute;
+	top: 10px;
+	background: red;
+	border-radius: 50%;
+	right: 20px;
+	width: 70px;
+	height: 70px;
+	line-height: 65px;
+	border: 3px solid #fff;
+	color: #ffffff;
+	font-size: 32px;
+	font-weight: bold;
+}
+
+//.media,
+//.media-body {
+//	overflow: visible;
+//}

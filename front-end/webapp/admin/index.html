@@ -8,6 +8,10 @@
 	<title>ADMIN PANEL</title>
 	<link rel="stylesheet" href="../assets/stylesheets/screen.css">
 
+	<!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
 </head>
 
 <body ng-app="eventAdminApp" ng-controller="startEventCtrl">
@@ -26,19 +30,20 @@
 		</div>
 
 		<nav class="pull-right" ng-hide="!eventStarted">
-			<button class="btn">Presentation <i class="fa fa-play"></i>
-			</button>
+			<a href="http://localhost:8085/index.html#/live" class="btn" target="_blank">
+				Presentation <i class="fa fa-play"></i>
+			</a>
 			<button class="btn btn-stop" id="stopEvent" ng-click="stopEventHandler('stop_event') "><i class="fa fa-stop"></i>
 			</button>
 		</nav>
 
 
 	</header>
-	
-	
+
+
 	<!-- Main -->
 	<main class="container">
-		
+
 		<!-- Admin Statistics -->
 		<section class="admin-stats text-center">
 			<div class="row">
@@ -62,44 +67,93 @@
 		</section>
 
 		<!-- UI Customization -->
-		<section class="panel panel-default admin-customization">
+		<section class="panel panel-default admin-customization" ng-controller="liveViewCtrl">
 			<h3 class="panel-heading text-center">UI Customization</h3>
 			<div class="panel-body">
+				<div class="row">
+					<article>
+						<strong>User Color : {{userColor}}</strong>
+						<strong>User Color : {{userSize}}</strong>
+					</article>
+				</div>
 				<div class="row">
 					<article class="col-md-12 custom-option">
 						<h6>Background color</h6>
 						<ul class="list-inline layout-custom-color">
-							<li><span class="color layout-black"></span>
-							</li>
-							<li><span class="color layout-turquoise "></span>
-							</li>
-							<li><span class="color layout-blue"></span>
-							</li>
-							<li><span class="color layout-violet"></span>
-							</li>
-							<li><span class="color layout-pink"></span>
-							</li>
-							<li><span class="color layout-green"></span>
-							</li>
-							<li><span class="color layout-orange"></span>
+							<li ng-click="layoutColor($index)" ng-repeat="color in layoutColors">
+								<span class="color layout-{{color}}"></span>
 							</li>
 						</ul>
 					</article>
 					<article class="col-md-12 custom-option">
 						<h6>Layout</h6>
 						<ul class="list-inline">
-							<li class="col-md-8">Small</li>
-							<li class="col-md-8">Medium</li>
-							<li class="col-md-8">Big</li>
+							<li class="" ng-click="layoutSize($index)" ng-repeat="size in layoutSizes">
+								{{size}}
+							</li>
 						</ul>
 					</article>
 				</div>
 				<div class="row">
-					<article class="col-md-12 custom-option">
+
+					<!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
+					<article class="col-md-12 custom-option" ng-controller="AppController" nv-file-drop="" uploader="uploader"  filters="queueLimit, customFilter">
 						<h6>Upload your Logo</h6>
-						<input type="file" name="" id="">
 						<small class="text-muted">Max height: 150px  -  Max width: 650px</small>
+						
+						<div class="media">
+							<div ng-repeat="item in uploader.queue">
+
+								<!-- Image preview -->
+								<!--auto height-->
+								<!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+								<!--auto width-->
+								<div class="media-left" ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100, width :100 }"></div>
+								
+								<div class="media-body">
+									<strong class="pull-left">{{ item.file.name }}</strong>
+									<!--fixed width and height -->
+									<!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+									<br>
+									<strong ng-show="uploader.isHTML5">{{ item.file.size/1024/1024|number:2 }} MB</strong>
+									
+									<div>
+										<button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+											<span class="glyphicon glyphicon-upload"></span>
+										</button>
+										<button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+											<span class="glyphicon glyphicon-trash"></span>
+										</button>
+									</div>
+									
+									<div class="upload-status pull-left">
+										<span ng-show="item.isSuccess"><span class="text-success"><i class="glyphicon glyphicon-ok"></i> Uploaded</span></span>
+										<span ng-show="item.isError"><span class="text-danger"><i class="glyphicon glyphicon-remove"></i> Error</span></span>
+									</div>
+								</div>
+							</div>
+
+						</div>
+						
+						<div class="">
+
+							<div ng-show="uploader.isHTML5">
+								<!-- 3. nv-file-over uploader="link" over-class="className" -->
+								<div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+									Drop your logo here
+								</div>
+
+							</div>
+
+							<!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
+							<input type="file" nv-file-select="" uploader="uploader"/>
+							<br/>
+
+						</div>
+
 					</article>
+
+
 					<article class="col-md-12 custom-option">
 						<h6>Screens</h6>
 						<ul class="list-inline">
@@ -167,7 +221,7 @@
 
 									<ul class="users-list">
 										<li ng-repeat="item in items.data" class="clearfix">
-										<strong>
+											<strong>
 											<a class="pull-left">
 												<img ng-src="{{item.img}}">
 												{{item.name}}
@@ -180,8 +234,8 @@
 							</div>
 						</script>
 					</li>
-					
-					
+
+
 					<li ng-controller="blockedUsersModalCtrl">
 						<a ng-click="open()">Blocked Users</a>
 						<!-- Modal -->
@@ -202,7 +256,7 @@
 
 									<ul class="users-list">
 										<li ng-repeat="item in items.data" class="clearfix">
-										<strong>
+											<strong>
 											<a class="pull-left">
 												<img ng-src="{{item.img}}">
 												{{item.name}}
@@ -281,13 +335,16 @@
 	<script src="../assets/scripts/bootstrap.min.js"></script>
 	<script src="../assets/scripts/widgets.js" charset="utf-8"></script>
 
+	<!-- Vendors -->
 	<script src="../assets/scripts/angular-animate.min.js"></script>
+	<script src="../assets/scripts/angular-cookies.min.js"></script>
 	<script src="../assets/scripts/angular-route.min.js"></script>
 	<script src="../assets/vendors/ui-bootstrap-tpls-0.12.1.min.js"></script>
-	
 	<script src="../assets/vendors/angular-timer-all.min.js"></script>
 
-	<script src="../assets/scripts/eventAdminApp.js"></script>
+	<script src="../assets/vendors/angular-file-upload/angular-file-upload.min.js"></script>
+
+	<script src="../assets/scripts/adminApp.js"></script>
 
 </body>
 

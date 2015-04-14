@@ -12679,7 +12679,15 @@ header {
   padding: 30px;
 }
 
-/* line 17, ../sass/_/_modules/_admin-custom.scss */
+/* line 16, ../sass/_/_modules/_admin-custom.scss */
+.layout-custom-color li {
+  margin-right: 10px;
+}
+/* line 18, ../sass/_/_modules/_admin-custom.scss */
+.layout-custom-color li:last-child {
+  margin-right: 0;
+}
+/* line 21, ../sass/_/_modules/_admin-custom.scss */
 .layout-custom-color li .color, .layout-custom-color li .layout-black, .layout-custom-color li .layout-turquoise, .layout-custom-color li .layout-blue, .layout-custom-color li .layout-violet, .layout-custom-color li .layout-pink, .layout-custom-color li .layout-green, .layout-custom-color li .layout-orange {
   width: 15px;
   height: 15px;
@@ -12688,37 +12696,37 @@ header {
   cursor: pointer;
 }
 
-/* line 27, ../sass/_/_modules/_admin-custom.scss */
+/* line 31, ../sass/_/_modules/_admin-custom.scss */
 .layout-black {
   background: #000000;
 }
 
-/* line 32, ../sass/_/_modules/_admin-custom.scss */
+/* line 36, ../sass/_/_modules/_admin-custom.scss */
 .layout-turquoise {
   background: #24dfcc;
 }
 
-/* line 37, ../sass/_/_modules/_admin-custom.scss */
+/* line 41, ../sass/_/_modules/_admin-custom.scss */
 .layout-blue {
   background: #2493de;
 }
 
-/* line 42, ../sass/_/_modules/_admin-custom.scss */
+/* line 46, ../sass/_/_modules/_admin-custom.scss */
 .layout-violet {
   background: #7524df;
 }
 
-/* line 47, ../sass/_/_modules/_admin-custom.scss */
+/* line 51, ../sass/_/_modules/_admin-custom.scss */
 .layout-pink {
   background: #dd2452;
 }
 
-/* line 52, ../sass/_/_modules/_admin-custom.scss */
+/* line 56, ../sass/_/_modules/_admin-custom.scss */
 .layout-green {
   background: #0fcb9d;
 }
 
-/* line 57, ../sass/_/_modules/_admin-custom.scss */
+/* line 61, ../sass/_/_modules/_admin-custom.scss */
 .layout-orange {
   background: #f64728;
 }
@@ -12765,4 +12773,221 @@ footer {
 /* line 6, ../sass/_/_modules/_footer.scss */
 footer .social-links a {
   color: #555555;
+}
+
+/* line 1, ../sass/_/_modules/_live-view.scss */
+#live-view {
+  text-align: center;
+  background: #2493de;
+}
+/* line 7, ../sass/_/_modules/_live-view.scss */
+#live-view.small strong {
+  font-size: 12px;
+}
+/* line 12, ../sass/_/_modules/_live-view.scss */
+#live-view.normal strong {
+  font-size: 21px;
+}
+/* line 17, ../sass/_/_modules/_live-view.scss */
+#live-view.large strong {
+  font-size: 36px;
+}
+/* line 23, ../sass/_/_modules/_live-view.scss */
+#live-view.black {
+  background: #000000;
+}
+/* line 26, ../sass/_/_modules/_live-view.scss */
+#live-view.turquoise {
+  background: #24dfcc;
+}
+/* line 29, ../sass/_/_modules/_live-view.scss */
+#live-view.violet {
+  background: #7524df;
+}
+/* line 32, ../sass/_/_modules/_live-view.scss */
+#live-view.pink {
+  background: #dd2452;
+}
+/* line 35, ../sass/_/_modules/_live-view.scss */
+#live-view.green {
+  background: #0fcb9d;
+}
+/* line 38, ../sass/_/_modules/_live-view.scss */
+#live-view.orange {
+  background: #f64728;
+}
+/* line 41, ../sass/_/_modules/_live-view.scss */
+#live-view.blue {
+  background: #2493de;
+}
+
+/* line 46, ../sass/_/_modules/_live-view.scss */
+#intro {
+  background: #0025c0 url(../images/taghreed.jpg) center no-repeat;
+  background-position: center -180px;
+}
+
+/* line 62, ../sass/_/_modules/_live-view.scss */
+.tweets-container {
+  margin: 0 auto;
+  width: 90%;
+  padding: 20px;
+}
+
+/* line 68, ../sass/_/_modules/_live-view.scss */
+.media-body {
+  text-align: left;
+}
+
+/* line 72, ../sass/_/_modules/_live-view.scss */
+.media-heading {
+  color: #0009c1;
+  font-family: 'Myriad Arabic';
+  font-size: 36px;
+  line-height: 30px !important;
+}
+
+/* line 79, ../sass/_/_modules/_live-view.scss */
+.user-img {
+  padding-left: 0;
+  padding-right: 10px;
+}
+
+/* line 84, ../sass/_/_modules/_live-view.scss */
+.user-img img {
+  width: 92px;
+  height: 92px;
+  border-radius: 10%;
+}
+
+/* line 90, ../sass/_/_modules/_live-view.scss */
+.twitter-logo {
+  margin: 30px 0;
+}
+
+/* line 94, ../sass/_/_modules/_live-view.scss */
+.pg-hd {
+  color: #ffffff;
+  margin: 0 0 0 25px;
+  line-height: 42px;
+  font-size: 40px;
+}
+
+/* IF ARABIC */
+/* line 102, ../sass/_/_modules/_live-view.scss */
+.tweet.dir-ar,
+.tweet.dir-ar .media-body {
+  direction: rtl;
+  text-align: right;
+}
+
+/* line 108, ../sass/_/_modules/_live-view.scss */
+.tweet.dir-ar .user-img {
+  padding-left: 10px;
+  padding-right: 0;
+}
+
+/* IF STARED */
+/* line 114, ../sass/_/_modules/_live-view.scss */
+.tweet.stared {
+  border: 5px solid #1d408d;
+}
+
+/* TOP PEOPLE */
+/* line 119, ../sass/_/_modules/_live-view.scss */
+#top-people {
+  direction: ltr;
+}
+
+/* line 123, ../sass/_/_modules/_live-view.scss */
+#top-people .tweet.top-user {
+  width: 100%;
+  margin: 0 0 20px 25px;
+  position: relative;
+  padding: 10px;
+}
+
+/* line 130, ../sass/_/_modules/_live-view.scss */
+#top-people .tweet.top-user .user-img {
+  padding-left: 0;
+  padding-right: 10px;
+}
+
+/* line 135, ../sass/_/_modules/_live-view.scss */
+#top-people .tweet.top-user .user-img img {
+  width: 72px;
+  height: 72px;
+}
+
+/* line 140, ../sass/_/_modules/_live-view.scss */
+#top-people .media-body {
+  text-align: left;
+}
+
+/* line 144, ../sass/_/_modules/_live-view.scss */
+#top-people .media-body h1 {
+  font-size: 36px;
+  line-height: 20px;
+  margin: 20px 0 0 20px;
+  padding: 0;
+}
+
+/* line 151, ../sass/_/_modules/_live-view.scss */
+#top-people .media-body h1.tweets-count {
+  margin-left: 60px;
+}
+
+/* line 155, ../sass/_/_modules/_live-view.scss */
+#tweet-chart h2.tweets-count {
+  font-size: 60px;
+  margin-top: 30px;
+}
+
+/* line 160, ../sass/_/_modules/_live-view.scss */
+#live-tweets .star-tweet {
+  position: absolute;
+  top: -20%;
+  left: -35px;
+}
+
+/* line 166, ../sass/_/_modules/_live-view.scss */
+#live-tweets .media-heading {
+  font-size: 50px;
+}
+
+/* line 170, ../sass/_/_modules/_live-view.scss */
+#live-tweets .tweet-text {
+  font-size: 55px;
+  line-height: 62px;
+}
+
+/* line 175, ../sass/_/_modules/_live-view.scss */
+#live-tweets .tweet.stared {
+  position: relative;
+}
+
+/* line 179, ../sass/_/_modules/_live-view.scss */
+#tweets-container {
+  height: 375px;
+}
+
+/* line 183, ../sass/_/_modules/_live-view.scss */
+#top-people .tweets-container {
+  overflow: visible;
+}
+
+/* line 187, ../sass/_/_modules/_live-view.scss */
+.user-ranks {
+  position: absolute;
+  top: 10px;
+  background: red;
+  border-radius: 50%;
+  right: 20px;
+  width: 70px;
+  height: 70px;
+  line-height: 65px;
+  border: 3px solid #fff;
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: bold;
 }
