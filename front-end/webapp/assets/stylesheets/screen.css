@@ -3,7 +3,7 @@
  * In this file you should write your main styles. (or centralize your imports)
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
-/* line 5, C:/Ruby193/lib/ruby/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 5, ../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -25,45 +25,45 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
-/* line 22, C:/Ruby193/lib/ruby/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 22, ../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 html {
   line-height: 1;
 }
 
-/* line 24, C:/Ruby193/lib/ruby/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 24, ../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 26, C:/Ruby193/lib/ruby/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 26, ../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 28, C:/Ruby193/lib/ruby/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 28, ../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 30, C:/Ruby193/lib/ruby/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 30, ../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: none;
 }
-/* line 103, C:/Ruby193/lib/ruby/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 103, ../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
   content: none;
 }
 
-/* line 32, C:/Ruby193/lib/ruby/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 32, ../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
 
-/* line 116, C:/Ruby193/lib/ruby/gems/1.9.1/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
+/* line 116, ../../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
   display: block;
 }
@@ -12482,7 +12482,7 @@ a:hover, a:focus {
 .btn {
   border: none;
   padding: 10px;
-  background: #93c01f;
+  background: #0fcb9d;
   color: #ffffff;
 }
 /* line 6, ../sass/_/_atoms/_buttons.scss */
@@ -12526,7 +12526,7 @@ a:hover, a:focus {
 }
 /* line 36, ../sass/_/_atoms/_buttons.scss */
 .btn.btn-load-more strong i {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 /* line 44, ../sass/_/_atoms/_buttons.scss */
@@ -12559,6 +12559,36 @@ ul,
 ol {
   margin: 0;
   padding: 0;
+}
+
+/* line 1, ../sass/_/_atoms/_icons.scss */
+.icon-massive {
+  font-size: 60px;
+}
+
+/* line 4, ../sass/_/_atoms/_icons.scss */
+.icon-huge {
+  font-size: 32px;
+}
+
+/* line 7, ../sass/_/_atoms/_icons.scss */
+.icon-large {
+  font-size: 21px;
+}
+
+/* line 10, ../sass/_/_atoms/_icons.scss */
+.icon-normal {
+  font-size: 16px;
+}
+
+/* line 13, ../sass/_/_atoms/_icons.scss */
+.icon-small {
+  font-size: 14px;
+}
+
+/* line 16, ../sass/_/_atoms/_icons.scss */
+.icon-tiny {
+  font-size: 11px;
 }
 
 /* line 1, ../sass/_/_atoms/_modal.scss */
@@ -12632,7 +12662,7 @@ ol {
 
 /* line 1, ../sass/_/_modules/_header.scss */
 body {
-  background: #fafafa;
+  background: #ffffff;
 }
 
 /* line 5, ../sass/_/_modules/_header.scss */
@@ -12641,6 +12671,55 @@ header {
   margin-bottom: 10px;
   background: #ffffff;
   border-bottom: 1px solid #fafafa;
+}
+
+/* line 12, ../sass/_/_modules/_header.scss */
+.homepage-header {
+  background: #26CA9F;
+  color: #ffffff;
+  padding: 75px 0;
+  text-align: center;
+}
+/* line 17, ../sass/_/_modules/_header.scss */
+.homepage-header .start-event {
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 480px;
+}
+/* line 22, ../sass/_/_modules/_header.scss */
+.homepage-header .start-event input {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  color: #ffffff;
+  font-weight: 300;
+  background: #20a884;
+}
+/* line 27, ../sass/_/_modules/_header.scss */
+.homepage-header .start-event input::-webkit-input-placeholder {
+  color: #188166;
+}
+/* line 30, ../sass/_/_modules/_header.scss */
+.homepage-header .start-event input:-moz-placeholder {
+  color: #188166;
+  opacity: 1;
+}
+/* line 34, ../sass/_/_modules/_header.scss */
+.homepage-header .start-event input::-moz-placeholder {
+  color: #188166;
+  opacity: 1;
+}
+/* line 38, ../sass/_/_modules/_header.scss */
+.homepage-header .start-event input:-ms-input-placeholder {
+  color: #188166;
+}
+/* line 42, ../sass/_/_modules/_header.scss */
+.homepage-header .start-event .btn.btn-search {
+  background: #1a8a6c;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  line-height: 20px;
 }
 
 /* line 1, ../sass/_/_modules/_admin-stats.scss */
@@ -12773,6 +12852,33 @@ footer {
 /* line 6, ../sass/_/_modules/_footer.scss */
 footer .social-links a {
   color: #555555;
+}
+/* line 8, ../sass/_/_modules/_footer.scss */
+footer .social-links a:hover, footer .social-links a:focus {
+  text-decoration: none;
+}
+
+/* line 1, ../sass/_/_modules/_homepage.scss */
+.homepage-boxes {
+  margin: 50px 0;
+}
+/* line 3, ../sass/_/_modules/_homepage.scss */
+.homepage-boxes .icon {
+  color: #26CA9F;
+}
+/* line 6, ../sass/_/_modules/_homepage.scss */
+.homepage-boxes h4 {
+  font-size: 16px;
+  margin: 10px 0;
+}
+/* line 10, ../sass/_/_modules/_homepage.scss */
+.homepage-boxes p {
+  font-size: 14px;
+  color: gray;
+  font-weight: 200;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* line 1, ../sass/_/_modules/_live-view.scss */

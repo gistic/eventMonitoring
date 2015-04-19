@@ -5,6 +5,10 @@ footer {
 	.social-links {
 		a {
 			color: $gray;
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
 		}
 	}
 }
