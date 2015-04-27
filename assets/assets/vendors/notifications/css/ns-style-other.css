@@ -452,6 +452,7 @@
 	animation-direction: reverse;
 	-webkit-animation-delay: 0.3s;
 	animation-delay: 0.3s;
+    display: none;
 }
 
 /* Generated with Bounce.js. Edit at http://goo.gl/6iLZu5 */
