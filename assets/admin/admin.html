@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ADMIN PANEL</title>
+    <link rel="stylesheet" href="../assets/stylesheets/screen.css">
+    <link rel="stylesheet" href="../assets/fonts/eventboard/style.css">
+
+    <link rel="stylesheet" type="text/css" href="../assets/vendors/notifications/css/ns-default.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/vendors/notifications/css/ns-style-other.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/vendors/notifications/css/ns-style-growl.css" />
+
+    <!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+</head>
+
+<body ng-app="eventAdminApp" ng-controller="startEventCtrl">
+
+    <!-- HEADER	-->
+    <header class="container-fluid clearfix">
+
+        <div class="row">
+            <div class="start-event col-md-5">
+                <div class="input-group">
+                    <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startEventHandler()">
+                    <span class="input-group-btn">
+                    <button class="btn btn-search" type="button" ng-click="startEventHandler()"><i class="fa fa-search"></i></button>
+
+                </span>
+                </div>
+            </div>
+
+            <h2 class="col-md-5 col-md-offset-6 logo">
+            <a href="/admin">TweetBoard</a>
+		</h2>
+
+            <nav class="col-md-4 pull-right">
+                <a href="http://localhost:8080/index.html#/live" class="btn" target="_blank">
+				Presentation <i class="icon-controller-play"></i>
+			</a>
+                <button class="btn btn-stop" id="stopEvent" ng-click="stopEventHandler()">
+                    Stop <i class="fa fa-stop"></i>
+                </button>
+<!--                <button class="btn btn-search" type="button" ng-click="getEventOptions()">getEventOptions</button>-->
+            </nav>
+        </div>
+
+    </header>
+
+    <aside class="container-fluid">
+        <!-- Admin Statistics -->
+        <section class="admin-stats text-center row">
+            <article class="col-md-6">
+                <strong><timer autostart="false">{{minutes}} : {{seconds}}</timer></strong>
+                <p>Event time</p>
+            </article>
+            <article class="col-md-6">
+                <strong>183</strong>
+                <p>People</p>
+            </article>
+            <article class="col-md-6">
+                <strong>{{tweetsCount}}</strong>
+                <p>Tweets</p>
+            </article>
+            <article class="col-md-6">
+                <strong>1,209</strong>
+                <p>Retweets</p>
+            </article>
+        </section>
+    </aside>
+
+    <!-- Main -->
+    <main class="container">
+
+        <!-- UI Customization -->
+        <section class="panel panel-default admin-customization" ng-controller="liveViewCtrl">
+            <h3 class="panel-heading text-center">UI Customization</h3>
+            <div class="panel-body">
+                <div class="row">
+                    <article>
+                        <strong>User Color : {{userColor}}</strong>
+                        <strong>User Color : {{userSize}}</strong>
+                    </article>
+                </div>
+                <div class="row first-row">
+                    <article class="col-md-12 custom-option">
+                        <h6>Background color</h6>
+                        <ul class="list-inline layout-custom-color">
+                            <li ng-click="layoutColor($index)" ng-repeat="color in layoutColors" ng-class="{active: layoutColors[$index] == userColor}">
+                                <span class="color layout-{{color}}"></span>
+                            </li>
+                        </ul>
+                    </article>
+                    <article class="col-md-12 custom-option">
+                        <h6>Layout</h6>
+                        <ul class="list-inline layout-custom-size">
+                            <li class="col-md-8" ng-click="layoutSize($index)" ng-repeat="size in layoutSizes" ng-class="{active: layoutSizes[$index] == userSize}">
+                                <span class="size layout-{{size}}">{{size}}</span>
+                            </li>
+                        </ul>
+                    </article>
+                </div>
+                <div class="row">
+
+                    <!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
+                    <article class="col-md-12 custom-option" ng-controller="AppController" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
+                        <h6>Upload your Logo</h6>
+                        <div class="media">
+                            <div ng-repeat="item in uploader.queue">
+
+                                <!-- Image preview -->
+                                <!--auto height-->
+                                <!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+                                <!--auto width-->
+                                <div class="media-left" ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100, width :100 }"></div>
+
+                                <div class="media-body">
+                                    <strong class="pull-left">{{ item.file.name }}</strong>
+                                    <!--fixed width and height -->
+                                    <!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+                                    <br>
+                                    <strong ng-show="uploader.isHTML5">{{ item.file.size/1024/1024|number:2 }} MB</strong>
+
+                                    <div>
+                                        <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                            <span class="glyphicon glyphicon-upload"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </div>
+
+                                    <div class="upload-status pull-left">
+                                        <span ng-show="item.isSuccess"><span class="text-success"><i class="glyphicon glyphicon-ok"></i> Uploaded</span></span>
+                                        <span ng-show="item.isError"><span class="text-danger"><i class="glyphicon glyphicon-remove"></i> Error</span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="">
+
+                            <div ng-show="uploader.isHTML5">
+                                <!-- 3. nv-file-over uploader="link" over-class="className" -->
+                                <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                                    Drop your logo
+                                </div>
+
+                            </div>
+
+                            <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
+                            <input type="file" nv-file-select="" uploader="uploader" />
+                            <br/>
+
+                        </div>
+
+                        <small class="text-muted">Max height: 150px  -  Max width: 650px</small>
+
+                    </article>
+
+                    <article class="col-md-12 custom-option">
+                        <h6>Screens</h6>
+                        <ul class="list-inline row">
+                            <li class="col-md-8" ng-repeat="screen in layoutScreens">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="selectedScreens[]" value="{{screen.value}}" ng-checked="selection.indexOf(screen) > -1" ng-click="toggleSelection(screen)">
+                                        {{screen.name}}
+                                    </label>
+                                </div>
+                            </li>
+
+                        </ul>
+
+                        <div class="text-right save-layout-options">
+                            <a href="#" class="btn" ng-click="updateViewOptions()">
+                               Save
+                           </a>
+                        </div>
+
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="container admin-moderation">
+            <div class="clearfix moderation-header">
+                <h3 class="text-center">Moderation</h3>
+            </div>
+
+            <nav class="clearfix">
+                <ul class="list-inline pull-left tweets-nav">
+                    <li><i class="fa fa-times"></i> {{removedTweetsCount}} tweets</li>
+                    <li><i class="fa fa-check"></i> {{approvedTweetsCount}} tweets</li>
+                </ul>
+
+                <ul class="list-inline pull-right">
+                    <li><a href="#">Approve all</a>
+                    </li>
+                    <li ng-controller="trustedUsersModalCtrl">
+                        <a ng-click="open()">Trusted Users</a>
+
+                        <!-- Modal -->
+                        <script type="text/ng-template" id="trustedUsers.html">
+                            <div class="modal-window">
+                                <div class="modal-header">
+                                    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title">Trusted users</h4>
+                                </div>
+                                <div class="input-group">
+                                    <input type="search" class="form-control" placeholder="@Username" value="" ng-model="trustedUsername" ng-enter="updateTrustedUsers()">
+                                    <span class="input-group-btn">
+										<button class="btn btn-search" type="button" ng-click="updateTrustedUsers()">Add</button>
+									</span>
+                                </div>
+                                <div class="modal-body">
+
+                                    <ul class="users-list">
+                                        <li ng-repeat="user in trustedUsers" class="clearfix">
+                                            <strong>
+											<a class="pull-left">
+												{{user}}
+											</a>
+											</strong>
+                                            <a class="pull-right remove-user" ng-click="deleteTrustedUsername($index)">Remove</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </script>
+                    </li>
+
+					<li ng-controller="blockedUsersModalCtrl">
+						<a ng-click="open()">Blocked Users</a>
+						<!-- Modal -->
+						<script type="text/ng-template" id="blockedUsers.html">
+							<div class="modal-window">
+								<div class="modal-header">
+									<button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span>
+									</button>
+									<h4 class="modal-title">Blocked users</h4>
+								</div>
+								<div class="input-group">
+									<input type="search" class="form-control" placeholder="@Username" value="" ng-model="blockedUsername" ng-enter="updateBlockedUsers()">
+									<span class="input-group-btn">
+										<button class="btn btn-search" type="button" ng-click="updateBlockedUsers()">Add</button>
+									</span>
+								</div>
+								<div class="modal-body">
+
+									<ul class="users-list">
+										<li ng-repeat="user in blockedUsers" class="clearfix">
+											<strong>
+
+											<a class="pull-left">
+												{{user}}
+											</a>
+											</strong>
+
+                                            <a class="pull-right remove-user" ng-click="deleteBlockedUsername($index)">Remove</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </script>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <section class="tweets-queue" id="toApproveDiv">
+
+                <button type="button" class="btn btn-load-more" ng-show="loadMoreButton()" ng-click="loadMoreTweets()"><strong><i class="fa fa-arrow-up"></i></strong> {{remainingTweetsCount}} New Tweets
+                </button>
+
+                <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit() | reverseQueue">
+                    <div class="pull-left">
+                        <img ng-src="{{tweet.user.profile_image_url_https}}" alt="" class="media-object">
+                    </div>
+                    <div class="tweet-content pull-left">
+                        <h6 class="tweet-user">
+							{{tweet.user.name}}
+							<small>
+							<a href="http://twitter.com/{{tweet.user.screen_name}}" target="_blank">
+							@ {{tweet.user.screen_name}}
+							</a>
+							</small>
+						</h6>
+                        <p>{{tweet.text}}</p>
+                        <small class="text-muted">{{tweet.user.country}}</small>
+                    </div>
+
+                    <div class="btn-toolbar pull-right tweet-options" role="toolbar">
+
+                        <div class="btn-group " role="group">
+                            <button type="button" class="btn btn-default" ng-click="approveTweet($event)"><i class="icon-check"></i>
+                            </button>
+                            <button type="button" class="btn btn-default" ng-click="removeTweet($event)"><i class="icon-cross"></i>
+                            </button>
+                            <button type="button" class="btn btn-default" ng-click="approveStarred($event)"><i class="icon-star"></i>
+                            </button>
+                        </div>
+
+                        <div class="btn-group " role="group">
+                            <button type="button" class="btn btn-default" ng-click="updateTrustedUsers(tweet.user.screen_name, tweet.user.profile_image_url_https)"><i class="icon-add-user"></i>
+                            </button>
+                            <button type="button" class="btn btn-default" ng-click="updateBlockedUsers(tweet.user.screen_name, tweet.user.profile_image_url_https)"><i class="icon-remove-user"></i>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </article>
+            </section>
+
+        </section>
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="container clearfix">
+        <small class="text-muted pull-left">TweetBoard © 2015</small>
+        <ul class="list-inline social-links pull-right">
+            <li>
+                <a href="">
+                    <span class="icon-envelope"></span>
+                </a>
+            </li>
+
+            <li>
+                <a href="">
+                    <span class="icon-twitter"></span>
+                </a>
+            </li>
+
+            <li>
+                <a href="">
+                    <span class="icon-linkedin"></span>
+                </a>
+            </li>
+
+            <li>
+                <a href="">
+                    <span class="icon-facebook"></span>
+                </a>
+            </li>
+        </ul>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="../assets/scripts/jquery.min.js"></script>
+    <script src="../assets/vendors/notifications/js/modernizr.custom.js"></script>
+    <script src="../assets/scripts/angular.min.js"></script>
+    <script src="../assets/scripts/bootstrap.min.js"></script>
+    <script src="../assets/scripts/widgets.js" charset="utf-8"></script>
+
+    <!-- Vendors -->
+    <script src="../assets/scripts/angular-animate.min.js"></script>
+    <script src="../assets/scripts/angular-cookies.min.js"></script>
+    <script src="../assets/scripts/angular-route.min.js"></script>
+    <script src="../assets/vendors/ui-bootstrap-tpls-0.12.1.min.js"></script>
+    <script src="../assets/vendors/angular-timer-all.min.js"></script>
+
+    <script src="../assets/vendors/angular-file-upload/angular-file-upload.min.js"></script>
+
+    <script src="../assets/scripts/adminApp.js"></script>
+
+    <script src="../assets/vendors/notifications/js/classie.js"></script>
+    <script src="../assets/vendors/notifications/js/notificationFx.js"></script>
+
+
+</body>
+
+</html>

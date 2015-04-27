@@ -1,0 +1,58 @@
+body {
+    font-family: 'Roboto', sans-serif;
+	background: $white;
+}
+
+header {
+	padding: $padding - 5 0;
+	background: $white;
+	border-bottom: 1px solid $gray-light;
+    .logo {
+        font-family: 'Lobster', cursive;
+        a {
+            color: $black;
+            &:hover,
+            &:focus {
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.homepage-header {
+    background: $dark-green;
+    color: $white;
+    padding: $padding * 5 0;
+    text-align: center;
+    .start-event {
+        margin-top: $margin * 3;
+        margin-left: auto;
+        margin-right: auto;
+        width: $container-width / 2;
+        input {
+            @include border-radius(5px);
+            color: $white;
+            font-weight: 300;
+            background: darken($dark-green, 8%);
+            &::-webkit-input-placeholder {
+                color: darken($dark-green, 17%);
+            }
+            &:-moz-placeholder {
+                color: darken($dark-green, 17%);
+                opacity: 1;
+            }
+            &::-moz-placeholder {
+                color: darken($dark-green, 17%);
+                opacity: 1;
+            }
+            &:-ms-input-placeholder {
+                color: darken($dark-green, 17%);
+            }
+        }
+        .btn.btn-search {
+            background: darken($dark-green, 15%);
+            @include border-right-radius(5px);
+            line-height: 20px;
+        }
+    }
+}

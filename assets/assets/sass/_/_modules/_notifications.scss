@@ -1,0 +1,10 @@
+.ns-box {
+    &.ns-other {
+        &.ns-type-success {
+            .ns-content {
+                background: $layout-green;
+                color: $white;
+            }
+        }
+    }
+}
