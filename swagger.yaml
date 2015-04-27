@@ -286,6 +286,9 @@ paths:
           description: ID of the event for which to get the top users.
           required: true
           type: string
+        - name: count
+          in: query
+          type: integer
       responses:
         "200":
           description: An array of top users
