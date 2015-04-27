@@ -1,0 +1,28 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+# Node
+/assets/node_modules/
+
+# Sass
+/assets/.sass-cache/
+
+# HTML
+
+# JS
+/assets/scripts/snippet
+/dump.rdb
