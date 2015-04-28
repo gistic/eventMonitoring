@@ -86,13 +86,20 @@
         }
         .media-heading {
             color: $layout-blue;
+            width: 40%;
+        }
+        .media-body {
+            vertical-align: middle;
+            width: 700px;
+            display: inline-block;
+            margin-top: $margin * 2;
         }
         .tweets-count {
             margin-left: $margin * 6;
         }
         .user-ranks {
             position: absolute;
-            top: 10px;
+            top: 20px;
             background: $layout-pink;
             @include border-radius(50%);
             right: 20px;
