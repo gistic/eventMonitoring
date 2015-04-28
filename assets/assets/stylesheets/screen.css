@@ -12973,8 +12973,18 @@ footer .social-links a:hover, footer .social-links a:focus {
 }
 
 /* line 4, ../sass/_/_modules/_notifications.scss */
+.ns-box.ns-other .ns-thumb img {
+  width: 64px;
+  height: 64px;
+}
+/* line 10, ../sass/_/_modules/_notifications.scss */
 .ns-box.ns-other.ns-type-success .ns-content {
   background: #0fcb9d;
+  color: #ffffff;
+}
+/* line 16, ../sass/_/_modules/_notifications.scss */
+.ns-box.ns-other.ns-type-error .ns-content {
+  background: #dd2452;
   color: #ffffff;
 }
 
@@ -13065,15 +13075,23 @@ footer .social-links a:hover, footer .social-links a:focus {
 /* line 87, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--top-people .media-heading {
   color: #2493de;
+  width: 40%;
 }
-/* line 90, ../sass/_/_modules/_live-view.scss */
+/* line 91, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view--top-people .media-body {
+  vertical-align: middle;
+  width: 700px;
+  display: inline-block;
+  margin-top: 20px;
+}
+/* line 97, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--top-people .tweets-count {
   margin-left: 60px;
 }
-/* line 93, ../sass/_/_modules/_live-view.scss */
+/* line 100, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--top-people .user-ranks {
   position: absolute;
-  top: 10px;
+  top: 20px;
   background: #dd2452;
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
@@ -13088,7 +13106,7 @@ footer .social-links a:hover, footer .social-links a:focus {
   font-weight: bold;
   text-align: center;
 }
-/* line 112, ../sass/_/_modules/_live-view.scss */
+/* line 119, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--tweets-overtime .tweets-count {
   font-size: 60px;
   margin-top: 30px;
@@ -13096,7 +13114,7 @@ footer .social-links a:hover, footer .social-links a:focus {
 }
 
 /* IF ARABIC */
-/* line 149, ../sass/_/_modules/_live-view.scss */
+/* line 156, ../sass/_/_modules/_live-view.scss */
 .media,
 .media-body {
   overflow: visible;
