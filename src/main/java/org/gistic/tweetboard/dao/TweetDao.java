@@ -62,4 +62,6 @@ public interface TweetDao {
     EventConfig getEventConfig(String uuid);
 
     void approveAllExistingTweetsByUser(String uuid, String screenName);
+
+    String getProfileImageUrl(String element);
 }

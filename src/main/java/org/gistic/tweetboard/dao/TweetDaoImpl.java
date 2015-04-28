@@ -68,6 +68,7 @@ public class TweetDaoImpl implements TweetDao {
                 String userId = String.valueOf(tweet.getUser().getId());
                 String tweetId = String.valueOf(tweet.getId());
                 jedis.set(screenName, userId);
+                jedis.set(getUserProfileImageKey(screenName), tweet.getUser().getOriginalProfileImageURL());
                 jedis.sadd(getUserTweetsSetKey(uuid, userId), tweetId);
                 jedis.zincrby(getUsersRankSetKey(uuid), 1, screenName);
             }
@@ -127,10 +128,15 @@ public class TweetDaoImpl implements TweetDao {
         String tweetId = String.valueOf(tweet.getId());
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.set(screenName, userId);
+            jedis.set(getUserProfileImageKey(screenName), tweet.getUser().getOriginalProfileImageURL());
             jedis.sadd(getUserTweetsSetKey(uuid, userId), tweetId);
             jedis.zincrby(getUsersRankSetKey(uuid), 1, screenName);
             //jedis.zrevrangeByScore(getUsersRankSetKey(uuid), "+", "-", 0, 5);
         }
+    }
+
+    private String getUserProfileImageKey(String screenName) {
+        return screenName + ":profileImageUrl";
     }
 
     @Override
@@ -213,6 +219,13 @@ public class TweetDaoImpl implements TweetDao {
                 removeFromSentForApproval(uuid, tweetId);
                 addToApproved(uuid, tweetId, false);
             }
+        }
+    }
+
+    @Override
+    public String getProfileImageUrl(String screenName) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.get(getUserProfileImageKey(screenName));
         }
     }
 

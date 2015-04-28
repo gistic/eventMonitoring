@@ -5,13 +5,20 @@ package org.gistic.tweetboard.representations;
  */
 public class TopUser {
     private final int score;
+    private final String profileImageUrl;
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
     private String screenName;
     private String userId;
 
-    public TopUser(String userId, String screenName, double score) {
+    public TopUser(String userId, String screenName, double score, String profileImageUrl) {
         this.userId = userId;
         this.screenName = screenName;
         this.score = new Double(score).intValue();
+        this.profileImageUrl = profileImageUrl;
     }
 
     public int getScore() {
