@@ -15,6 +15,21 @@ eventViewsApp.directive('lazyLoad', function ($timeout) {
     }
 });
 
+
+eventViewsApp.directive('errSrc', function($rootScope) {
+    $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
+
+    return {
+        link: function(scope, element, attrs) {
+            element.bind('error', function() {
+                if (attrs.src != attrs.errSrc) {
+                    attrs.$set('src', attrs.errSrc);
+                }
+            });
+        }
+    }
+});
+
 // Directive : On error or missing user profile image -> Load this default image
 eventViewsApp.directive('onErrorSrc', function ($rootScope) {
 
@@ -94,7 +109,7 @@ eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location,get
         $scope.eventHashtag = getEventData.getEventHashTag();
 
         $scope.pages = ["/live", "/top", "/overtime"]
-        $scope.pagesTimeout = [1000000, 7000,5000]
+        $scope.pagesTimeout = [10000000, 3000000,300000000]
 
         $scope.pageIndex = 0;
 
@@ -155,7 +170,7 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $ti
         $timeout(function () {
             $scope.fetchData();
             $scope.intervalFunction();
-        }, 3000)
+        }, 1000000)
     };
     $scope.intervalFunction();
 

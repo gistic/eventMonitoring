@@ -1,39 +1,36 @@
-<div ng-init="init()">
-    <img class="twitter-logo" src="assets/images/taghreed.png" alt="">
+<div ng-init="init()" class="view--live-tweets">
 
-    <strong class="pg-hd">Hashtag : #{{eventHashtag}}</strong>
-
-    <div id="content"></div>
+    <div class="view-header">
+        <img class="event-logo" src="assets/images/taghreed.png" alt="">
+        <strong class="">Hashtag : #{{eventHashtag}}</strong>
+    </div>
 
     <div class="tweets-container">
 
-        <div class="media tweet clearfix fx-fade-down fx-easing-bounce fx-speed-1000" ng-class="{'dir-ar' : tweet.language == 'ar' || 'und', 'stared' : tweet.starred == true, 'showd' : display == block }" ng-repeat="tweet in allTweets | reverse | limitTo : 2" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
+        <div class="media tweet clearfix fx-fade-down fx-easing-bounce fx-speed-1000" ng-class="{'dir-ar' : tweet.language == 'ar' || 'und', 'stared' : tweet.starred == true, 'showd' : display == block }" ng-repeat="tweet in allTweets | reverse | limitTo : 3" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
 
             <span ng-show="{{tweet.starred == true}}">
-
-			<span class="star-tweet">
-			<img src="assets/images/star-icon.png" alt="">
-			</span>
+                <span class="star-tweet">
+                <img src="assets/images/star-icon.png" alt="">
+                </span>
             </span>
-            <div class="user-img pull-right">
+
+            <div class="user-img pull-left">
                 <img lazy-load ll-src="{{tweet.user.profile_image_url }}" on-error-src="{{defultImage}}" />
             </div>
+
             <div class="media-body ">
                 <h4 class="media-heading">
-                {{tweet.user.name}}
-                <small>
-                    {{tweet.user.screen_name}}
-                </small>
-            </h4>
-                <img lazy-load ll-src="{{tweet.profile_image_url}}" on-error-src="{{defultImage}}" />
-            </div>
-            <div class="media-body ">
-                <h4 class="media-heading ">{{tweet.name}}</h4>
+                    {{tweet.user.name}}
+                    <small>
+                        {{tweet.user.screen_name}}
+                    </small>
+                </h4>
                 <p class="tweet-text">{{tweet.text}}</p>
             </div>
+
         </div>
 
     </div>
-
 
 </div>
