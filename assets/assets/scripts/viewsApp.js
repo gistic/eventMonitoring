@@ -1,6 +1,6 @@
 'use strict';
 
-var eventViewsApp = angular.module('eventViewsApp', ['ngAnimate', 'ngFx', 'highcharts-ng', 'ui.router', 'ngCookies']);
+var eventViewsApp = angular.module('eventViewsApp', ['eventAdminApp','ngAnimate', 'ngFx', 'highcharts-ng', 'ui.router', 'ngCookies']);
 
 eventViewsApp.directive('lazyLoad', function ($timeout) {
     return {
@@ -171,7 +171,8 @@ eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location) {
 // liveTweetsCtrl
 
 eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window',
-   function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window) {
+                                            function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window) {
+
         $scope.init = function () {
             $scope.liveTweetsUrl = "http://localhost:8080/api/liveTweets?uuid=" + $cookies.eventID;
 
@@ -207,8 +208,7 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, get
         
         getEventData.dataRequest(requestAction, apiUrl, requestData)
             .then(function (data) {
-            $scope.data = data;
-
+            $scope.data = data.topUsers;
         });
     }
     $scope.fetchData();
@@ -223,7 +223,7 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, get
 });
 
 // TweetsChatCtr
-eventViewsApp.controller('TweetsChatCtr', function ($scope, $http, getTweetsOverTime, $timeout) {
+eventViewsApp.controller('TweetsChatCtr', function ($scope, $http,$cookies, getTweetsOverTime, $timeout, getEventData) {
     $scope.chartConfig = {
         options: {
             chart: {
@@ -241,11 +241,18 @@ eventViewsApp.controller('TweetsChatCtr', function ($scope, $http, getTweetsOver
     $scope.tweetsCount = [];
 
     $scope.fetchData = function () {
-        getTweetsOverTime.dataRequest().then(function (data) {
+
+        var eventID = $cookies.eventID;
+        var requestAction = "GET";
+        var apiUrl = '/api/events/' + eventID + '/overTime';
+        var requestData = "";
+
+
+        getEventData.dataRequest(requestAction, apiUrl, requestData)
+            .then(function (data) {
             $scope.data = data;
             $scope.tweetsTime = data.time;
             $scope.tweetsCount = data.count;
-
 
             function drawDailyChart() {
                 var arrayLength = $scope.data.length;

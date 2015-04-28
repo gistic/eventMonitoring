@@ -413,6 +413,8 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
    function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
 
        var eventID = $cookies.eventID;
+       $rootScope.smile = "Smile";
+
        $rootScope.eventHashtag = $cookies.eventHashtag;
 
         $scope.updateBlockedUsers = function (screenName) {
