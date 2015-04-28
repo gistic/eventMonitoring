@@ -30,7 +30,7 @@ redis:
   # The maximum number of connections allowed in the pool.  (default: 1024)
   maxTotal: 1924
 twitter:
-  consumer-key: tzXQPPEEeukLO3TOI9pGJ523G
-  consumer-secret: ui2U9LxTzWbXt5Qsy7RXHPzsUdfNr0a7xaeotSDYL1yfgF1dOG
-  user-key: 1974931724-VbIpg9wz8yfzIQxn3JloGUarcOFHIrvNL9KrDRn
-  user-secret: r3vrxgcJVT8OslNGFvXm1yyd5SBI68MDphuSR2IkgBccr
+  consumer-key: YzZKKQ2v793ClhDvOvpg2XtNO
+  consumer-secret: vQToihSmBVtZK6ziYKORtGNWKxAGEVUAxo5VyuHxPRBQk8JNgw
+  user-key: 146937078-oJdMfF0B849bQgqLMNElQzvFpeD8iaeYBZ5hNeaK
+  user-secret: g5MWqiIvkYE41Gu0BYuv0NbL3arCIIE80NzIzeIrD98ml
