@@ -387,8 +387,6 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
             getData.updateBlockedUsers(eventID, screenName)
                 .then(function (response) {
                     $scope.blockedUsers.push($scope.blockedUsername);
-                    console.log(response);
-                    console.log(screenName);
                 })
         }
 
@@ -418,8 +416,6 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         $scope.updateBlockedUsers = function (screenName) {
             getData.updateBlockedUsers(eventID, screenName)
                 .then(function (response) {
-                    console.log(response);
-                    console.log(screenName);
                 })
         }
 
@@ -592,7 +588,6 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                     $scope.$on('timer-stopped', function (event, data) {
                         console.log('Timer Stopped - data = ', data);
                     });
-                    console.log("Event Stopped");
 
                     // show the notification
                     notification.show();

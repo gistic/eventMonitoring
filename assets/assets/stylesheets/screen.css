@@ -12908,20 +12908,30 @@ header .logo a:hover, header .logo a:focus {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
+  text-align: left;
 }
-/* line 6, ../sass/_/_modules/_tweet.scss */
+/* line 7, ../sass/_/_modules/_tweet.scss */
 .tweet img {
   width: 72px;
   height: 72px;
 }
-/* line 10, ../sass/_/_modules/_tweet.scss */
+/* line 11, ../sass/_/_modules/_tweet.scss */
 .tweet h6 {
   font-weight: 400px;
   font-size: 21px;
 }
-/* line 14, ../sass/_/_modules/_tweet.scss */
+/* line 15, ../sass/_/_modules/_tweet.scss */
 .tweet .tweet-content {
   width: 60%;
+}
+/* line 18, ../sass/_/_modules/_tweet.scss */
+.tweet.tweet:first-child {
+  opacity: 1;
+}
+/* line 21, ../sass/_/_modules/_tweet.scss */
+.tweet.tweet.stared {
+  position: relative;
+  border: 5px solid #1d408d;
 }
 
 /* line 1, ../sass/_/_modules/_footer.scss */
@@ -12969,211 +12979,104 @@ footer .social-links a:hover, footer .social-links a:focus {
 }
 
 /* line 1, ../sass/_/_modules/_live-view.scss */
-#live-view {
+.event-views {
   text-align: center;
   background: #2493de;
 }
 /* line 7, ../sass/_/_modules/_live-view.scss */
-#live-view.small strong {
+.event-views.small strong {
   font-size: 12px;
 }
 /* line 12, ../sass/_/_modules/_live-view.scss */
-#live-view.normal strong {
+.event-views.normal strong {
   font-size: 21px;
 }
 /* line 17, ../sass/_/_modules/_live-view.scss */
-#live-view.large strong {
+.event-views.large strong {
   font-size: 36px;
 }
 /* line 23, ../sass/_/_modules/_live-view.scss */
-#live-view.black {
+.event-views.black {
   background: #000000;
 }
 /* line 26, ../sass/_/_modules/_live-view.scss */
-#live-view.turquoise {
+.event-views.turquoise {
   background: #24dfcc;
 }
 /* line 29, ../sass/_/_modules/_live-view.scss */
-#live-view.violet {
+.event-views.violet {
   background: #7524df;
 }
 /* line 32, ../sass/_/_modules/_live-view.scss */
-#live-view.pink {
+.event-views.pink {
   background: #dd2452;
 }
 /* line 35, ../sass/_/_modules/_live-view.scss */
-#live-view.green {
+.event-views.green {
   background: #0fcb9d;
 }
 /* line 38, ../sass/_/_modules/_live-view.scss */
-#live-view.orange {
+.event-views.orange {
   background: #f64728;
 }
 /* line 41, ../sass/_/_modules/_live-view.scss */
-#live-view.blue {
+.event-views.blue {
   background: #2493de;
 }
 
-/* line 46, ../sass/_/_modules/_live-view.scss */
-#intro {
-  background: #0025c0 url(../images/taghreed.jpg) center no-repeat;
-  background-position: center -180px;
+/* line 47, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view-header {
+  margin: 40px auto;
 }
-
-/* line 62, ../sass/_/_modules/_live-view.scss */
-.tweets-container {
-  margin: 0 auto;
-  width: 90%;
-  padding: 20px;
+/* line 49, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view-header strong {
+  color: #ffffff;
+  vertical-align: middle;
+  font-size: 32px;
+  margin-left: 40px;
 }
-
-/* line 68, ../sass/_/_modules/_live-view.scss */
-.media-body {
-  text-align: left;
-}
-
-/* line 72, ../sass/_/_modules/_live-view.scss */
-.media-heading {
-  color: #0009c1;
-  font-family: 'Myriad Arabic';
-  font-size: 36px;
-  line-height: 30px !important;
-}
-
-/* line 79, ../sass/_/_modules/_live-view.scss */
-.user-img {
-  padding-left: 0;
-  padding-right: 10px;
-}
-
-/* line 84, ../sass/_/_modules/_live-view.scss */
-.user-img img {
+/* line 58, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .user-img img {
   width: 92px;
   height: 92px;
+  -moz-border-radius: 10%;
+  -webkit-border-radius: 10%;
   border-radius: 10%;
 }
-
-/* line 90, ../sass/_/_modules/_live-view.scss */
-.twitter-logo {
-  margin: 30px 0;
-}
-
-/* line 94, ../sass/_/_modules/_live-view.scss */
-.pg-hd {
-  color: #ffffff;
-  margin: 0 0 0 25px;
-  line-height: 42px;
-  font-size: 40px;
-}
-
-/* IF ARABIC */
-/* line 102, ../sass/_/_modules/_live-view.scss */
-.tweet.dir-ar,
-.tweet.dir-ar .media-body {
-  direction: rtl;
-  text-align: right;
-}
-
-/* line 108, ../sass/_/_modules/_live-view.scss */
-.tweet.dir-ar .user-img {
-  padding-left: 10px;
-  padding-right: 0;
-}
-
-/* IF STARED */
-/* line 114, ../sass/_/_modules/_live-view.scss */
-.tweet.stared {
-  border: 5px solid #1d408d;
-}
-
-/* TOP PEOPLE */
-/* line 119, ../sass/_/_modules/_live-view.scss */
-#top-people {
-  direction: ltr;
-}
-
-/* line 123, ../sass/_/_modules/_live-view.scss */
-#top-people .tweet.top-user {
-  width: 100%;
-  margin: 0 0 20px 25px;
-  position: relative;
-  padding: 10px;
-}
-
-/* line 130, ../sass/_/_modules/_live-view.scss */
-#top-people .tweet.top-user .user-img {
-  padding-left: 0;
-  padding-right: 10px;
-}
-
-/* line 135, ../sass/_/_modules/_live-view.scss */
-#top-people .tweet.top-user .user-img img {
-  width: 72px;
-  height: 72px;
-}
-
-/* line 140, ../sass/_/_modules/_live-view.scss */
-#top-people .media-body {
-  text-align: left;
-}
-
-/* line 144, ../sass/_/_modules/_live-view.scss */
-#top-people .media-body h1 {
-  font-size: 36px;
-  line-height: 20px;
-  margin: 20px 0 0 20px;
-  padding: 0;
-}
-
-/* line 151, ../sass/_/_modules/_live-view.scss */
-#top-people .media-body h1.tweets-count {
-  margin-left: 60px;
-}
-
-/* line 155, ../sass/_/_modules/_live-view.scss */
-#tweet-chart h2.tweets-count {
-  font-size: 60px;
-  margin-top: 30px;
-}
-
-/* line 160, ../sass/_/_modules/_live-view.scss */
-#live-tweets .star-tweet {
-  position: absolute;
-  top: -20%;
-  left: -35px;
-}
-
-/* line 166, ../sass/_/_modules/_live-view.scss */
-#live-tweets .media-heading {
-  font-size: 50px;
-}
-
-/* line 170, ../sass/_/_modules/_live-view.scss */
-#live-tweets .tweet-text {
-  font-size: 55px;
-  line-height: 62px;
-}
-
-/* line 175, ../sass/_/_modules/_live-view.scss */
-#live-tweets .tweet.stared {
-  position: relative;
-}
-
-/* line 179, ../sass/_/_modules/_live-view.scss */
-#tweets-container {
+/* line 67, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view--live-tweets .tweets-container {
+  margin: 0 auto;
   height: 375px;
 }
-
-/* line 183, ../sass/_/_modules/_live-view.scss */
-#top-people .tweets-container {
+/* line 71, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view--live-tweets .media-heading {
+  color: #2493de;
+  font-size: 32px;
+  line-height: 30px !important;
+}
+/* line 76, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view--live-tweets .tweet-text {
+  font-size: 21px;
+}
+/* line 84, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view--top-people .tweets-container {
   overflow: visible;
 }
-
-/* line 187, ../sass/_/_modules/_live-view.scss */
-.user-ranks {
+/* line 87, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view--top-people .media-heading {
+  color: #2493de;
+}
+/* line 90, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view--top-people .tweets-count {
+  margin-left: 60px;
+}
+/* line 93, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view--top-people .user-ranks {
   position: absolute;
   top: 10px;
-  background: red;
+  background: #dd2452;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
   border-radius: 50%;
   right: 20px;
   width: 70px;
@@ -13183,4 +13086,18 @@ footer .social-links a:hover, footer .social-links a:focus {
   color: #ffffff;
   font-size: 32px;
   font-weight: bold;
+  text-align: center;
+}
+/* line 112, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view--tweets-overtime .tweets-count {
+  font-size: 60px;
+  margin-top: 30px;
+  color: #ffffff;
+}
+
+/* IF ARABIC */
+/* line 149, ../sass/_/_modules/_live-view.scss */
+.media,
+.media-body {
+  overflow: visible;
 }
