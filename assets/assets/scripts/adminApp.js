@@ -38,7 +38,7 @@ eventAdminApp.filter('reverseQueue', function () {
     };
 });
 
-eventAdminApp.run(function($window, $rootScope){
+eventAdminApp.run(function ($window, $rootScope) {
     $rootScope.baseUrl = $window.location.origin;
 })
 
@@ -61,7 +61,7 @@ eventAdminApp.factory('appVar', function ($rootScope) {
 
 
 /* Factory to post the requestes */
-eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', '$cookies', '$cookieStore','$location', '$window', function ($http, $rootScope, appVar, $cookies, $cookieStore,$location, $window) {
+eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', '$cookies', '$cookieStore', '$location', '$window', function ($http, $rootScope, appVar, $cookies, $cookieStore, $location, $window) {
 
     return {
 
@@ -281,7 +281,7 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
             getData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
                     $scope.blockedUsers.push($scope.blockedUsername);
-            })
+                })
         }
 
         // DELETE : Trusted User
@@ -296,13 +296,39 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
             getData.fetchData(requestAction, apiUrl, requestData, screenName)
                 .then(function (response) {
                     $scope.blockedUsers.splice(index, 1);
-            })
+                })
         }
 
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
 }]);
+
+/* startEventHandler controller for the admin front page */
+eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
+   function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
+
+        $scope.startEventHandler = function (action) {
+            $scope.$broadcast();
+            $scope.timerRunning = true;
+
+            getData.startEvent()
+                .success(function (response) {
+                    $rootScope.eventStarted = true;
+                    $rootScope.eventID = response.uuid;
+                    $scope.adminUrl = "/admin/admin.html?uuid=" + $scope.eventID;
+                    $window.location.href = $scope.adminUrl;
+
+                    $cookies.eventID = $rootScope.eventID;
+                    $cookies.eventHashtag = $rootScope.eventHashtag;
+
+                    console.log("New Event Started");
+                })
+        };
+
+
+   }]);
+
 
 /* Main controller for the application */
 eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
@@ -311,28 +337,28 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         var eventID = $cookies.eventID;
         $rootScope.eventHashtag = $cookies.eventHashtag;
 
-       $scope.updateBlockedUsers = function (screenName, userPicture) {
+        $scope.updateBlockedUsers = function (screenName, userPicture) {
 
-           var requestAction = "PUT";
-           var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
-           var requestData = "";
+            var requestAction = "PUT";
+            var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
+            var requestData = "";
 
-           // create the notification
-           var notification = new NotificationFx({
-               message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to blocked users list.</p></div>',
-               layout: 'other',
-               ttl: 6000,
-               effect: 'thumbslider',
-               type: 'success'
-           });
+            // create the notification
+            var notification = new NotificationFx({
+                message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to blocked users list.</p></div>',
+                layout: 'other',
+                ttl: 6000,
+                effect: 'thumbslider',
+                type: 'success'
+            });
 
-           getData.fetchData(requestAction, apiUrl, requestData)
-               .then(function (response) {
-               // show the notification
-               notification.show();
-           })
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .then(function (response) {
+                    // show the notification
+                    notification.show();
+                })
 
-       }
+        }
 
         $scope.updateTrustedUsers = function (screenName, userPicture) {
 
@@ -370,40 +396,27 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         $scope.tweetsCount = 0;
         $scope.tweet = {};
 
-        $scope.startEventHandler = function (action) {
-            $scope.$broadcast();
-            $scope.timerRunning = true;
-
-            getData.startEvent()
-                .success(function (response) {
-                    $rootScope.eventStarted = true;
-                    $rootScope.eventID = response.uuid;
-                    $scope.adminUrl = "/admin/admin.html?uuid=" + $scope.eventID;
-                    $window.location.href = $scope.adminUrl;
-
-                    $cookies.eventID = $rootScope.eventID;
-                    $cookies.eventHashtag = $rootScope.eventHashtag;
-
-                    console.log("New Event Started");
-                })
-        };
-
         // Listen to new message
 
-        $scope.eventSourceUrl = $rootScope.baseUrl + "/api/adminLiveTweets?uuid=" + $cookies.eventID;
+        $scope.startEventSource = function () {
+            $scope.eventSourceUrl = $rootScope.baseUrl + "/api/adminLiveTweets?uuid=" + $cookies.eventID;
 
 
-        var source = new EventSource($scope.eventSourceUrl);
+            var source = new EventSource($scope.eventSourceUrl);
 
-        source.addEventListener('message', function (response) {
+            source.addEventListener('message', function (response) {
 
-            $scope.tweet = JSON.parse(response.data);
+                $scope.tweet = JSON.parse(response.data);
 
-            $scope.$apply(function () {
-                $scope.tweetsQueue.push($scope.tweet);
-                $scope.tweetsCount = $scope.tweetsQueue.length;
-            }, false);
-        });
+                $scope.$apply(function () {
+                    $scope.tweetsQueue.push($scope.tweet);
+                    $scope.tweetsCount = $scope.tweetsQueue.length;
+                }, false);
+            });
+        }
+
+        $scope.startEventSource();
+
 
         $scope.pagesShown = 1;
         $scope.pageSize = 20;
@@ -534,8 +547,8 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
             };
             getData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
-                console.log("Options Updated");
-            })
+                    console.log("Options Updated");
+                })
         }
 
 
