@@ -53,6 +53,7 @@ public class TweetProcessor {
         } else if (isBadKeywordTweet(tweet)) {
             System.out.println("bad tweet detected " + tweet.getText());
         } else {
+            tweet.getUser().getOriginalProfileImageURLHttps();
             activePeopleAnalyzer.TweetArrived(tweet);
             if (isApprovedUser(tweet)) {
                 tweetDataLogic.addToApproved(status, true);

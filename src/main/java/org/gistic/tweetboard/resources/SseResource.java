@@ -37,7 +37,7 @@ public class SseResource extends EventSourceServlet {
                                     Thread.sleep(1000);
                                 } else {
                                     Status tweet = status.getInternalStatus();
-                                    try { emitter.data(status.getStatusString()); }
+                                    try { emitter.data(status.getStatusString().replace("_normal", "")); }
                                     catch (Exception ex) { break; }
                                     //Thread.sleep(100);
                                 }
