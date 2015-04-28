@@ -39,7 +39,7 @@ eventAdminApp.filter('reverseQueue', function () {
 });
 
 eventAdminApp.run(function($window, $rootScope){
-    $rootScope.baseUrl = $window.location. origin;
+    $rootScope.baseUrl = $window.location.origin;
 })
 
 // Angular factory allwos you to share data between controllers and pages
@@ -310,7 +310,6 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
         var eventID = $cookies.eventID;
         $rootScope.eventHashtag = $cookies.eventHashtag;
-
 
        $scope.updateBlockedUsers = function (screenName, userPicture) {
 
