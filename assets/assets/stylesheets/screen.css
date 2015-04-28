@@ -12973,8 +12973,18 @@ footer .social-links a:hover, footer .social-links a:focus {
 }
 
 /* line 4, ../sass/_/_modules/_notifications.scss */
+.ns-box.ns-other .ns-thumb img {
+  width: 64px;
+  height: 64px;
+}
+/* line 10, ../sass/_/_modules/_notifications.scss */
 .ns-box.ns-other.ns-type-success .ns-content {
   background: #0fcb9d;
+  color: #ffffff;
+}
+/* line 16, ../sass/_/_modules/_notifications.scss */
+.ns-box.ns-other.ns-type-error .ns-content {
+  background: #dd2452;
   color: #ffffff;
 }
 

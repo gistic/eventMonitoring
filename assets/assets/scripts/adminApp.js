@@ -2,6 +2,21 @@
 
 var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'ngCookies', 'angularFileUpload']);
 
+eventAdminApp.directive('errSrc', function($rootScope) {
+    $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
+
+    return {
+        link: function(scope, element, attrs) {
+            element.bind('error', function() {
+                if (attrs.src != attrs.errSrc) {
+                    attrs.$set('src', attrs.errSrc);
+                }
+            });
+        }
+    }
+});
+
+
 // Activate ' ENTER ' keypress to make the same action as click
 eventAdminApp.directive('ngEnter', function () {
     return function (scope, element, attrs) {
@@ -321,7 +336,6 @@ eventAdminApp.controller('trustedUsersCtrl', ['$rootScope', '$scope', '$http', '
         getData.getTrustedUsers(eventID)
             .then(function (response) {
                 $scope.trustedUsers = response.data;
-                console.log($scope.trustedUsers);
             })
 
         // Add Approved Users
@@ -331,8 +345,6 @@ eventAdminApp.controller('trustedUsersCtrl', ['$rootScope', '$scope', '$http', '
             getData.updateTrustedUsers(eventID, screenName)
                 .then(function (response) {
                     $scope.trustedUsers.push($scope.trustedUsername);
-                    console.log(response);
-                    console.log(screenName);
                 })
         }
 
@@ -413,9 +425,21 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
        var eventID = $cookies.eventID;
        $rootScope.eventHashtag = $cookies.eventHashtag;
 
-        $scope.updateBlockedUsers = function (screenName) {
+       $scope.updateBlockedUsers = function (screenName, userPicture) {
+
+            // create the notification
+            var notification = new NotificationFx({
+                message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to blocked users list.</p></div>',
+                layout: 'other',
+                ttl: 6000,
+                effect: 'thumbslider',
+                type: 'error'
+            });
+
+
             getData.updateBlockedUsers(eventID, screenName)
                 .then(function (response) {
+                notification.show();
                 })
         }
 
@@ -570,7 +594,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
             var notification = new NotificationFx({
                 message: '<p>Hello there! Your event have been stoped.</p>',
                 layout: 'growl',
-                effect: 'jelly',
+                effect: 'genie',
                 type: 'notice' // notice, warning, error or success
             });
 
@@ -590,7 +614,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                     });
 
                     // show the notification
-                    notification.show();
+//                    notification.show();
 
                 })
         }
