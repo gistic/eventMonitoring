@@ -2,6 +2,7 @@
 
 var eventViewsApp = angular.module('eventViewsApp', ['eventAdminApp','ngAnimate', 'ngFx', 'highcharts-ng', 'ui.router', 'ngCookies']);
 
+// Directive : Image lazy load
 eventViewsApp.directive('lazyLoad', function ($timeout) {
     return {
         restrict: 'A',
@@ -14,6 +15,7 @@ eventViewsApp.directive('lazyLoad', function ($timeout) {
     }
 });
 
+// Directive : On error or missing user profile image -> Load this default image
 eventViewsApp.directive('onErrorSrc', function ($rootScope) {
 
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
@@ -29,6 +31,7 @@ eventViewsApp.directive('onErrorSrc', function ($rootScope) {
     }
 });
 
+// Filter : Reverse tweets lists
 eventViewsApp.filter('reverse', function () {
     var items = [];
     return function (items) {
@@ -36,6 +39,7 @@ eventViewsApp.filter('reverse', function () {
     };
 });
 
+// Config : Views pages routing
 eventViewsApp.config(function ($stateProvider, $urlRouterProvider) {
 
     window.routes = {
@@ -65,7 +69,8 @@ eventViewsApp.config(function ($stateProvider, $urlRouterProvider) {
 
 });
 
-eventViewsApp.factory('getEventData', ['$http', '$rootScope',function ($http, $rootScope) {
+// Factory : Get : Live tweets - Top active peopel - tweets over time
+eventViewsApp.factory('getEventData', ['$http', '$rootScope','$cookies',function ($http, $rootScope,$cookies) {
         return {
             dataRequest: function (requestMethod, requestUrl, requestParamaters) {
                 return $http({
@@ -75,109 +80,42 @@ eventViewsApp.factory('getEventData', ['$http', '$rootScope',function ($http, $r
                 }).then(function (result) {
                     return result.data;
                 });
+            },
+            getEventHashTag : function(){
+                return $cookies.eventHashtag;
             }
         }
  }
 ]);
 
-eventViewsApp.factory('getActivePeople', ['$http', '$rootScope',
- function ($http, $rootScope) {
+// Controller : Automatice views pages rotuing
+eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location,getEventData) {
 
-        return {
-            dataRequest: function () {
+        $scope.eventHashtag = getEventData.getEventHashTag();
 
-                return $http({
-                    method: 'GET',
-                    url: 'active_people',
-                    params: {
-                        max: 4
-                    },
-                }).then(function (result) {
-                    $rootScope.tweets = result.data;
-                    return result.data;
-                });
-            }
-        }
- }
-]);
+        $scope.pages = ["/live", "/top", "/overtime"]
+        $scope.pagesTimeout = [1000000, 7000,5000]
 
-eventViewsApp.factory('getTweetsOverTime', ['$http', '$rootScope',
- function ($http, $rootScope) {
+        $scope.pageIndex = 0;
 
-        return {
-            dataRequest: function () {
-
-                return $http({
-                    method: 'GET',
-                    url: 'tweets_per_time',
-                    params: {
-                        sample_rate: 1
-                    },
-                }).then(function (result) {
-                    $rootScope.tweets = result.data;
-                    return result.data;
-                });
-            }
-        }
- }
-]);
-
-eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location) {
-
-    //    $scope.pages = ["/live", "/top", "/overtime"]
-    //    $scope.pagesTimeout = [10000, 7000,5000]
-    //
-    //    $scope.pageIndex = 0;
-    //
-    //    $scope.intervalFunction = function () {
-    //        $timeout(function () {
-    //            $location.path($scope.pages[$scope.pageIndex]);
-    //            $scope.pageIndex = ($scope.pageIndex + 1)%3;
-    //            $scope.intervalFunction();
-    //        }, $scope.pagesTimeout[$scope.pageIndex])
-    //    };
-    //    $scope.intervalFunction();
+        $scope.intervalFunction = function () {
+            $timeout(function () {
+                $location.path($scope.pages[$scope.pageIndex]);
+                $scope.pageIndex = ($scope.pageIndex + 1)%3;
+                $scope.intervalFunction();
+            }, $scope.pagesTimeout[$scope.pageIndex])
+        };
+        $scope.intervalFunction();
 
 });
 
-// LayoutCtrl
-
-//eventViewsApp.controller('LayoutCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window',
-//   function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window) {
-//
-//        $scope.init = function () {
-//
-//            $scope.layoutCtrlsUrl = "http://localhost:8080/api/liveTweets?uuid=" + $cookies.eventID;
-//
-//            var source = new EventSource($scope.layoutCtrlsUrl);
-//
-//            source.onmessage = function (tweets) {
-//                var tweet = JSON.parse(event.data);
-//
-//                $scope.$apply(function () {
-//                    console.log(tweet);
-//                    console.log(tweet);
-//                });
-//            };
-//
-//            source.onerror = function (event) {
-//                console.log(event.message);
-//            }
-//
-//        }
-//
-//}]);
-
-// liveTweetsCtrl
-
+// Controller : Live Tweets View CTRL
 eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window',
                                             function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window) {
 
         $scope.init = function () {
             $scope.liveTweetsUrl = "http://localhost:8080/api/liveTweets?uuid=" + $cookies.eventID;
-
             var source = new EventSource($scope.liveTweetsUrl);
-
             var tweets = {};
             $scope.allTweets = [];
 
@@ -186,15 +124,13 @@ eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$c
                 $scope.$apply(function () {
                     $scope.allTweets.push($scope.tweet);
                 });
-                console.log($scope.tweet);
-
             });
         }
 
 }]);
 
-// TopPeopleCtrl
-eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, getActivePeople, $timeout, getEventData) {
+// Controller : Top People View CTRL
+eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $timeout, getEventData) {
     
     $scope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
     
@@ -203,7 +139,10 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, get
         var eventID = $cookies.eventID;
         var requestAction = "GET";
         var apiUrl = '/api/events/' + eventID + '/topUsers';
-        var requestData = "";
+        var topUsersCount = 6
+        var requestData = {
+            "count" : topUsersCount
+        };
         
         
         getEventData.dataRequest(requestAction, apiUrl, requestData)
@@ -222,8 +161,8 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, get
 
 });
 
-// TweetsChatCtr
-eventViewsApp.controller('TweetsChatCtr', function ($scope, $http,$cookies, getTweetsOverTime, $timeout, getEventData) {
+// Controller : Tweets Over Time View CTRL
+eventViewsApp.controller('TweetsChatCtr', function ($scope, $http,$cookies, $timeout, getEventData) {
     $scope.chartConfig = {
         options: {
             chart: {
@@ -245,7 +184,17 @@ eventViewsApp.controller('TweetsChatCtr', function ($scope, $http,$cookies, getT
         var eventID = $cookies.eventID;
         var requestAction = "GET";
         var apiUrl = '/api/events/' + eventID + '/overTime';
-        var requestData = "";
+
+        // tweetsTimeRate = 1 : Gives you a tweets count reading every 1 minute
+        var tweetsTimeRate = 1;
+
+        // tweetsOverSpecificTime = -1 : Gives you the whole tweets since the event have been started
+        var tweetsOverSpecificTime = -1;
+
+        var requestData = {
+            'sampleRate': tweetsTimeRate,
+            'period': tweetsOverSpecificTime
+        };
 
 
         getEventData.dataRequest(requestAction, apiUrl, requestData)
