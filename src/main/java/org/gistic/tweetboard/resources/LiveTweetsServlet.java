@@ -31,7 +31,7 @@ public class LiveTweetsServlet extends EventSourceServlet {
                                 Thread.sleep(500);
                             }else{
                                 try {
-                                    emitter.data(status.getStatusString());
+                                    emitter.data(status.getStatusString().replace("_normal", ""));
                                 } catch (Exception ex) { break; }
                                 Thread.sleep(3000);
                             }
