@@ -2,12 +2,12 @@
 
 var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'ngCookies', 'angularFileUpload']);
 
-eventAdminApp.directive('errSrc', function ($rootScope) {
+eventAdminApp.directive('errSrc', function($rootScope) {
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
 
     return {
-        link: function (scope, element, attrs) {
-            element.bind('error', function () {
+        link: function(scope, element, attrs) {
+            element.bind('error', function() {
                 if (attrs.src != attrs.errSrc) {
                     attrs.$set('src', attrs.errSrc);
                 }
@@ -80,11 +80,10 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', '$cookies', '
         startEvent: function (requestAction) {
 
             var eventHashtag = $('#eventHashtag').val();
-            var baseUrl = "http://localhost:8080";
 
             return $http({
                 method: 'POST',
-                url: baseUrl + '/api/events',
+                url: '/api/events',
                 data: {
                     "hashTags": [eventHashtag]
                 },
@@ -95,8 +94,135 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', '$cookies', '
             }).error(function () {
                 console.log("Request failed");
             });
-        }
+        },
 
+        // GET : Trusted Users
+        getTrustedUsers: function (eventId) {
+
+            $rootScope.getTrustedUsersUrl = 'http://localhost:8080/api/events/' + eventId + '/trustedUsers';
+
+            return $http({
+                method: 'GET',
+                url: $rootScope.getTrustedUsersUrl,
+            }).success(function () {
+                console.log("Request successed");
+            }).error(function () {
+                console.log("Request failed");
+            });
+        },
+
+        // PUT : Trusted Users
+        updateTrustedUsers: function (eventId, trustedScreenName) {
+
+            $rootScope.updateTrustedUsersUrl = 'http://localhost:8080/api/events/' + eventId + '/trustedUsers/' + trustedScreenName;
+
+            return $http({
+                method: 'PUT',
+                url: $rootScope.updateTrustedUsersUrl,
+            }).success(function () {
+                console.log("Request successed");
+            }).error(function () {
+                console.log("Request failed");
+            });
+        },
+
+
+        // DELETE : Trusted Users
+        deleteTrustedUser: function (eventId, trustedScreenName) {
+
+            $rootScope.updateTrustedUsersUrl = 'http://localhost:8080/api/events/' + eventId + '/trustedUsers/' + trustedScreenName;
+
+            return $http({
+                method: 'DELETE',
+                url: $rootScope.updateTrustedUsersUrl,
+            }).success(function () {
+                console.log("Request successed");
+            }).error(function () {
+                console.log("Request failed");
+            });
+        },
+
+        // GET : Blocked Users
+        getBlockedUsers: function (eventId) {
+
+            $rootScope.getBlockedUsersUrl = 'http://localhost:8080/api/events/' + eventId + '/blockedUsers';
+
+            return $http({
+                method: 'GET',
+                url: $rootScope.getBlockedUsersUrl,
+            }).success(function () {
+                console.log("Request successed");
+            }).error(function () {
+                console.log("Request failed");
+            });
+        },
+
+        // PUT : Trusted Users
+        updateBlockedUsers: function (eventId, blockedScreenName) {
+
+            $rootScope.updateBlockedUsersUrl = 'http://localhost:8080/api/events/' + eventId + '/blockedUsers/' + blockedScreenName;
+
+            return $http({
+                method: 'PUT',
+                url: $rootScope.updateBlockedUsersUrl,
+            }).success(function () {
+                console.log("Request successed");
+            }).error(function () {
+                console.log("Request failed");
+            });
+        },
+
+
+        // DELETE : Trusted Users
+        deleteBlockedUser: function (eventId, blockedScreenName) {
+
+            $rootScope.updateBlockedUsersUrl = 'http://localhost:8080/api/events/' + eventId + '/blockedUsers/' + blockedScreenName;
+
+            return $http({
+                method: 'DELETE',
+                url: $rootScope.updateBlockedUsersUrl,
+            }).success(function () {
+                console.log("Request successed");
+            }).error(function () {
+                console.log("Request failed");
+            });
+        },
+
+        // PUT : Update Layout Configuration
+        updateViewOptions: function (eventId, userColor, userSize, userScreen) {
+
+            $rootScope.updateViewOptionsUrl = 'http://localhost:8080/api/events/' + eventId + '/config';
+
+            return $http({
+                method: 'PUT',
+                url: $rootScope.updateViewOptionsUrl,
+                data: {
+                    "backgroundColor": userColor,
+                    "screens": [userScreen],
+                    "size": userSize
+
+                },
+            }).success(function () {
+                console.log("Request successed");
+            }).error(function () {
+                console.log("Request failed");
+            });
+        },
+
+        // PUT : Update Layout Configuration
+        getViewOptions: function (eventId) {
+
+            $rootScope.getViewOptionsUrl = 'http://localhost:8080/api/events/' + eventId + '/config';
+
+            return $http({
+                method: 'GET',
+                url: $rootScope.getViewOptionsUrl,
+            }).success(function () {
+                console.log("Request successed");
+            }).error(function () {
+                console.log("Request failed");
+            });
+        }
     }
 
 }]);
@@ -158,6 +284,10 @@ eventAdminApp.factory('shareData', function ($rootScope, $cookies, $cookieStore,
 
     $cookies.userScreen = $rootScope.selection;
 
+//    $rootScope.layoutScreens = ["/live", "/top", "/overtime"];
+//    $rootScope.userScreen = $rootScope.layoutScreens;
+//    $cookies.userScreen = $rootScope.userScreen;
+
     return {
         userColor: function () {
             return $cookies.userColor;
@@ -181,8 +311,11 @@ eventAdminApp.controller("liveViewCtrl", function ($scope, $rootScope, $cookies,
 
 });
 
-
+/*
 // Trusted Users Handlers
+// Controller : Create Trusted Users Modal Instance
+// Controller : Populate Trusted Users Data
+*/
 eventAdminApp.controller('trustedUsersModalCtrl', function ($scope, $modal) {
     $scope.open = function () {
         var modalInstance = $modal.open({
@@ -200,37 +333,27 @@ eventAdminApp.controller('trustedUsersCtrl', ['$rootScope', '$scope', '$http', '
         $scope.trustedUsers = [];
         var eventID = $cookies.eventID;
 
-        var requestAction = "GET";
-        var apiUrl = '/api/events/' + eventID + '/trustedUsers';
-        var requestData = "";
-
-        // GET : Trusted Users
-        getData.fetchData(requestAction, apiUrl, requestData)
+        getData.getTrustedUsers(eventID)
             .then(function (response) {
                 $scope.trustedUsers = response.data;
             })
 
-        // PUT : Trusted User
+        // Add Approved Users
         $scope.updateTrustedUsers = function () {
+
             var screenName = $scope.trustedUsername;
-            var requestAction = "PUT";
-            var apiUrl = '/api/events/' + eventID + '/trustedUsers/' + screenName;
-            var requestData = "";
-            getData.fetchData(requestAction, apiUrl, requestData)
+            getData.updateTrustedUsers(eventID, screenName)
                 .then(function (response) {
                     $scope.trustedUsers.push($scope.trustedUsername);
                 })
         }
 
-        // DELETE : Trusted User
+        // Remove Approved Users
         $scope.deleteTrustedUsername = function (index) {
 
             var screenName = $scope.trustedUsers[index];
-            var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
-            var requestData = "";
 
-            getData.fetchData(requestAction, apiUrl, requestData, screenName)
+            getData.deleteTrustedUser(eventID, screenName)
                 .then(function (response) {
                     $scope.trustedUsers.splice(index, 1);
                 })
@@ -241,8 +364,12 @@ eventAdminApp.controller('trustedUsersCtrl', ['$rootScope', '$scope', '$http', '
         };
 }]);
 
-
+/*
 // Blocked Users Handlers
+// Controller : Create Trusted Users Modal Instance
+// Controller : Populate Trusted Users Data
+*/
+
 eventAdminApp.controller('blockedUsersModalCtrl', function ($scope, $modal) {
     $scope.open = function () {
         var modalInstance = $modal.open({
@@ -260,41 +387,30 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
         $rootScope.blockedUsers = [];
         var eventID = $cookies.eventID;
 
-        var requestAction = "GET";
-        var apiUrl = '/api/events/' + eventID + '/blockedUsers';
-        var requestData = "";
-
-        // GET : Blocked Users
-        getData.fetchData(requestAction, apiUrl, requestData)
+        getData.getBlockedUsers(eventID)
             .then(function (response) {
                 $scope.blockedUsers = response.data;
+                console.log($scope.blockedUsers);
             })
 
-        // PUT : Blocked User
+        // Add Approved Users
         $scope.updateBlockedUsers = function () {
             var screenName = $scope.blockedUsername;
-            var requestAction = "PUT";
-            var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
-            var requestData = "";
-            getData.fetchData(requestAction, apiUrl, requestData)
+            getData.updateBlockedUsers(eventID, screenName)
                 .then(function (response) {
                     $scope.blockedUsers.push($scope.blockedUsername);
-            })
+                })
         }
 
-        // DELETE : Trusted User
+        // Remove Approved Users
         $scope.deleteBlockedUsername = function (index) {
 
             var screenName = $scope.blockedUsers[index];
 
-            var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID + '/trustedUsers/' + screenName;
-            var requestData = "";
-
-            getData.fetchData(requestAction, apiUrl, requestData, screenName)
+            getData.deleteBlockedUser(eventID, screenName)
                 .then(function (response) {
                     $scope.blockedUsers.splice(index, 1);
-            })
+                })
         }
 
         $scope.cancel = function () {
@@ -306,38 +422,27 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
 eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
    function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
 
-        var eventID = $cookies.eventID;
-        $rootScope.eventHashtag = $cookies.eventHashtag;
-
+       var eventID = $cookies.eventID;
+       $rootScope.eventHashtag = $cookies.eventHashtag;
 
        $scope.updateBlockedUsers = function (screenName, userPicture) {
 
-           var requestAction = "PUT";
-           var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
-           var requestData = "";
+            // create the notification
+            var notification = new NotificationFx({
+                message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to blocked users list.</p></div>',
+                layout: 'other',
+                ttl: 6000,
+                effect: 'thumbslider',
+                type: 'error'
+            });
 
-           // create the notification
-           var notification = new NotificationFx({
-               message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to blocked users list.</p></div>',
-               layout: 'other',
-               ttl: 6000,
-               effect: 'thumbslider',
-               type: 'success'
-           });
-
-           getData.fetchData(requestAction, apiUrl, requestData)
-               .then(function (response) {
-               // show the notification
-               notification.show();
-           })
-
-       }
+            getData.updateBlockedUsers(eventID, screenName)
+                .then(function (response) {
+                notification.show();
+                })
+        }
 
         $scope.updateTrustedUsers = function (screenName, userPicture) {
-
-            var requestAction = "PUT";
-            var apiUrl = '/api/events/' + eventID + '/trustedUsers/' + screenName;
-            var requestData = "";
 
             // create the notification
             var notification = new NotificationFx({
@@ -348,12 +453,11 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 type: 'success'
             });
 
-            getData.fetchData(requestAction, apiUrl, requestData)
+            getData.updateTrustedUsers(eventID, screenName)
                 .then(function (response) {
                     // show the notification
                     notification.show();
                 })
-
         }
 
 
@@ -370,7 +474,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         $scope.tweet = {};
 
         $scope.startEventHandler = function (action) {
-            $scope.$broadcast();
+            $scope.$broadcast( );
             $scope.timerRunning = true;
 
             getData.startEvent()
@@ -389,7 +493,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
         // Listen to new message
 
-        $scope.eventSourceUrl = "http://localhost:8080/api/adminLiveTweets?uuid=" + $cookies.eventID;
+       $scope.eventSourceUrl = "http://localhost:8080/api/adminLiveTweets?uuid=" + $cookies.eventID;
 
 
         var source = new EventSource($scope.eventSourceUrl);
@@ -515,28 +619,17 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         }
 
         // Update Config
-        $scope.updateViewOptions = function (userColor, userSize, userScreen) {
-            var eventID = $cookies.eventID;
-            var requestAction = "PUT";
-            var apiUrl = '/api/events/' + eventID + '/config';
-
+        $scope.updateViewOptions = function () {
             var eventID = $cookies.eventID;
             var userColor = shareData.userColor();
             var userSize = shareData.userSize();
             var userScreen = shareData.userScreen();
 
-            var requestData = {
-                "backgroundColor": userColor,
-                "screens": [userScreen],
-                "size": userSize
-
-            };
-            getData.fetchData(requestAction, apiUrl, requestData)
+            getData.updateViewOptions(eventID, userColor, userSize, userScreen)
                 .then(function (response) {
-                console.log("Options Updated");
-            })
+                    console.log("Options Updated");
+                })
         }
-
 
 }]);
 
