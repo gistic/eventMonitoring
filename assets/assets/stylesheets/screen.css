@@ -12902,6 +12902,8 @@ header .logo a:hover, header .logo a:focus {
 
 /* line 1, ../sass/_/_modules/_tweet.scss */
 .tweet {
+  direction: rtl;
+  text-align: right;
   background: #ffffff;
   padding: 15px;
   border: 1px solid #cdd2d4;
@@ -12910,28 +12912,33 @@ header .logo a:hover, header .logo a:focus {
   border-radius: 5px;
   text-align: left;
 }
-/* line 7, ../sass/_/_modules/_tweet.scss */
+/* line 9, ../sass/_/_modules/_tweet.scss */
 .tweet img {
   width: 72px;
   height: 72px;
 }
-/* line 11, ../sass/_/_modules/_tweet.scss */
+/* line 13, ../sass/_/_modules/_tweet.scss */
 .tweet h6 {
   font-weight: 400px;
   font-size: 21px;
 }
-/* line 15, ../sass/_/_modules/_tweet.scss */
+/* line 17, ../sass/_/_modules/_tweet.scss */
 .tweet .tweet-content {
   width: 60%;
 }
-/* line 18, ../sass/_/_modules/_tweet.scss */
+/* line 20, ../sass/_/_modules/_tweet.scss */
 .tweet.tweet:first-child {
   opacity: 1;
 }
-/* line 21, ../sass/_/_modules/_tweet.scss */
+/* line 23, ../sass/_/_modules/_tweet.scss */
 .tweet.tweet.stared {
   position: relative;
   border: 5px solid #1d408d;
+}
+/* line 27, ../sass/_/_modules/_tweet.scss */
+.tweet.lang-en {
+  direction: ltr;
+  text-align: left;
 }
 
 /* line 1, ../sass/_/_modules/_footer.scss */
@@ -13113,8 +13120,7 @@ footer .social-links a:hover, footer .social-links a:focus {
   color: #ffffff;
 }
 
-/* IF ARABIC */
-/* line 156, ../sass/_/_modules/_live-view.scss */
+/* line 142, ../sass/_/_modules/_live-view.scss */
 .media,
 .media-body {
   overflow: visible;

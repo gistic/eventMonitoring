@@ -87,7 +87,10 @@ eventViewsApp.config(function ($stateProvider, $urlRouterProvider) {
 // Factory : Get : Live tweets - Top active peopel - tweets over time
 eventViewsApp.factory('getEventData', ['$http', '$rootScope','$cookies',function ($http, $rootScope,$cookies) {
         return {
-            dataRequest: function (requestMethod, requestUrl, requestParamaters) {
+            dataRequest: function (requestMethod, apiUrl, requestParamaters) {
+
+                var requestUrl = $rootScope.baseUrl + apiUrl;
+
                 return $http({
                     method: requestMethod,
                     url: requestUrl,
@@ -129,7 +132,11 @@ eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$c
                                             function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window) {
 
         $scope.init = function () {
-            $scope.liveTweetsUrl = "http://localhost:8080/api/liveTweets?uuid=" + $cookies.eventID;
+
+            var apiUrl = "/api/liveTweets?uuid=" + $cookies.eventID;
+            var requestUrl = $rootScope.baseUrl + apiUrl;
+
+            $scope.liveTweetsUrl = requestUrl;
             var source = new EventSource($scope.liveTweetsUrl);
             var tweets = {};
             $scope.allTweets = [];
@@ -170,7 +177,7 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $ti
         $timeout(function () {
             $scope.fetchData();
             $scope.intervalFunction();
-        }, 1000000)
+        }, 7000)
     };
     $scope.intervalFunction();
 

@@ -38,6 +38,10 @@ eventAdminApp.filter('reverseQueue', function () {
     };
 });
 
+eventAdminApp.run(function($window, $rootScope){
+    $rootScope.baseUrl = $window.location. origin;
+})
+
 // Angular factory allwos you to share data between controllers and pages
 eventAdminApp.factory('appVar', function ($rootScope) {
     return {
@@ -57,15 +61,13 @@ eventAdminApp.factory('appVar', function ($rootScope) {
 
 
 /* Factory to post the requestes */
-eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', '$cookies', '$cookieStore', function ($http, $rootScope, $cookies, $cookieStore, appVar) {
+eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', '$cookies', '$cookieStore','$location', '$window', function ($http, $rootScope, appVar, $cookies, $cookieStore,$location, $window) {
 
     return {
 
         fetchData: function (requestAction, apiUrl, requestData) {
 
-            var baseUrl = "http://localhost:8080";
-            var requestUrl = baseUrl + apiUrl;
-
+            var requestUrl = $rootScope.baseUrl + apiUrl;
             return $http({
                 method: requestAction,
                 url: requestUrl,
@@ -80,11 +82,11 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', '$cookies', '
         startEvent: function (requestAction) {
 
             var eventHashtag = $('#eventHashtag').val();
-            var baseUrl = "http://localhost:8080";
+            var requestUrl = $rootScope.baseUrl + '/api/events';
 
             return $http({
                 method: 'POST',
-                url: baseUrl + '/api/events',
+                url: requestUrl,
                 data: {
                     "hashTags": [eventHashtag]
                 },
@@ -389,7 +391,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
         // Listen to new message
 
-        $scope.eventSourceUrl = "http://localhost:8080/api/adminLiveTweets?uuid=" + $cookies.eventID;
+        $scope.eventSourceUrl = $rootScope.baseUrl + "/api/adminLiveTweets?uuid=" + $cookies.eventID;
 
 
         var source = new EventSource($scope.eventSourceUrl);
