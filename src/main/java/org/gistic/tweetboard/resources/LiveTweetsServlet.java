@@ -19,6 +19,11 @@ public class LiveTweetsServlet extends EventSourceServlet {
             String uuid = req.getParameter("uuid");
             private boolean connected;
             public void onOpen(final Emitter emitter) throws IOException {
+                if (uuid == null || uuid.equalsIgnoreCase("undefined")) {
+                    emitter.data("wrong uuid");
+                    emitter.close();
+                    return;
+                }
                 connected = true;
                 System.out.println("Live tweets connection opened");
                 while (connected) {
@@ -43,7 +48,7 @@ public class LiveTweetsServlet extends EventSourceServlet {
                         e.printStackTrace();
                     }
                 }
-                emitter.close();
+                //emitter.close();
             }
             public void onClose() {
                 connected = false;
