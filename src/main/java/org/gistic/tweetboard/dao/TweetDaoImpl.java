@@ -9,6 +9,7 @@ import org.gistic.tweetboard.representations.EventMetaList;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
@@ -105,7 +106,8 @@ public class TweetDaoImpl implements TweetDao {
             String statusId = jedis.rpop(getArrivedNotSentListKey(uuid));
             if (statusId == null) return null;
             return getStatus(statusId);
-        }
+        } catch (JedisConnectionException e) { LoggerFactory.getLogger(this.getClass()).warn("DB access: error in front end hanging request"); }
+        return null;
     }
 
     @Override

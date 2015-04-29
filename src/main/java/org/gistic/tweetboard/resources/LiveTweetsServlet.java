@@ -5,6 +5,7 @@ import org.eclipse.jetty.servlets.EventSourceServlet;
 import org.gistic.tweetboard.eventmanager.Event;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
+import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 import twitter4j.TwitterObjectFactory;
 
@@ -37,7 +38,10 @@ public class LiveTweetsServlet extends EventSourceServlet {
                             }else{
                                 try {
                                     emitter.data(status.getStatusString().replace("_normal", ""));
-                                } catch (Exception ex) { break; }
+                                } catch (IOException ex) {
+                                    LoggerFactory.getLogger(this.getClass()).warn("could not stream to liveTweets, check connection on client");
+                                    break;
+                                }
                                 Thread.sleep(3000);
                             }
                         }else{
