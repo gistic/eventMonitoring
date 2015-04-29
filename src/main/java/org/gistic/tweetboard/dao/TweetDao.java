@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.dao;
 
 import org.gistic.tweetboard.representations.EventConfig;
+import org.gistic.tweetboard.representations.EventMetaList;
 import org.joda.time.DateTime;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
@@ -23,7 +24,7 @@ public interface TweetDao {
     //void insetIn
     void addNewEventToList(String uuid);
 
-    void setDefaultEventProperties(String uuid);
+    void setDefaultEventProperties(String uuid, String[] hashTags);
 
     void addToArrived(String uuid, Status tweet, String statusString);
 
@@ -64,4 +65,6 @@ public interface TweetDao {
     void approveAllExistingTweetsByUser(String uuid, String screenName);
 
     String getProfileImageUrl(String element);
+
+    EventMetaList getEventMetaList();
 }
