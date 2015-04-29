@@ -72,9 +72,9 @@ public class TweetDataLogic {
 //        tweetDao.addToSentForApproval(uuid, id);
 //    }
 
-    public void createNewEvent() {
+    public void createNewEvent(String[] hashTags) {
         tweetDao.addNewEventToList(uuid);
-        tweetDao.setDefaultEventProperties(uuid);
+        tweetDao.setDefaultEventProperties(uuid, hashTags);
     }
 
     public InternalStatus getOldestTweetNotSentForApproval() {

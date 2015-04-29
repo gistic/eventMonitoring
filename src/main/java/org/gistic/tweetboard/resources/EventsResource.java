@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.resources;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.EventMap;
@@ -189,5 +190,13 @@ public class EventsResource {
             result.put(TweetsPeriod .getJsonObject());
         }
         return result.toString();
+    }
+
+    @GET
+    @Path("/superAdmin/")
+    public EventMetaList getSuperAdmin() {
+        TweetDao dao = new TweetDaoImpl();
+        EventMetaList list = dao.getEventMetaList();
+        return list;
     }
 }

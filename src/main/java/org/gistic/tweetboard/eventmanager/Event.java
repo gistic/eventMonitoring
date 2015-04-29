@@ -34,7 +34,7 @@ public class Event {
             System.out.println("Error: Failure in starting twitter stream logic!");
             e.printStackTrace();
         }
-        tweetDataLogic.createNewEvent();
+        tweetDataLogic.createNewEvent(hashTags);
     }
 
     public void delete() {
