@@ -66,15 +66,15 @@
     .view--live-tweets {
         .tweets-container {
             margin: 0 auto;
-            height: 375px;
+            height: 750px;
         }
         .media-heading {
             color: $blue;
-            font-size: $font-huge;
+            font-size: 48px;
             line-height: 30px !important;
         }
         .tweet-text {
-            font-size: $font-large;
+            font-size: 48px;
         }
 
     }

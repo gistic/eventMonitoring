@@ -13067,17 +13067,17 @@ footer .social-links a:hover, footer .social-links a:focus {
 /* line 67, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--live-tweets .tweets-container {
   margin: 0 auto;
-  height: 375px;
+  height: 750px;
 }
 /* line 71, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--live-tweets .media-heading {
   color: #2493de;
-  font-size: 32px;
+  font-size: 48px;
   line-height: 30px !important;
 }
 /* line 76, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--live-tweets .tweet-text {
-  font-size: 21px;
+  font-size: 48px;
 }
 /* line 84, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--top-people .tweets-container {

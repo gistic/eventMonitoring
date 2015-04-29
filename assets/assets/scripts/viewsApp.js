@@ -112,15 +112,15 @@ eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location,get
         $scope.eventHashtag = getEventData.getEventHashTag();
 
         $scope.pages = ["/live", "/top", "/overtime"]
-        $scope.pagesTimeout = [420000, 60000,60000]
+        $scope.pagesTimeout = [3000, 3000,3000]
 
         $scope.pageIndex = 0;
 
         $scope.intervalFunction = function () {
             $timeout(function () {
                 $location.path($scope.pages[$scope.pageIndex]);
-                $scope.pageIndex = ($scope.pageIndex + 1)%3;
                 $scope.intervalFunction();
+                $scope.pageIndex = ($scope.pageIndex + 1)%3;
             }, $scope.pagesTimeout[$scope.pageIndex])
         };
         $scope.intervalFunction();
@@ -154,6 +154,8 @@ eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$c
 // Controller : Top People View CTRL
 eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $timeout, getEventData) {
     
+    $scope.init = function () {
+    
     $scope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
     
     $scope.fetchData = function () {
@@ -161,7 +163,7 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $ti
         var eventID = $cookies.eventID;
         var requestAction = "GET";
         var apiUrl = '/api/events/' + eventID + '/topUsers';
-        var topUsersCount = 6
+        var topUsersCount = 5
         var requestData = {
             "count" : topUsersCount
         };
@@ -173,13 +175,16 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $ti
         });
     }
     $scope.fetchData();
-    $scope.intervalFunction = function () {
-        $timeout(function () {
-            $scope.fetchData();
-            $scope.intervalFunction();
-        }, 7000)
-    };
-    $scope.intervalFunction();
+        
+//    $scope.intervalFunction = function () {
+//        $timeout(function () {
+//            $scope.fetchData();
+//            $scope.intervalFunction();
+//        }, 30000)
+//    };
+//    $scope.intervalFunction();
+        
+    }
 
 });
 
@@ -323,12 +328,12 @@ eventViewsApp.controller('TweetsChatCtr', function ($scope, $http,$cookies, $tim
     $scope.fetchData();
 
 
-    $scope.intervalFunction = function () {
-        $timeout(function () {
-            $scope.fetchData();
-            $scope.intervalFunction();
-        }, 1000)
-    };
-    $scope.intervalFunction();
+//    $scope.intervalFunction = function () {
+//        $timeout(function () {
+//            $scope.fetchData();
+//            $scope.intervalFunction();
+//        }, 300000)
+//    };
+//    $scope.intervalFunction();
 
 });

@@ -229,7 +229,7 @@ eventAdminApp.controller('trustedUsersCtrl', ['$rootScope', '$scope', '$http', '
 
             var screenName = $scope.trustedUsers[index];
             var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
+            var apiUrl = '/api/events/' + eventID + '/trustedUsers/' + screenName;
             var requestData = "";
 
             getData.fetchData(requestAction, apiUrl, requestData, screenName)
@@ -290,7 +290,7 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
             var screenName = $scope.blockedUsers[index];
 
             var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID + '/trustedUsers/' + screenName;
+            var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
             var requestData = "";
 
             getData.fetchData(requestAction, apiUrl, requestData, screenName)
@@ -304,6 +304,22 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
         };
 }]);
 
+/* startEventHandler controller for the admin front page */
+eventAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
+   function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
+       
+       var requestAction = "GET";
+       var apiUrl = '/api/events/superAdmin/';
+       var requestData = "";
+
+       getData.fetchData(requestAction, apiUrl, requestData)
+           .then(function (response) {
+                $scope.serverEvents = response.data;
+                    consoel.log($scope.serverEvents);
+       })
+   
+}]);       
+       
 /* startEventHandler controller for the admin front page */
 eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
    function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
@@ -331,17 +347,20 @@ eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', 
 
 
 /* Main controller for the application */
-eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
-   function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
+eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData', '$anchorScroll',
+                                            function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData, $anchorScroll) {
 
         var eventID = $cookies.eventID;
         $rootScope.eventHashtag = $cookies.eventHashtag;
 
-        $scope.updateBlockedUsers = function (screenName, userPicture) {
+        $scope.updateBlockedUsers = function (e, screenName, userPicture) {
 
             var requestAction = "PUT";
             var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
             var requestData = "";
+
+            var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
+            $("#" + tweetId).remove();
 
             // create the notification
             var notification = new NotificationFx({
@@ -360,11 +379,14 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
         }
 
-        $scope.updateTrustedUsers = function (screenName, userPicture) {
+        $scope.updateTrustedUsers = function (e, screenName, userPicture) {
 
             var requestAction = "PUT";
             var apiUrl = '/api/events/' + eventID + '/trustedUsers/' + screenName;
             var requestData = "";
+
+            var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
+            $("#" + tweetId).remove();
 
             // create the notification
             var notification = new NotificationFx({
@@ -401,7 +423,6 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         $scope.startEventSource = function () {
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/adminLiveTweets?uuid=" + $cookies.eventID;
 
-
             var source = new EventSource($scope.eventSourceUrl);
 
             source.addEventListener('message', function (response) {
@@ -434,6 +455,8 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         // Load more tweets handler
         $scope.loadMoreTweets = function () {
             $scope.pagesShown = $scope.pagesShown + 1;
+            $location.hash('toApproveDiv');
+            $anchorScroll();
         };
 
         // Remaining tweets in queue

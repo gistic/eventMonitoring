@@ -2,12 +2,12 @@
 
     <div class="view-header">
         <img class="event-logo" src="assets/images/taghreed.png" alt="">
-        <strong class="">Hashtag : #{{eventHashtag}}</strong>
+        <strong class="">Hashtag : {{eventHashtag}}</strong>
     </div>
 
     <div class="tweets-container">
 
-        <div class="media tweet clearfix fx-fade-down fx-easing-bounce fx-speed-1000" ng-class="{'lang-en' : tweet.lang == 'en', 'stared' : tweet.starred == true, 'showd' : display == block }" ng-repeat="tweet in allTweets | reverse | limitTo : 3" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
+        <div class="media tweet clearfix fx-fade-down fx-easing-bounce fx-speed-1000" ng-class="{'lang-en' : tweet.lang == 'en', 'stared' : tweet.starred == true, 'showd' : display == block }" ng-repeat="tweet in allTweets | reverse | limitTo : 4" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
 
             <span ng-show="{{tweet.starred == true}}">
                 <span class="star-tweet">
