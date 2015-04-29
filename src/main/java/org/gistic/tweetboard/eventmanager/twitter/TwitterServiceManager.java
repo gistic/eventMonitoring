@@ -23,6 +23,7 @@ public class TwitterServiceManager {
     }
 
     public static void stop(String uuid) throws Exception {
+        //if no more running services (event reader streams from twitter)
         if (twitterService.stop(uuid)) twitterService = null;
     }
 }

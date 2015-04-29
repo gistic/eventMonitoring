@@ -1,16 +1,21 @@
 package org.gistic.tweetboard.dao;
 
+import org.apache.commons.lang.StringUtils;
+import org.eclipse.jetty.util.StringUtil;
 import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.representations.EventConfig;
+import org.gistic.tweetboard.representations.EventMeta;
+import org.gistic.tweetboard.representations.EventMetaList;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
 
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by sohussain on 4/12/15.
@@ -24,6 +29,8 @@ public class TweetDaoImpl implements TweetDao {
     final String SIZE_DEAFULT = "normal";
     final String SCREENS_KEY = "screens";
     final String SCREENS_DEFAULT = "[\"/live\", \"/top\", \"/overtime\"]";
+    final String START_TIME_KEY = "startTime";
+    final String HASHTAGS_KEY = "hashTags";
 
     public TweetDaoImpl() {
         //this.jedis = jedis;
@@ -39,11 +46,15 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public void setDefaultEventProperties(String uuid) {
+    public void setDefaultEventProperties(String uuid, String[] hashTags) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hset(uuid, BG_COLOR_KEY, BG_COLOR_DEFAULT);
             jedis.hset(uuid, SIZE_KEY, SIZE_DEAFULT);
             jedis.hset(uuid, SCREENS_KEY, SCREENS_DEFAULT);
+            Date d =new Date();
+            String time = d.toLocaleString();
+            jedis.hset(uuid, START_TIME_KEY, time);
+            jedis.hset(uuid, HASHTAGS_KEY, StringUtils.join(hashTags, ","));
         }
     }
 
@@ -95,7 +106,8 @@ public class TweetDaoImpl implements TweetDao {
             String statusId = jedis.rpop(getArrivedNotSentListKey(uuid));
             if (statusId == null) return null;
             return getStatus(statusId);
-        }
+        } catch (JedisConnectionException e) { LoggerFactory.getLogger(this.getClass()).warn("DB access: error in front end hanging request"); }
+        return null;
     }
 
     @Override
@@ -230,6 +242,19 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
+    public EventMetaList getEventMetaList() {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            List<String> list = jedis.lrange(All_EVENTS_KEY, 0, -1);
+            List<EventMeta> metaList = list.stream()
+                    .map(event -> new EventMeta(event,
+                            jedis.hget(event, START_TIME_KEY), jedis.hget(event, HASHTAGS_KEY)))
+                    .collect(Collectors.toList());
+            EventMeta[] metaArray = metaList.stream().toArray(EventMeta[]::new);
+            return new EventMetaList(metaArray);
+        }
+    }
+
+    @Override
     public void blockAllExistingTweetsByUser(String uuid, String screenName) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             String userId = jedis.get(screenName);
@@ -247,6 +272,7 @@ public class TweetDaoImpl implements TweetDao {
             jedis.lrem(All_EVENTS_KEY, 0, uuid);
             jedis.del(uuid, getArrivedNotSentListKey(uuid), getApprovedSentToClientListKey(uuid),
                     getSentForApprovalListKey(uuid));
+            //jedis.hdel(uuid);
         }
     }
 

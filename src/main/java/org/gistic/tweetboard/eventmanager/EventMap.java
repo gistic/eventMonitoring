@@ -30,6 +30,7 @@ public class EventMap {
 
     public static void delete(String uuid) {
         Event e = allEvents.get(uuid);
+        allEvents.remove(uuid);
         e.delete();
     }
 }
