@@ -171,7 +171,7 @@
                 <button type="button" class="btn btn-load-more" ng-show="loadMoreButton()" ng-click="loadMoreTweets()"><strong><i class="fa fa-arrow-up"></i></strong> {{remainingTweetsCount}} New Tweets
                 </button>
 
-                <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit() | reverseQueue">
+                <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit()">
                     <div class="pull-left">
                         <img ng-src="{{tweet.user.profile_image_url_https}}" alt="" class="media-object">
                     </div>
@@ -191,7 +191,7 @@
                     <div class="btn-toolbar pull-right tweet-options" role="toolbar">
 
                         <div class="btn-group " role="group">
-                            <button type="button" class="btn btn-default" ng-click="approveTweet($event)"><i class="icon-check"></i>
+                            <button type="button" class="btn btn-default" data-id="{{$index}}" ng-click="approveTweet($event)"><i class="icon-check"></i>
                             </button>
                             <button type="button" class="btn btn-default" ng-click="removeTweet($event)"><i class="icon-cross"></i>
                             </button>

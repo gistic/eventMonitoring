@@ -451,7 +451,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 $scope.tweet = JSON.parse(response.data);
 
                 $scope.$apply(function () {
-                    $scope.tweetsQueue.push($scope.tweet);
+                    $scope.tweetsQueue.unshift($scope.tweet);
                     $scope.tweetsCount = $scope.tweetsQueue.length;
                 }, false);
             });
@@ -494,7 +494,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
             var requestAction = "POST";
             var apiUrl = '/api/events/' + eventID + '/blockedTweets/' + tweetId;
             var requestData = "";
-
+            
             getData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
                     console.log("Tweet Removed");
@@ -506,24 +506,29 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         // Approve Tweet
         $scope.approvedTweetsCount = 0;
 
-        $scope.approveTweet = function (e) {
-
+        $scope.approveTweet = function (e, $index) {
+            
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
+            var tweetIndex = $(e.currentTarget).attr('data-id');
+            
             var eventID = $cookies.eventID;
             var requestAction = "POST";
             var apiUrl = '/api/events/' + eventID + '/approvedTweets/' + tweetId;
             var requestData = "";
-
+            
+            
             getData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    console.log("Tweet Approved");
-                    $("#" + tweetId).remove();
+                .success(function (response) {
+                $scope.tweetsQueue.splice(tweetIndex, 1);
                     $scope.approvedTweetsCount++;
+                }).error(function (){
+                    console.log("#");
                 })
         }
 
         // Approve Tweet As Starred
         $scope.approveStarred = function (e) {
+            //            starred = true
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
 
             var dataObj = {

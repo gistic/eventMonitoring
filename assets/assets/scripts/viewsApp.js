@@ -72,11 +72,6 @@ eventViewsApp.config(function ($stateProvider, $urlRouterProvider) {
             url: '/overtime',
             templateUrl: '../../views/tweets-chart.html',
             controller: 'TweetsChatCtr'
-        },
-        "media": {
-            url: '/media',
-            templateUrl: '../../views/media.html',
-            controller: 'liveTweetsCtrl'
         }
     };
 
@@ -112,48 +107,77 @@ eventViewsApp.factory('getEventData', ['$http', '$rootScope','$cookies',function
 ]);
 
 // Controller : Automatice views pages rotuing
-eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location,getEventData) {
+eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location,getEventData, createEventSource) {
 
         $scope.eventHashtag = getEventData.getEventHashTag();
 
         $scope.pages = ["/live", "/top", "/overtime"]
-        $scope.pagesTimeout = [120000, 30000,30000]
+        $scope.pagesTimeout = [12000, 12000,12000]
 
         $scope.pageIndex = 0;
 
         $scope.intervalFunction = function () {
             $timeout(function () {
-                $location.path($scope.pages[$scope.pageIndex]);
+                if (!createEventSource.closed) {
+                    createEventSource.closeEventSource();
+                }
                 $scope.intervalFunction();
                 $scope.pageIndex = ($scope.pageIndex + 1)%3;
+                $location.path($scope.pages[$scope.pageIndex]);
             }, $scope.pagesTimeout[$scope.pageIndex])
         };
         $scope.intervalFunction();
 
 });
 
-// Controller : Live Tweets View CTRL
-eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window',
-                                            function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window) {
 
-        $scope.init = function () {
-
+eventViewsApp.factory('createEventSource', function($rootScope, $cookies){
+    
+    this.eventSourceObject;
+    this.closed;
+    
+    return {
+        createSource: function() {
             var apiUrl = "/api/liveTweets?uuid=" + $cookies.eventID;
             var requestUrl = $rootScope.baseUrl + apiUrl;
+            $rootScope.liveTweetsUrl = requestUrl;
+            this.eventSourceObject = new EventSource($rootScope.liveTweetsUrl);
+            this.closed = false;
+            return this.eventSourceObject;
+        },
+        getSourceObject: function() {
+            return this.eventSourceObject || this.createSource();
+        },
+        closeEventSource: function(){
+            this.eventSourceObject.close();
+            this.eventSourceObject = undefined;
+            this.closed = true;
+            return;
+        }
+    }
 
-            $scope.liveTweetsUrl = requestUrl;
-            var source = new EventSource($scope.liveTweetsUrl);
+
+});
+
+// Controller : Live Tweets View CTRL
+eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window','createEventSource',
+                                            function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, createEventSource) {
+
+        $scope.init = function () {
+            
+            var source = createEventSource.getSourceObject();
+            
             var tweets = {};
             $scope.allTweets = [];
 
             source.addEventListener('message', function (response) {
                 $scope.tweet = JSON.parse(response.data);
-                if ($scope.tweet.entities.media == 0) {
-//                    console.log($scope.tweet.entities.media.media_url_https);
-                    console.log("Empty");
-                } else {
-                    console.log($scope.tweet.entities.media);
-                }
+//                if ($scope.tweet.entities.media.length == 0) {
+////                    console.log($scope.tweet.entities.media.media_url_https);
+//                    console.log("Empty");
+//                } else {
+//                    console.log($scope.tweet.entities.media.id);
+//                }
                 $scope.$apply(function () {
                     $scope.allTweets.push($scope.tweet);
                 });
@@ -334,12 +358,12 @@ eventViewsApp.controller('TweetsChatCtr', function ($scope, $http,$cookies, $tim
     }
     $scope.fetchData();
 
-
+//
 //    $scope.intervalFunction = function () {
 //        $timeout(function () {
 //            $scope.fetchData();
 //            $scope.intervalFunction();
-//        }, 300000)
+//        }, 5000)
 //    };
 //    $scope.intervalFunction();
 
