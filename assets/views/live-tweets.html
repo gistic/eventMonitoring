@@ -14,18 +14,28 @@
                 <img src="assets/images/star-icon.png" alt="">
                 </span>
             </span>
-
-            <div class="user-img pull-left">
+            
+            <div class="row">
+            <div class="user-img pull-right">
                 <img lazy-load ll-src="{{tweet.user.profile_image_url }}" on-error-src="{{defultImage}}" />
             </div>
-
-            <div class="media-body ">
+            <div class="pull-right">
                 <h4 class="media-heading">
                     {{tweet.user.name}}
+                    
+                </h4>
+                <h6>
                     <small>
                         {{tweet.user.screen_name}}
                     </small>
-                </h4>
+                </h6>
+            </div>
+            
+            
+            </div>
+
+            <div class="media-body ">
+                
                 <p class="tweet-text">{{tweet.text}}</p>
             </div>
 

@@ -527,25 +527,28 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                     console.log("#");
                 })
         }
-
+        
+        
         // Approve Tweet As Starred
-        $scope.approveStarred = function (e) {
-            //            starred = true
+        $scope.approveStarred = function (e, $index) {
+
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
+            var tweetIndex = $(e.currentTarget).attr('data-id');
 
-            var dataObj = {
-                action: "approve_starred",
-                tweet_id: tweetId
-            };
-            var res = $http.post('do', dataObj);
-            res.success(function (data, status, headers, config) {
-                if (data == "OK") {
-                    $("#" + tweetId).remove();
-                } else
-                    alert(data);
-            });
+            var eventID = $cookies.eventID;
+            var requestAction = "POST";
+            var apiUrl = '/api/events/' + eventID + '/approvedTweets/' + tweetId;
+            var requestData = "";
+
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                $scope.tweetsQueue.splice(tweetIndex, 1);
+                $scope.approvedTweetsCount++;
+            }).error(function (){
+                console.log("#");
+            })
         }
-
+        
         // Stop Event Handler
 
         $scope.stopEventHandler = function () {

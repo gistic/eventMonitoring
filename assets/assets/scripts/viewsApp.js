@@ -112,7 +112,7 @@ eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location,get
         $scope.eventHashtag = getEventData.getEventHashTag();
 
         $scope.pages = ["/live", "/top", "/overtime"]
-        $scope.pagesTimeout = [12000, 12000,12000]
+        $scope.pagesTimeout = [480000, 30000,30000]
 
         $scope.pageIndex = 0;
 

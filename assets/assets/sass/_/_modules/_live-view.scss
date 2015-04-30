@@ -45,7 +45,7 @@
 
 .event-ui-views {
     .view-header {
-        margin: $margin * 4 auto;
+        margin: $margin * 2 auto;
         strong {
             color: $white;
             vertical-align: middle;
@@ -70,8 +70,15 @@
         }
         .media-heading {
             color: $blue;
-            font-size: 48px;
-            line-height: 30px !important;
+            font-size: 40px;
+            text-align: right;
+//            line-height: 85px !important;
+            margin-right: 15px;
+        }
+        .media-body {
+            text-align: right;
+            margin-top: 20px;
+            width: 100%;
         }
         .tweet-text {
             font-size: 48px;
@@ -89,10 +96,12 @@
             width: 40%;
         }
         .media-body {
-            vertical-align: middle;
-            width: 700px;
-            display: inline-block;
-            margin-top: $margin * 2;
+            text-align: right;
+//            vertical-align: middle;
+//            width: 700px;
+//            display: inline-block;
+            margin-top: $margin * 2 0;
+            text-align: right;
         }
         .tweets-count {
             margin-left: $margin * 6;
