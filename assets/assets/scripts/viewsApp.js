@@ -213,7 +213,7 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $ti
 //        $timeout(function () {
 //            $scope.fetchData();
 //            $scope.intervalFunction();
-//        }, 30000)
+//        }, 600000)
 //    };
 //    $scope.intervalFunction();
 
@@ -358,12 +358,12 @@ eventViewsApp.controller('TweetsChatCtr', function ($scope, $http,$cookies, $tim
     }
     $scope.fetchData();
 
-//
+
 //    $scope.intervalFunction = function () {
 //        $timeout(function () {
 //            $scope.fetchData();
 //            $scope.intervalFunction();
-//        }, 5000)
+//        }, 60000)
 //    };
 //    $scope.intervalFunction();
 

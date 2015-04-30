@@ -13,9 +13,12 @@ footer {
     }
     &.views--footer {
         bottom: 0;
-        height: 60px;
+        height: 40px;
         position: absolute;
+        border: none;
+        background:#166398;
         width: 100%;
+        padding: 10px 0;
         p {
             color: $white;
             font-size: $font-normal;

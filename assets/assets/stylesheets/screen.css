@@ -12964,11 +12964,14 @@ footer .social-links a:hover, footer .social-links a:focus {
 /* line 14, ../sass/_/_modules/_footer.scss */
 footer.views--footer {
   bottom: 0;
-  height: 60px;
+  height: 40px;
   position: absolute;
+  border: none;
+  background: #166398;
   width: 100%;
+  padding: 10px 0;
 }
-/* line 19, ../sass/_/_modules/_footer.scss */
+/* line 22, ../sass/_/_modules/_footer.scss */
 footer.views--footer p {
   color: #ffffff;
   font-size: 16px;
