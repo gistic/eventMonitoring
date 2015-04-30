@@ -193,9 +193,9 @@
                         <div class="btn-group " role="group">
                             <button type="button" class="btn btn-default" data-id="{{$index}}" ng-click="approveTweet($event)"><i class="icon-check"></i>
                             </button>
-                            <button type="button" class="btn btn-default" ng-click="removeTweet($event)"><i class="icon-cross"></i>
+                            <button type="button" class="btn btn-default" data-id="{{$index}}" ng-click="removeTweet($event)"><i class="icon-cross"></i>
                             </button>
-                            <button type="button" class="btn btn-default" ng-click="approveStarred($event)"><i class="icon-star"></i>
+                            <button type="button" class="btn btn-default" data-id="{{$index}}" ng-click="approveStarred($event)"><i class="icon-star"></i>
                             </button>
                         </div>
 

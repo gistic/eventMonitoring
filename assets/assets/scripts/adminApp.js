@@ -487,20 +487,23 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         // Remove Tweet From List
         $scope.removedTweetsCount = 0;
 
-        $scope.removeTweet = function (e) {
+        $scope.removeTweet = function (e, $index) {
 
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
+            var tweetIndex = $(e.currentTarget).attr('data-id');
+            
             var eventID = $cookies.eventID;
             var requestAction = "POST";
             var apiUrl = '/api/events/' + eventID + '/blockedTweets/' + tweetId;
             var requestData = "";
             
             getData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    console.log("Tweet Removed");
-                    $("#" + tweetId).remove();
-                    $scope.removedTweetsCount++;
-                })
+                .success(function (response) {
+                $scope.tweetsQueue.splice(tweetIndex, 1);
+                $scope.removedTweetsCount++;
+            }).error(function (){
+                console.log("#");
+            })
         }
 
         // Approve Tweet
@@ -516,10 +519,9 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
             var apiUrl = '/api/events/' + eventID + '/approvedTweets/' + tweetId;
             var requestData = "";
             
-            
             getData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                $scope.tweetsQueue.splice(tweetIndex, 1);
+                    $scope.tweetsQueue.splice(tweetIndex, 1);
                     $scope.approvedTweetsCount++;
                 }).error(function (){
                     console.log("#");
