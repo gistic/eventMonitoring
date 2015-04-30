@@ -229,7 +229,7 @@ eventAdminApp.controller('trustedUsersCtrl', ['$rootScope', '$scope', '$http', '
 
             var screenName = $scope.trustedUsers[index];
             var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
+            var apiUrl = '/api/events/' + eventID + '/trustedUsers/' + screenName;
             var requestData = "";
 
             getData.fetchData(requestAction, apiUrl, requestData, screenName)
@@ -290,7 +290,7 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
             var screenName = $scope.blockedUsers[index];
 
             var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID + '/trustedUsers/' + screenName;
+            var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
             var requestData = "";
 
             getData.fetchData(requestAction, apiUrl, requestData, screenName)
@@ -302,6 +302,43 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
+}]);
+
+/* startEventHandler controller for the admin front page */
+eventAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
+   function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
+
+        var requestAction = "GET";
+        var apiUrl = '/api/events/superAdmin/';
+        var requestData = "";
+
+        getData.fetchData(requestAction, apiUrl, requestData)
+            .then(function (response) {
+                $scope.serverEvents = response.data.data;
+            })
+
+        $scope.killEvent = function (e) {
+            
+            var eventID = $(e.currentTarget).parent().parent().attr('id');
+            
+            var notification = new NotificationFx({
+                message: '<p>Event: <strong>' + eventID + '</strong> have been stoped.</p>',
+                layout: 'growl',
+                effect: 'genie',
+                type: 'notice'
+            });
+        
+            var requestAction = "DELETE";
+            var apiUrl = '/api/events/' + eventID;
+            var requestData = "";
+
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .then(function (response) {
+                    notification.show();
+                })
+
+        }
+
 }]);
 
 /* startEventHandler controller for the admin front page */
@@ -331,17 +368,20 @@ eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', 
 
 
 /* Main controller for the application */
-eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
-   function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
+eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData', '$anchorScroll',
+                                            function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData, $anchorScroll) {
 
         var eventID = $cookies.eventID;
         $rootScope.eventHashtag = $cookies.eventHashtag;
 
-        $scope.updateBlockedUsers = function (screenName, userPicture) {
+        $scope.updateBlockedUsers = function (e, screenName, userPicture) {
 
             var requestAction = "PUT";
             var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
             var requestData = "";
+
+            var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
+            $("#" + tweetId).remove();
 
             // create the notification
             var notification = new NotificationFx({
@@ -360,11 +400,14 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
         }
 
-        $scope.updateTrustedUsers = function (screenName, userPicture) {
+        $scope.updateTrustedUsers = function (e, screenName, userPicture) {
 
             var requestAction = "PUT";
             var apiUrl = '/api/events/' + eventID + '/trustedUsers/' + screenName;
             var requestData = "";
+
+            var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
+            $("#" + tweetId).remove();
 
             // create the notification
             var notification = new NotificationFx({
@@ -401,7 +444,6 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         $scope.startEventSource = function () {
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/adminLiveTweets?uuid=" + $cookies.eventID;
 
-
             var source = new EventSource($scope.eventSourceUrl);
 
             source.addEventListener('message', function (response) {
@@ -409,7 +451,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 $scope.tweet = JSON.parse(response.data);
 
                 $scope.$apply(function () {
-                    $scope.tweetsQueue.push($scope.tweet);
+                    $scope.tweetsQueue.unshift($scope.tweet);
                     $scope.tweetsCount = $scope.tweetsQueue.length;
                 }, false);
             });
@@ -434,6 +476,8 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         // Load more tweets handler
         $scope.loadMoreTweets = function () {
             $scope.pagesShown = $scope.pagesShown + 1;
+            $location.hash('toApproveDiv');
+            $anchorScroll();
         };
 
         // Remaining tweets in queue
@@ -443,43 +487,50 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         // Remove Tweet From List
         $scope.removedTweetsCount = 0;
 
-        $scope.removeTweet = function (e) {
+        $scope.removeTweet = function (e, $index) {
 
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
+            var tweetIndex = $(e.currentTarget).attr('data-id');
+            
             var eventID = $cookies.eventID;
             var requestAction = "POST";
             var apiUrl = '/api/events/' + eventID + '/blockedTweets/' + tweetId;
             var requestData = "";
-
+            
             getData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    console.log("Tweet Removed");
-                    $("#" + tweetId).remove();
-                    $scope.removedTweetsCount++;
-                })
+                .success(function (response) {
+                $scope.tweetsQueue.splice(tweetIndex, 1);
+                $scope.removedTweetsCount++;
+            }).error(function (){
+                console.log("#");
+            })
         }
 
         // Approve Tweet
         $scope.approvedTweetsCount = 0;
 
-        $scope.approveTweet = function (e) {
-
+        $scope.approveTweet = function (e, $index) {
+            
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
+            var tweetIndex = $(e.currentTarget).attr('data-id');
+            
             var eventID = $cookies.eventID;
             var requestAction = "POST";
             var apiUrl = '/api/events/' + eventID + '/approvedTweets/' + tweetId;
             var requestData = "";
-
+            
             getData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    console.log("Tweet Approved");
-                    $("#" + tweetId).remove();
+                .success(function (response) {
+                    $scope.tweetsQueue.splice(tweetIndex, 1);
                     $scope.approvedTweetsCount++;
+                }).error(function (){
+                    console.log("#");
                 })
         }
 
         // Approve Tweet As Starred
         $scope.approveStarred = function (e) {
+            //            starred = true
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
 
             var dataObj = {

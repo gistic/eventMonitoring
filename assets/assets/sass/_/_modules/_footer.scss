@@ -1,14 +1,25 @@
 footer {
-	padding: $padding - 5 0 0;
-	border-top: 1px solid $gray-light;
-	margin: $margin*3 0 $margin;
-	.social-links {
-		a {
-			color: $gray;
+    padding: $padding - 5 0 0;
+    border-top: 1px solid $gray-light;
+    margin: $margin*3 0 $margin;
+    .social-links {
+        a {
+            color: $gray;
             &:hover,
             &:focus {
                 text-decoration: none;
             }
-		}
-	}
+        }
+    }
+    &.views--footer {
+        bottom: 0;
+        height: 60px;
+        position: absolute;
+        width: 100%;
+        p {
+            color: $white;
+            font-size: $font-normal;
+        }
+    }
 }
+
