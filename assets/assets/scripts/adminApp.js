@@ -451,7 +451,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 $scope.tweet = JSON.parse(response.data);
 
                 $scope.$apply(function () {
-                    $scope.tweetsQueue.unshift($scope.tweet);
+                    $scope.tweetsQueue.push($scope.tweet);
                     $scope.tweetsCount = $scope.tweetsQueue.length;
                 }, false);
             });
