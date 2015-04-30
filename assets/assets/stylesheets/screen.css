@@ -12959,6 +12959,18 @@ footer .social-links a {
 footer .social-links a:hover, footer .social-links a:focus {
   text-decoration: none;
 }
+/* line 14, ../sass/_/_modules/_footer.scss */
+footer.views--footer {
+  bottom: 0;
+  height: 60px;
+  position: absolute;
+  width: 100%;
+}
+/* line 19, ../sass/_/_modules/_footer.scss */
+footer.views--footer p {
+  color: #ffffff;
+  font-size: 16px;
+}
 
 /* line 1, ../sass/_/_modules/_homepage.scss */
 .homepage-boxes {

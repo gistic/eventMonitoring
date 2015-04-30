@@ -307,19 +307,40 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
 /* startEventHandler controller for the admin front page */
 eventAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
    function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
-       
-       var requestAction = "GET";
-       var apiUrl = '/api/events/superAdmin/';
-       var requestData = "";
 
-       getData.fetchData(requestAction, apiUrl, requestData)
-           .then(function (response) {
-                $scope.serverEvents = response.data;
-                    consoel.log($scope.serverEvents);
-       })
-   
-}]);       
-       
+        var requestAction = "GET";
+        var apiUrl = '/api/events/superAdmin/';
+        var requestData = "";
+
+        getData.fetchData(requestAction, apiUrl, requestData)
+            .then(function (response) {
+                $scope.serverEvents = response.data.data;
+            })
+
+        $scope.killEvent = function (e) {
+            
+            var eventID = $(e.currentTarget).parent().parent().attr('id');
+            
+            var notification = new NotificationFx({
+                message: '<p>Event: <strong>' + eventID + '</strong> have been stoped.</p>',
+                layout: 'growl',
+                effect: 'genie',
+                type: 'notice'
+            });
+        
+            var requestAction = "DELETE";
+            var apiUrl = '/api/events/' + eventID;
+            var requestData = "";
+
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .then(function (response) {
+                    notification.show();
+                })
+
+        }
+
+}]);
+
 /* startEventHandler controller for the admin front page */
 eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
    function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {

@@ -72,6 +72,11 @@ eventViewsApp.config(function ($stateProvider, $urlRouterProvider) {
             url: '/overtime',
             templateUrl: '../../views/tweets-chart.html',
             controller: 'TweetsChatCtr'
+        },
+        "media": {
+            url: '/media',
+            templateUrl: '../../views/media.html',
+            controller: 'liveTweetsCtrl'
         }
     };
 
@@ -112,7 +117,7 @@ eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location,get
         $scope.eventHashtag = getEventData.getEventHashTag();
 
         $scope.pages = ["/live", "/top", "/overtime"]
-        $scope.pagesTimeout = [3000, 3000,3000]
+        $scope.pagesTimeout = [120000, 30000,30000]
 
         $scope.pageIndex = 0;
 
@@ -143,6 +148,12 @@ eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$c
 
             source.addEventListener('message', function (response) {
                 $scope.tweet = JSON.parse(response.data);
+                if ($scope.tweet.entities.media == 0) {
+//                    console.log($scope.tweet.entities.media.media_url_https);
+                    console.log("Empty");
+                } else {
+                    console.log($scope.tweet.entities.media);
+                }
                 $scope.$apply(function () {
                     $scope.allTweets.push($scope.tweet);
                 });
@@ -153,8 +164,6 @@ eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$c
 
 // Controller : Top People View CTRL
 eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $timeout, getEventData) {
-    
-    $scope.init = function () {
     
     $scope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
     
@@ -183,8 +192,6 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $ti
 //        }, 30000)
 //    };
 //    $scope.intervalFunction();
-        
-    }
 
 });
 
