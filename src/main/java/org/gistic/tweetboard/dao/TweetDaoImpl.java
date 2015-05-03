@@ -115,7 +115,7 @@ public class TweetDaoImpl implements TweetDao {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             String statusString = jedis.get(tweetId);
             if (starred) { //TODO: refactor
-                statusString = statusString.substring(0, statusString.length()-1).concat("\"starred\":true}");
+                statusString = statusString.substring(0, statusString.length()-1).concat(",\"starred\":true}");
             }
             jedis.set(tweetId, statusString);
             jedis.lpush(getApprovedListKey(uuid), tweetId);
