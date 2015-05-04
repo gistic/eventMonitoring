@@ -106,25 +106,32 @@ eventViewsApp.factory('getEventData', ['$http', '$rootScope','$cookies',function
  }
 ]);
 
-// Controller : Automatice views pages rotuing
-eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location,getEventData, createEventSource) {
+// Controller : Looping through views pages
+eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location, getEventData, createEventSource) {
 
         $scope.eventHashtag = getEventData.getEventHashTag();
 
         $scope.pages = ["/live", "/top", "/overtime"]
-        $scope.pagesTimeout = [480000, 30000,30000]
-
-        $scope.pageIndex = 0;
-
+        $scope.pagesTimeout = [10000, 5000, 3000]
+        
+        // Get the current page path index
+        $scope.pageIndex = $scope.pages.indexOf($location.path());
+    
         $scope.intervalFunction = function () {
             $timeout(function () {
+                
+                // Close event source when leaving the live tweets screen
                 if (!createEventSource.closed) {
                     createEventSource.closeEventSource();
                 }
-                $scope.intervalFunction();
-                $scope.pageIndex = ($scope.pageIndex + 1)%3;
+                
+                // Redirect the page
                 $location.path($scope.pages[$scope.pageIndex]);
+                
+                $scope.intervalFunction();
+                
             }, $scope.pagesTimeout[$scope.pageIndex])
+                $scope.pageIndex = ($scope.pageIndex + 1)%3;
         };
         $scope.intervalFunction();
 
@@ -149,10 +156,12 @@ eventViewsApp.factory('createEventSource', function($rootScope, $cookies){
             return this.eventSourceObject || this.createSource();
         },
         closeEventSource: function(){
-            this.eventSourceObject.close();
-            this.eventSourceObject = undefined;
-            this.closed = true;
-            return;
+            if (this.eventSourceObject != null || this.eventSourceObject != undefined) {
+                this.eventSourceObject.close();
+                this.eventSourceObject = undefined;
+                this.closed = true;
+                return;
+            }
         }
     }
 
