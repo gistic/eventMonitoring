@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by osama-hussain on 5/4/15.
  */
 @Singleton
-@Path("/broadcast")
+@Path("/liveTweets")
 public class LiveTweetsBroadcaster {
 
     private Map<String, SseBroadcaster> broadcasters = new HashMap<>();
@@ -34,7 +34,7 @@ public class LiveTweetsBroadcaster {
         EventUuid e = new EventUuid();
         e.setUuid(message);
         OutboundEvent event = eventBuilder
-                .name("key")
+                .name("approved-tweets")
                 .mediaType(MediaType.TEXT_PLAIN_TYPE)
                 .data(String.class, tweetText)
                 .build();
