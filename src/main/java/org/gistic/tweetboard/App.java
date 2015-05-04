@@ -3,22 +3,16 @@ package org.gistic.tweetboard;
 
 import com.bendb.dropwizard.redis.JedisBundle;
 import com.bendb.dropwizard.redis.JedisFactory;
-import com.bendb.dropwizard.redis.JedisPoolManager;
-import io.dropwizard.Bundle;
-import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.Application;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.resources.EventsResource;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcaster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.dropwizard.Application;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
-import com.google.common.eventbus.AsyncEventBus;
-import com.google.common.eventbus.EventBus;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 
 /**
@@ -35,9 +29,7 @@ public class App extends Application<TweetBoardConfiguration> {
 
     @Override
     public void initialize(Bootstrap<TweetBoardConfiguration> b) {
-        //AssetsBundle assetsBundle = new AssetsBundle("/assets/", "/", "index.html", "static");
         b.addBundle(new ConfiguredAssetsBundle("/assets/","/", "index.html"));
-        //b.addBundle(assetsBundle);
         b.addBundle(new JedisBundle<TweetBoardConfiguration>() {
             @Override
             public JedisFactory getJedisFactory(TweetBoardConfiguration configuration) {
@@ -57,6 +49,5 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(new LiveTweetsBroadcaster());
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
         //e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");
-//        e.jersey().setUrlPattern("/api/*");
     }
 }
