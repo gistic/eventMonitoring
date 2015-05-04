@@ -9,6 +9,7 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.resources.EventsResource;
+import org.gistic.tweetboard.resources.LiveTweetsBroadcaster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.dropwizard.Application;
@@ -53,8 +54,9 @@ public class App extends Application<TweetBoardConfiguration> {
         JedisPoolContainer.setInstance(pool);
         EventMap.setTwitterConfiguration(c.getTwitterConfiguration());
         e.jersey().register(new EventsResource());
+        e.jersey().register(new LiveTweetsBroadcaster());
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
-        e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");
+        //e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");
 //        e.jersey().setUrlPattern("/api/*");
     }
 }
