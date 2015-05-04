@@ -36,7 +36,7 @@ public class LiveTweetsBroadcaster {
         OutboundEvent event = eventBuilder
                 .name("approved-tweets")
                 .mediaType(MediaType.TEXT_PLAIN_TYPE)
-                .data(String.class, tweetText)
+                .data(String.class, tweetText.replace("_normal", ""))
                 .build();
         try {
             SseBroadcaster broadcaster = broadcasters.get(uuid);
