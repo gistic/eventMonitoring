@@ -30,6 +30,8 @@ public class TweetDaoImpl implements TweetDao {
     final String SCREENS_DEFAULT = "[\"/live\", \"/top\", \"/overtime\"]";
     final String START_TIME_KEY = "startTime";
     final String HASHTAGS_KEY = "hashTags";
+    private String SCREENTIMES_KEY = "screensTime";
+    private String SCREENTIMES_DEFAULT = "[12000, 12000, 12000]";
 
     public TweetDaoImpl() {
         //this.jedis = jedis;
@@ -54,6 +56,7 @@ public class TweetDaoImpl implements TweetDao {
             String time = d.toLocaleString();
             jedis.hset(uuid, START_TIME_KEY, time);
             jedis.hset(uuid, HASHTAGS_KEY, StringUtils.join(hashTags, ","));
+            jedis.hset(uuid, SCREENTIMES_KEY, SCREENTIMES_DEFAULT);
         }
     }
 
@@ -202,6 +205,7 @@ public class TweetDaoImpl implements TweetDao {
             jedis.hset(uuid, BG_COLOR_KEY, eventConfig.getBackgroundColor());
             jedis.hset(uuid, SIZE_KEY, eventConfig.getSize());
             jedis.hset(uuid, SCREENS_KEY, Arrays.toString(eventConfig.getScreens()));
+            jedis.hset(uuid, SCREENTIMES_KEY, Arrays.toString(eventConfig.getScreenTimes()));
         }
     }
 
@@ -220,6 +224,10 @@ public class TweetDaoImpl implements TweetDao {
                     .toArray();
             String[] screensArray = Arrays.copyOf(o, o.length, String[].class);
             eventConfig.setScreens(screensArray);
+            String screenTimesStr = jedis.hget(uuid, SCREENTIMES_KEY);
+            int[] screenTimes = Arrays.stream(screenTimesStr.substring(1, screenTimesStr.length()-1).split(","))
+                    .map(String::trim).mapToInt(Integer::parseInt).toArray();
+            eventConfig.setScreenTimes(screenTimes);
         }
         return eventConfig;
     }

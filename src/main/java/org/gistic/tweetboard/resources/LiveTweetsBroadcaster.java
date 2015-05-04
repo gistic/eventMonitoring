@@ -25,7 +25,7 @@ public class LiveTweetsBroadcaster {
     private Map<String, SseBroadcaster> broadcasters = new HashMap<>();
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public String broadcastMessage(Message msg) {
         String uuid = msg.getUuid();
@@ -59,7 +59,7 @@ public class LiveTweetsBroadcaster {
                 }
                 break;
         }
-        return "Message has been broadcasted.";
+        return "{\"msg\":\"Message has been broadcasted.\"}";
     }
 
     @GET
