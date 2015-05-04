@@ -1,10 +1,12 @@
 package org.gistic.tweetboard;
 
-import com.bazaarvoice.dropwizard.assets.ConfiguredAssetsBundle;
+
 import com.bendb.dropwizard.redis.JedisBundle;
 import com.bendb.dropwizard.redis.JedisFactory;
 import com.bendb.dropwizard.redis.JedisPoolManager;
+import io.dropwizard.Bundle;
 import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.resources.EventsResource;
 import org.slf4j.Logger;
@@ -53,6 +55,6 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(new EventsResource());
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");
-        e.jersey().setUrlPattern("/api/*");
+//        e.jersey().setUrlPattern("/api/*");
     }
 }
