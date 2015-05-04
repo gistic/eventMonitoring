@@ -212,9 +212,13 @@ public class TweetDaoImpl implements TweetDao {
             eventConfig.setBackgroundColor(jedis.hget(uuid, BG_COLOR_KEY));
             eventConfig.setSize(jedis.hget(uuid, SIZE_KEY));
             String screens = jedis.hget(uuid, SCREENS_KEY);
-            String[] screensArray = (String[])Arrays
+            Object[] o =
+                    Arrays
                     .stream(screens.substring(1, screens.length() - 1).split(","))
-                    .map(String::trim).toArray();
+                    .map(String::trim)
+                            .map(s -> s.substring(1, s.length()-1))
+                    .toArray();
+            String[] screensArray = Arrays.copyOf(o, o.length, String[].class);
             eventConfig.setScreens(screensArray);
         }
         return eventConfig;
