@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.eventmanager.twitter;
 
 import com.google.common.eventbus.EventBus;
+import org.apache.commons.lang.StringUtils;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusAdapter;
@@ -22,7 +23,7 @@ public final class TweetListener extends StatusAdapter {
     @Override
     public void onStatus(Status status) {
         for (String hashtag : hashtags) {
-            if (status.getText().contains(hashtag)) {
+            if (StringUtils.containsIgnoreCase(status.getText(), hashtag)) {
                 String tweet = TwitterObjectFactory.getRawJSON(status);
                 InternalStatus iStatus = new InternalStatus(status, tweet);
                 bus.post(iStatus);

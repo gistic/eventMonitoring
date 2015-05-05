@@ -95,6 +95,7 @@ public class TweetDataLogic {
             tweetDao.addToSentForApproval(uuid, statusId);
             return new InternalStatus(status, tweetDao.getStatusString(statusId));
         } catch (TwitterException e) {
+            LoggerFactory.getLogger(this.getClass()).error("error in parsing tweet string to status object");
             return null;
         }
     }
