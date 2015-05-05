@@ -45,7 +45,6 @@ public class TweetProcessor {
     @AllowConcurrentEvents
     public void onStatusUpdate(InternalStatus status) {
     try {
-        //new TwitterObjectFactory.createStatus(statusString);
         Status tweet = status.getInternalStatus();
         if (isBlockedUserTweet(tweet)) {
             System.out.println("blocked user detected "

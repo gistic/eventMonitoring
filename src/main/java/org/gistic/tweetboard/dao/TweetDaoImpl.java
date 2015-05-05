@@ -1,7 +1,6 @@
 package org.gistic.tweetboard.dao;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jetty.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.representations.EventConfig;
 import org.gistic.tweetboard.representations.EventMeta;

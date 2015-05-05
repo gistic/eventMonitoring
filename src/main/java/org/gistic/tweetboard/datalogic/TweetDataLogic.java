@@ -9,6 +9,10 @@ import redis.clients.jedis.Tuple;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -42,9 +46,10 @@ public class TweetDataLogic {
     public void addToApproved(String tweetId, boolean starred) {
         tweetDao.removeFromSentForApproval(uuid, tweetId);
         tweetDao.addToApproved(uuid, tweetId, starred);
-//        if (newArrival) {
-//            tweetDao.addToUserTweetsSet(uuid, String.valueOf(tweetId));
-//        }
+        String statusString = tweetDao.getStatusString(tweetId);
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://127.0.0.1:8080/api/broadcast");
+        target.request().post(Entity.text(uuid + ":" + statusString));
     }
 
     public void addToBlocked(String tweetId) {
