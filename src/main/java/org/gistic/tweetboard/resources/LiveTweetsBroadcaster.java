@@ -1,5 +1,6 @@
 package org.gistic.tweetboard.resources;
 
+import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.representations.EventUuid;
 import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.jersey.media.sse.OutboundEvent;
@@ -24,27 +25,41 @@ public class LiveTweetsBroadcaster {
     private Map<String, SseBroadcaster> broadcasters = new HashMap<>();
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
-    @Consumes(MediaType.TEXT_PLAIN)
-    public String broadcastMessage(String message) {
-        String[] splitMessage = message.split(":", 2);
-        String uuid = splitMessage[0];
-        String tweetText = splitMessage[1];
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String broadcastMessage(Message msg) {
+        String uuid = msg.getUuid();
+        String message = msg.getMsg();
         OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
-        EventUuid e = new EventUuid();
-        e.setUuid(message);
-        OutboundEvent event = eventBuilder
-                .name("approved-tweets")
-                .mediaType(MediaType.TEXT_PLAIN_TYPE)
-                .data(String.class, tweetText.replace("_normal", ""))
-                .build();
-        try {
-            SseBroadcaster broadcaster = broadcasters.get(uuid);
-            broadcaster.broadcast(event);
-        } catch (NullPointerException ex) {
-            LoggerFactory.getLogger(this.getClass()).info("No one listening for event: "+uuid);
+        String type = msg.getType();
+        switch (type) {
+            case Message.Type.LiveTweet:
+                OutboundEvent event = eventBuilder
+                        .name("approved-tweets")
+                        .mediaType(MediaType.TEXT_PLAIN_TYPE)
+                        .data(String.class, message.replace("_normal", ""))
+                        .build();
+                try {
+                    SseBroadcaster broadcaster = broadcasters.get(uuid);
+                    broadcaster.broadcast(event);
+                } catch (NullPointerException ex) {
+                    LoggerFactory.getLogger(this.getClass()).info("No one listening for event: " + uuid);
+                }
+                break;
+            case Message.Type.UiUpdate:
+                event = eventBuilder
+                        .name("broadcast-ui-customization")
+                        .mediaType(MediaType.TEXT_PLAIN_TYPE)
+                        .data(String.class, message)
+                        .build();
+                try {
+                    broadcasters.get(uuid).broadcast(event);
+                } catch (NullPointerException ex) {
+                    LoggerFactory.getLogger(this.getClass()).info("No one listening for event: " + uuid);
+                }
+                break;
         }
-        return "Message '" + message + "' has been broadcast.";
+        return "{\"msg\":\"Message has been broadcasted.\"}";
     }
 
     @GET

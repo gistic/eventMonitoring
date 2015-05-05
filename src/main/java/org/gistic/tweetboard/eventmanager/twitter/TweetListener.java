@@ -1,7 +1,7 @@
 package org.gistic.tweetboard.eventmanager.twitter;
 
 import com.google.common.eventbus.EventBus;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusAdapter;

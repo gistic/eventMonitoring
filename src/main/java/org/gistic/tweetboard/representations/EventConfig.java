@@ -7,6 +7,15 @@ public class EventConfig {
     private String backgroundColor;
     private String[] screens;
     private String size;
+    private int screenTimes[];
+
+    public int[] getScreenTimes() {
+        return screenTimes;
+    }
+
+    public void setScreenTimes(int[] screenTimes) {
+        this.screenTimes = screenTimes;
+    }
 
     public String getSize() {
         return size;
