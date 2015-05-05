@@ -1,6 +1,41 @@
 'use strict';
 
-var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'ngCookies', 'angularFileUpload']);
+var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'ngCookies', 'ui.router', 'angularFileUpload']);
+
+
+eventAdminApp.run(function ($window, $rootScope) {
+    $rootScope.baseUrl = $window.location.origin;
+})
+
+// Config : Views pages routing
+eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {
+
+    window.routes = {
+        "/": {
+            url: '',
+            templateUrl: '../../admin/admin-views/index.html',
+            controller: 'startEventHandler'
+        },
+        "admin": {
+            url: '/admin?uuid',
+            templateUrl: '../../admin/admin-views/admin.html',
+            controller: 'startEventCtrl'
+        },
+        "superAdmin": {
+            url: '/superAdmin',
+            templateUrl: '../../admin/admin-views/super-admin.html',
+            controller: 'SuperAdminCtrl'
+        }
+    };
+
+    for (var path in window.routes) {
+        $stateProvider.state(path, window.routes[path]);
+    }
+
+    $urlRouterProvider.otherwise('/');
+
+});
+
 
 eventAdminApp.directive('errSrc', function ($rootScope) {
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
@@ -15,7 +50,6 @@ eventAdminApp.directive('errSrc', function ($rootScope) {
         }
     }
 });
-
 
 // Activate ' ENTER ' keypress to make the same action as click
 eventAdminApp.directive('ngEnter', function () {
@@ -38,32 +72,44 @@ eventAdminApp.filter('reverseQueue', function () {
     };
 });
 
-eventAdminApp.run(function ($window, $rootScope) {
-    $rootScope.baseUrl = $window.location.origin;
-})
-
 // Angular factory allwos you to share data between controllers and pages
-eventAdminApp.factory('appVar', function ($rootScope) {
-    return {
-        eventHashtag: function () {
-            $rootScope.eventHashtag = $('#eventHashtag').val();
-            if ($rootScope.eventHashtag !== "" || $rootScope.eventHashtag.length >= 3) {
-                return ($rootScope.eventHashtag);
-            } else {
-                return '';
-            }
-        },
-        link: function () {
-            return "http://www.twitter.com"
-        }
-    };
-});
+//eventAdminApp.factory function ($rootScope) {
+//    return {
+//        eventHashtag: function () {
+//            $rootScope.eventHashtag = $('#eventHashtag').val();
+//            if ($rootScope.eventHashtag !== "" || $rootScope.eventHashtag.length >= 3) {
+//                return ($rootScope.eventHashtag);
+//            } else {
+//                return '';
+//            }
+//        },
+//        link: function () {
+//            return "http://www.twitter.com"
+//        }
+//    };
+//});
 
 
 /* Factory to post the requestes */
-eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', '$cookies', '$cookieStore', '$location', '$window', function ($http, $rootScope, appVar, $cookies, $cookieStore, $location, $window) {
-
+eventAdminApp.factory('getData', ['$http', '$rootScope', '$cookies', '$cookieStore', '$location', '$window', function ($http, $rootScope, $cookies, $cookieStore, $location, $window) {
+    
     return {
+        
+        setEventHashTag : function(eventHashtag){
+            $rootScope.eventHashtag = eventHashtag;
+        },
+        
+        getEventHashTag : function(){
+            return $rootScope.eventHashtag;
+        },
+        
+        setEventID : function(eventID){
+            $rootScope.eventID = eventID;
+        },
+        
+        getEventID : function(){
+            return $rootScope.eventID;
+        },
 
         fetchData: function (requestAction, apiUrl, requestData) {
 
@@ -80,7 +126,7 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', 'appVar', '$cookies', '
         },
 
         startEvent: function (requestAction) {
-
+            
             var eventHashtag = $('#eventHashtag').val();
             var requestUrl = $rootScope.baseUrl + '/api/events';
 
@@ -174,15 +220,7 @@ eventAdminApp.factory('shareData', function ($rootScope, $cookies, $cookieStore,
 });
 
 // UI Customization
-eventAdminApp.controller("liveViewCtrl", function ($scope, $rootScope, $cookies, $cookieStore, $window, shareData) {
-
-    // Layout : Color
-    //    $rootScope.userColor = shareData.userColor();
-    // Layout : Size
-    //    $rootScope.userSize = shareData.userSize();
-
-});
-
+eventAdminApp.controller("liveViewCtrl", function ($scope, $rootScope, $cookies, $cookieStore, $window, shareData) {});
 
 // Trusted Users Handlers
 eventAdminApp.controller('trustedUsersModalCtrl', function ($scope, $modal) {
@@ -200,7 +238,7 @@ eventAdminApp.controller('trustedUsersCtrl', ['$rootScope', '$scope', '$http', '
    function ($rootScope, $scope, $http, $cookies, $cookieStore, $modalInstance, getData) {
 
         $scope.trustedUsers = [];
-        var eventID = $cookies.eventID;
+       var eventID = $rootScope.eventID;
 
         var requestAction = "GET";
         var apiUrl = '/api/events/' + eventID + '/trustedUsers';
@@ -260,7 +298,7 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
    function ($rootScope, $scope, $http, $cookies, $cookieStore, $modalInstance, getData) {
 
         $rootScope.blockedUsers = [];
-        var eventID = $cookies.eventID;
+       var eventID = $rootScope.eventID;
 
         var requestAction = "GET";
         var apiUrl = '/api/events/' + eventID + '/blockedUsers';
@@ -304,9 +342,8 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
         };
 }]);
 
-/* startEventHandler controller for the admin front page */
-eventAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
-   function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
+/* Controller : Super admin page */
+eventAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', 'getData', function ($rootScope, $scope, $http, getData) {
 
         var requestAction = "GET";
         var apiUrl = '/api/events/superAdmin/';
@@ -341,23 +378,27 @@ eventAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', '$c
 
 }]);
 
-/* startEventHandler controller for the admin front page */
-eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData',
-   function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData) {
-
+/* Controller : Start new event - Website front page */
+eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'shareData', '$state',
+                                               function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, shareData, $state) {
+       
         $scope.startEventHandler = function (action) {
             $scope.$broadcast();
             $scope.timerRunning = true;
-
+                    
             getData.startEvent()
                 .success(function (response) {
+                    
                     $rootScope.eventStarted = true;
                     $rootScope.eventID = response.uuid;
-                    $scope.adminUrl = "/admin/admin.html?uuid=" + $scope.eventID;
-                    $window.location.href = $scope.adminUrl;
-
-                    $cookies.eventID = $rootScope.eventID;
-                    $cookies.eventHashtag = $rootScope.eventHashtag;
+                    
+                    getData.setEventHashTag($scope.eventHashtag);
+                    
+                    getData.setEventID($rootScope.eventID);
+                    
+                    $scope.adminUrl = "/admin?uuid=" + $scope.eventID;
+                    $scope.ViewUrl = $rootScope.baseUrl + "?uuid=" + $scope.eventID;
+                    $state.transitionTo('admin', {uuid: $scope.eventID});
 
                     console.log("New Event Started");
                 })
@@ -368,16 +409,24 @@ eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', 
 
 
 /* Main controller for the application */
-eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'appVar', 'shareData', '$anchorScroll',
-                                            function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, appVar, shareData, $anchorScroll) {
+eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'shareData', '$anchorScroll', '$state',
+                                            function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, shareData, $anchorScroll, $state) {
 
-        var eventID = $cookies.eventID;
-        $rootScope.eventHashtag = $cookies.eventHashtag;
-
+//        $rootScope.eventID = getData.getEventID();
+//        $scope.eventID = getData.getEventID();
+                                                
+        $rootScope.eventID = $location.search().uuid;
+        $scope.eventID = $location.search().uuid;
+                                                
+        $scope.goLive = function(){
+//            $location.path($rootScope.baseUrl + "/#/live?uuid=" + $rootScope.eventID);
+            $window.open($rootScope.baseUrl + "/#/live?uuid=" + $rootScope.eventID, '_blank');
+        }
+    
         $scope.updateBlockedUsers = function (e, screenName, userPicture) {
 
             var requestAction = "PUT";
-            var apiUrl = '/api/events/' + eventID + '/blockedUsers/' + screenName;
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/blockedUsers/' + screenName;
             var requestData = "";
 
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
@@ -403,7 +452,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         $scope.updateTrustedUsers = function (e, screenName, userPicture) {
 
             var requestAction = "PUT";
-            var apiUrl = '/api/events/' + eventID + '/trustedUsers/' + screenName;
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/trustedUsers/' + screenName;
             var requestData = "";
 
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
@@ -440,9 +489,9 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         $scope.tweet = {};
 
         // Listen to new message
-
+        
         $scope.startEventSource = function () {
-            $scope.eventSourceUrl = $rootScope.baseUrl + "/api/adminLiveTweets?uuid=" + $cookies.eventID;
+            $scope.eventSourceUrl = $rootScope.baseUrl + "/api/adminLiveTweets?uuid=" + $rootScope.eventID;
 
             var source = new EventSource($scope.eventSourceUrl);
 
@@ -492,7 +541,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
             var tweetIndex = $(e.currentTarget).attr('data-id');
             
-            var eventID = $cookies.eventID;
+            var eventID = $rootScope.eventID;
             var requestAction = "POST";
             var apiUrl = '/api/events/' + eventID + '/blockedTweets/' + tweetId;
             var requestData = "";
@@ -514,7 +563,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
             var tweetIndex = $(e.currentTarget).attr('data-id');
             
-            var eventID = $cookies.eventID;
+            var eventID = $rootScope.eventID;
             var requestAction = "POST";
             var apiUrl = '/api/events/' + eventID + '/approvedTweets/' + tweetId;
             var requestData = "";
@@ -535,9 +584,9 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
             var tweetIndex = $(e.currentTarget).attr('data-id');
 
-            var eventID = $cookies.eventID;
+            var eventID = $rootScope.eventID;
             var requestAction = "POST";
-            var apiUrl = '/api/events/' + eventID + '/approvedTweets/' + tweetId;
+            var apiUrl = '/api/events/' + eventID + '/approvedTweets/' + tweetId + "?starred=true";
             var requestData = "";
 
             getData.fetchData(requestAction, apiUrl, requestData)
@@ -562,7 +611,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
             });
 
 
-            var eventID = $cookies.eventID;
+            var eventID = $rootScope.eventID;
             var requestAction = "DELETE";
             var apiUrl = '/api/events/' + eventID;
             var requestData = "";
@@ -584,11 +633,11 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
         // Update Config
         $scope.updateViewOptions = function (userColor, userSize, userScreen) {
-            var eventID = $cookies.eventID;
+            var eventID = $rootScope.eventID;
             var requestAction = "PUT";
             var apiUrl = '/api/events/' + eventID + '/config';
 
-            var eventID = $cookies.eventID;
+            var eventID = $rootScope.eventID;
             var userColor = shareData.userColor();
             var userSize = shareData.userSize();
             var userScreen = shareData.userScreen();
