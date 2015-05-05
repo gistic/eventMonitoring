@@ -2,6 +2,10 @@
 
 var eventViewsApp = angular.module('eventViewsApp', ['eventAdminApp','ngAnimate', 'ngFx', 'highcharts-ng', 'ui.router', 'ngCookies']);
 
+
+eventAdminApp.run(function ($rootScope, $location) {
+    $rootScope.eventID = $location.search().uuid;
+});
 // Directive : Image lazy load
 eventViewsApp.directive('lazyLoad', function ($timeout) {
     return {
@@ -59,17 +63,17 @@ eventViewsApp.config(function ($stateProvider, $urlRouterProvider) {
 
     window.routes = {
         "live": {
-            url: '/live',
+            url: '/live?uuid',
             templateUrl: '../../views/live-tweets.html',
             controller: 'liveTweetsCtrl'
         },
         "top": {
-            url: '/top',
+            url: '/top?uuid',
             templateUrl: '../../views/top_people.html',
             controller: 'TopPeopleCtrl'
         },
         "overtime": {
-            url: '/overtime',
+            url: '/overtime?uuid',
             templateUrl: '../../views/tweets-chart.html',
             controller: 'TweetsChatCtr'
         }
@@ -100,7 +104,7 @@ eventViewsApp.factory('getEventData', ['$http', '$rootScope','$cookies',function
                 });
             },
             getEventHashTag : function(){
-                return $cookies.eventHashtag;
+                return $rootScope.eventHashtag;
             }
         }
  }
@@ -112,7 +116,7 @@ eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location, ge
         $scope.eventHashtag = getEventData.getEventHashTag();
 
         $scope.pages = ["/live", "/top", "/overtime"]
-        $scope.pagesTimeout = [10000, 5000, 3000]
+        $scope.pagesTimeout = [420000, 30000, 30000]
         
         // Get the current page path index
         $scope.pageIndex = $scope.pages.indexOf($location.path());
@@ -138,14 +142,15 @@ eventViewsApp.controller('layoutCtrl', function ($scope, $timeout, $location, ge
 });
 
 
-eventViewsApp.factory('createEventSource', function($rootScope, $cookies){
+eventViewsApp.factory('createEventSource', function($rootScope, $cookies, getData, $location){
     
     this.eventSourceObject;
     this.closed;
     
     return {
         createSource: function() {
-            var apiUrl = "/api/liveTweets?uuid=" + $cookies.eventID;
+            var apiUrl = "/api/liveTweets?uuid=" + $rootScope.eventID;
+            
             var requestUrl = $rootScope.baseUrl + apiUrl;
             $rootScope.liveTweetsUrl = requestUrl;
             this.eventSourceObject = new EventSource($rootScope.liveTweetsUrl);
@@ -179,14 +184,15 @@ eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$c
             var tweets = {};
             $scope.allTweets = [];
 
-            source.addEventListener('message', function (response) {
+            source.addEventListener('approved-tweets', function (response) {
                 $scope.tweet = JSON.parse(response.data);
-//                if ($scope.tweet.entities.media.length == 0) {
-////                    console.log($scope.tweet.entities.media.media_url_https);
-//                    console.log("Empty");
-//                } else {
-//                    console.log($scope.tweet.entities.media.id);
-//                }
+                $scope.$apply(function () {
+                    $scope.allTweets.push($scope.tweet);
+                });
+            });
+            
+            source.addEventListener('broadcast-ui-customization', function (response) {
+                $scope.tweet = JSON.parse(response.data);
                 $scope.$apply(function () {
                     $scope.allTweets.push($scope.tweet);
                 });
@@ -196,15 +202,14 @@ eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$c
 }]);
 
 // Controller : Top People View CTRL
-eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $timeout, getEventData) {
+eventViewsApp.controller('TopPeopleCtrl', function ($scope, $rootScope, $http, $cookies, $timeout, getEventData) {
     
     $scope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
     
     $scope.fetchData = function () {
         
-        var eventID = $cookies.eventID;
         var requestAction = "GET";
-        var apiUrl = '/api/events/' + eventID + '/topUsers';
+        var apiUrl = '/api/events/' + $rootScope.eventID + '/topUsers';
         var topUsersCount = 5
         var requestData = {
             "count" : topUsersCount
@@ -229,7 +234,7 @@ eventViewsApp.controller('TopPeopleCtrl', function ($scope, $http, $cookies, $ti
 });
 
 // Controller : Tweets Over Time View CTRL
-eventViewsApp.controller('TweetsChatCtr', function ($scope, $http,$cookies, $timeout, getEventData) {
+eventViewsApp.controller('TweetsChatCtr', function ($scope,$rootScope, $http,$cookies, $timeout, getEventData) {
     $scope.chartConfig = {
         options: {
             chart: {
@@ -248,9 +253,8 @@ eventViewsApp.controller('TweetsChatCtr', function ($scope, $http,$cookies, $tim
 
     $scope.fetchData = function () {
 
-        var eventID = $cookies.eventID;
         var requestAction = "GET";
-        var apiUrl = '/api/events/' + eventID + '/overTime';
+        var apiUrl = '/api/events/' + $rootScope.eventID + '/overTime';
 
         // tweetsTimeRate = 1 : Gives you a tweets count reading every 1 minute
         var tweetsTimeRate = 1;

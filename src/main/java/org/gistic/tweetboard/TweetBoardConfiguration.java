@@ -1,10 +1,10 @@
 package org.gistic.tweetboard;
 
-import com.bazaarvoice.dropwizard.assets.AssetsBundleConfiguration;
-import com.bazaarvoice.dropwizard.assets.AssetsConfiguration;
 import com.bendb.dropwizard.redis.JedisFactory;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import io.dropwizard.bundles.assets.AssetsBundleConfiguration;
+import io.dropwizard.bundles.assets.AssetsConfiguration;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;

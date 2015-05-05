@@ -11,6 +11,12 @@
     <url>http://maven.apache.org</url>
     <repositories>
         <repository>
+            <id>snapshot-repository.java.net</id>
+            <name>Java.net Snapshot Repository for Maven</name>
+            <url>https://maven.java.net/content/repositories/snapshots/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
             <id>sonatype-nexus-snapshots</id>
             <name>Sonatype Nexus Snapshots</name>
             <url>http://oss.sonatype.org/content/repositories/snapshots</url>
@@ -25,7 +31,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dropwizard.version>0.7.1</dropwizard.version>
+        <dropwizard.version>0.8.1</dropwizard.version>
     </properties>
 
     <dependencies>
@@ -46,14 +52,9 @@
             <version>5.1.6</version>
         </dependency>
         <dependency>
-            <groupId>io.dropwizard</groupId>
-            <artifactId>dropwizard-jdbi</artifactId>
-            <version>${dropwizard.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.bendb.dropwizard</groupId>
             <artifactId>dropwizard-redis</artifactId>
-            <version>0.7.1-5</version>
+            <version>0.8.1-0</version>
         </dependency>
         <dependency>
             <groupId>org.twitter4j</groupId>
@@ -63,17 +64,28 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20090211</version>
+            <version>20141113</version>
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-assets</artifactId>
-            <version>0.7.1</version>
+            <version>${dropwizard.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.bazaarvoice.dropwizard</groupId>
+            <groupId>io.dropwizard-bundles</groupId>
             <artifactId>dropwizard-configurable-assets-bundle</artifactId>
-            <version>0.2.2</version>
+            <version>${dropwizard.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-sse</artifactId>
+            <version>2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>2.17</version>
         </dependency>
     </dependencies>
     <build>

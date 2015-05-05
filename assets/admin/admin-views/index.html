@@ -1,0 +1,33 @@
+<!-- Header -->
+<header class="homepage-header">
+    <h1 class="icon icon-massive icon-bird"></h1>
+    <h1>TweetBoard</h1>
+    <small>Show realtime tweets for your events</small>
+
+    <div class="input-group start-event">
+        <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startEventHandler()">
+        <span class="input-group-btn">
+<button class="btn btn-search" type="button" ng-click="startEventHandler()"><i class="fa fa-search"></i></button>
+</span>
+    </div>
+</header>
+
+<main class="container">
+    <section class="row text-center homepage-boxes">
+        <article class="col-md-8">
+            <span class="icon icon-bird icon icon-massive"></span>
+            <h4>100% Free</h4>
+            <p>We are offering this service for free .. Enjoy!</p>
+        </article>
+        <article class="col-md-8">
+            <span class="icon icon-presentation icon icon-massive"></span>
+            <h4>UI Customization</h4>
+            <p>Change how the tweets are going to look like to fit for your event.</p>
+        </article>
+        <article class="col-md-8">
+            <span class="icon icon-circle-check icon icon-massive"></span>
+            <h4>Tweets Moderation</h4>
+            <p>Control which tweets to show / hide during your event.</p>
+        </article>
+    </section>
+</main>

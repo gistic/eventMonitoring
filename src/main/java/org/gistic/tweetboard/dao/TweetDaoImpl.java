@@ -1,7 +1,6 @@
 package org.gistic.tweetboard.dao;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.jetty.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.representations.EventConfig;
 import org.gistic.tweetboard.representations.EventMeta;
@@ -31,6 +30,8 @@ public class TweetDaoImpl implements TweetDao {
     final String SCREENS_DEFAULT = "[\"/live\", \"/top\", \"/overtime\"]";
     final String START_TIME_KEY = "startTime";
     final String HASHTAGS_KEY = "hashTags";
+    private String SCREENTIMES_KEY = "screensTime";
+    private String SCREENTIMES_DEFAULT = "[12000, 12000, 12000]";
 
     public TweetDaoImpl() {
         //this.jedis = jedis;
@@ -55,6 +56,7 @@ public class TweetDaoImpl implements TweetDao {
             String time = d.toLocaleString();
             jedis.hset(uuid, START_TIME_KEY, time);
             jedis.hset(uuid, HASHTAGS_KEY, StringUtils.join(hashTags, ","));
+            jedis.hset(uuid, SCREENTIMES_KEY, SCREENTIMES_DEFAULT);
         }
     }
 
@@ -203,6 +205,7 @@ public class TweetDaoImpl implements TweetDao {
             jedis.hset(uuid, BG_COLOR_KEY, eventConfig.getBackgroundColor());
             jedis.hset(uuid, SIZE_KEY, eventConfig.getSize());
             jedis.hset(uuid, SCREENS_KEY, Arrays.toString(eventConfig.getScreens()));
+            jedis.hset(uuid, SCREENTIMES_KEY, Arrays.toString(eventConfig.getScreenTimes()));
         }
     }
 
@@ -213,10 +216,18 @@ public class TweetDaoImpl implements TweetDao {
             eventConfig.setBackgroundColor(jedis.hget(uuid, BG_COLOR_KEY));
             eventConfig.setSize(jedis.hget(uuid, SIZE_KEY));
             String screens = jedis.hget(uuid, SCREENS_KEY);
-            String[] screensArray = (String[])Arrays
+            Object[] o =
+                    Arrays
                     .stream(screens.substring(1, screens.length() - 1).split(","))
-                    .map(String::trim).toArray();
+                    .map(String::trim)
+                            .map(s -> s.substring(1, s.length()-1))
+                    .toArray();
+            String[] screensArray = Arrays.copyOf(o, o.length, String[].class);
             eventConfig.setScreens(screensArray);
+            String screenTimesStr = jedis.hget(uuid, SCREENTIMES_KEY);
+            int[] screenTimes = Arrays.stream(screenTimesStr.substring(1, screenTimesStr.length()-1).split(","))
+                    .map(String::trim).mapToInt(Integer::parseInt).toArray();
+            eventConfig.setScreenTimes(screenTimes);
         }
         return eventConfig;
     }

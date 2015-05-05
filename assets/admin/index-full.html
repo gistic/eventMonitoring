@@ -9,54 +9,48 @@
     <link rel="stylesheet" href="../assets/stylesheets/screen.css">
     <link rel="stylesheet" href="../assets/fonts/eventboard/style.css">
 
-    <link rel="stylesheet" type="text/css" href="../assets/vendors/notifications/css/ns-default.css" />
-    <link rel="stylesheet" type="text/css" href="../assets/vendors/notifications/css/ns-style-other.css" />
-    <link rel="stylesheet" type="text/css" href="../assets/vendors/notifications/css/ns-style-growl.css" />
-
     <!--[if lt IE 9]>
-<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
 
 </head>
 
-<body ng-app="eventAdminApp" ng-controller="SuperAdminCtrl">
+<body ng-app="eventAdminApp" ng-controller="startEventHandler">
 
-    <!-- Main -->
+    <!-- Header -->
+    <header class="homepage-header">
+        <h1 class="icon icon-massive icon-bird"></h1>
+        <h1>TweetBoard</h1>
+        <small>Show realtime tweets for your events</small>
+
+        <div class="input-group start-event">
+            <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startEventHandler()">
+            <span class="input-group-btn">
+                <button class="btn btn-search" type="button" ng-click="startEventHandler()"><i class="fa fa-search"></i></button>
+            </span>
+        </div>
+    </header>
+
     <main class="container">
-    <h1 class="text-center alert">
-        Running Events On Server
-    </h1>
-    <table class="table table-responsive table-striped table-hover">
-       <thead>
-           <tr>
-               <th>ID</th>
-               <th>Start Time</th>
-               <th>UUID</th>
-               <th>HashTags</th>
-               <th>Kill Event</th>
-           </tr>
-       </thead>
-        <tbody>
-            <tr ng-repeat="event in serverEvents" id="{{event.uuid}}">
-               <td>
-                   {{$index+1}}
-               </td>
-                <td>
-                    {{event.startTime}}
-                </td>
-                <td>
-                    {{event.uuid}}
-                </td>
-                <td>
-                    {{event.hashTags}}
-                </td>
-                <td>
-                    <button class="btn btn-sm btn-stop" ng-click="killEvent($event)">Kill</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <section class="row text-center homepage-boxes">
+            <article class="col-md-8">
+                <span class="icon icon-bird icon icon-massive"></span>
+                <h4>100% Free</h4>
+                <p>We are offering this service for free .. Enjoy!</p>
+            </article>
+            <article class="col-md-8">
+                <span class="icon icon-presentation icon icon-massive"></span>
+                <h4>UI Customization</h4>
+                <p>Change how the tweets are going to look like to fit for your event.</p>
+            </article>
+            <article class="col-md-8">
+                <span class="icon icon-circle-check icon icon-massive"></span>
+                <h4>Tweets Moderation</h4>
+                <p>Control which tweets to show / hide during your event.</p>
+            </article>
+        </section>
     </main>
+
 
     <!-- Footer -->
     <footer class="container clearfix">
@@ -88,9 +82,10 @@
         </ul>
     </footer>
 
+
     <!-- SCRIPTS -->
     <script src="../assets/scripts/jquery.min.js"></script>
-    <script src="../assets/vendors/notifications/js/modernizr.custom.js"></script>
+
     <script src="../assets/scripts/angularjs/angular.min.js"></script>
     <script src="../assets/scripts/bootstrap.min.js"></script>
     <script src="../assets/scripts/widgets.js" charset="utf-8"></script>
@@ -98,18 +93,14 @@
     <!-- Vendors -->
     <script src="../assets/scripts/angularjs/angular-animate.min.js"></script>
     <script src="../assets/scripts/angularjs/angular-cookies.min.js"></script>
-    <script src="../assets/scripts/angularjs/angular-route.min.js"></script>
-    <script src="../assets/scripts/angularjs/angular-ui-router.js"></script>
+    <script src="assets/scripts/angularjs/angular-route.min.js"></script>
+    <script src="assets/scripts/angularjs/angular-ui-router.js"></script>
     <script src="../assets/vendors/ui-bootstrap-tpls-0.12.1.min.js"></script>
     <script src="../assets/vendors/angular-timer-all.min.js"></script>
 
     <script src="../assets/vendors/angular-file-upload/angular-file-upload.min.js"></script>
 
     <script src="../assets/scripts/adminApp.js"></script>
-
-    <script src="../assets/vendors/notifications/js/classie.js"></script>
-    <script src="../assets/vendors/notifications/js/notificationFx.js"></script>
-
 
 </body>
 

@@ -1,6 +1,9 @@
 package org.gistic.tweetboard.datalogic;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gistic.tweetboard.dao.TweetDao;
+import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.representations.EventConfig;
 import org.gistic.tweetboard.representations.TopUser;
@@ -9,6 +12,11 @@ import redis.clients.jedis.Tuple;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -42,9 +50,11 @@ public class TweetDataLogic {
     public void addToApproved(String tweetId, boolean starred) {
         tweetDao.removeFromSentForApproval(uuid, tweetId);
         tweetDao.addToApproved(uuid, tweetId, starred);
-//        if (newArrival) {
-//            tweetDao.addToUserTweetsSet(uuid, String.valueOf(tweetId));
-//        }
+        String statusString = tweetDao.getStatusString(tweetId);
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
+        Message msg = new Message(uuid, Message.Type.LiveTweet, statusString);
+        target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
     }
 
     public void addToBlocked(String tweetId) {
@@ -105,6 +115,16 @@ public class TweetDataLogic {
 
     public void updateEventConfig(EventConfig eventConfig) {
         tweetDao.updateEventConfig(uuid, eventConfig);
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
+        String configString = "";
+        try {
+            configString = new ObjectMapper().writeValueAsString(eventConfig);
+        } catch (JsonProcessingException e) {
+            LoggerFactory.getLogger(this.getClass()).error("Error converting pojo, SHOULD NEVER HAPPEN");
+        }
+        Message msg = new Message(uuid, Message.Type.UiUpdate, configString);
+        target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
     }
 
     public EventConfig getEventConfig(String uuid) {
