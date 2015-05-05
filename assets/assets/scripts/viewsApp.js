@@ -184,7 +184,14 @@ eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$c
             var tweets = {};
             $scope.allTweets = [];
 
-            source.addEventListener('message', function (response) {
+            source.addEventListener('approved-tweets', function (response) {
+                $scope.tweet = JSON.parse(response.data);
+                $scope.$apply(function () {
+                    $scope.allTweets.push($scope.tweet);
+                });
+            });
+            
+            source.addEventListener('broadcast-ui-customization', function (response) {
                 $scope.tweet = JSON.parse(response.data);
                 $scope.$apply(function () {
                     $scope.allTweets.push($scope.tweet);

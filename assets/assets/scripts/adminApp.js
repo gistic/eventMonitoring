@@ -411,17 +411,29 @@ eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', 
 /* Main controller for the application */
 eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'shareData', '$anchorScroll', '$state',
                                             function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, shareData, $anchorScroll, $state) {
-
-//        $rootScope.eventID = getData.getEventID();
-//        $scope.eventID = getData.getEventID();
                                                 
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
                                                 
         $scope.goLive = function(){
-//            $location.path($rootScope.baseUrl + "/#/live?uuid=" + $rootScope.eventID);
             $window.open($rootScope.baseUrl + "/#/live?uuid=" + $rootScope.eventID, '_blank');
         }
+        
+        
+        $scope.getViewOptions = function () {
+
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/config';
+            var requestData = "";
+
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                console.log(response);
+            }).error(function (){
+                console.log("#");
+            })
+        }
+        $scope.getViewOptions();
     
         $scope.updateBlockedUsers = function (e, screenName, userPicture) {
 
