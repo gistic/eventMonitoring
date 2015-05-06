@@ -46,6 +46,11 @@ public class TweetProcessor {
     public void onStatusUpdate(InternalStatus status) {
     try {
         Status tweet = status.getInternalStatus();
+        if(tweet.isRetweet()) {
+            tweetDataLogic.incrTotalRetweets();
+        } else {
+            tweetDataLogic.incrOriginalTweets();
+        }
         if (isBlockedUserTweet(tweet)) {
             System.out.println("blocked user detected "
                     + tweet.getUser().getScreenName() + ":" + tweet.getText());

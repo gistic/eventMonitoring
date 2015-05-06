@@ -5,12 +5,7 @@ import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
-import org.gistic.tweetboard.representations.Event;
-import org.gistic.tweetboard.representations.EventUuid;
-import org.gistic.tweetboard.representations.TopUser;
-import org.gistic.tweetboard.representations.TopUsers;
-import org.gistic.tweetboard.representations.EventConfig;
-import org.gistic.tweetboard.representations.EventMetaList;
+import org.gistic.tweetboard.representations.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import redis.clients.jedis.Jedis;
@@ -215,5 +210,13 @@ public class EventsResource {
     public EventMetaList getSuperAdmin() {
         TweetDao dao = new TweetDaoImpl();
         return dao.getEventMetaList();
+    }
+
+    @GET
+    @Path("/{uuid}/basicStats")
+    public BasicStats getbasicStats(@PathParam("uuid") String uuid) {
+        checkUuid(uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        return tweetDataLogic.getBasicStats(uuid);
     }
 }

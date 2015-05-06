@@ -1,5 +1,6 @@
 package org.gistic.tweetboard.dao;
 
+import org.gistic.tweetboard.representations.BasicStats;
 import org.gistic.tweetboard.representations.EventConfig;
 import org.gistic.tweetboard.representations.EventMetaList;
 import org.joda.time.DateTime;
@@ -67,4 +68,10 @@ public interface TweetDao {
     String getProfileImageUrl(String element);
 
     EventMetaList getEventMetaList();
+
+    void incrRetweets(String uuid);
+
+    void incrTweets(String uuid);
+
+    BasicStats getBasicStats(String uuid);
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
+import org.gistic.tweetboard.representations.BasicStats;
 import org.gistic.tweetboard.representations.EventConfig;
 import org.gistic.tweetboard.representations.TopUser;
 import org.slf4j.LoggerFactory;
@@ -139,5 +140,17 @@ public class TweetDataLogic {
                 .map(user -> new TopUser(tweetDao.getGetUserId(user.getElement()), user.getElement(), user.getScore(),
                         tweetDao.getProfileImageUrl(user.getElement())))
                 .collect(Collectors.toList());
+    }
+
+    public BasicStats getBasicStats(String uuid) {
+        return tweetDao.getBasicStats(uuid);
+    }
+
+    public void incrTotalRetweets() {
+        tweetDao.incrRetweets(uuid);
+    }
+
+    public void incrOriginalTweets() {
+        tweetDao.incrTweets(uuid);
     }
 }
