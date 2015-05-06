@@ -4,6 +4,7 @@ import com.google.common.eventbus.AsyncEventBus;
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.twitter.*;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -23,16 +24,15 @@ public class Event {
         this.hashTags = hashTags;
         this.tweetDataLogic = tweetDataLogic;
         bus = new AsyncEventBus(ExecutorSingleton.getInstance());
-//        twitterService = new TwitterService(ConfigurationSingleton.
-//                getInstance().getTwitterConfiguration(), bus, hashTags);
         TwitterServiceManager.make(ConfigurationSingleton.
                 getInstance().getTwitterConfiguration(), bus, hashTags, uuid);
         tweetProcessor = new TweetProcessor(bus, tweetDataLogic);
         try {
             tweetProcessor.start();
         } catch (Exception e) {
-            System.out.println("Error: Failure in starting twitter stream logic!");
+            LoggerFactory.getLogger(this.getClass()).error("Error: Failure in starting twitter stream logic!");
             e.printStackTrace();
+            //TODO: throw
         }
         tweetDataLogic.createNewEvent(hashTags);
     }
@@ -42,8 +42,9 @@ public class Event {
             TwitterServiceManager.stop(uuid);
             tweetProcessor.stop();
         } catch (Exception e) {
-            System.out.println("Error: Failure in stopping twitter stream logic!");
+            LoggerFactory.getLogger(this.getClass()).error("Error: Failure in stopping twitter stream logic!");
             e.printStackTrace();
+            //TODO: throw
         }
         tweetDataLogic.deleteEvent();
     }

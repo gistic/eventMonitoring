@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
 import redis.clients.jedis.exceptions.JedisConnectionException;
+import redis.clients.jedis.exceptions.JedisException;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
@@ -27,11 +28,11 @@ public class TweetDaoImpl implements TweetDao {
     final String SIZE_KEY = "size";
     final String SIZE_DEAFULT = "normal";
     final String SCREENS_KEY = "screens";
-    final String SCREENS_DEFAULT = "[\"/live\", \"/top\", \"/overtime\"]";
+    final String SCREENS_DEFAULT = "[/live, /top, /overtime]";
     final String START_TIME_KEY = "startTime";
     final String HASHTAGS_KEY = "hashTags";
-    private String SCREENTIMES_KEY = "screensTime";
-    private String SCREENTIMES_DEFAULT = "[12000, 12000, 12000]";
+    final String SCREENTIMES_KEY = "screensTime";
+    final String SCREENTIMES_DEFAULT = "[12000, 12000, 12000]";
 
     public TweetDaoImpl() {
         //this.jedis = jedis;
@@ -43,6 +44,8 @@ public class TweetDaoImpl implements TweetDao {
     public void addNewEventToList(String uuid) {
         try (Jedis jedis = JedisPoolContainer.getInstance()){
             jedis.lpush(All_EVENTS_KEY, uuid);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -55,8 +58,10 @@ public class TweetDaoImpl implements TweetDao {
             Date d =new Date();
             String time = d.toLocaleString();
             jedis.hset(uuid, START_TIME_KEY, time);
-            jedis.hset(uuid, HASHTAGS_KEY, StringUtils.join(hashTags, ","));
+            jedis.hset(uuid, HASHTAGS_KEY, "["+StringUtils.join(hashTags, ",")+"]");
             jedis.hset(uuid, SCREENTIMES_KEY, SCREENTIMES_DEFAULT);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -66,6 +71,8 @@ public class TweetDaoImpl implements TweetDao {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.set(id, statusString);
             jedis.lpush(getArrivedNotSentListKey(uuid), id);
+        }  catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -85,13 +92,17 @@ public class TweetDaoImpl implements TweetDao {
                 jedis.sadd(getUserTweetsSetKey(uuid, userId), tweetId);
                 jedis.zincrby(getUsersRankSetKey(uuid), 1, screenName);
             }
-        } catch (Exception e) { LoggerFactory.getLogger(TweetDaoImpl.class).error("Status string could not be saved!");  }
+        }  catch (JedisException jE) {
+            jE.printStackTrace();
+        }
     }
 
     @Override
     public void removeFromArrived(String uuid, String id) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lrem(getArrivedNotSentListKey(uuid), 0, id);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -99,6 +110,8 @@ public class TweetDaoImpl implements TweetDao {
     public void addToSentForApproval(String uuid, String id) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lpush(getSentForApprovalListKey(uuid), id);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -121,6 +134,8 @@ public class TweetDaoImpl implements TweetDao {
             }
             jedis.set(tweetId, statusString);
             jedis.lpush(getApprovedListKey(uuid), tweetId);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -132,6 +147,8 @@ public class TweetDaoImpl implements TweetDao {
     public void removeFromSentForApproval(String uuid, String tweetId) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lrem(getSentForApprovalListKey(uuid), 0, tweetId);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -145,7 +162,8 @@ public class TweetDaoImpl implements TweetDao {
             jedis.set(getUserProfileImageKey(screenName), tweet.getUser().getOriginalProfileImageURLHttps());
             jedis.sadd(getUserTweetsSetKey(uuid, userId), tweetId);
             jedis.zincrby(getUsersRankSetKey(uuid), 1, screenName);
-            //jedis.zrevrangeByScore(getUsersRankSetKey(uuid), "+", "-", 0, 5);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -157,14 +175,22 @@ public class TweetDaoImpl implements TweetDao {
     public Set<Tuple> getTopNUsers(String uuid, int topN) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getUsersRankSetKey(uuid), "+inf", "-inf", 0, topN);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
+        //TODO: handle error in callers
+        return null;
     }
 
     @Override
     public String getGetUserId(String screenName) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.get(screenName);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
+        //TODO: handle error in callers
+        return null;
     }
 
     private String getUsersRankSetKey(String uuid) {
@@ -175,13 +201,19 @@ public class TweetDaoImpl implements TweetDao {
     public String removeFromApproved(String uuid) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.rpop(getApprovedListKey(uuid));
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
+        //TODO: handle error in callers
+        return null;
     }
 
     @Override
     public void addToApprovedSentToClient(String uuid, String tweetId) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lpush(getApprovedSentToClientListKey(uuid), tweetId);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -196,7 +228,11 @@ public class TweetDaoImpl implements TweetDao {
     public String getStatusString(String tweetId) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.get(tweetId);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
+        //TODO: handle error in callers
+        return null;
     }
 
     @Override
@@ -206,6 +242,8 @@ public class TweetDaoImpl implements TweetDao {
             jedis.hset(uuid, SIZE_KEY, eventConfig.getSize());
             jedis.hset(uuid, SCREENS_KEY, Arrays.toString(eventConfig.getScreens()));
             jedis.hset(uuid, SCREENTIMES_KEY, Arrays.toString(eventConfig.getScreenTimes()));
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -216,20 +254,27 @@ public class TweetDaoImpl implements TweetDao {
             eventConfig.setBackgroundColor(jedis.hget(uuid, BG_COLOR_KEY));
             eventConfig.setSize(jedis.hget(uuid, SIZE_KEY));
             String screens = jedis.hget(uuid, SCREENS_KEY);
-            Object[] o =
-                    Arrays
-                    .stream(screens.substring(1, screens.length() - 1).split(","))
-                    .map(String::trim)
-                            .map(s -> s.substring(1, s.length()-1))
-                    .toArray();
-            String[] screensArray = Arrays.copyOf(o, o.length, String[].class);
+            String[] screensArray = getStringArray(screens);
             eventConfig.setScreens(screensArray);
             String screenTimesStr = jedis.hget(uuid, SCREENTIMES_KEY);
             int[] screenTimes = Arrays.stream(screenTimesStr.substring(1, screenTimesStr.length()-1).split(","))
                     .map(String::trim).mapToInt(Integer::parseInt).toArray();
             eventConfig.setScreenTimes(screenTimes);
+            String hashtagsString = jedis.hget(uuid, HASHTAGS_KEY);
+            String[] hashtagsArray = getStringArray(hashtagsString);
+            eventConfig.setHashtags(hashtagsArray);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
         return eventConfig;
+    }
+
+    private String[] getStringArray(String arrayAsString) {
+        Object[] objectHashtagsArray =
+                Arrays
+                        .stream(arrayAsString.substring(1, arrayAsString.length() - 1).split(","))
+                        .toArray();
+        return Arrays.copyOf(objectHashtagsArray, objectHashtagsArray.length, String[].class);
     }
 
     @Override
@@ -242,6 +287,8 @@ public class TweetDaoImpl implements TweetDao {
                 removeFromSentForApproval(uuid, tweetId);
                 addToApproved(uuid, tweetId, false);
             }
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -249,7 +296,11 @@ public class TweetDaoImpl implements TweetDao {
     public String getProfileImageUrl(String screenName) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.get(getUserProfileImageKey(screenName));
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
+        //TODO: handle error in callers
+        return null;
     }
 
     @Override
@@ -262,7 +313,11 @@ public class TweetDaoImpl implements TweetDao {
                     .collect(Collectors.toList());
             EventMeta[] metaArray = metaList.stream().toArray(EventMeta[]::new);
             return new EventMetaList(metaArray);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
+        //TODO: handle error in callers
+        return null;
     }
 
     @Override
@@ -274,6 +329,8 @@ public class TweetDaoImpl implements TweetDao {
                 removeFromArrived(uuid, tweetId);
                 removeFromSentForApproval(uuid, tweetId);
             }
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 
@@ -283,7 +340,8 @@ public class TweetDaoImpl implements TweetDao {
             jedis.lrem(All_EVENTS_KEY, 0, uuid);
             jedis.del(uuid, getArrivedNotSentListKey(uuid), getApprovedSentToClientListKey(uuid),
                     getSentForApprovalListKey(uuid));
-            //jedis.hdel(uuid);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
         }
     }
 

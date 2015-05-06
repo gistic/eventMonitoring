@@ -17,7 +17,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,11 +75,6 @@ public class TweetDataLogic {
         tweetDao.addToArrived(uuid, tweet.getInternalStatus(), tweet.getStatusString());
         tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
     }
-
-//    public void sentForApproval(String id) {
-//        tweetDao.removeFromArrived(uuid, id);
-//        tweetDao.addToSentForApproval(uuid, id);
-//    }
 
     public void createNewEvent(String[] hashTags) {
         tweetDao.addNewEventToList(uuid);
@@ -141,10 +135,9 @@ public class TweetDataLogic {
     public List<TopUser> getTopTenNUsers(Integer count) {
         Set<Tuple> topUsers = tweetDao.getTopNUsers(uuid, count);
 
-        List<TopUser> topUsersList = topUsers.stream()
+        return topUsers.stream()
                 .map(user -> new TopUser(tweetDao.getGetUserId(user.getElement()), user.getElement(), user.getScore(),
                         tweetDao.getProfileImageUrl(user.getElement())))
                 .collect(Collectors.toList());
-        return topUsersList;
     }
 }

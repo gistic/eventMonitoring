@@ -8,6 +8,7 @@ public class EventConfig {
     private String[] screens;
     private String size;
     private int screenTimes[];
+    private String[] hashtags;
 
     public int[] getScreenTimes() {
         return screenTimes;
@@ -36,5 +37,13 @@ public class EventConfig {
     }
     public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    public void setHashtags(String[] hashtags) {
+        this.hashtags = hashtags;
+    }
+
+    public String[] getHashtags() {
+        return hashtags;
     }
 }

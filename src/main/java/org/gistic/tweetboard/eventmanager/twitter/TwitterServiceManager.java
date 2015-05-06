@@ -16,6 +16,7 @@ public class TwitterServiceManager {
     public static void make(TwitterConfiguration config, AsyncEventBus bus, String[] hashTags, String uuid) {
         streamFactory = new TwitterStreamFactory(new ConfigurationBuilder().setJSONStoreEnabled(true).build());
         if (twitterService == null) {
+            //there were no running twitter streams
             twitterService = new TwitterService(config, streamFactory);
             try { twitterService.start(bus, uuid, hashTags);} catch (Exception e) {e.printStackTrace();}
         }

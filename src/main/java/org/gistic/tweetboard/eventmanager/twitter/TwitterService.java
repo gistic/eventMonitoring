@@ -11,6 +11,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by sohussain on 4/12/15.
+ *
  */
 public class TwitterService {
     private final TwitterConfiguration config;
@@ -24,7 +25,6 @@ public class TwitterService {
         eventDetailsMap = new HashMap<>();
     }
 
-    //@Override
     public void start(AsyncEventBus bus, String uuid, String[] hashTags) throws Exception {
         sampleStream = streamFactory.getInstance();
         sampleStream.setOAuthConsumer(config.getConsumerKey(), config.getConsumerSecret());
@@ -35,12 +35,6 @@ public class TwitterService {
         fq.track(hashTags);
         sampleStream.addListener(tweetListener);
         sampleStream.filter(fq);
-//        List<String> queries = new ArrayList<String>();
-//        for (String keyWord : hashTags) {
-//            queries.add(keyWord);
-//        }
-//        sampleStream.sample();
-
     }
 
     public void addNewEvent(AsyncEventBus bus, String uuid, String[] hashTags) {
@@ -67,7 +61,6 @@ public class TwitterService {
 
     }
 
-    //@Override
     public boolean stop(String uuid) throws Exception {
         EventServiceDetails eventDetails = eventDetailsMap.remove(uuid);
         checkNotNull(eventDetails);
