@@ -1,18 +1,33 @@
 package org.gistic.tweetboard.resources;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
-import org.gistic.tweetboard.representations.*;
+import org.gistic.tweetboard.representations.Event;
+import org.gistic.tweetboard.representations.EventUuid;
+import org.gistic.tweetboard.representations.TopUser;
+import org.gistic.tweetboard.representations.TopUsers;
+import org.gistic.tweetboard.representations.EventConfig;
+import org.gistic.tweetboard.representations.EventMetaList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import redis.clients.jedis.Jedis;
 
-import javax.ws.rs.*;
+import javax.validation.Valid;
+import javax.ws.rs.Path;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.POST;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
@@ -27,8 +42,18 @@ import java.util.UUID;
 @Consumes(MediaType.APPLICATION_JSON)
 public class EventsResource {
 
+    private org.gistic.tweetboard.eventmanager.Event checkUuid(@PathParam("uuid") String uuid) {
+        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
+        if (event == null) throw new WebApplicationException(
+                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+                        .entity("incorrect uuid")
+                        .build()
+        );
+        return event;
+    }
+
     @POST
-    public EventUuid createEvent(Event event, @Context Jedis jedis) {
+    public EventUuid createEvent(@Valid Event event, @Context Jedis jedis) {
         String[] hashTags = event.getHashTags();
         for(String hashTag:hashTags) {
             System.out.println("Hashtag received: "+hashTag);
@@ -40,22 +65,12 @@ public class EventsResource {
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);
         return eventUuid;
-//        return Response
-//                .created(null)
-//                .build();
     }
 
     @DELETE
     @Path("/{uuid}")
     public Response deleteEvent(@PathParam("uuid") String uuid) {
-        //TODO: implement
-        if (uuid == null) return Response.status(400).build();
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        checkUuid(uuid);
         EventMap.delete(uuid);
         return Response
                 .ok()
@@ -65,29 +80,16 @@ public class EventsResource {
     @GET
     @Path("/{uuid}/config")
     public EventConfig getEventConfig(@PathParam("uuid") String uuid) {
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         return tweetDataLogic.getEventConfig(uuid);
-//        return Response
-//                .ok("")
-//                .build();
     }
 
     @PUT
     @Path("/{uuid}/config")
     public Response updateEventConfig(
             @PathParam("uuid") String uuid,EventConfig eventConfig, @Context Jedis jedis) {
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.updateEventConfig(eventConfig);
         return Response
@@ -99,12 +101,7 @@ public class EventsResource {
     @Path("/{uuid}/approvedTweets/{tweetId}")
     public Response approveTweet(@PathParam("uuid") String uuid, @PathParam("tweetId") String tweetId,
                                  @DefaultValue("false") @QueryParam("starred") String star){
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        checkUuid(uuid);
         boolean starred = Boolean.parseBoolean(star);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.addToApproved(tweetId, starred);
@@ -114,12 +111,7 @@ public class EventsResource {
     @POST
     @Path("/{uuid}/blockedTweets/{tweetId}")
     public Response blockTweet(@PathParam("uuid") String uuid, @PathParam("tweetId") String tweetId){
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.addToBlocked(tweetId);
         return Response.ok("").build();
@@ -129,12 +121,7 @@ public class EventsResource {
     @PUT
     @Path("/{uuid}/trustedUsers/{screenName}")
     public Response addTrustedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName){
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.addTrustedUser(screenName);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.approveAllExistingTweetsByUser(screenName);
@@ -144,12 +131,7 @@ public class EventsResource {
     @DELETE
     @Path("/{uuid}/trustedUsers/{screenName}")
     public Response deleteTrustedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName){
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.deleteTrustedUser(screenName);
         return Response.ok("").build();
     }
@@ -158,12 +140,7 @@ public class EventsResource {
     @Path("/{uuid}/trustedUsers/")
     public String getTrustedUsers(@PathParam("uuid") String uuid){
 
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         List<String> list = event.getTrustedUsers();
         try {
             return new JSONArray(list.toArray(new String[list.size()])).toString();
@@ -178,12 +155,7 @@ public class EventsResource {
     @Path("/{uuid}/blockedUsers/")
     public String getBlockedUsers(@PathParam("uuid") String uuid){
 
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         List<String> list = event.getBlockedUsers();
         try {
             return new JSONArray(list.toArray(new String[list.size()])).toString();
@@ -196,12 +168,7 @@ public class EventsResource {
     @PUT
     @Path("/{uuid}/blockedUsers/{screenName}")
     public Response addBlockedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName){
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.addBlockedUser(screenName);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.blockAllExistingTweetsByUser(screenName);
@@ -211,12 +178,7 @@ public class EventsResource {
     @DELETE
     @Path("/{uuid}/blockedUsers/{screenName}")
     public Response deleteBlockedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName){
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.deleteBlockedUser(screenName);
         return Response.ok("").build();
     }
@@ -225,12 +187,7 @@ public class EventsResource {
     @Path("/{uuid}/topUsers/")
     public TopUsers getTopUsers(@PathParam("uuid") String uuid,
                                 @DefaultValue("10") @QueryParam("count") Integer count){
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         // TopUser arraylist to array ... TODO: refactor
         List<TopUser> topUserList = tweetDataLogic.getTopTenNUsers(count);
@@ -244,12 +201,7 @@ public class EventsResource {
     public String getTweetsOverTime(@PathParam("uuid") String uuid,
                                        @DefaultValue("-1") @QueryParam("period") Integer period,
                                        @DefaultValue("1") @QueryParam("sampleRate") Integer sampleRate){
-        org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
-        if (event == null) throw new WebApplicationException(
-                Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
-                        .build()
-        );
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         List<TweetsOverTimeAnalyzer.TweetsCountPerTime> tweetsPerTime = event.getTweetsPerTime(sampleRate, period);
         JSONArray result = new JSONArray();
         for (TweetsOverTimeAnalyzer.TweetsCountPerTime TweetsPeriod : tweetsPerTime) {
@@ -262,7 +214,6 @@ public class EventsResource {
     @Path("/superAdmin/")
     public EventMetaList getSuperAdmin() {
         TweetDao dao = new TweetDaoImpl();
-        EventMetaList list = dao.getEventMetaList();
-        return list;
+        return dao.getEventMetaList();
     }
 }

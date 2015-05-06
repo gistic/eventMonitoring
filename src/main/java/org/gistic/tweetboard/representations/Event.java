@@ -1,5 +1,11 @@
 package org.gistic.tweetboard.representations;
 
+import io.dropwizard.validation.SizeRange;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Created by sohussain on 4/5/15.
  */
@@ -17,6 +23,7 @@ public class Event {
 //    public String[] getHashTags() {
 //        return hashTags;
 //    }
+    @NotNull @Size(min = 1, max = 1)
     private  String[] hashTags;
 
     Event() {}
