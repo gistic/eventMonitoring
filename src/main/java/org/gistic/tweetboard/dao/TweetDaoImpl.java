@@ -2,6 +2,7 @@ package org.gistic.tweetboard.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.gistic.tweetboard.JedisPoolContainer;
+import org.gistic.tweetboard.representations.BasicStats;
 import org.gistic.tweetboard.representations.EventConfig;
 import org.gistic.tweetboard.representations.EventMeta;
 import org.gistic.tweetboard.representations.EventMetaList;
@@ -56,7 +57,7 @@ public class TweetDaoImpl implements TweetDao {
             jedis.hset(uuid, SIZE_KEY, SIZE_DEAFULT);
             jedis.hset(uuid, SCREENS_KEY, SCREENS_DEFAULT);
             Date d =new Date();
-            String time = d.toLocaleString();
+            String time = d.toGMTString();
             jedis.hset(uuid, START_TIME_KEY, time);
             jedis.hset(uuid, HASHTAGS_KEY, "["+StringUtils.join(hashTags, ",")+"]");
             jedis.hset(uuid, SCREENTIMES_KEY, SCREENTIMES_DEFAULT);
@@ -321,6 +322,53 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
+    public void incrRetweets(String uuid) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.incr(getTotalRetweetsKey(uuid));
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    private String getTotalRetweetsKey(String uuid) {
+        return uuid + ":totalRetweets";
+    }
+
+    @Override
+    public void incrTweets(String uuid) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.incr(getTotalTweetsKey(uuid));
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    private String getTotalTweetsKey(String uuid) {
+        return uuid + ":totalTweets";
+    }
+
+    @Override
+    public BasicStats getBasicStats(String uuid) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            Long numberOfUsers = jedis.zcard(getUsersRankSetKey(uuid));
+            Long totalTweets = 0l;
+            Long totalRetweets = 0l;
+            try {
+                totalTweets = Long.parseLong(jedis.get(getTotalTweetsKey(uuid)));
+            } catch (NumberFormatException e) {}//nothing to log the value is just one
+            try {
+                totalRetweets =  Long.parseLong(jedis.get(getTotalRetweetsKey(uuid)));
+            } catch (NumberFormatException e) {}//nothing to log the value is just one
+            String startTime = jedis.hget(uuid, START_TIME_KEY);
+            return new BasicStats(startTime, numberOfUsers, totalTweets, totalRetweets);
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO throw
+        return null;
+    }
+
+    @Override
     public void blockAllExistingTweetsByUser(String uuid, String screenName) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             String userId = jedis.get(screenName);
@@ -339,7 +387,7 @@ public class TweetDaoImpl implements TweetDao {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lrem(All_EVENTS_KEY, 0, uuid);
             jedis.del(uuid, getArrivedNotSentListKey(uuid), getApprovedSentToClientListKey(uuid),
-                    getSentForApprovalListKey(uuid));
+                    getSentForApprovalListKey(uuid), getTotalTweetsKey(uuid), getTotalRetweetsKey(uuid));
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
