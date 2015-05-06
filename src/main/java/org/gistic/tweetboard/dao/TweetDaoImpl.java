@@ -331,7 +331,7 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     private String getTotalRetweetsKey(String uuid) {
-        return "uuid:"+"totalRetweets";
+        return uuid + ":totalRetweets";
     }
 
     @Override
@@ -344,7 +344,7 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     private String getTotalTweetsKey(String uuid) {
-        return "uuid:"+"totalTweets";
+        return uuid + ":totalTweets";
     }
 
     @Override
