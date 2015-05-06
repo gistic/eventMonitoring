@@ -447,7 +447,10 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
             getData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    console.log(response);
+                    $scope.numberOfUsers = response.numberOfUsers;
+                    $rootScope.totalTweetsFromServer = response.totalTweets;
+                    $scope.totalRetweets = response.totalRetweets;
+                    $scope.startTime = response.startTime;
                 }).error(function () {
                     console.log("#");
                 })
@@ -479,9 +482,9 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         $scope.eventStarted = false;
         $rootScope.timerRunning = false;
         $scope.tweetsQueue = [];
-        $scope.tweetsCount = 0;
         $scope.tweet = {};
-
+        $scope.tweetsCount= 0;
+        
         // Listen to new message
 
         $scope.startEventSource = function () {
@@ -495,7 +498,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
                 $scope.$apply(function () {
                     $scope.tweetsQueue.push($scope.tweet);
-                    $scope.tweetsCount = $scope.tweetsQueue.length;
+                    $scope.tweetsCount = $rootScope.totalTweetsFromServer + $scope.tweetsQueue.length;
                 }, false);
             });
         }
