@@ -274,6 +274,7 @@ public class TweetDaoImpl implements TweetDao {
         Object[] objectHashtagsArray =
                 Arrays
                         .stream(arrayAsString.substring(1, arrayAsString.length() - 1).split(","))
+                        .map(String::trim)
                         .toArray();
         return Arrays.copyOf(objectHashtagsArray, objectHashtagsArray.length, String[].class);
     }
