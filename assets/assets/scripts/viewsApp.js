@@ -124,10 +124,8 @@ eventViewsApp.controller('layoutCtrl', function ($rootScope, $scope, $timeout, $
                 $rootScope.userSize = response.size;
                 $rootScope.pagesTimeout = response.screenTimes;
                 $rootScope.pages = response.screens;
-
                 // Get the current page path index
                 $scope.pageIndex = $scope.pages.indexOf($location.path());
-
                 $scope.intervalFunction();
             }).error(function () {
                 console.log("#");
@@ -145,6 +143,9 @@ eventViewsApp.controller('layoutCtrl', function ($rootScope, $scope, $timeout, $
 
             // Redirect the page
             $location.path($scope.pages[$scope.pageIndex]);
+            console.log($location.path());
+            console.log($scope.pages);
+            console.log($scope.pageIndex);
 
             $scope.intervalFunction();
 
@@ -211,6 +212,12 @@ eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$c
                     console.log($rootScope.userColor);
                     $rootScope.userSize = $scope.layoutOptions.size;
                     console.log($rootScope.userSize);
+                    $rootScope.pages = $scope.layoutOptions.screens;
+                    console.log($rootScope.pages);
+                    $rootScope.pagesTimeout = $scope.layoutOptions.screenTimes;
+                    console.log($rootScope.pagesTimeout);
+                    $rootScope.eventHashtag = $scope.layoutOptions.hashtags;
+                    console.log($rootScope.eventHashtag);
                 });
             });
         }

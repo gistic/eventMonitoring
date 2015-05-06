@@ -196,22 +196,22 @@ eventAdminApp.factory('shareData', function ($rootScope, $cookies, $cookieStore,
     $rootScope.layoutScreens = [
         {
             name: 'Live Tweets',
-            value: '/live',
+            value: 'live',
             selected: true
         },
         {
             name: 'Top People',
-            value: '/top',
+            value: 'top',
             selected: true
         },
         {
             name: 'Tweets Over Time',
-            value: '/overtime',
+            value: 'overtime',
             selected: true
         }
     ];
 
-    $rootScope.userScreen = ["/live", "/top", "/overtime"];
+//    $rootScope.userScreen = ["/live", "/top", "/overtime"];
 
     return {
         userColor: function () {
@@ -438,8 +438,22 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 })
         }
         $rootScope.getViewOptions();
+                                                
+        $rootScope.getEventStats = function () {
 
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/basicStats';
+            var requestData = "";
 
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    console.log(response);
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+        $rootScope.getEventStats();
+                                                
         $scope.$watch('layoutScreens|filter:{selected:true}', function (nv, ov, scope) {
 
             $rootScope.userScreens = [];
@@ -448,7 +462,9 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                     this.push(value.value);
                 }
             }, $rootScope.userScreens);
+            console.log($rootScope.userScreens);
         }, true);
+                                                
 
         $scope.goLive = function () {
             $window.open($rootScope.baseUrl + "/#/live?uuid=" + $rootScope.eventID, '_blank');
