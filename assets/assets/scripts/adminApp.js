@@ -5,6 +5,7 @@ var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'n
 
 eventAdminApp.run(function ($window, $rootScope) {
     $rootScope.baseUrl = $window.location.origin;
+    $rootScope.twitterBaseUrl = "http://www.twitter.com/";
 })
 
 // Config : Views pages routing
@@ -72,6 +73,7 @@ eventAdminApp.filter('reverseQueue', function () {
     };
 });
 
+
 // Angular factory allwos you to share data between controllers and pages
 //eventAdminApp.factory function ($rootScope) {
 //    return {
@@ -82,9 +84,6 @@ eventAdminApp.filter('reverseQueue', function () {
 //            } else {
 //                return '';
 //            }
-//        },
-//        link: function () {
-//            return "http://www.twitter.com"
 //        }
 //    };
 //});
@@ -92,22 +91,23 @@ eventAdminApp.filter('reverseQueue', function () {
 
 /* Factory to post the requestes */
 eventAdminApp.factory('getData', ['$http', '$rootScope', '$cookies', '$cookieStore', '$location', '$window', function ($http, $rootScope, $cookies, $cookieStore, $location, $window) {
-    
+
     return {
-        
-        setEventHashTag : function(eventHashtag){
+
+        setEventHashTag: function (eventHashtag) {
+            console.log(eventHashtag);
             $rootScope.eventHashtag = eventHashtag;
         },
-        
-        getEventHashTag : function(){
+
+        getEventHashTag: function () {
             return $rootScope.eventHashtag;
         },
-        
-        setEventID : function(eventID){
+
+        setEventID: function (eventID) {
             $rootScope.eventID = eventID;
         },
-        
-        getEventID : function(){
+
+        getEventID: function () {
             return $rootScope.eventID;
         },
 
@@ -126,7 +126,7 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', '$cookies', '$cookieSto
         },
 
         startEvent: function (requestAction) {
-            
+
             var eventHashtag = $('#eventHashtag').val();
             var requestUrl = $rootScope.baseUrl + '/api/events';
 
@@ -149,25 +149,47 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', '$cookies', '$cookieSto
 
 }]);
 
-eventAdminApp.factory('shareData', function ($rootScope, $cookies, $cookieStore, $window, filterFilter) {
+
+
+/**
+ * custom filter
+ */
+eventAdminApp.filter('fruitSelection', ['filterFilter', function (filterFilter) {
+    return function fruitSelection(input, prop) {
+        return filterFilter(input, {
+            selected: true
+        }).map(function (screen) {
+            return screen[prop];
+        });
+    };
+}]);
+
+eventAdminApp.filter('customFilter', function () {
+    return function (arr) {
+        var alter = [];
+        angular.forEach(arr, function (value, key) {
+            if (value.selected == true) {
+                this.push(value);
+            }
+        }, alter);
+        return alter;
+    }
+});
+
+eventAdminApp.factory('shareData', function ($rootScope, $cookies, $cookieStore, $window, filterFilter, getData) {
+
 
 
     // LAYOUT : Colors
     $rootScope.layoutColors = ['black', 'turquoise', 'blue', 'violet', 'pink', 'green', 'orange'];
-    $rootScope.userColor = $rootScope.layoutColors[0];
-
     $rootScope.layoutColor = function ($index) {
         $rootScope.userColor = $rootScope.layoutColors[$index];
-        $cookies.userColor = $rootScope.userColor;
     }
 
     // LAYOUT : Sizes
-    $rootScope.layoutSizes = ['Small', 'Normal', 'Large'];
-    $rootScope.userSize = $rootScope.layoutSizes[1];
-
+    $rootScope.layoutSizes = ['small', 'normal', 'large'];
     $rootScope.layoutSize = function ($index) {
         $rootScope.userSize = $rootScope.layoutSizes[$index];
-        $cookies.userSize = $rootScope.userSize;
     }
 
     // LAYOUT : Screens
@@ -180,41 +202,26 @@ eventAdminApp.factory('shareData', function ($rootScope, $cookies, $cookieStore,
         {
             name: 'Top People',
             value: '/top',
-            selected: false
+            selected: true
         },
         {
             name: 'Tweets Over Time',
             value: '/overtime',
-            selected: false
+            selected: true
         }
     ];
 
-
-    $rootScope.selection = ['/live'];
-
-    // toggle selection for a given fruit by name
-    $rootScope.toggleSelection = function toggleSelection(screen) {
-
-        var idx = $rootScope.selection.indexOf(screen.value);
-
-        if (idx > -1) {
-            $rootScope.selection.splice(idx, 1);
-        } else {
-            $rootScope.selection.push(screen.value);
-        }
-    };
-
-    $cookies.userScreen = $rootScope.selection;
+    $rootScope.userScreen = ["/live", "/top", "/overtime"];
 
     return {
         userColor: function () {
-            return $cookies.userColor;
+            return $rootScope.userColor;
         },
         userSize: function () {
-            return $cookies.userSize;
+            return $rootScope.userSize;
         },
         userScreen: function () {
-            return $cookies.userScreen;
+            return $rootScope.userScreens;
         }
     };
 });
@@ -238,7 +245,7 @@ eventAdminApp.controller('trustedUsersCtrl', ['$rootScope', '$scope', '$http', '
    function ($rootScope, $scope, $http, $cookies, $cookieStore, $modalInstance, getData) {
 
         $scope.trustedUsers = [];
-       var eventID = $rootScope.eventID;
+        var eventID = $rootScope.eventID;
 
         var requestAction = "GET";
         var apiUrl = '/api/events/' + eventID + '/trustedUsers';
@@ -298,7 +305,7 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
    function ($rootScope, $scope, $http, $cookies, $cookieStore, $modalInstance, getData) {
 
         $rootScope.blockedUsers = [];
-       var eventID = $rootScope.eventID;
+        var eventID = $rootScope.eventID;
 
         var requestAction = "GET";
         var apiUrl = '/api/events/' + eventID + '/blockedUsers';
@@ -345,60 +352,60 @@ eventAdminApp.controller('blockedUsersCtrl', ['$rootScope', '$scope', '$http', '
 /* Controller : Super admin page */
 eventAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', 'getData', function ($rootScope, $scope, $http, getData) {
 
-        var requestAction = "GET";
-        var apiUrl = '/api/events/superAdmin/';
+    var requestAction = "GET";
+    var apiUrl = '/api/events/superAdmin/';
+    var requestData = "";
+
+    getData.fetchData(requestAction, apiUrl, requestData)
+        .then(function (response) {
+            $scope.serverEvents = response.data.data;
+        })
+
+    $scope.killEvent = function (e) {
+
+        var eventID = $(e.currentTarget).parent().parent().attr('id');
+
+        var notification = new NotificationFx({
+            message: '<p>Event: <strong>' + eventID + '</strong> have been stoped.</p>',
+            layout: 'growl',
+            effect: 'genie',
+            type: 'notice'
+        });
+
+        var requestAction = "DELETE";
+        var apiUrl = '/api/events/' + eventID;
         var requestData = "";
 
         getData.fetchData(requestAction, apiUrl, requestData)
             .then(function (response) {
-                $scope.serverEvents = response.data.data;
+                notification.show();
             })
 
-        $scope.killEvent = function (e) {
-            
-            var eventID = $(e.currentTarget).parent().parent().attr('id');
-            
-            var notification = new NotificationFx({
-                message: '<p>Event: <strong>' + eventID + '</strong> have been stoped.</p>',
-                layout: 'growl',
-                effect: 'genie',
-                type: 'notice'
-            });
-        
-            var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID;
-            var requestData = "";
-
-            getData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    notification.show();
-                })
-
-        }
+    }
 
 }]);
 
 /* Controller : Start new event - Website front page */
 eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'shareData', '$state',
                                                function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, shareData, $state) {
-       
+
         $scope.startEventHandler = function (action) {
             $scope.$broadcast();
             $scope.timerRunning = true;
-                    
+
             getData.startEvent()
                 .success(function (response) {
-                    
+
                     $rootScope.eventStarted = true;
                     $rootScope.eventID = response.uuid;
-                    
-                    getData.setEventHashTag($scope.eventHashtag);
-                    
+
                     getData.setEventID($rootScope.eventID);
-                    
+
                     $scope.adminUrl = "/admin?uuid=" + $scope.eventID;
                     $scope.ViewUrl = $rootScope.baseUrl + "?uuid=" + $scope.eventID;
-                    $state.transitionTo('admin', {uuid: $scope.eventID});
+                    $state.transitionTo('admin', {
+                        uuid: $scope.eventID
+                    });
 
                     console.log("New Event Started");
                 })
@@ -411,16 +418,11 @@ eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', 
 /* Main controller for the application */
 eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'shareData', '$anchorScroll', '$state',
                                             function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, shareData, $anchorScroll, $state) {
-                                                
+
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
-                                                
-        $scope.goLive = function(){
-            $window.open($rootScope.baseUrl + "/#/live?uuid=" + $rootScope.eventID, '_blank');
-        }
-        
-        
-        $scope.getViewOptions = function () {
+
+        $rootScope.getViewOptions = function () {
 
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/config';
@@ -428,65 +430,29 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
             getData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                console.log(response);
-            }).error(function (){
-                console.log("#");
-            })
-        }
-        $scope.getViewOptions();
-    
-        $scope.updateBlockedUsers = function (e, screenName, userPicture) {
-
-            var requestAction = "PUT";
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/blockedUsers/' + screenName;
-            var requestData = "";
-
-            var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
-            $("#" + tweetId).remove();
-
-            // create the notification
-            var notification = new NotificationFx({
-                message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to blocked users list.</p></div>',
-                layout: 'other',
-                ttl: 6000,
-                effect: 'thumbslider',
-                type: 'success'
-            });
-
-            getData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    // show the notification
-                    notification.show();
+                    console.log(response);
+                    $rootScope.userColor = response.backgroundColor;
+                    $rootScope.userSize = response.size;
+                }).error(function () {
+                    console.log("#");
                 })
-
         }
+        $rootScope.getViewOptions();
 
-        $scope.updateTrustedUsers = function (e, screenName, userPicture) {
 
-            var requestAction = "PUT";
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/trustedUsers/' + screenName;
-            var requestData = "";
+        $scope.$watch('layoutScreens|filter:{selected:true}', function (nv, ov, scope) {
 
-            var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
-            $("#" + tweetId).remove();
+            $rootScope.userScreens = [];
+            angular.forEach(nv, function (value, key) {
+                if (value.selected == true) {
+                    this.push(value.value);
+                }
+            }, $rootScope.userScreens);
+        }, true);
 
-            // create the notification
-            var notification = new NotificationFx({
-                message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to trusted users list.</p></div>',
-                layout: 'other',
-                ttl: 6000,
-                effect: 'thumbslider',
-                type: 'success'
-            });
-
-            getData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    // show the notification
-                    notification.show();
-                })
-
+        $scope.goLive = function () {
+            $window.open($rootScope.baseUrl + "/#/live?uuid=" + $rootScope.eventID, '_blank');
         }
-
 
         // Layout : Color
         $rootScope.userColor = shareData.userColor();
@@ -501,7 +467,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         $scope.tweet = {};
 
         // Listen to new message
-        
+
         $scope.startEventSource = function () {
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/adminLiveTweets?uuid=" + $rootScope.eventID;
 
@@ -552,44 +518,44 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
             var tweetIndex = $(e.currentTarget).attr('data-id');
-            
+
             var eventID = $rootScope.eventID;
             var requestAction = "POST";
             var apiUrl = '/api/events/' + eventID + '/blockedTweets/' + tweetId;
             var requestData = "";
-            
+
             getData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                $scope.tweetsQueue.splice(tweetIndex, 1);
-                $scope.removedTweetsCount++;
-            }).error(function (){
-                console.log("#");
-            })
+                    $scope.tweetsQueue.splice(tweetIndex, 1);
+                    $scope.removedTweetsCount++;
+                }).error(function () {
+                    console.log("#");
+                })
         }
 
         // Approve Tweet
         $scope.approvedTweetsCount = 0;
 
         $scope.approveTweet = function (e, $index) {
-            
+
             var tweetId = $(e.currentTarget).parent().parent().parent().attr('id');
             var tweetIndex = $(e.currentTarget).attr('data-id');
-            
+
             var eventID = $rootScope.eventID;
             var requestAction = "POST";
             var apiUrl = '/api/events/' + eventID + '/approvedTweets/' + tweetId;
             var requestData = "";
-            
+
             getData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
                     $scope.tweetsQueue.splice(tweetIndex, 1);
                     $scope.approvedTweetsCount++;
-                }).error(function (){
+                }).error(function () {
                     console.log("#");
                 })
         }
-        
-        
+
+
         // Approve Tweet As Starred
         $scope.approveStarred = function (e, $index) {
 
@@ -603,15 +569,14 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
             getData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                $scope.tweetsQueue.splice(tweetIndex, 1);
-                $scope.approvedTweetsCount++;
-            }).error(function (){
-                console.log("#");
-            })
+                    $scope.tweetsQueue.splice(tweetIndex, 1);
+                    $scope.approvedTweetsCount++;
+                }).error(function () {
+                    console.log("#");
+                })
         }
-        
-        // Stop Event Handler
 
+        // Stop Event Handler
         $scope.stopEventHandler = function () {
 
             // create the notification
@@ -619,7 +584,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 message: '<p>Hello there! Your event have been stoped.</p>',
                 layout: 'growl',
                 effect: 'genie',
-                type: 'notice' // notice, warning, error or success
+                type: 'notice'
             });
 
 
@@ -645,18 +610,19 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
         // Update Config
         $scope.updateViewOptions = function (userColor, userSize, userScreen) {
+
             var eventID = $rootScope.eventID;
             var requestAction = "PUT";
             var apiUrl = '/api/events/' + eventID + '/config';
 
-            var eventID = $rootScope.eventID;
             var userColor = shareData.userColor();
             var userSize = shareData.userSize();
             var userScreen = shareData.userScreen();
 
             var requestData = {
                 "backgroundColor": userColor,
-                "screens": [userScreen],
+                "screens": userScreen,
+                "screenTimes": [7000, 5000, 3000],
                 "size": userSize
 
             };
@@ -664,6 +630,68 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 .then(function (response) {
                     console.log("Options Updated");
                 })
+        }
+
+        $scope.updateBlockedUsers = function (e, screenName, userPicture, userID) {
+
+            var requestAction = "PUT";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/blockedUsers/' + screenName;
+            var requestData = "";
+
+            // create the notification
+            var notification = new NotificationFx({
+                message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to blocked users list.</p></div>',
+                layout: 'other',
+                ttl: 6000,
+                effect: 'thumbslider',
+                type: 'success'
+            });
+
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .then(function (response) {
+                    // show the notification
+                    notification.show();
+
+                    var tweetQueueWithoutBlocked = [];
+                    angular.forEach($scope.tweetsQueue, function (tweet) {
+                        if (tweet.user.id_str != userID) {
+                            tweetQueueWithoutBlocked.push(tweet);
+                        }
+                    });
+                    $scope.tweetsQueue = tweetQueueWithoutBlocked;
+                })
+
+        }
+
+        $scope.updateTrustedUsers = function (e, screenName, userPicture, userID) {
+
+            var requestAction = "PUT";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/trustedUsers/' + screenName;
+            var requestData = "";
+
+            // create the notification
+            var notification = new NotificationFx({
+                message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to trusted users list.</p></div>',
+                layout: 'other',
+                ttl: 6000,
+                effect: 'thumbslider',
+                type: 'success'
+            });
+
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .then(function (response) {
+                    // show the notification
+                    notification.show();
+
+                    var tweetQueueWithoutTrusted = [];
+                    angular.forEach($scope.tweetsQueue, function (tweet) {
+                        if (tweet.user.id_str != userID) {
+                            tweetQueueWithoutTrusted.push(tweet);
+                        }
+                    });
+                    $scope.tweetsQueue = tweetQueueWithoutTrusted;
+                })
+
         }
 
 

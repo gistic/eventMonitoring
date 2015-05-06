@@ -16,11 +16,7 @@
             <a ng-href="" ng-click="goLive()" class="btn" target="_blank">
                 Presentation <i class="icon-controller-play"></i>
             </a>
-<!--
-            <button class="btn btn-stop" id="stopEvent" ng-click="">
-                Stop <i class="fa fa-stop"></i>
-            </button>
--->
+
             <button class="btn btn-stop" id="stopEvent" ng-click="stopEventHandler()">
                 Stop <i class="fa fa-stop"></i>
             </button>
@@ -139,22 +135,24 @@
                 <article class="col-md-12 custom-option">
                     <h6>Screens</h6>
                     <ul class="list-inline row">
-                        <li class="col-md-8" ng-repeat="screen in layoutScreens">
+
+                        <li class="col-md-8" ng-repeat="(key, value) in layoutScreens">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="selectedScreens[]" value="{{screen.value}}" ng-checked="selection.indexOf(screen) > -1" ng-click="toggleSelection(screen)"> {{screen.name}}
+                                    <input type="checkbox" ng-model="value.selected" ng-checked="value.selected==true" />{{value.name}}
                                 </label>
+                                
                             </div>
                         </li>
-
+                        
                     </ul>
 
                     <div class="text-right save-layout-options">
-                        <a href="#" class="btn" ng-click="updateViewOptions()">
-Save
-</a>
+                        <button class="btn" ng-click="updateViewOptions()">
+                            Save
+                        </button>
                     </div>
-
+                                        
                 </article>
             </div>
         </div>
@@ -256,15 +254,15 @@ Save
             <button type="button" class="btn btn-load-more" ng-show="loadMoreButton()" ng-click="loadMoreTweets()"><strong><i class="fa fa-arrow-up"></i></strong> {{remainingTweetsCount}} New Tweets
             </button>
 
-            <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit()">
+            <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit()" data-user-id="{{tweet.user.id_str}}">
                 <div class="pull-left">
-                    <!--                        <img ng-src="{{tweet.user.profile_image_url_https}}" alt="" class="media-object">-->
+<!--                                            <img ng-src="{{tweet.user.profile_image_url_https}}" alt="" class="media-object">-->
                 </div>
                 <div class="tweet-content pull-left">
                     <h6 class="tweet-user">
 {{tweet.user.name}}
 <small>
-<a href="http://twitter.com/{{tweet.user.screen_name}}" target="_blank">
+    <a href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank">
 @ {{tweet.user.screen_name}}
 </a>
 </small>
@@ -285,9 +283,9 @@ Save
                     </div>
 
                     <div class="btn-group " role="group">
-                        <button type="button" class="btn btn-default" ng-click="updateTrustedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https)"><i class="icon-add-user"></i>
+                        <button type="button" class="btn btn-default" data-id="{{$index}}" ng-click="updateTrustedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https, tweet.user.id_str)"><i class="icon-add-user"></i>
                         </button>
-                        <button type="button" class="btn btn-default" ng-click="updateBlockedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https)"><i class="icon-remove-user"></i>
+                        <button type="button" class="btn btn-default" data-id="{{$index}}" ng-click="updateBlockedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https, tweet.user.id_str)"><i class="icon-remove-user"></i>
                         </button>
                     </div>
 
