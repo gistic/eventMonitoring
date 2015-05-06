@@ -11,7 +11,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by sohussain on 4/12/15.
- * This class handles the creation and destruction of twitter streams and there listeners
+ *
  */
 public class TwitterService {
     private final TwitterConfiguration config;
@@ -55,7 +55,7 @@ public class TwitterService {
         }
         String[] hashtags = new String[hashtagsList.size()];
         fq.track( hashtagsList.toArray(hashtags) );
-        listeners.forEach(sampleStream::addListener);
+        listeners.forEach((streamListener) -> sampleStream.addListener(streamListener));
         sampleStream.filter(fq);
 
 

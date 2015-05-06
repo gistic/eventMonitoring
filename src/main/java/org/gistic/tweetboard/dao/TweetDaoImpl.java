@@ -28,7 +28,7 @@ public class TweetDaoImpl implements TweetDao {
     final String SIZE_KEY = "size";
     final String SIZE_DEAFULT = "normal";
     final String SCREENS_KEY = "screens";
-    final String SCREENS_DEFAULT = "[\"/live\", \"/top\", \"/overtime\"]";
+    final String SCREENS_DEFAULT = "[/live, /top, /overtime]";
     final String START_TIME_KEY = "startTime";
     final String HASHTAGS_KEY = "hashTags";
     final String SCREENTIMES_KEY = "screensTime";
@@ -58,7 +58,7 @@ public class TweetDaoImpl implements TweetDao {
             Date d =new Date();
             String time = d.toLocaleString();
             jedis.hset(uuid, START_TIME_KEY, time);
-            jedis.hset(uuid, HASHTAGS_KEY, StringUtils.join(hashTags, ","));
+            jedis.hset(uuid, HASHTAGS_KEY, "["+StringUtils.join(hashTags, ",")+"]");
             jedis.hset(uuid, SCREENTIMES_KEY, SCREENTIMES_DEFAULT);
         } catch (JedisException jE) {
             jE.printStackTrace();
@@ -254,22 +254,27 @@ public class TweetDaoImpl implements TweetDao {
             eventConfig.setBackgroundColor(jedis.hget(uuid, BG_COLOR_KEY));
             eventConfig.setSize(jedis.hget(uuid, SIZE_KEY));
             String screens = jedis.hget(uuid, SCREENS_KEY);
-            Object[] o =
-                    Arrays
-                    .stream(screens.substring(1, screens.length() - 1).split(","))
-                    .map(String::trim)
-                            .map(s -> s.substring(1, s.length()-1))
-                    .toArray();
-            String[] screensArray = Arrays.copyOf(o, o.length, String[].class);
+            String[] screensArray = getStringArray(screens);
             eventConfig.setScreens(screensArray);
             String screenTimesStr = jedis.hget(uuid, SCREENTIMES_KEY);
             int[] screenTimes = Arrays.stream(screenTimesStr.substring(1, screenTimesStr.length()-1).split(","))
                     .map(String::trim).mapToInt(Integer::parseInt).toArray();
             eventConfig.setScreenTimes(screenTimes);
+            String hashtagsString = jedis.hget(uuid, HASHTAGS_KEY);
+            String[] hashtagsArray = getStringArray(hashtagsString);
+            eventConfig.setHashtags(hashtagsArray);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
         return eventConfig;
+    }
+
+    private String[] getStringArray(String arrayAsString) {
+        Object[] objectHashtagsArray =
+                Arrays
+                        .stream(arrayAsString.substring(1, arrayAsString.length() - 1).split(","))
+                        .toArray();
+        return Arrays.copyOf(objectHashtagsArray, objectHashtagsArray.length, String[].class);
     }
 
     @Override
