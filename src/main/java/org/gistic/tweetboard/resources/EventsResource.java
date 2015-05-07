@@ -96,7 +96,7 @@ public class EventsResource {
     @DELETE
     @Path("/{uuid}/moderation")
     public Response disableModeration(
-            @PathParam("uuid") String uuid,EventConfig eventConfig, @Context Jedis jedis) {
+            @PathParam("uuid") String uuid, @Context Jedis jedis) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.setModeration(false);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
@@ -109,7 +109,7 @@ public class EventsResource {
     @PUT
     @Path("/{uuid}/moderation")
     public Response enableModeration(
-            @PathParam("uuid") String uuid,EventConfig eventConfig, @Context Jedis jedis) {
+            @PathParam("uuid") String uuid, @Context Jedis jedis) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.setModeration(true);
         return Response

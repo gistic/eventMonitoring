@@ -61,7 +61,10 @@ public class TweetProcessor {
         } else {
             tweetDataLogic.incrOriginalTweets();
         }
-        if (!moderated) return;
+        if (!moderated) {
+            tweetDataLogic.addToApproved(status, true);
+            return;
+        }
         if (isBlockedUserTweet(tweet)) {
             System.out.println("blocked user detected "
                     + tweet.getUser().getScreenName() + ":" + tweet.getText());

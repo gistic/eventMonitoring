@@ -212,6 +212,9 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public void addToApprovedSentToClient(String uuid, String... tweetIds) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            if (tweetIds.length == 0) {
+                return;
+            }
             jedis.lpush(getApprovedSentToClientListKey(uuid), tweetIds);
         } catch (JedisException jE) {
             jE.printStackTrace();
