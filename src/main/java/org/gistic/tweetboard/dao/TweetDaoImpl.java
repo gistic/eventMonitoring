@@ -59,7 +59,7 @@ public class TweetDaoImpl implements TweetDao {
             Date d =new Date();
             String time = d.toGMTString();
             jedis.hset(uuid, START_TIME_KEY, time);
-            jedis.hset(uuid, HASHTAGS_KEY, "["+StringUtils.join(hashTags, ",")+"]");
+            jedis.hset(uuid, HASHTAGS_KEY, "[" + StringUtils.join(hashTags, ",") + "]");
             jedis.hset(uuid, SCREENTIMES_KEY, SCREENTIMES_DEFAULT);
         } catch (JedisException jE) {
             jE.printStackTrace();
@@ -119,7 +119,7 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public Status getOldestTweetNotSentForApproval(String uuid) throws TwitterException {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            String statusId = jedis.rpop(getArrivedNotSentListKey(uuid));
+            String statusId = jedis.lpop(getArrivedNotSentListKey(uuid));
             if (statusId == null) return null;
             return getStatus(statusId);
         } catch (JedisConnectionException e) { LoggerFactory.getLogger(this.getClass()).warn("DB access: error in front end hanging request"); }
@@ -179,7 +179,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
-        //TODO: handle error in callers
+        //TODO: error module
         return null;
     }
 
@@ -190,7 +190,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
-        //TODO: handle error in callers
+        //TODO: error module
         return null;
     }
 
@@ -205,14 +205,14 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
-        //TODO: handle error in callers
+        //TODO: error module
         return null;
     }
 
     @Override
-    public void addToApprovedSentToClient(String uuid, String tweetId) {
+    public void addToApprovedSentToClient(String uuid, String... tweetIds) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.lpush(getApprovedSentToClientListKey(uuid), tweetId);
+            jedis.lpush(getApprovedSentToClientListKey(uuid), tweetIds);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -232,7 +232,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
-        //TODO: handle error in callers
+        //TODO: error module
         return null;
     }
 
@@ -301,7 +301,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
-        //TODO: handle error in callers
+        //TODO: error module
         return null;
     }
 
@@ -318,7 +318,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
-        //TODO: handle error in callers
+        //TODO: error module
         return null;
     }
 
@@ -365,9 +365,23 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         }
-        //TODO throw
+        //TODO: error module
         return null;
     }
+
+    @Override
+    public List<String> getAllTweetIdsSentForApprovalAndDeleteFromSentForApproval(String uuid) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            List<String> tweetIds = jedis.lrange(getSentForApprovalListKey(uuid), 0, -1);
+            jedis.del(getSentForApprovalListKey(uuid));
+            return tweetIds;
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
+
 
     @Override
     public void blockAllExistingTweetsByUser(String uuid, String screenName) {

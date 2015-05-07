@@ -104,6 +104,15 @@ public class EventsResource {
     }
 
     @POST
+    @Path("/{uuid}/approvedTweets/all")
+    public Response approveAllTweet(@PathParam("uuid") String uuid){
+        checkUuid(uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        tweetDataLogic.approveAllTweets();
+        return Response.ok("").build();
+    }
+
+    @POST
     @Path("/{uuid}/blockedTweets/{tweetId}")
     public Response blockTweet(@PathParam("uuid") String uuid, @PathParam("tweetId") String tweetId){
         checkUuid(uuid);
