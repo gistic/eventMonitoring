@@ -49,7 +49,7 @@ public interface TweetDao {
 
     String removeFromApproved(String uuid);
 
-    void addToApprovedSentToClient(String uuid, String tweetId);
+    void addToApprovedSentToClient(String uuid, String... tweetIds);
 
     Status getStatus(String tweetId) throws TwitterException;
 
@@ -74,4 +74,6 @@ public interface TweetDao {
     void incrTweets(String uuid);
 
     BasicStats getBasicStats(String uuid);
+
+    List<String> getAllTweetIdsSentForApprovalAndDeleteFromSentForApproval(String uuid);
 }

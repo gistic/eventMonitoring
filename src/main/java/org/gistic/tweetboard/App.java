@@ -8,11 +8,16 @@ import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.gistic.tweetboard.eventmanager.EventMap;
+import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
 import org.gistic.tweetboard.resources.EventsResource;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcaster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisPool;
+
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -49,5 +54,22 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(new LiveTweetsBroadcaster());
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
         //e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");
+        //Close threads on JVM exit
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                LoggerFactory.getLogger(this.getClass()).info("Shutting down threads");
+                ExecutorService executor = ExecutorSingleton.getInstance();
+                executor.shutdown();
+                try {
+                    if (!executor.awaitTermination(15, TimeUnit.SECONDS)) { //optional *
+                        LoggerFactory.getLogger(this.getClass()).error("Executor did not terminate in the specified time."); //optional *
+                        List<Runnable> droppedTasks = executor.shutdownNow(); //optional **
+                        LoggerFactory.getLogger(this.getClass()).error("Executor was abruptly shut down. " + droppedTasks.size() + " tasks will not be executed."); //optional **
+                    }
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 }

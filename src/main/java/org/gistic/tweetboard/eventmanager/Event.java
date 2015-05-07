@@ -100,4 +100,8 @@ public class Event {
     public List<TweetsOverTimeAnalyzer.TweetsCountPerTime> getTweetsPerTime(int sampleRate, int period) {
         return tweetProcessor.getTweetsPerTime(sampleRate, period);
     }
+
+    public void setModeration(boolean moderated) {
+        tweetProcessor.setModerated(moderated);
+    }
 }

@@ -27,6 +27,16 @@ public class TweetProcessor {
     private TweetsOverTimeAnalyzer tweetsOverTimeAnalyzer = new TweetsOverTimeAnalyzer();
     private ActivePeopleAnalyzer activePeopleAnalyzer = new ActivePeopleAnalyzer();
 
+    public boolean isModerated() {
+        return moderated;
+    }
+
+    public void setModerated(boolean moderated) {
+        this.moderated = moderated;
+    }
+
+    private boolean moderated = true;
+
     public TweetProcessor(EventBus bus, TweetDataLogic tweetDataLogic) {
         this.bus = checkNotNull(bus);
         this.tweetDataLogic = checkNotNull(tweetDataLogic);
@@ -50,6 +60,10 @@ public class TweetProcessor {
             tweetDataLogic.incrTotalRetweets();
         } else {
             tweetDataLogic.incrOriginalTweets();
+        }
+        if (!moderated) {
+            tweetDataLogic.addToApproved(status, true);
+            return;
         }
         if (isBlockedUserTweet(tweet)) {
             System.out.println("blocked user detected "

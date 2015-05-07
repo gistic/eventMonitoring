@@ -3,8 +3,10 @@ package org.gistic.tweetboard.datalogic;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gistic.tweetboard.dao.TweetDao;
+import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
 import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
+import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.BasicStats;
 import org.gistic.tweetboard.representations.EventConfig;
 import org.gistic.tweetboard.representations.TopUser;
@@ -18,6 +20,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -152,5 +155,13 @@ public class TweetDataLogic {
 
     public void incrOriginalTweets() {
         tweetDao.incrTweets(uuid);
+    }
+
+    public void approveAllTweets() {
+        List<String> tweetIdsList = tweetDao.getAllTweetIdsSentForApprovalAndDeleteFromSentForApproval(uuid);
+        Collections.reverse(tweetIdsList);
+        String[] tweetIds = tweetIdsList.toArray(new String[]{});
+        tweetDao.addToApprovedSentToClient(uuid, tweetIds);
+        ExecutorSingleton.getInstance().execute(new SendApprovedTweets(tweetIds, tweetDao, uuid));
     }
 }
