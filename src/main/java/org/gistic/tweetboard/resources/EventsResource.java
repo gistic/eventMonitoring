@@ -3,9 +3,10 @@ package org.gistic.tweetboard.resources;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
-import org.gistic.tweetboard.eventmanager.EventMap;
+import org.gistic.tweetboard.eventmanager.*;
 import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
 import org.gistic.tweetboard.representations.*;
+import org.gistic.tweetboard.representations.Event;
 import org.json.JSONArray;
 import org.json.JSONException;
 import redis.clients.jedis.Jedis;
@@ -90,6 +91,30 @@ public class EventsResource {
         return Response
                 .ok("")
         .build();
+    }
+
+    @DELETE
+    @Path("/{uuid}/moderation")
+    public Response disableModeration(
+            @PathParam("uuid") String uuid,EventConfig eventConfig, @Context Jedis jedis) {
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
+        event.setModeration(false);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        tweetDataLogic.approveAllTweets();
+        return Response
+                .ok("")
+                .build();
+    }
+
+    @PUT
+    @Path("/{uuid}/moderation")
+    public Response enableModeration(
+            @PathParam("uuid") String uuid,EventConfig eventConfig, @Context Jedis jedis) {
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
+        event.setModeration(true);
+        return Response
+                .ok("")
+                .build();
     }
 
     @POST
