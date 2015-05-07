@@ -110,8 +110,6 @@ eventViewsApp.factory('getEventData', ['$http', '$rootScope', '$cookies', functi
 // Controller : Looping through views pages
 eventViewsApp.controller('layoutCtrl', function ($rootScope, $scope, $timeout, $location, getData, createEventSource) {
 
-    $scope.eventHashtag = getData.getEventHashTag();
-
     $rootScope.getViewOptions = function () {
 
         var requestAction = "GET";
@@ -124,14 +122,20 @@ eventViewsApp.controller('layoutCtrl', function ($rootScope, $scope, $timeout, $
                 $rootScope.userSize = response.size;
                 $rootScope.pagesTimeout = response.screenTimes;
                 $rootScope.pages = response.screens;
+            
                 // Get the current page path index
+                $rootScope.eventHashtags = response.hashtags;
                 $scope.pageIndex = $scope.pages.indexOf($location.path());
                 $scope.intervalFunction();
             }).error(function () {
                 console.log("#");
             })
     }
-    $rootScope.getViewOptions();
+    
+    $scope.test = function(){
+        $rootScope.getViewOptions();
+    }
+    
 
     $scope.intervalFunction = function () {
         $timeout(function () {
@@ -143,16 +147,11 @@ eventViewsApp.controller('layoutCtrl', function ($rootScope, $scope, $timeout, $
 
             // Redirect the page
             $location.path($scope.pages[$scope.pageIndex]);
-            console.log($location.path());
-            console.log($scope.pages);
-            console.log($scope.pageIndex);
-
             $scope.intervalFunction();
 
         }, $scope.pagesTimeout[$scope.pageIndex])
         $scope.pageIndex = ($scope.pageIndex + 1) % 3;
     };
-    //        $scope.intervalFunction();
 
 });
 

@@ -160,8 +160,11 @@
 
 
     <section class="container admin-moderation">
-        <div class="clearfix moderation-header">
-            <h3 class="text-center">Moderation</h3>
+        
+        <div class="row clearfix moderation-header">
+            <h3 class="text-center">Moderation
+                <switch class="text-right wide" ng-change="moderationStatus" name="enableModeration" ng-model="enableModeration" on="On" off="Off"></switch>
+            </h3>
         </div>
 
         <nav class="clearfix">

@@ -1,6 +1,6 @@
 'use strict';
 
-var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'ngCookies', 'ui.router', 'angularFileUpload']);
+var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'ngCookies', 'ui.router', 'angularFileUpload', 'uiSwitch']);
 
 
 eventAdminApp.run(function ($window, $rootScope) {
@@ -408,6 +408,31 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
+                                                
+        $scope.enableModeration = true;
+
+
+        $scope.moderationStatus = function() {
+            
+            if ($scope.enableModeration == false ) {
+                var requestAction = "DELETE";
+            } else {
+                var requestAction = "PUT";
+            }
+            
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/moderation';
+            var requestData = "";
+
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    console.log(response);
+                }).error(function () {
+                    console.log("#");
+                })
+            
+            
+            console.log('Moderation is: ' + $scope.enableModeration);
+        };
 
         $rootScope.getViewOptions = function () {
 
