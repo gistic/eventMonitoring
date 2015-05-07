@@ -8,11 +8,11 @@ import java.util.concurrent.Executors;
  * Created by sohussain on 4/7/15.
  */
 public class ExecutorSingleton {
-    private static Executor executor = null;
+    private static ExecutorService executor = null;
     private ExecutorSingleton() {
         // Exists only to defeat instantiation.
     }
-    public static Executor getInstance() {
+    public static ExecutorService getInstance() {
         if(executor == null) {
             executor = Executors.newCachedThreadPool();
         }
