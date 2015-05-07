@@ -211,8 +211,6 @@ eventAdminApp.factory('shareData', function ($rootScope, $cookies, $cookieStore,
         }
     ];
 
-//    $rootScope.userScreen = ["/live", "/top", "/overtime"];
-
     return {
         userColor: function () {
             return $rootScope.userColor;
@@ -583,6 +581,22 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 .success(function (response) {
                     $scope.tweetsQueue.splice(tweetIndex, 1);
                     $scope.approvedTweetsCount++;
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+        
+        // Approve all tweets
+        $scope.approveAllTweets = function(){
+            
+            var eventID = $rootScope.eventID;
+            var requestAction = "POST";
+            var apiUrl = '/api/events/' + eventID + '/approvedTweets/all';
+            var requestData = "";
+
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.tweetsQueue = [];
                 }).error(function () {
                     console.log("#");
                 })
