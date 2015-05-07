@@ -15,7 +15,7 @@ eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {
         "/": {
             url: '',
             templateUrl: '../../admin/admin-views/index.html',
-            controller: 'startEventHandler'
+            controller: 'StartNewEventController'
         },
         "admin": {
             url: '/admin?uuid',
@@ -211,8 +211,6 @@ eventAdminApp.factory('shareData', function ($rootScope, $cookies, $cookieStore,
         }
     ];
 
-//    $rootScope.userScreen = ["/live", "/top", "/overtime"];
-
     return {
         userColor: function () {
             return $rootScope.userColor;
@@ -385,37 +383,26 @@ eventAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', 'ge
 
 }]);
 
-/* Controller : Start new event - Website front page */
-eventAdminApp.controller('startEventHandler', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'shareData', '$state',
-                                               function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, shareData, $state) {
+/* Controller : Start new event */
+eventAdminApp.controller('StartNewEventController', ['$rootScope', '$scope', '$http', 'getData', '$state', function ($rootScope, $scope, $http, getData, $state) {
 
-        $scope.startEventHandler = function (action) {
+        $scope.startNewEvent = function (action) {
+
             $scope.$broadcast();
-            $scope.timerRunning = true;
-
+            
             getData.startEvent()
                 .success(function (response) {
-
-                    $rootScope.eventStarted = true;
                     $rootScope.eventID = response.uuid;
-
-                    getData.setEventID($rootScope.eventID);
-
-                    $scope.adminUrl = "/admin?uuid=" + $scope.eventID;
-                    $scope.ViewUrl = $rootScope.baseUrl + "?uuid=" + $scope.eventID;
+                
+                // Redirect the front website page to the admin page
                     $state.transitionTo('admin', {
                         uuid: $scope.eventID
                     });
-
-                    console.log("New Event Started");
                 })
         };
+}]);
 
-
-   }]);
-
-
-/* Main controller for the application */
+/* Controller : Populate the recieved data and update admin views */
 eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'shareData', '$anchorScroll', '$state',
                                             function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, shareData, $anchorScroll, $state) {
 
@@ -451,6 +438,10 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                     $rootScope.totalTweetsFromServer = response.totalTweets;
                     $scope.totalRetweets = response.totalRetweets;
                     $scope.startTime = response.startTime;
+                    var myDate = new Date($scope.startTime);
+                    $scope.startTimeMilliseconds  = myDate.getTime();
+                    console.log($scope.startTimeMilliseconds);
+                    console.log($scope.startTime);
                 }).error(function () {
                     console.log("#");
                 })
@@ -590,6 +581,22 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 .success(function (response) {
                     $scope.tweetsQueue.splice(tweetIndex, 1);
                     $scope.approvedTweetsCount++;
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+        
+        // Approve all tweets
+        $scope.approveAllTweets = function(){
+            
+            var eventID = $rootScope.eventID;
+            var requestAction = "POST";
+            var apiUrl = '/api/events/' + eventID + '/approvedTweets/all';
+            var requestData = "";
+
+            getData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.tweetsQueue = [];
                 }).error(function () {
                     console.log("#");
                 })

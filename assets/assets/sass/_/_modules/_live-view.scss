@@ -56,8 +56,7 @@
     }
 
     .user-img img {
-        width: 92px;
-        height: 92px;
+        @include size(92px);
         @include border-radius(10%);
     }
 
@@ -72,7 +71,6 @@
             color: $blue;
             font-size: 40px;
             text-align: right;
-//            line-height: 85px !important;
             margin-right: 15px;
         }
         .media-body {

@@ -5,10 +5,12 @@
     <small>Show realtime tweets for your events</small>
 
     <div class="input-group start-event">
-        <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startEventHandler()">
+        <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startNewEvent()">
         <span class="input-group-btn">
-<button class="btn btn-search" type="button" ng-click="startEventHandler()"><i class="fa fa-search"></i></button>
-</span>
+            <button class="btn btn-search" type="button" ng-click="startNewEvent()">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
     </div>
 </header>
 

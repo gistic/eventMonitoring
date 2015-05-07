@@ -13,11 +13,10 @@ footer {
     }
     &.views--footer {
         bottom: 0;
-        height: 40px;
         position: absolute;
         border: none;
         background:#166398;
-        width: 100%;
+        @include size(100%, 40px);
         padding: 10px 0;
         p {
             color: $white;
