@@ -11,7 +11,7 @@
     }
     h6 {
         margin-bottom: $margin*3;
-        font-size: $font-large;
+        @include font-size($font-large);
         font-weight: 400;
     }
     .custom-option {
@@ -42,9 +42,8 @@
             margin-right: 0;
         }
         .color {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
+            @include size(15px);
+            @include border-radius(50%);
             display: inline-block;
             cursor: pointer;
             @include transition-property(width);
@@ -54,8 +53,7 @@
         }
         &.active {
             .color {
-                width: 25px;
-                height: 25px;
+                @include size(25px)
             }
         }
     }

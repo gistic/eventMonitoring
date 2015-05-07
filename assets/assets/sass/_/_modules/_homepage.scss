@@ -4,11 +4,11 @@
         color: $dark-green;
     }
     h4 {
-        font-size: $font-normal;
+        @include font-size($font-normal);
         margin: $margin 0;
     }
     p {
-        font-size: $font-small;
+        @include font-size($font-small);
         color: lighten($gray-dark, 30%);
         font-weight: 200;
         width: 60%;

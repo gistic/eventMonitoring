@@ -1,19 +1,15 @@
 .tweet {
-    direction: rtl;
-    text-align: right;
 	background: $white;
 	padding: $padding;
 	border: 1px solid $gray-light;
 	@include border-radius(5px);
     text-align: left;
 	img {
-		width: 72px;
-		height: 72px;
+        @include size(72px);
 	}
 	h6 {
 		font-weight: 400px;
-		font-size: $font-large;
-        text-align: right;
+        @include font-size($font-large);
         margin-right: 15px;
 	}
 	.tweet-content {
@@ -27,9 +23,7 @@
         border: 5px solid rgba(29, 64, 141, 1);
     }
     &.lang-en {
-    	direction: ltr;
-    	text-align: left;
-        .user-img {
+    	.user-img {
         }
     }
 
