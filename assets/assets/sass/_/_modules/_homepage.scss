@@ -8,7 +8,7 @@
         margin: $margin 0;
     }
     p {
-        @include font-size($font-small);
+        @include font-size($font-tiny);
         color: lighten($gray-dark, 30%);
         font-weight: 200;
         width: 60%;

@@ -98,7 +98,8 @@
 .layout-custom-size {
     li {
         .size {
-            border: 1px solid $white;
+            border: 1px solid $gray-super-light;
+            text-transform: capitalize;
             padding: $padding;
             @include border-radius(5%);
             cursor: pointer;
