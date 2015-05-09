@@ -1,18 +1,19 @@
 <!-- HEADER	-->
-<header class="container-fluid clearfix">
-
-    <div class="row">
-        <div class="start-event col-md-5">
+<header class="container clearfix header-admin">
+       
+<!--
+        <div class="start-event col-md-5 col-sm-12">
             <div class="input-group">
                 <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startEventHandler()">
             </div>
         </div>
+-->
 
-        <h2 class="col-md-5 col-md-offset-6 logo">
-<a href="/admin">TweetBoard</a>
-</h2>
+        <h2 class="logo pull-left ">
+            <a href="/admin">TweetBoard</a>
+        </h2>
 
-        <nav class="col-md-4 pull-right">
+        <nav class="pull-right header-buttons">
             <a ng-href="" ng-click="goLive()" class="btn" target="_blank">
                 Presentation <i class="icon-controller-play"></i>
             </a>
@@ -21,7 +22,6 @@
                 Stop <i class="fa fa-stop"></i>
             </button>
         </nav>
-    </div>
 
 </header>
 
@@ -141,10 +141,10 @@
                                 <label>
                                     <input type="checkbox" ng-model="value.selected" ng-checked="value.selected==true" /> {{value.name}}
                                 </label>
-                                
+
                             </div>
                         </li>
-                        
+
                     </ul>
 
                     <div class="text-right save-layout-options">
@@ -152,7 +152,7 @@
                             Save
                         </button>
                     </div>
-                                        
+
                 </article>
             </div>
         </div>
@@ -160,20 +160,14 @@
 
 
     <section class="container admin-moderation">
-        
+
         <div class="row clearfix moderation-header">
-            <h3 class="text-center">Moderation
+
+            <h3 class="text-center clearfix">Moderation
+               
                 <switch class="pull-right wide" ng-change="moderationStatus" name="enableModeration" ng-model="enableModeration" on="On" off="Off"></switch>
-            </h3>
-        </div>
 
-        <nav class="clearfix">
-            <ul class="list-inline pull-left tweets-nav">
-                <li><i class="fa fa-times"></i> {{removedTweetsCount}} tweets</li>
-                <li><i class="fa fa-check"></i> {{approvedTweetsCount}} tweets</li>
-            </ul>
-
-            <ul class="list-inline pull-right">
+            <ul class="list-inline pull-left moderation-actions">
 
                 <li><a ng-click="approveAllTweets()">Approve all</a>
                 </li>
@@ -250,7 +244,9 @@
                 </li>
 
             </ul>
-        </nav>
+            
+            </h3>
+        </div>
 
         <section class="tweets-queue" id="toApproveDiv">
 
@@ -259,7 +255,7 @@
 
             <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit()" data-user-id="{{tweet.user.id_str}}">
                 <div class="pull-left">
-                        <img ng-src="{{tweet.user.profile_image_url_https}}" alt="" class="media-object">
+                    <img ng-src="{{tweet.user.profile_image_url_https}}" alt="" class="media-object">
                 </div>
                 <div class="tweet-content pull-left">
                     <h6 class="tweet-user">
@@ -279,18 +275,18 @@
                 <div class="btn-toolbar pull-right tweet-options" role="toolbar">
 
                     <div class="btn-group " role="group">
-                        <button type="button" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="approveTweet($event)"><i class="icon-check"></i>
+                        <button type="button" tooltip-placement="top" tooltip="Approve tweet" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="approveTweet($event)"><i class="icon-check"></i>
                         </button>
-                        <button type="button" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="removeTweet($event)"><i class="icon-cross"></i>
+                        <button type="button" tooltip-placement="top" tooltip="Remove tweet" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="removeTweet($event)"><i class="icon-cross"></i>
                         </button>
-                        <button type="button" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="approveStarred($event)"><i class="icon-star"></i>
+                        <button type="button" tooltip-placement="top" tooltip="Approve tweet as starred" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="approveStarred($event)"><i class="icon-star"></i>
                         </button>
                     </div>
 
                     <div class="btn-group " role="group">
-                        <button type="button" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="updateTrustedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https, tweet.user.id_str)"><i class="icon-add-user"></i>
+                        <button type="button" tooltip-placement="top" tooltip="Add user to trusted list" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="updateTrustedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https, tweet.user.id_str)"><i class="icon-add-user"></i>
                         </button>
-                        <button type="button" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="updateBlockedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https, tweet.user.id_str)"><i class="icon-remove-user"></i>
+                        <button type="button" tooltip-placement="top" tooltip="Add user to blocked list" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="updateBlockedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https, tweet.user.id_str)"><i class="icon-remove-user"></i>
                         </button>
                     </div>
 
