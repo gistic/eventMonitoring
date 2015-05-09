@@ -95,7 +95,6 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', '$cookies', '$cookieSto
     return {
 
         setEventHashTag: function (eventHashtag) {
-            console.log(eventHashtag);
             $rootScope.eventHashtag = eventHashtag;
         },
 
@@ -425,13 +424,9 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
             getData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    console.log(response);
                 }).error(function () {
                     console.log("#");
                 })
-            
-            
-            console.log('Moderation is: ' + $scope.enableModeration);
         };
 
         $rootScope.getViewOptions = function () {
@@ -442,7 +437,6 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
             getData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    console.log(response);
                     $rootScope.userColor = response.backgroundColor;
                     $rootScope.userSize = response.size;
                 }).error(function () {
@@ -465,8 +459,6 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                     $scope.startTime = response.startTime;
                     var myDate = new Date($scope.startTime);
                     $scope.startTimeMilliseconds  = myDate.getTime();
-                    console.log($scope.startTimeMilliseconds);
-                    console.log($scope.startTime);
                 }).error(function () {
                     console.log("#");
                 })
@@ -481,7 +473,6 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                     this.push(value.value);
                 }
             }, $rootScope.userScreens);
-            console.log($rootScope.userScreens);
         }, true);
                                                 
 
@@ -541,10 +532,6 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
             $location.hash('toApproveDiv');
             $anchorScroll();
         };
-
-        // Remaining tweets in queue
-        //	$scope.remainingTweetsCount = $scope.tweetsCount - ($scope.pagesShown * $scope.pageSize);
-        //	console.log($scope.remainingTweetsCount);
 
         // Remove Tweet From List
         $scope.removedTweetsCount = 0;
@@ -649,9 +636,6 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                     $scope.eventStarted = false;
                     $scope.$broadcast('timer-stop');
                     $rootScope.timerRunning = false;
-                    $scope.$on('timer-stopped', function (event, data) {
-                        console.log('Timer Stopped - data = ', data);
-                    });
 
                     // show the notification
                     notification.show();
@@ -673,7 +657,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
             var requestData = {
                 "backgroundColor": userColor,
                 "screens": userScreen,
-                "screenTimes": [7000, 5000, 3000],
+                "screenTimes": [70000, 50000, 30000],
                 "size": userSize
 
             };

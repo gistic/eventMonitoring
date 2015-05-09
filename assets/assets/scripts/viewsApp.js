@@ -110,6 +110,19 @@ eventViewsApp.factory('getEventData', ['$http', '$rootScope', '$cookies', functi
 // Controller : Looping through views pages
 eventViewsApp.controller('layoutCtrl', function ($rootScope, $scope, $timeout, $location, getData, createEventSource) {
 
+        var source = createEventSource.getSourceObject();
+
+        source.addEventListener('broadcast-ui-customization', function (response) {
+            $scope.layoutOptions = JSON.parse(response.data);
+            $scope.$apply(function () {
+                $rootScope.userColor = $scope.layoutOptions.backgroundColor;
+                $rootScope.userSize = $scope.layoutOptions.size;
+                $rootScope.pages = $scope.layoutOptions.screens;
+                $rootScope.pagesTimeout = $scope.layoutOptions.screenTimes;
+                $rootScope.eventHashtag = $scope.layoutOptions.hashtags;
+            });
+        });
+
     $rootScope.getViewOptions = function () {
 
         var requestAction = "GET";
@@ -122,7 +135,7 @@ eventViewsApp.controller('layoutCtrl', function ($rootScope, $scope, $timeout, $
                 $rootScope.userSize = response.size;
                 $rootScope.pagesTimeout = response.screenTimes;
                 $rootScope.pages = response.screens;
-            
+
                 // Get the current page path index
                 $rootScope.eventHashtags = response.hashtags;
                 $scope.pageIndex = $scope.pages.indexOf($location.path());
@@ -131,19 +144,19 @@ eventViewsApp.controller('layoutCtrl', function ($rootScope, $scope, $timeout, $
                 console.log("#");
             })
     }
-    
-    $scope.test = function(){
+
+    $scope.test = function () {
         $rootScope.getViewOptions();
     }
-    
+
 
     $scope.intervalFunction = function () {
         $timeout(function () {
 
-        // Close event source when leaving the live tweets screen
-        //                if (!createEventSource.closed) {
-        //                    createEventSource.closeEventSource();
-        //                }
+            // Close event source when leaving the live tweets screen
+            //                if (!createEventSource.closed) {
+            //                    createEventSource.closeEventSource();
+            //                }
 
             // Redirect the page
             $location.path($scope.pages[$scope.pageIndex]);
@@ -188,8 +201,7 @@ eventViewsApp.factory('createEventSource', function ($rootScope, $cookies, getDa
 });
 
 // Controller : Live Tweets View CTRL
-eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'createEventSource',
-                                            function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, createEventSource) {
+eventViewsApp.controller('liveTweetsCtrl', ['$scope', 'createEventSource', function ($scope, createEventSource) {
         $scope.init = function () {
 
             var source = createEventSource.getSourceObject();
@@ -201,22 +213,6 @@ eventViewsApp.controller('liveTweetsCtrl', ['$rootScope', '$scope', '$http', '$c
                 $scope.tweet = JSON.parse(response.data);
                 $scope.$apply(function () {
                     $scope.allTweets.push($scope.tweet);
-                });
-            });
-
-            source.addEventListener('broadcast-ui-customization', function (response) {
-                $scope.layoutOptions = JSON.parse(response.data);
-                $scope.$apply(function () {
-                    $rootScope.userColor = $scope.layoutOptions.backgroundColor;
-                    console.log($rootScope.userColor);
-                    $rootScope.userSize = $scope.layoutOptions.size;
-                    console.log($rootScope.userSize);
-                    $rootScope.pages = $scope.layoutOptions.screens;
-                    console.log($rootScope.pages);
-                    $rootScope.pagesTimeout = $scope.layoutOptions.screenTimes;
-                    console.log($rootScope.pagesTimeout);
-                    $rootScope.eventHashtag = $scope.layoutOptions.hashtags;
-                    console.log($rootScope.eventHashtag);
                 });
             });
         }
