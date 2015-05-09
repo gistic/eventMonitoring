@@ -20,7 +20,7 @@ footer {
         padding: 10px 0;
         p {
             color: $white;
-            font-size: $font-normal;
+            @include font-size($font-normal);
         }
     }
 }

@@ -23,18 +23,16 @@
 		z-index: 9;
 		right: 30px;
 		bottom: 25px;
-		width: 150px;
-		height: 40px;
+        @include size(150px, 40px);
 		@include border-radius(50px);
 		@include box-shadow(rgba(darken($blue, 50%), 0.2) 0 0 15px);
 		strong {
-			width: 20px;
-			height: 20px;
+            @include size(20px);
 			@include border-radius(50%);
 			background: darken($blue, 20%);
 			display: inline-block;
 			i {
-				font-size: $font-tiny;
+                @include font-size($font-tiny);
 			}
 		}
 	}
