@@ -1,6 +1,6 @@
 'use strict';
 
-var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'ngCookies', 'ui.router', 'angularFileUpload', 'uiSwitch']);
+var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'ngCookies', 'ui.router', 'uiSwitch', 'angularFileUpload']);
 
 
 eventAdminApp.run(function ($window, $rootScope) {
@@ -14,17 +14,17 @@ eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {
     window.routes = {
         "/": {
             url: '',
-            templateUrl: '../../admin/admin-views/index.html',
+            templateUrl: '/../../admin/admin-views/index.html',
             controller: 'StartNewEventController'
         },
         "admin": {
             url: '/admin?uuid',
-            templateUrl: '../../admin/admin-views/admin.html',
+            templateUrl: '/../../admin/admin-views/admin.html',
             controller: 'startEventCtrl'
         },
         "superAdmin": {
             url: '/superAdmin',
-            templateUrl: '../../admin/admin-views/super-admin.html',
+            templateUrl: '/../../admin/admin-views/super-admin.html',
             controller: 'SuperAdminCtrl'
         }
     };
@@ -385,20 +385,20 @@ eventAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', 'ge
 /* Controller : Start new event */
 eventAdminApp.controller('StartNewEventController', ['$rootScope', '$scope', '$http', 'getData', '$state', function ($rootScope, $scope, $http, getData, $state) {
 
-        $scope.startNewEvent = function (action) {
+    $scope.startNewEvent = function (action) {
 
-            $scope.$broadcast();
-            
-            getData.startEvent()
-                .success(function (response) {
-                    $rootScope.eventID = response.uuid;
-                
+        $scope.$broadcast();
+
+        getData.startEvent()
+            .success(function (response) {
+                $rootScope.eventID = response.uuid;
+
                 // Redirect the front website page to the admin page
-                    $state.transitionTo('admin', {
-                        uuid: $scope.eventID
-                    });
-                })
-        };
+                $state.transitionTo('admin', {
+                    uuid: $scope.eventID
+                });
+            })
+    };
 }]);
 
 /* Controller : Populate the recieved data and update admin views */
@@ -407,24 +407,23 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
-                                                
+
         $scope.enableModeration = true;
 
 
-        $scope.moderationStatus = function() {
-            
-            if ($scope.enableModeration == false ) {
+        $scope.moderationStatus = function () {
+
+            if ($scope.enableModeration == false) {
                 var requestAction = "DELETE";
             } else {
                 var requestAction = "PUT";
             }
-            
+
             var apiUrl = '/api/events/' + $rootScope.eventID + '/moderation';
             var requestData = "";
 
             getData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {
-                }).error(function () {
+                .success(function (response) {}).error(function () {
                     console.log("#");
                 })
         };
@@ -444,7 +443,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 })
         }
         $rootScope.getViewOptions();
-                                                
+
         $rootScope.getEventStats = function () {
 
             var requestAction = "GET";
@@ -458,13 +457,13 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                     $scope.totalRetweets = response.totalRetweets;
                     $scope.startTime = response.startTime;
                     var myDate = new Date($scope.startTime);
-                    $scope.startTimeMilliseconds  = myDate.getTime();
+                    $scope.startTimeMilliseconds = myDate.getTime();
                 }).error(function () {
                     console.log("#");
                 })
         }
         $rootScope.getEventStats();
-                                                
+
         $scope.$watch('layoutScreens|filter:{selected:true}', function (nv, ov, scope) {
 
             $rootScope.userScreens = [];
@@ -474,7 +473,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 }
             }, $rootScope.userScreens);
         }, true);
-                                                
+
 
         $scope.goLive = function () {
             $window.open($rootScope.baseUrl + "/#/live?uuid=" + $rootScope.eventID, '_blank');
@@ -490,8 +489,8 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         $rootScope.timerRunning = false;
         $scope.tweetsQueue = [];
         $scope.tweet = {};
-        $scope.tweetsCount= 0;
-        
+        $scope.tweetsCount = 0;
+
         // Listen to new message
 
         $scope.startEventSource = function () {
@@ -597,10 +596,10 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                     console.log("#");
                 })
         }
-        
+
         // Approve all tweets
-        $scope.approveAllTweets = function(){
-            
+        $scope.approveAllTweets = function () {
+
             var eventID = $rootScope.eventID;
             var requestAction = "POST";
             var apiUrl = '/api/events/' + eventID + '/approvedTweets/all';
@@ -728,14 +727,20 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
                 })
 
         }
-
-
 }]);
 
-// Upload File
-eventAdminApp.controller('AppController', ['$scope', 'FileUploader', function ($scope, FileUploader) {
+eventAdminApp.controller('AppController', ['$scope', 'FileUploader', '$location', function ($scope, FileUploader, $location) {
+
+    $scope.eventID = $location.search().uuid;
+    var apiUrl = '/api/events/' + $scope.eventID + '/logo';
+
     var uploader = $scope.uploader = new FileUploader({
-        url: 'upload.php'
+        url: apiUrl,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+        withCredentials: true,
+        queueLimit: 1
     });
 
     // FILTERS
@@ -748,16 +753,51 @@ eventAdminApp.controller('AppController', ['$scope', 'FileUploader', function ($
         }
     });
 
+    // CALLBACKS
+
+//    uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/ , filter, options) {
+//        console.info('onWhenAddingFileFailed', item, filter, options);
+//    };
+//    uploader.onAfterAddingFile = function (fileItem) {
+//        console.info('onAfterAddingFile', fileItem);
+//    };
+//    uploader.onAfterAddingAll = function (addedFileItems) {
+//        console.info('onAfterAddingAll', addedFileItems);
+//    };
+//    uploader.onBeforeUploadItem = function (item) {
+//        console.info('onBeforeUploadItem', item);
+//    };
+//    uploader.onProgressItem = function (fileItem, progress) {
+//        console.info('onProgressItem', fileItem, progress);
+//    };
+//    uploader.onProgressAll = function (progress) {
+//        console.info('onProgressAll', progress);
+//    };
+//    uploader.onSuccessItem = function (fileItem, response, status, headers) {
+//        console.info('onSuccessItem', fileItem, response, status, headers);
+//    };
+    uploader.onErrorItem = function (fileItem, response, status, headers) {
+        console.info('onErrorItem', fileItem, response, status, headers);
+    };
+//    uploader.onCancelItem = function (fileItem, response, status, headers) {
+//        console.info('onCancelItem', fileItem, response, status, headers);
+//    };
+//    uploader.onCompleteItem = function (fileItem, response, status, headers) {
+//        console.info('onCompleteItem', fileItem, response, status, headers);
+//    };
+//    uploader.onCompleteAll = function () {
+//        console.info('onCompleteAll');
+//    };
+
+    console.info('uploader', uploader);
 }]);
 
-// Angular File Upload module does not include this directive
-// Only for example
+// Angular File Upload module does not include this directive Only for example
 /**
  * The ng-thumb directive
  * @author: nerv
  * @version: 0.1.2, 2014-01-09
  */
-
 eventAdminApp.directive('ngThumb', ['$window', function ($window) {
     var helper = {
         support: !!($window.FileReader && $window.CanvasRenderingContext2D),
@@ -804,4 +844,4 @@ eventAdminApp.directive('ngThumb', ['$window', function ($window) {
             }
         }
     };
-}]);
+    }]);

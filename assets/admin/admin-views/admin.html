@@ -1,27 +1,19 @@
 <!-- HEADER	-->
 <header class="container clearfix header-admin">
-       
-<!--
-        <div class="start-event col-md-5 col-sm-12">
-            <div class="input-group">
-                <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startEventHandler()">
-            </div>
-        </div>
--->
 
-        <h2 class="logo pull-left ">
+    <h2 class="logo pull-left ">
             <a href="/admin">TweetBoard</a>
         </h2>
 
-        <nav class="pull-right header-buttons">
-            <a ng-href="" ng-click="goLive()" class="btn" target="_blank">
+    <nav class="pull-right header-buttons">
+        <a ng-href="" ng-click="goLive()" class="btn" target="_blank">
                 Presentation <i class="icon-controller-play"></i>
             </a>
 
-            <button class="btn btn-stop" id="stopEvent" ng-click="stopEventHandler()">
-                Stop <i class="fa fa-stop"></i>
-            </button>
-        </nav>
+        <button class="btn btn-stop" id="stopEvent" ng-click="stopEventHandler()">
+            Stop <i class="fa fa-stop"></i>
+        </button>
+    </nav>
 
 </header>
 
@@ -75,61 +67,73 @@
             </div>
             <div class="row">
 
-                <!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
-                <article class="col-md-12 custom-option" ng-controller="AppController" nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
-                    <h6>Upload your Logo</h6>
-                    <div class="media">
-                        <div ng-repeat="item in uploader.queue">
 
-                            <!-- Image preview -->
-                            <!--auto height-->
-                            <!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
-                            <!--auto width-->
-                            <div class="media-left" ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100, width :100 }"></div>
+                <article class="col-md-12 custom-option">
+                    <!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
+                    <div ng-controller="AppController" nv-file-drop="" uploader="uploader">
 
-                            <div class="media-body">
-                                <strong class="pull-left">{{ item.file.name }}</strong>
-                                <!--fixed width and height -->
-                                <!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
-                                <br>
-                                <strong ng-show="uploader.isHTML5">{{ item.file.size/1024/1024|number:2 }} MB</strong>
+                        <div class="">
 
-                                <div>
-                                    <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                                        <span class="glyphicon glyphicon-upload"></span>
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                    </button>
+                            <div class="row">
+
+                                <div class="col-md-24">
+
+                                    <div ng-show="uploader.isHTML5">
+                                        <!-- 3. nv-file-over uploader="link" over-class="className" -->
+                                        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                                            Base drop zone
+                                        </div>
+                                    </div>
+
+                                    <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
+                                    <input type="file" nv-file-select="" uploader="uploader" multiple />
+                                    <br/>
+
                                 </div>
 
-                                <div class="upload-status pull-left">
-                                    <span ng-show="item.isSuccess"><span class="text-success"><i class="glyphicon glyphicon-ok"></i> Uploaded</span></span>
-                                    <span ng-show="item.isError"><span class="text-danger"><i class="glyphicon glyphicon-remove"></i> Error</span></span>
+                                <div class="col-md-24">
+                                    <div ng-repeat="item in uploader.queue">
+                                        <div>
+                                            <strong>{{ item.file.name }}</strong>
+                                            <!-- Image preview -->
+                                            <!--auto height-->
+                                            <!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+                                            <!--auto width-->
+                                            <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>
+                                            <!--fixed width and height -->
+                                            <!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+                                        </div>
+                                        <div ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</div>
+                                        <div ng-show="uploader.isHTML5">
+                                            <div class="progress" style="margin-bottom: 0;">
+                                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                            </div>
+                                        </div>
+                                        <div class="text-center">
+                                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                        </div>
+                                        <div nowrap>
+                                            <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                <span class="glyphicon glyphicon-upload"></span> Upload
+                                            </button>
+                                            <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                <span class="glyphicon glyphicon-trash"></span> Remove
+                                            </button>
+                                        </div>
+                                    </div>
+
                                 </div>
+
                             </div>
+
                         </div>
 
                     </div>
-
-                    <div class="">
-
-                        <div ng-show="uploader.isHTML5">
-                            <!-- 3. nv-file-over uploader="link" over-class="className" -->
-                            <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
-                                Drop your logo
-                            </div>
-
-                        </div>
-
-                        <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
-                        <input type="file" nv-file-select="" uploader="uploader" />
-                        <br/>
-
-                    </div>
-
-                    <small class="text-muted">Max height: 150px  -  Max width: 650px</small>
-
                 </article>
 
                 <article class="col-md-12 custom-option">
