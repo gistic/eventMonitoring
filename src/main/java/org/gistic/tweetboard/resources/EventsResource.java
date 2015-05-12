@@ -1,7 +1,6 @@
 package org.gistic.tweetboard.resources;
 
 import com.codahale.metrics.annotation.Timed;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
@@ -271,7 +270,7 @@ public class EventsResource {
     public Response uploadFile(
             @PathParam("uuid") String uuid,
             @FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail) throws MessagingException, IOException {
+            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
         /*
         works with
         <input id="the-file" name="file" type="file">
