@@ -1,6 +1,6 @@
 'use strict';
 
-var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'ngCookies', 'ui.router', 'uiSwitch', 'angularFileUpload']);
+var eventAdminApp = angular.module('eventAdminApp', ['eventAdminApp.directives', 'ui.bootstrap', 'timer', 'ngCookies', 'ui.router', 'uiSwitch', 'angularFileUpload']);
 
 
 eventAdminApp.run(function ($window, $rootScope) {
@@ -50,20 +50,6 @@ eventAdminApp.directive('errSrc', function ($rootScope) {
             });
         }
     }
-});
-
-// Activate ' ENTER ' keypress to make the same action as click
-eventAdminApp.directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if (event.which === 13) {
-                scope.$apply(function () {
-                    scope.$eval(attrs.ngEnter);
-                });
-                event.preventDefault();
-            }
-        });
-    };
 });
 
 // Filter to reverse Tweets Queue
