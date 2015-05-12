@@ -1,5 +1,14 @@
 .homepage-boxes {
     margin: $margin * 5 0;
+    @include phone {
+        margin: $margin * 3 0;
+    }
+    .box {
+        @include phone {
+            margin-bottom: $margin * 3;
+        
+        }
+    }
     .icon {
         color: $dark-green;
     }
@@ -8,10 +17,10 @@
         margin: $margin 0;
     }
     p {
-        @include font-size($font-small);
+        @include font-size($font-tiny);
         color: lighten($gray-dark, 30%);
         font-weight: 200;
-        width: 60%;
+        @include size(60%, auto);
         margin-left: auto;
         margin-right: auto;
     }
