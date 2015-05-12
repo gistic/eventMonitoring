@@ -401,9 +401,70 @@ eventAdminApp.controller('StartNewEventController', ['$rootScope', '$scope', '$h
     };
 }]);
 
+
 /* Controller : Populate the recieved data and update admin views */
 eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$cookies', '$cookieStore', '$location', '$window', 'getData', 'shareData', '$anchorScroll', '$state',
                                             function ($rootScope, $scope, $http, $cookies, $cookieStore, $location, $window, getData, shareData, $anchorScroll, $state) {
+        //        console.log($state);
+
+        //        if ($state.current.url == "/admin?uuid") {
+        //            $scope.$on('$locationChangeStart', function (event) {
+        //                var answer = confirm("Are you sure you want to leave this page?");
+        //                console.log(answer);
+        //                if (answer) {
+        //                    console.log(answer);
+        //                    $scope.stopEventHandler();
+        //                    // Redirect the front website page to the admin page
+        ////                    $state.transitionTo('admin');
+        //                } else {
+        ////                    event.preventDefault();
+        //                    console.log(answer);
+        //                }
+        //            });
+        //
+        //        }
+        //                                                
+                if ($state.current.url == "/admin?uuid") {
+                    window.onbeforeunload = function (event) {
+                        var message = 'If you close this window your event will stop.';
+                        return message;
+                    }
+                }
+                $(window).on('unload', function(){
+                    $scope.stopEventHandler(); 
+                });
+
+//        window.addEventListener("beforeunload", function (e) {
+//            var answer = confirm("Are you sure you want to leave this page?");
+//            console.log($state);
+//        }, false);
+
+        //        if ($state.current.url == "/admin?uuid") {
+        //            $scope.$on('$locationChangeStart', function (event, next, current) {
+        //                console.log($state.current.url);
+        //                var answer = confirm("Are you sure you want to navigate away from this page");
+        //            });
+        //        }
+
+        //        $scope.$on('$locationChangeStart', function (event, next, current) {
+        //            if ($state.current.url == "/admin?uuid") {
+        //                var answer = confirm("Are you sure you want to navigate away from this page");
+        //                if (!answer) {
+        ////                    event.preventDefault();
+        //                    console.log(answer);
+        //                } else {
+        //                    console.log(answer);
+        //                }
+        //                
+        //            }
+        //        });
+
+        //        window.onbeforeunload = function (e) {
+        //            if (check(document.URL))
+        //                return check(document.URL);
+        //            else
+        //                return undefined;
+        //        };
 
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
@@ -736,10 +797,10 @@ eventAdminApp.controller('AppController', ['$scope', 'FileUploader', '$location'
 
     var uploader = $scope.uploader = new FileUploader({
         url: apiUrl,
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        },
-        withCredentials: true,
+        //        headers: {
+        //            'Content-Type': 'multipart/form-data'
+        //        },
+        withCredentials: false,
         queueLimit: 1
     });
 
@@ -755,39 +816,39 @@ eventAdminApp.controller('AppController', ['$scope', 'FileUploader', '$location'
 
     // CALLBACKS
 
-//    uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/ , filter, options) {
-//        console.info('onWhenAddingFileFailed', item, filter, options);
-//    };
-//    uploader.onAfterAddingFile = function (fileItem) {
-//        console.info('onAfterAddingFile', fileItem);
-//    };
-//    uploader.onAfterAddingAll = function (addedFileItems) {
-//        console.info('onAfterAddingAll', addedFileItems);
-//    };
-//    uploader.onBeforeUploadItem = function (item) {
-//        console.info('onBeforeUploadItem', item);
-//    };
-//    uploader.onProgressItem = function (fileItem, progress) {
-//        console.info('onProgressItem', fileItem, progress);
-//    };
-//    uploader.onProgressAll = function (progress) {
-//        console.info('onProgressAll', progress);
-//    };
-//    uploader.onSuccessItem = function (fileItem, response, status, headers) {
-//        console.info('onSuccessItem', fileItem, response, status, headers);
-//    };
+    //    uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/ , filter, options) {
+    //        console.info('onWhenAddingFileFailed', item, filter, options);
+    //    };
+    //    uploader.onAfterAddingFile = function (fileItem) {
+    //        console.info('onAfterAddingFile', fileItem);
+    //    };
+    //    uploader.onAfterAddingAll = function (addedFileItems) {
+    //        console.info('onAfterAddingAll', addedFileItems);
+    //    };
+    //    uploader.onBeforeUploadItem = function (item) {
+    //        console.info('onBeforeUploadItem', item);
+    //    };
+    //    uploader.onProgressItem = function (fileItem, progress) {
+    //        console.info('onProgressItem', fileItem, progress);
+    //    };
+    //    uploader.onProgressAll = function (progress) {
+    //        console.info('onProgressAll', progress);
+    //    };
+    //    uploader.onSuccessItem = function (fileItem, response, status, headers) {
+    //        console.info('onSuccessItem', fileItem, response, status, headers);
+    //    };
     uploader.onErrorItem = function (fileItem, response, status, headers) {
         console.info('onErrorItem', fileItem, response, status, headers);
     };
-//    uploader.onCancelItem = function (fileItem, response, status, headers) {
-//        console.info('onCancelItem', fileItem, response, status, headers);
-//    };
-//    uploader.onCompleteItem = function (fileItem, response, status, headers) {
-//        console.info('onCompleteItem', fileItem, response, status, headers);
-//    };
-//    uploader.onCompleteAll = function () {
-//        console.info('onCompleteAll');
-//    };
+    //    uploader.onCancelItem = function (fileItem, response, status, headers) {
+    //        console.info('onCancelItem', fileItem, response, status, headers);
+    //    };
+    //    uploader.onCompleteItem = function (fileItem, response, status, headers) {
+    //        console.info('onCompleteItem', fileItem, response, status, headers);
+    //    };
+    //    uploader.onCompleteAll = function () {
+    //        console.info('onCompleteAll');
+    //    };
 
     console.info('uploader', uploader);
 }]);
