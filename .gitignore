@@ -26,3 +26,5 @@ target/
 # JS
 /assets/scripts/snippet
 /dump.rdb
+
+/assets/logo/
