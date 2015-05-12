@@ -1,6 +1,6 @@
 'use strict';
 
-var eventAdminApp = angular.module('eventAdminApp', ['eventAdminApp.directives', 'ui.bootstrap', 'timer', 'ngCookies', 'ui.router', 'uiSwitch', 'angularFileUpload']);
+var eventAdminApp = angular.module('eventAdminApp', ['ui.bootstrap', 'timer', 'ngCookies', 'ui.router', 'uiSwitch', 'angularFileUpload', 'myAppDirectives', 'myAppFilters']);
 
 
 eventAdminApp.run(function ($window, $rootScope) {
@@ -36,44 +36,6 @@ eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
 
 });
-
-
-eventAdminApp.directive('errSrc', function ($rootScope) {
-    $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
-
-    return {
-        link: function (scope, element, attrs) {
-            element.bind('error', function () {
-                if (attrs.src != attrs.errSrc) {
-                    attrs.$set('src', attrs.errSrc);
-                }
-            });
-        }
-    }
-});
-
-// Filter to reverse Tweets Queue
-eventAdminApp.filter('reverseQueue', function () {
-    return function (tweetsQueue) {
-        return tweetsQueue.slice().reverse();
-    };
-});
-
-
-// Angular factory allwos you to share data between controllers and pages
-//eventAdminApp.factory function ($rootScope) {
-//    return {
-//        eventHashtag: function () {
-//            $rootScope.eventHashtag = $('#eventHashtag').val();
-//            if ($rootScope.eventHashtag !== "" || $rootScope.eventHashtag.length >= 3) {
-//                return ($rootScope.eventHashtag);
-//            } else {
-//                return '';
-//            }
-//        }
-//    };
-//});
-
 
 /* Factory to post the requestes */
 eventAdminApp.factory('getData', ['$http', '$rootScope', '$cookies', '$cookieStore', '$location', '$window', function ($http, $rootScope, $cookies, $cookieStore, $location, $window) {
@@ -134,36 +96,7 @@ eventAdminApp.factory('getData', ['$http', '$rootScope', '$cookies', '$cookieSto
 
 }]);
 
-
-
-/**
- * custom filter
- */
-eventAdminApp.filter('fruitSelection', ['filterFilter', function (filterFilter) {
-    return function fruitSelection(input, prop) {
-        return filterFilter(input, {
-            selected: true
-        }).map(function (screen) {
-            return screen[prop];
-        });
-    };
-}]);
-
-eventAdminApp.filter('customFilter', function () {
-    return function (arr) {
-        var alter = [];
-        angular.forEach(arr, function (value, key) {
-            if (value.selected == true) {
-                this.push(value);
-            }
-        }, alter);
-        return alter;
-    }
-});
-
 eventAdminApp.factory('shareData', function ($rootScope, $cookies, $cookieStore, $window, filterFilter, getData) {
-
-
 
     // LAYOUT : Colors
     $rootScope.layoutColors = ['black', 'turquoise', 'blue', 'violet', 'pink', 'green', 'orange'];

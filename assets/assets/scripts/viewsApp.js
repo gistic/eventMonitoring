@@ -1,61 +1,10 @@
 'use strict';
 
-var eventViewsApp = angular.module('eventViewsApp', ['eventAdminApp', 'ngRoute','ngAnimate', 'ngFx', 'highcharts-ng', 'ui.router', 'ngCookies']);
+var eventViewsApp = angular.module('eventViewsApp', ['eventAdminApp', 'ngRoute','ngAnimate', 'ngFx', 'highcharts-ng', 'ui.router', 'ngCookies', 'myAppDirectives', 'myAppFilters']);
 
 
 eventAdminApp.run(function ($rootScope, $location) {
     $rootScope.eventID = $location.search().uuid;
-});
-// Directive : Image lazy load
-eventViewsApp.directive('lazyLoad', function ($timeout) {
-    return {
-        restrict: 'A',
-        scope: {},
-        link: function (scope, elem, attrs) {
-            $timeout(function () {
-                elem.attr('src', attrs.llSrc)
-            });
-        },
-    }
-});
-
-
-eventViewsApp.directive('errSrc', function ($rootScope) {
-    $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
-
-    return {
-        link: function (scope, element, attrs) {
-            element.bind('error', function () {
-                if (attrs.src != attrs.errSrc) {
-                    attrs.$set('src', attrs.errSrc);
-                }
-            });
-        }
-    }
-});
-
-// Directive : On error or missing user profile image -> Load this default image
-eventViewsApp.directive('onErrorSrc', function ($rootScope) {
-
-    $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
-
-    return {
-        link: function (scope, element, attrs) {
-            element.bind('error', function () {
-                if (attrs.src != attrs.onErrorSrc) {
-                    attrs.$set('src', attrs.onErrorSrc);
-                }
-            });
-        }
-    }
-});
-
-// Filter : Reverse tweets lists
-eventViewsApp.filter('reverse', function () {
-    var items = [];
-    return function (items) {
-        return items.slice().reverse();
-    };
 });
 
 // Config : Views pages routing
