@@ -26,3 +26,6 @@ target/
 
 # JS
 /dump.rdb
+
+# Images
+/assets/logo/
