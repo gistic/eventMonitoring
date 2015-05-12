@@ -1,6 +1,6 @@
 'use strict';
 
-var eventViewsApp = angular.module('eventViewsApp', ['eventAdminApp', 'ngAnimate', 'ngFx', 'highcharts-ng', 'ui.router', 'ngCookies']);
+var eventViewsApp = angular.module('eventViewsApp', ['eventAdminApp', 'ngRoute','ngAnimate', 'ngFx', 'highcharts-ng', 'ui.router', 'ngCookies']);
 
 
 eventAdminApp.run(function ($rootScope, $location) {
@@ -64,17 +64,17 @@ eventViewsApp.config(function ($stateProvider, $urlRouterProvider) {
     window.routes = {
         "live": {
             url: '/live?uuid',
-            templateUrl: '../../views/live-tweets.html',
+            templateUrl: '../../views/presentation/live-tweets.html',
             controller: 'liveTweetsCtrl'
         },
         "top": {
             url: '/top?uuid',
-            templateUrl: '../../views/top_people.html',
+            templateUrl: '../../views/presentation/top_people.html',
             controller: 'TopPeopleCtrl'
         },
         "overtime": {
             url: '/overtime?uuid',
-            templateUrl: '../../views/tweets-chart.html',
+            templateUrl: '../../views/presentation/tweets-chart.html',
             controller: 'TweetsChatCtr'
         }
     };

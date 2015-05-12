@@ -22,7 +22,7 @@ target/
 /assets/.sass-cache/
 
 # HTML
+/assets/data/
 
 # JS
-/assets/scripts/snippet
 /dump.rdb

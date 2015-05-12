@@ -2,7 +2,7 @@
 <header class="container clearfix header-admin">
 
     <h2 class="logo pull-left ">
-            <a href="/admin">TweetBoard</a>
+            <a href="/">TweetBoard</a>
         </h2>
 
     <nav class="pull-right header-buttons">
@@ -256,7 +256,7 @@
 
             <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit()" data-user-id="{{tweet.user.id_str}}">
                 <div class="pull-left">
-<!--                    <img ng-src="{{tweet.user.profile_image_url_https}}" alt="" class="media-object">-->
+                    <img ng-src="{{tweet.user.profile_image_url_https}}" alt="" class="media-object">
                 </div>
                 <div class="tweet-content pull-left">
                     <h6 class="tweet-user">

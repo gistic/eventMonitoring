@@ -14,17 +14,17 @@ eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {
     window.routes = {
         "/": {
             url: '',
-            templateUrl: '/../../admin/admin-views/index.html',
+            templateUrl: '/../../views/admin/index.html',
             controller: 'StartNewEventController'
         },
         "admin": {
             url: '/admin?uuid',
-            templateUrl: '/../../admin/admin-views/admin.html',
+            templateUrl: '/../../views/admin/admin.html',
             controller: 'startEventCtrl'
         },
         "superAdmin": {
             url: '/superAdmin',
-            templateUrl: '/../../admin/admin-views/super-admin.html',
+            templateUrl: '/../../views/admin/super-admin.html',
             controller: 'SuperAdminCtrl'
         }
     };
@@ -424,15 +424,15 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
         //
         //        }
         //                                                
-                if ($state.current.url == "/admin?uuid") {
-                    window.onbeforeunload = function (event) {
-                        var message = 'If you close this window your event will stop.';
-                        return message;
-                    }
-                }
-                $(window).on('unload', function(){
-                    $scope.stopEventHandler(); 
-                });
+//                if ($state.current.url == "/admin?uuid") {
+//                    window.onbeforeunload = function (event) {
+//                        var message = 'If you close this window your event will stop.';
+//                        return message;
+//                    }
+//                }
+//                $(window).on('unload', function(){
+//                    $scope.stopEventHandler(); 
+//                });
 
 //        window.addEventListener("beforeunload", function (e) {
 //            var answer = confirm("Are you sure you want to leave this page?");
@@ -537,7 +537,7 @@ eventAdminApp.controller('startEventCtrl', ['$rootScope', '$scope', '$http', '$c
 
 
         $scope.goLive = function () {
-            $window.open($rootScope.baseUrl + "/#/live?uuid=" + $rootScope.eventID, '_blank');
+            $window.open($rootScope.baseUrl + "/views/presentation/#/live?uuid=" + $rootScope.eventID, '_blank');
         }
 
         // Layout : Color
