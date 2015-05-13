@@ -32,11 +32,29 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
         $scope.eventID = $location.search().uuid;
 
         $scope.enableModeration = true;
-
-
+        
         $scope.moderationStatus = function () {
 
             if ($scope.enableModeration == false) {
+                var requestAction = "DELETE";
+            } else {
+                var requestAction = "PUT";
+            }
+
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/moderation';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {}).error(function () {
+                    console.log("#");
+                })
+        };
+                                                
+        $scope.showRetweets = true;
+                                                
+        $scope.retweetsStatus = function () {
+
+            if ($scope.showRetweets == false) {
                 var requestAction = "DELETE";
             } else {
                 var requestAction = "PUT";
