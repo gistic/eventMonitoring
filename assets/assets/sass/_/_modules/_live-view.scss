@@ -1,22 +1,27 @@
+//body {
+//    overflow: hidden;
+//}
 .event-views {
 	text-align: center;
 	background: $blue;
 
 	// Layout Sizes
 	&.small {
-		strong {
-			font-size: 12px;
-		}
+        font-size: 150%;
 	}
+
 	&.normal {
-		strong {
-			font-size: 21px;
-		}
+        font-size: 300%;
+        h4 {
+            font-size: 75%;
+        }
 	}
+
 	&.large {
-		strong {
-			font-size: 36px;
-		}
+        font-size: 450%;
+        h4 {
+            font-size: 80%;
+        }
 	}
 
 	// Layout Colors
@@ -50,11 +55,9 @@
             color: $white;
             vertical-align: middle;
             font-size: $font-huge;
-            margin-left: $margin * 4;
         }
 
     }
-
     .user-img img {
         @include size(92px);
         @include border-radius(10%);
@@ -67,19 +70,15 @@
             margin: 0 auto;
             height: 750px;
         }
-        .media-heading {
+        .tweet-userName {
             color: $blue;
-            font-size: 40px;
-            text-align: right;
-            margin-right: 15px;
+        }
+        .tweet-screenName {
+            font-style: italic;
+            color:darken($gray-super-light, 40%);
         }
         .media-body {
-            text-align: right;
-            margin-top: 20px;
-            width: 100%;
-        }
-        .tweet-text {
-            font-size: 48px;
+            margin-left: $margin;
         }
 
     }
@@ -91,18 +90,12 @@
         }
         .media-heading {
             color: $layout-blue;
-            width: 40%;
+            @include size(50%, auto);
         }
         .media-body {
-            text-align: right;
-//            vertical-align: middle;
-//            width: 700px;
-//            display: inline-block;
-            margin-top: $margin * 2 0;
-            text-align: right;
+            @include size(80%, auto);
         }
         .tweets-count {
-            margin-left: $margin * 6;
         }
         .user-ranks {
             position: absolute;
@@ -110,12 +103,10 @@
             background: $layout-pink;
             @include border-radius(50%);
             right: 20px;
-            width: 70px;
-            height: 70px;
+            @include size(70px);
             line-height: 65px;
             border: 3px solid #fff;
             color: $white;
-            font-size: $font-huge;
             font-weight: bold;
             text-align: center;
         }

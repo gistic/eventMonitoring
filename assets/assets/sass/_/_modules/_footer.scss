@@ -12,15 +12,14 @@ footer {
         }
     }
     &.views--footer {
-        bottom: 0;
+        bottom: -10px;
         position: absolute;
         border: none;
-        background:#166398;
-        @include size(100%, 40px);
-        padding: 10px 0;
+        background: rgba(13, 13, 13, 0.60);
+        @include size(100%, 45px);
         p {
             color: $white;
-            @include font-size($font-normal);
+            @include font-size($font-small);
         }
     }
 }

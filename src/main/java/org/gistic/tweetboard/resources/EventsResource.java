@@ -1,5 +1,6 @@
 package org.gistic.tweetboard.resources;
 
+import com.codahale.metrics.annotation.Timed;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
@@ -8,6 +9,8 @@ import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.representations.Event;
 import org.gistic.tweetboard.util.GmailSender;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.LoggerFactory;
@@ -29,7 +32,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,8 +64,8 @@ public class EventsResource {
     public EventUuid createEvent(@Valid Event event, @DefaultValue("undefined") @QueryParam("email") String email,
                                  @Context Jedis jedis) {
         String[] hashTags = event.getHashTags();
-        for(String hashTag:hashTags) {
-            System.out.println("Hashtag received: "+hashTag);
+        for (String hashTag : hashTags) {
+            System.out.println("Hashtag received: " + hashTag);
             jedis.set("latestEventHashTag", hashTag);
         }
         String uuid = UUID.randomUUID().toString();
@@ -93,13 +102,13 @@ public class EventsResource {
     @PUT
     @Path("/{uuid}/config")
     public Response updateEventConfig(
-            @PathParam("uuid") String uuid,EventConfig eventConfig, @Context Jedis jedis) {
+            @PathParam("uuid") String uuid, EventConfig eventConfig, @Context Jedis jedis) {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.updateEventConfig(eventConfig);
         return Response
                 .ok("")
-        .build();
+                .build();
     }
 
     @DELETE
@@ -129,7 +138,7 @@ public class EventsResource {
     @POST
     @Path("/{uuid}/approvedTweets/{tweetId}")
     public Response approveTweet(@PathParam("uuid") String uuid, @PathParam("tweetId") String tweetId,
-                                 @DefaultValue("false") @QueryParam("starred") String star){
+                                 @DefaultValue("false") @QueryParam("starred") String star) {
         checkUuid(uuid);
         boolean starred = Boolean.parseBoolean(star);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
@@ -139,7 +148,7 @@ public class EventsResource {
 
     @POST
     @Path("/{uuid}/approvedTweets/all")
-    public Response approveAllTweet(@PathParam("uuid") String uuid){
+    public Response approveAllTweet(@PathParam("uuid") String uuid) {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.approveAllTweets();
@@ -148,7 +157,7 @@ public class EventsResource {
 
     @POST
     @Path("/{uuid}/blockedTweets/{tweetId}")
-    public Response blockTweet(@PathParam("uuid") String uuid, @PathParam("tweetId") String tweetId){
+    public Response blockTweet(@PathParam("uuid") String uuid, @PathParam("tweetId") String tweetId) {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.addToBlocked(tweetId);
@@ -158,7 +167,7 @@ public class EventsResource {
     //CRUD Trusted users
     @PUT
     @Path("/{uuid}/trustedUsers/{screenName}")
-    public Response addTrustedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName){
+    public Response addTrustedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.addTrustedUser(screenName);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
@@ -168,7 +177,7 @@ public class EventsResource {
 
     @DELETE
     @Path("/{uuid}/trustedUsers/{screenName}")
-    public Response deleteTrustedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName){
+    public Response deleteTrustedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.deleteTrustedUser(screenName);
         return Response.ok("").build();
@@ -176,7 +185,7 @@ public class EventsResource {
 
     @GET
     @Path("/{uuid}/trustedUsers/")
-    public String getTrustedUsers(@PathParam("uuid") String uuid){
+    public String getTrustedUsers(@PathParam("uuid") String uuid) {
 
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         List<String> list = event.getTrustedUsers();
@@ -191,7 +200,7 @@ public class EventsResource {
     // CRUD Blocked Users
     @GET
     @Path("/{uuid}/blockedUsers/")
-    public String getBlockedUsers(@PathParam("uuid") String uuid){
+    public String getBlockedUsers(@PathParam("uuid") String uuid) {
 
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         List<String> list = event.getBlockedUsers();
@@ -205,7 +214,7 @@ public class EventsResource {
 
     @PUT
     @Path("/{uuid}/blockedUsers/{screenName}")
-    public Response addBlockedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName){
+    public Response addBlockedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.addBlockedUser(screenName);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
@@ -215,7 +224,7 @@ public class EventsResource {
 
     @DELETE
     @Path("/{uuid}/blockedUsers/{screenName}")
-    public Response deleteBlockedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName){
+    public Response deleteBlockedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.deleteBlockedUser(screenName);
         return Response.ok("").build();
@@ -224,7 +233,7 @@ public class EventsResource {
     @GET
     @Path("/{uuid}/topUsers/")
     public TopUsers getTopUsers(@PathParam("uuid") String uuid,
-                                @DefaultValue("10") @QueryParam("count") Integer count){
+                                @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         // TopUser arraylist to array ... TODO: refactor
@@ -237,13 +246,13 @@ public class EventsResource {
     @GET
     @Path("/{uuid}/overTime/")
     public String getTweetsOverTime(@PathParam("uuid") String uuid,
-                                       @DefaultValue("-1") @QueryParam("period") Integer period,
-                                       @DefaultValue("1") @QueryParam("sampleRate") Integer sampleRate){
+                                    @DefaultValue("-1") @QueryParam("period") Integer period,
+                                    @DefaultValue("1") @QueryParam("sampleRate") Integer sampleRate) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         List<TweetsOverTimeAnalyzer.TweetsCountPerTime> tweetsPerTime = event.getTweetsPerTime(sampleRate, period);
         JSONArray result = new JSONArray();
         for (TweetsOverTimeAnalyzer.TweetsCountPerTime TweetsPeriod : tweetsPerTime) {
-            result.put(TweetsPeriod .getJsonObject());
+            result.put(TweetsPeriod.getJsonObject());
         }
         return result.toString();
     }
@@ -261,5 +270,44 @@ public class EventsResource {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         return tweetDataLogic.getBasicStats(uuid);
+    }
+
+    @POST
+    @Path("/{uuid}/logo")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadFile(
+            @PathParam("uuid") String uuid,
+            @FormDataParam("file") InputStream uploadedInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
+        /*
+        works with
+        <input id="the-file" name="file" type="file">
+        var fileInput = document.getElementById('the-file');
+        var file = fileInput.files[0];
+        var formData = new FormData();
+        formData.append('file', file);
+        xhr.open('POST', 'http://localhost:8080/api/events/{uuid}/logo', true);
+        xhr.send(formData);
+         */
+        System.out.println(fileDetail.getSize());
+        String uploadedFileLocation = "./assets/logo/"+uuid+"/";// + fileDetail.getFileName();
+        String fileName =fileDetail.getFileName();
+        System.out.println(fileName);
+        String fileType = fileName.substring(fileName.lastIndexOf("."));
+        writeToFile(uploadedInputStream, uploadedFileLocation, fileType);
+        String output = "File uploaded to : " + uploadedFileLocation;
+        uploadedInputStream.close();
+        return Response.ok(output).build();
+    }
+
+    // save uploaded file to new location
+    private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation, String fileType) throws IOException {
+        java.nio.file.Path outputPath = FileSystems.getDefault().getPath(uploadedFileLocation, "logo"+fileType);
+        System.out.println(Files.isDirectory(outputPath));
+        final java.nio.file.Path tmp = outputPath.getParent();
+        if (tmp != null) // null will be returned if the path has no parent
+            Files.createDirectories(tmp);
+
+        Files.copy(uploadedInputStream, outputPath, StandardCopyOption.REPLACE_EXISTING);
     }
 }
