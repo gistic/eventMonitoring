@@ -1,34 +1,56 @@
 body {
     font-family: 'Roboto', sans-serif;
-	background: $white;
+    background: $white;
 }
 
 header {
-	padding: $padding - 5 0;
-	background: $white;
-	border-bottom: 1px solid $gray-light;
+    padding: $padding - 5 0;
+    background: $white;
+    border-bottom: 1px solid $gray-light;
+    @include phone {
+        text-align: center;
+    }
     .logo {
         font-family: 'Lobster', cursive;
         a {
             color: $black;
-            &:hover,
-            &:focus {
+            &:hover, &:focus {
                 text-decoration: none;
             }
         }
     }
+    .header-buttons {
+        @include phone {
+            float: none !important;
+        }
+    }
 }
 
-.homepage-header {
+.header-admin {
+    .input-group {
+        @include phone {
+            text-align: center;
+            display: inline-block;
+        }
+    }
+}
+
+.header-homepage {
     background: $dark-green;
     color: $white;
     padding: $padding * 5 0;
+    @include phone {
+        padding: $padding * 2 0;
+    }
     text-align: center;
     .start-event {
         margin-top: $margin * 3;
         margin-left: auto;
         margin-right: auto;
-        width: $container-width / 2;
+        @include size(40%, auto);
+        @include phone {
+            @include size(80%, auto);
+        }
         input {
             @include border-radius(5px);
             color: $white;
@@ -39,11 +61,11 @@ header {
             }
             &:-moz-placeholder {
                 color: darken($dark-green, 17%);
-                 @include opacity(1);
+                @include opacity(1);
             }
             &::-moz-placeholder {
                 color: darken($dark-green, 17%);
-                 @include opacity(1);
+                @include opacity(1);
             }
             &:-ms-input-placeholder {
                 color: darken($dark-green, 17%);
