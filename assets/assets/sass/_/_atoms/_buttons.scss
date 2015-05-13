@@ -50,3 +50,26 @@
 		color: darken($gray, 40%);
 	}
 }
+
+// Extended from angular-ui-switch
+.switch {
+    vertical-align: middle;
+    &.wide-2x {
+        @include size(110px, auto);
+        &.checked {
+            small {
+                left: 90px;
+            }
+        }
+    }
+    &.small {
+        height: 20px;
+        small {
+            @include size(20px);
+        }
+        .on,
+        .off {
+            top: 6%;
+        }
+    }
+}
