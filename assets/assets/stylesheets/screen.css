@@ -12543,6 +12543,34 @@ a:hover, a:focus {
   color: black;
 }
 
+/* line 55, ../sass/_/_atoms/_buttons.scss */
+.switch {
+  vertical-align: middle;
+}
+/* line 57, ../sass/_/_atoms/_buttons.scss */
+.switch.wide-2x {
+  width: 110px;
+  height: auto;
+}
+/* line 60, ../sass/_/_atoms/_buttons.scss */
+.switch.wide-2x.checked small {
+  left: 90px;
+}
+/* line 65, ../sass/_/_atoms/_buttons.scss */
+.switch.small {
+  height: 20px;
+}
+/* line 67, ../sass/_/_atoms/_buttons.scss */
+.switch.small small {
+  width: 20px;
+  height: 20px;
+}
+/* line 70, ../sass/_/_atoms/_buttons.scss */
+.switch.small .on,
+.switch.small .off {
+  top: 6%;
+}
+
 /* line 1, ../sass/_/_atoms/_forms.scss */
 input,
 .form-control {
