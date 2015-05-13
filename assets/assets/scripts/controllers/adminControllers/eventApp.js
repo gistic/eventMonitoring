@@ -1,68 +1,32 @@
 var eventApp = angular.module('eventApp', []);
 
 // Controller : Populate the recieved data and update admin page
-eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', ' $anchorScroll', '$state', 'RequestData', 'RequestViewsLayoutData',
+eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'RequestViewsLayoutData',
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, RequestViewsLayoutData) {
-        //        console.log($state);
 
-        //        if ($state.current.url == "/admin?uuid") {
-        //            $scope.$on('$locationChangeStart', function (event) {
-        //                var answer = confirm("Are you sure you want to leave this page?");
-        //                console.log(answer);
-        //                if (answer) {
-        //                    console.log(answer);
-        //                    $scope.stopEventHandler();
-        //                    // Redirect the front website page to the admin page
-        ////                    $state.transitionTo('admin');
-        //                } else {
-        ////                    event.preventDefault();
-        //                    console.log(answer);
-        //                }
-        //            });
-        //
-        //        }
-        //
-        //                if ($state.current.url == "/admin?uuid") {
-        //                    window.onbeforeunload = function (event) {
-        //                        var message = 'If you close this window your event will stop.';
-        //                        return message;
-        //                    }
-        //                }
-        //                $(window).on('unload', function(){
-        //                    $scope.stopEventHandler();
-        //                });
+        // Reloading, Closing or navigatiging from the admin panel will cause event closing
 
-        //        window.addEventListener("beforeunload", function (e) {
-        //            var answer = confirm("Are you sure you want to leave this page?");
-        //            console.log($state);
-        //        }, false);
+        $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+            if (fromState.name == 'admin') {
+                var answer = confirm('Reloading or leaving this page will cause your event stopping.');
+                if (answer == false) {
+                    event.preventDefault();
+                } else {
+                    $scope.stopEventHandler();
+                }
+            }
 
-        //        if ($state.current.url == "/admin?uuid") {
-        //            $scope.$on('$locationChangeStart', function (event, next, current) {
-        //                console.log($state.current.url);
-        //                var answer = confirm("Are you sure you want to navigate away from this page");
-        //            });
-        //        }
+        });
 
-        //        $scope.$on('$locationChangeStart', function (event, next, current) {
-        //            if ($state.current.url == "/admin?uuid") {
-        //                var answer = confirm("Are you sure you want to navigate away from this page");
-        //                if (!answer) {
-        ////                    event.preventDefault();
-        //                    console.log(answer);
-        //                } else {
-        //                    console.log(answer);
-        //                }
-        //
-        //            }
-        //        });
-
-        //        window.onbeforeunload = function (e) {
-        //            if (check(document.URL))
-        //                return check(document.URL);
-        //            else
-        //                return undefined;
-        //        };
+        if ($state.current.name == "admin") {
+            window.onbeforeunload = function (event) {
+                var message = 'Reloading or leaving this page will cause your event stopping.';
+                return message;
+            }
+            $(window).on('unload', function () {
+                $scope.stopEventHandler();
+            });
+        }
 
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
@@ -383,7 +347,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
                     // show the notification
                     notification.show();
-
+                    $state.transitionTo('/');
                 })
         }
 }]);
