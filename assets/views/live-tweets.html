@@ -15,27 +15,20 @@
                 </span>
             </span>
             
-            <div class="row">
-            <div class="user-img pull-right">
+            <div class="user-img pull-left">
                 <img lazy-load ll-src="{{tweet.user.profile_image_url }}" on-error-src="{{defultImage}}" />
             </div>
-            <div class="pull-right">
-                <h4 class="media-heading">
-                    {{tweet.user.name}}
+
+            <div class="media-body">
+               <h4 class="media-heading">
+                    <strong class="tweet-userName">
+                        {{tweet.user.name}}
+                    </strong>
+                    <span class="tweet-screenName">
+                        @{{tweet.user.screen_name}}
+                    </span>
                     
                 </h4>
-                <h6>
-                    <small>
-                        {{tweet.user.screen_name}}
-                    </small>
-                </h6>
-            </div>
-            
-            
-            </div>
-
-            <div class="media-body ">
-                
                 <p class="tweet-text">{{tweet.text}}</p>
             </div>
 

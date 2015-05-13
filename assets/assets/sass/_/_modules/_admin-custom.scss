@@ -1,4 +1,7 @@
 .admin-customization {
+    @include phone {
+        text-align: center;
+    }
     margin: $margin*3 0;
     background: $gray-super-light;
     @include border-radius(5px);
@@ -8,6 +11,12 @@
     }
     .panel-body {
         padding: $padding * 3 $padding * 6;
+        @include phone {
+            padding: $padding;
+        }
+        @include tablet {
+            padding: $padding;
+        }
     }
     h6 {
         margin-bottom: $margin*3;
@@ -17,20 +26,36 @@
     .custom-option {
         padding: $padding*2;
         min-height: 175px;
+        @include phone {
+            padding: $padding;
+            min-height: 130px;
+        }
         &:nth-child(2n+1) {
             border-right: 1px solid $gray-light;
+            @include phone {
+                border-right: none;
+            }
         }
     }
     .first-row {
         &:nth-child(n) {
             border-bottom: 1px solid $gray-light;
+            @include phone {
+                border-bottom: none;
+            }
         }
     }
     .save-layout-options {
         margin-top: $margin * 5;
+        @include phone {
+            margin-top: $margin * 2;
+        }
         .btn {
             padding: $padding - 5 $padding * 2;
             background: $button-save-bg;
+            @include phone {
+                @include size(100%, auto);
+            }
         }
     }
 }
@@ -38,6 +63,12 @@
 .layout-custom-color {
     li {
         margin-right: $margin * 4;
+        @include phone {
+            margin-right: $margin;
+        }
+        @include tablet {
+            margin-right: $margin * 3;
+        }
         &:last-child {
             margin-right: 0;
         }
@@ -98,7 +129,8 @@
 .layout-custom-size {
     li {
         .size {
-            border: 1px solid $white;
+            border: 1px solid $gray-super-light;
+            text-transform: capitalize;
             padding: $padding;
             @include border-radius(5%);
             cursor: pointer;

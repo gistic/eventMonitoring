@@ -12,6 +12,7 @@ import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
 import org.gistic.tweetboard.resources.AdminEventSource;
 import org.gistic.tweetboard.resources.EventsResource;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcaster;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisPool;
@@ -51,6 +52,7 @@ public class App extends Application<TweetBoardConfiguration> {
         JedisPool pool = ConfigurationSingleton.getInstance().getJedisFactory().build(e);
         JedisPoolContainer.setInstance(pool);
         EventMap.setTwitterConfiguration(c.getTwitterConfiguration());
+        e.jersey().register(MultiPartFeature.class);
         e.jersey().register(new EventsResource());
         e.jersey().register(new LiveTweetsBroadcaster());
         e.jersey().register(new AdminEventSource());
