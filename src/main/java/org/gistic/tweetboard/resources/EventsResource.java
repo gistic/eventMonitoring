@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import org.gistic.tweetboard.DelayedJobsManager;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
@@ -70,6 +71,7 @@ public class EventsResource {
         EventMap.put(hashTags, tweetDataLogic, uuid);
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);
+        DelayedJobsManager.createEventDestroyJob(uuid);
         return eventUuid;
     }
 

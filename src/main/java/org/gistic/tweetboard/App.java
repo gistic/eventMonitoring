@@ -55,10 +55,13 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(new EventsResource());
         e.jersey().register(new LiveTweetsBroadcaster());
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
+        DelayedJobsManager.initiate();
         //e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");
         //Close threads on JVM exit
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
+                DelayedJobsManager.destroy();
+
                 LoggerFactory.getLogger(this.getClass()).info("Shutting down threads");
                 ExecutorService executor = ExecutorSingleton.getInstance();
                 executor.shutdown();
