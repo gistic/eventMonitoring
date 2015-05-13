@@ -7,6 +7,7 @@ import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.jersey.media.sse.OutboundEvent;
 import org.glassfish.jersey.media.sse.SseBroadcaster;
 import org.glassfish.jersey.media.sse.SseFeature;
+import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 
 import javax.inject.Singleton;
@@ -35,12 +36,16 @@ public class AdminEventSource {
             eventBuilder.name("new-admin-opened");
             eventBuilder.data(String.class, "shutDownStream");
             final OutboundEvent event = eventBuilder.build();
-            eventOutput.write(event);
             try {
-                Thread.sleep(2000l);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                eventOutput.write(event);
+            } catch (IOException e) {
+                LoggerFactory.getLogger(this.getClass()).info("admin tab probably refresehed");
             }
+//            try {
+//                Thread.sleep(2000l);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             eventOutput.close();
             this.eventOutputs.remove(uuid);
         }
