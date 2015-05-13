@@ -1,8 +1,8 @@
 var eventApp = angular.module('eventApp', []);
 
 // Controller : Populate the recieved data and update admin page
-eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'RequestViewsLayoutData',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, RequestViewsLayoutData) {
+eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'RequestViewsLayoutData', 'CreateEventSource',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, RequestViewsLayoutData, CreateEventSource) {
 
         // Reloading, Closing or navigatiging from the admin panel will cause event closing
 
@@ -18,15 +18,15 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
         });
 
-        if ($state.current.name == "admin") {
-            window.onbeforeunload = function (event) {
-                var message = 'Reloading or leaving this page will cause your event stopping.';
-                return message;
-            }
-            $(window).on('unload', function () {
-                $scope.stopEventHandler();
-            });
-        }
+//        if ($state.current.name == "admin") {
+//            window.onbeforeunload = function (event) {
+//                var message = 'Reloading or leaving this page will cause your event stopping.';
+//                return message;
+//            }
+//            $(window).on('unload', function () {
+//                $scope.stopEventHandler();
+//            });
+//        }
 
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
@@ -117,11 +117,11 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
         // Listen to new message
         $scope.startEventSource = function () {
-            $scope.eventSourceUrl = $rootScope.baseUrl + "/api/adminLiveTweets?uuid=" + $rootScope.eventID;
+            $scope.eventSourceUrl = $rootScope.baseUrl + "/api/events/" + $rootScope.eventID + "/adminEventSource";
 
             var source = new EventSource($scope.eventSourceUrl);
 
-            source.addEventListener('message', function (response) {
+            source.addEventListener('tweet', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
 
@@ -129,6 +129,12 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                     $scope.tweetsQueue.push($scope.tweet);
                     $scope.tweetsCount = $rootScope.totalTweetsFromServer + $scope.tweetsQueue.length;
                 }, false);
+            });
+            
+            
+            source.addEventListener('new-admin-opened', function (response) {
+                console.log(response);
+                source.close();
             });
         }
 
