@@ -1,15 +1,21 @@
 var myAppFilters = angular.module('myAppFilters', []);
 
-// Filter to reverse Tweets Queue
+// Filter : Reverse Tweets Queue
 myAppFilters.filter('reverseQueue', function () {
     return function (tweetsQueue) {
         return tweetsQueue.slice().reverse();
     };
 });
 
-/**
- * custom filter
- */
+myAppFilters.filter('reverse', function () {
+    var items = [];
+    return function (items) {
+        return items.slice().reverse();
+    };
+});
+
+
+// Filter : Added selected checkbox to array if selected == true
 myAppFilters.filter('fruitSelection', ['filterFilter', function (filterFilter) {
     return function fruitSelection(input, prop) {
         return filterFilter(input, {
@@ -30,12 +36,4 @@ myAppFilters.filter('customFilter', function () {
         }, alter);
         return alter;
     }
-});
-
-// Filter : Reverse tweets lists
-myAppFilters.filter('reverse', function () {
-    var items = [];
-    return function (items) {
-        return items.slice().reverse();
-    };
 });

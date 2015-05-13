@@ -44,7 +44,7 @@
 <main class="container">
 
     <!-- UI Customization -->
-    <section class="panel panel-default admin-customization" ng-controller="liveViewCtrl">
+    <section class="panel panel-default admin-customization">
         <h3 class="panel-heading text-center">UI Customization</h3>
         <div class="panel-body">
 
@@ -173,7 +173,7 @@
                 <li><a ng-click="approveAllTweets()">Approve all</a>
                 </li>
 
-                <li ng-controller="trustedUsersModalCtrl">
+                <li ng-controller="TrustedUsersModalController">
                     <a ng-click="open()">Trusted Users</a>
 
                     <!-- Modal -->
@@ -208,7 +208,7 @@
                     </script>
                 </li>
 
-                <li ng-controller="blockedUsersModalCtrl">
+                <li ng-controller="BlockedUsersModalController">
                     <a ng-click="open()">Blocked Users</a>
                     <!-- Modal -->
                     <script type="text/ng-template" id="blockedUsers.html">

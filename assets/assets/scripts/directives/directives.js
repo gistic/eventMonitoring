@@ -1,6 +1,6 @@
 var myAppDirectives = angular.module('myAppDirectives', []);
 
-// Activate ' ENTER ' keypress to make the same action as click
+// Directive : Activate ' ENTER ' keypress to make the same action as click
 myAppDirectives.directive('ngEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
@@ -27,7 +27,6 @@ myAppDirectives.directive('lazyLoad', function ($timeout) {
         },
     }
 });
-
 
 // Directive : On error or missing user profile image -> Load this default image
 myAppDirectives.directive('onErrorSrc', function ($rootScope) {
