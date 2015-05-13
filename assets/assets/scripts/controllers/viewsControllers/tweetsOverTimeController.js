@@ -37,10 +37,10 @@ tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$roo
 
 
         RequestData.fetchData(requestAction, apiUrl, requestData)
-            .then(function (data) {
-                $scope.data = data;
-                $scope.tweetsTime = data.time;
-                $scope.tweetsCount = data.count;
+            .then(function (response) {
+                $scope.data = response.data;
+                $scope.tweetsTime = response.data.time;
+                $scope.tweetsCount = response.data.tweets_count;
 
                 function drawTweetsOverTimeChart() {
                     var arrayLength = $scope.data.length;

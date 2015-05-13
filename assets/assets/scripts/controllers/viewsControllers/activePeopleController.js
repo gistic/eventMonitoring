@@ -15,10 +15,9 @@ activePeopleController.controller('ActivePeopleController', ['$scope', '$rootSco
             "count": topUsersCount
         };
 
-
         RequestData.fetchData(requestAction, apiUrl, requestData)
-            .then(function (data) {
-                $scope.data = data.topUsers;
+            .then(function (response) {
+                $scope.data = response.data.topUsers;
             });
     }
     $scope.fetchData();
