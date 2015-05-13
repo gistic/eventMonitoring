@@ -385,6 +385,15 @@ public class TweetDaoImpl implements TweetDao {
         return null;
     }
 
+    @Override
+    public void deleteTweetJson(String tweetId) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.del(tweetId);
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
 
     @Override
     public void blockAllExistingTweetsByUser(String uuid, String screenName) {

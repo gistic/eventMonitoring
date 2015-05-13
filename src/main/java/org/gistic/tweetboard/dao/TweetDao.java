@@ -76,4 +76,6 @@ public interface TweetDao {
     BasicStats getBasicStats(String uuid);
 
     List<String> getAllTweetIdsSentForApprovalAndDeleteFromSentForApproval(String uuid);
+
+    void deleteTweetJson(String tweetId);
 }
