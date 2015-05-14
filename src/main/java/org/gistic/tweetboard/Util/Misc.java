@@ -1,4 +1,4 @@
-package org.gistic.tweetboard.Util;
+package org.gistic.tweetboard.util;
 
 /**
  * Created by osama-hussain on 5/13/15.

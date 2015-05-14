@@ -1,13 +1,11 @@
 package org.gistic.tweetboard.delayedjob;
 
-import org.gistic.tweetboard.Util.Misc;
+import org.gistic.tweetboard.util.Misc;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
 
 /**
  * Created by osama-hussain on 5/13/15.

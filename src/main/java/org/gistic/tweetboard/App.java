@@ -9,6 +9,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
+import org.gistic.tweetboard.resources.AdminEventSource;
 import org.gistic.tweetboard.resources.EventsResource;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcaster;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -54,6 +55,7 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(MultiPartFeature.class);
         e.jersey().register(new EventsResource());
         e.jersey().register(new LiveTweetsBroadcaster());
+        e.jersey().register(new AdminEventSource());
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
         DelayedJobsManager.initiate();
         //e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");
