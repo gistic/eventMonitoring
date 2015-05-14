@@ -8,6 +8,7 @@ import org.gistic.tweetboard.eventmanager.*;
 import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.representations.Event;
+import org.gistic.tweetboard.util.GmailSender;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONArray;
@@ -15,6 +16,7 @@ import org.json.JSONException;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.ws.rs.Path;
 import javax.ws.rs.Consumes;
@@ -59,7 +61,8 @@ public class EventsResource {
     }
 
     @POST
-    public EventUuid createEvent(@Valid Event event, @Context Jedis jedis) {
+    public EventUuid createEvent(@Valid Event event, @DefaultValue("undefined") @QueryParam("email") String email,
+                                 @Context Jedis jedis) {
         String[] hashTags = event.getHashTags();
         for (String hashTag : hashTags) {
             System.out.println("Hashtag received: " + hashTag);
@@ -70,6 +73,11 @@ public class EventsResource {
         EventMap.put(hashTags, tweetDataLogic, uuid);
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);
+        try {
+            GmailSender.send(uuid, email);
+        } catch (MessagingException e) {
+            LoggerFactory.getLogger(this.getClass()).error("Failed to send email to: "+email+" for event: "+uuid);
+        }
         return eventUuid;
     }
 
