@@ -28,6 +28,7 @@ trustedUsersController.controller('TrustedUsersController', ['$rootScope', '$sco
             .then(function (response) {
                 $scope.trustedUsers = response.data;
             })
+        
 
         // PUT : Trusted User
         $scope.updateTrustedUsers = function () {

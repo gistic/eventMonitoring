@@ -168,7 +168,7 @@
                 <switch class="wide" ng-change="moderationStatus" name="enableModeration" ng-model="enableModeration" on="On" off="Off"></switch>
             </h3>
         </div>
-        
+
         <div class="row clearfix">
             <ul class="list-inline pull-left moderation-actions">
 
@@ -197,11 +197,11 @@
                                 <ul class="users-list">
                                     <li ng-repeat="user in trustedUsers" class="clearfix">
                                         <strong>
-<!--                                            <img ng-src="logo.png" err-SRC="http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png" />-->
-<a class="">
-{{user}}
-</a>
-</strong>
+                                            <!-- <img ng-src="logo.png" err-SRC="http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png" /> -->
+                                            <a ng-href="{{twitterBaseUrl}}{{user}}" target="_blank">
+                                            {{user}}
+                                            </a>
+                                        </strong>
                                         <a class="pull-right remove-user" ng-click="deleteTrustedUsername($index)">Remove</a>
                                     </li>
                                 </ul>
@@ -231,13 +231,11 @@
                                 <ul class="users-list">
                                     <li ng-repeat="user in blockedUsers" class="clearfix">
                                         <strong>
-
-<!--											<img ng-src="logo.png" err-SRC="http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png" />-->
-<a class="">
-{{user}}
-</a>
-</strong>
-
+											<!-- <img ng-src="logo.png" err-SRC="http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png" /> -->
+                                            <a ng-href="{{twitterBaseUrl}}{{user}}" target="_blank">
+                                                {{user}}
+                                            </a>
+                                        </strong>
                                         <a class="pull-right remove-user" ng-click="deleteBlockedUsername($index)">Remove</a>
                                     </li>
                                 </ul>
@@ -245,13 +243,13 @@
                         </div>
                     </script>
                 </li>
-                
+
                 <li>
-                    <switch class="small wide-2x" ng-change="retweetsStatus" name="showRetweets" ng-model="showRetweets" on="Retweets On" off="Retweets Off"></switch>    
+                    <switch class="small wide-2x" ng-change="retweetsStatus" name="showRetweets" ng-model="showRetweets" on="Retweets On" off="Retweets Off"></switch>
                 </li>
 
             </ul>
-            
+
         </div>
 
         <section class="tweets-queue" id="toApproveDiv">
@@ -261,17 +259,17 @@
 
             <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit()" data-user-id="{{tweet.user.id_str}}">
                 <div class="pull-left">
-                    <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object"/>
+                    <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object" />
                 </div>
                 <div class="tweet-content pull-left">
                     <h6 class="tweet-user">
-{{tweet.user.name}}
-<small>
-    <a href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank">
-@ {{tweet.user.screen_name}}
-</a>
-</small>
-</h6>
+                        {{tweet.user.name}}
+                        <small>
+                            <a href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank">
+                        @ {{tweet.user.screen_name}}
+                        </a>
+                        </small>
+                    </h6>
                     <p>{{tweet.text}}</p>
                     <small class="text-muted">Country : {{tweet.user.country || "none"}}</small>
                     <br>
