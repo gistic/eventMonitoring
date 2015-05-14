@@ -1,6 +1,9 @@
 package org.gistic.tweetboard.util;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -17,6 +20,7 @@ public class GmailSender {
     static Properties mailServerProperties;
     static Session getMailSession;
     static MimeMessage generateMailMessage;
+    static final String URL = "http://127.0.0.1:8080";
 
     public static void send(String uuid, String address) throws AddressException, MessagingException {
         generateAndSendEmail(uuid, address);
@@ -24,32 +28,31 @@ public class GmailSender {
     }
 
     public static void generateAndSendEmail(String uuid, String address) throws AddressException, MessagingException {
-
+        Logger logger = LoggerFactory.getLogger(GmailSender.class);
+        logger.info("sending email for event: "+uuid+" to address: "+address);
 //Step1
-        System.out.println("\n 1st ===> setup Mail Server Properties..");
         mailServerProperties = System.getProperties();
         mailServerProperties.put("mail.smtp.port", "587");
         mailServerProperties.put("mail.smtp.auth", "true");
         mailServerProperties.put("mail.smtp.starttls.enable", "true");
-        System.out.println("Mail Server Properties have been setup successfully..");
 
 //Step2
-        System.out.println("\n\n 2nd ===> get Mail Session..");
+        logger.info("get Mail Session..");
         getMailSession = Session.getDefaultInstance(mailServerProperties, null);
         generateMailMessage = new MimeMessage(getMailSession);
         generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(address));
         //generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("test2@crunchify.com"));
         generateMailMessage.setSubject("Congratulations! new event created at TweetBoard");
-        String emailBody = "Your event has been created. \n\n You can access the admin page at {url}/admin#/admin?uuid="+uuid;
+        String emailBody = "Your event has been created. \n\n You can access the admin page at "+URL+"/admin#/admin?uuid="+uuid;
         generateMailMessage.setContent(emailBody, "text/html");
-        System.out.println("Mail Session has been created successfully..");
+        logger.info("Mail Session has been created successfully..");
 
 //Step3
-        System.out.println("\n\n 3rd ===> Get Session and Send mail");
+        logger.info("Getting Session");
         Transport transport = getMailSession.getTransport("smtp");
-
         // Enter your correct gmail UserID and Password (XXXApp Shah@gmail.com)
         transport.connect("smtp.gmail.com", "noreply.tweetboard@gmail.com", "draobteewt");
+        logger.info("Sending email");
         transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
         transport.close();
     }
