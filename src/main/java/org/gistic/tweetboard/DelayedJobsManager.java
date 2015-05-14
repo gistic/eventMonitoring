@@ -37,8 +37,8 @@ public class DelayedJobsManager {
     public static void createEventDestroyJob(String uuid) {
         final Config config = new ConfigBuilder().build();
         Client client = new ClientImpl(config);
-        final long delay = 20; // in seconds
-        final long future = System.currentTimeMillis() + (delay * 1000);
+        final long delayInSeconds = ConfigurationSingleton.getInstance().getDefaultAutoShutdownDelayInHours() * 60 * 60; // in seconds
+        final long future = System.currentTimeMillis() + (delayInSeconds * 1000);
         // Add a job to the delayed queue
         final Job job = new Job(DESTROY_EVENT_ACTION, new Object[]{ uuid });
         client.delayedEnqueue(EVENT_DESTROY_QUEUE, job, future);
@@ -52,8 +52,8 @@ public class DelayedJobsManager {
         final Job job = new Job(DESTROY_EVENT_ACTION, new Object[]{ uuid });
         client.removeDelayedEnqueue(EVENT_DESTROY_QUEUE, job);
         // Add a job to the delayed queue
-        final long delay = 20; // in seconds
-        final long future = System.currentTimeMillis() + (delay * 1000);
+        final long delayInSeconds = ConfigurationSingleton.getInstance().getDefaultAutoShutdownDelayInHours() * 60 * 60; // in seconds
+        final long future = System.currentTimeMillis() + (delayInSeconds * 1000);
         client.delayedEnqueue(EVENT_DESTROY_QUEUE, job, future);
         client.end();
     }
