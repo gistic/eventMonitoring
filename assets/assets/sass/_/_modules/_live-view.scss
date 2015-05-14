@@ -70,17 +70,6 @@
             margin: 0 auto;
             height: 750px;
         }
-        .tweet-userName {
-            color: $blue;
-        }
-        .tweet-screenName {
-            font-style: italic;
-            color:darken($gray-super-light, 40%);
-        }
-        .media-body {
-            margin-left: $margin;
-        }
-
     }
 
     // Views : Top People

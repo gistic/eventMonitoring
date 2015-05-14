@@ -18,6 +18,8 @@ var eventAdminApp = angular.module('eventAdminApp', [
     'eventApp'
 ]);
 
+
+// Run : Intliaize the event admin app with this values
 eventAdminApp.run(function ($window, $location, $rootScope) {
     $rootScope.baseUrl = $window.location.origin;
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
