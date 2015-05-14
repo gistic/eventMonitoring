@@ -7,7 +7,6 @@ var eventViewsApp = angular.module('eventViewsApp', [
     'ngFx',
     'highcharts-ng',
     'ui.router',
-    'ngCookies',
     'myAppDirectives',
     'myAppFilters',
     'myAppServices',

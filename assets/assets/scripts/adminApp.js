@@ -3,7 +3,6 @@
 var eventAdminApp = angular.module('eventAdminApp', [
     'ui.bootstrap',
     'timer',
-    'ngCookies',
     'ui.router',
     'uiSwitch',
     'angularFileUpload',
