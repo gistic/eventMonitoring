@@ -6,17 +6,17 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
         // Reloading, Closing or navigatiging from the admin panel will cause event closing
 
-        $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-            if (fromState.name == 'admin') {
-                var answer = confirm('Reloading or leaving this page will cause your event stopping.');
-                if (answer == false) {
-                    event.preventDefault();
-                } else {
-                    $scope.stopEventHandler();
-                }
-            }
-
-        });
+//        $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+//            if (fromState.name == 'admin') {
+//                var answer = confirm('Reloading or leaving this page will cause your event stopping.');
+//                if (answer == false) {
+//                    event.preventDefault();
+//                } else {
+//                    $scope.stopEventHandler();
+//                }
+//            }
+//
+//        });
 
 //        if ($state.current.name == "admin") {
 //            window.onbeforeunload = function (event) {

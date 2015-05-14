@@ -9,6 +9,7 @@
 
 @import "_/_vendor/_bootstrap/_bootstrap.scss";
 @import "_/_vendor/_fa/_font-awesome.scss";
+@import "_/_vendor/_hover/_hover.scss";
 
 //node added [_configs]
 @import "_/_configs/mixins";
@@ -17,6 +18,7 @@
 
 //node added [_atoms]
 @import "_/_atoms/buttons";
+@import "_/_atoms/switch";
 @import "_/_atoms/forms";
 @import "_/_atoms/typography";
 @import "_/_atoms/icons";

@@ -281,13 +281,16 @@
                     <div class="btn-group " role="group">
                         <button type="button" tooltip-placement="top" tooltip="Approve tweet" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="approveTweet($event)"><i class="icon-check"></i>
                         </button>
-                        <button type="button" tooltip-placement="top" tooltip="Remove tweet" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="removeTweet($event)"><i class="icon-cross"></i>
-                        </button>
                         <button type="button" tooltip-placement="top" tooltip="Approve tweet as starred" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="approveStarred($event)"><i class="icon-star"></i>
                         </button>
                     </div>
+                    
+                    <div class="btn-group" role="group">
+                        <button type="button" tooltip-placement="top" tooltip="Remove tweet" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="removeTweet($event)"><i class="icon-cross"></i>
+                        </button>
+                    </div>
 
-                    <div class="btn-group " role="group">
+                    <div class="btn-group" role="group">
                         <button type="button" tooltip-placement="top" tooltip="Add user to trusted list" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="updateTrustedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https, tweet.user.id_str)"><i class="icon-add-user"></i>
                         </button>
                         <button type="button" tooltip-placement="top" tooltip="Add user to blocked list" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="updateBlockedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https, tweet.user.id_str)"><i class="icon-remove-user"></i>

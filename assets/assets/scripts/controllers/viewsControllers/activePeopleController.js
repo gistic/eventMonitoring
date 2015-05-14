@@ -9,7 +9,7 @@ activePeopleController.controller('ActivePeopleController', ['$scope', '$rootSco
 
         var requestAction = "GET";
         var apiUrl = '/api/events/' + $rootScope.eventID + '/topUsers';
-        var topUsersCount = 5;
+        var topUsersCount = 10;
 
         var requestData = {
             "count": topUsersCount
