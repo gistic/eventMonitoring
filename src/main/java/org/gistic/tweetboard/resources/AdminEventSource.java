@@ -1,5 +1,6 @@
 package org.gistic.tweetboard.resources;
 
+import org.gistic.tweetboard.DelayedJobsManager;
 import org.gistic.tweetboard.eventmanager.Event;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
@@ -71,6 +72,7 @@ public class AdminEventSource {
                                 eventBuilder.data(String.class, status.getStatusString().replace("_normal", ""));
                                 final OutboundEvent event = eventBuilder.build();
                                 finalEventOutput.write(event);
+                                DelayedJobsManager.refreshEventDestroyJob(uuid);
                             }
                         } else {
                             Thread.sleep(500);
