@@ -45,6 +45,10 @@ public class TweetDataLogic {
         addToApproved(tweet);
     }
 
+    public void setNewTweetMeta(InternalStatus status) {
+        tweetDao.setNewTweetMeta(uuid, status);
+    }
+
     public void addToApproved(Status tweet) {
         String tweetId = String.valueOf(tweet.getId());
         addToApproved(tweetId, false);
@@ -54,6 +58,7 @@ public class TweetDataLogic {
         tweetDao.removeFromSentForApproval(uuid, tweetId);
         tweetDao.addToApproved(uuid, tweetId, starred);
         String statusString = tweetDao.getStatusString(tweetId);
+        tweetDao.deleteTweetJson(tweetId);
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
         Message msg = new Message(uuid, Message.Type.LiveTweet, statusString);
