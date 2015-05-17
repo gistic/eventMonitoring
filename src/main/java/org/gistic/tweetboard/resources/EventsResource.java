@@ -98,10 +98,13 @@ public class EventsResource {
     @GET
     @Path("/{uuid}/config")
     public EventConfig getEventConfig(@PathParam("uuid") String uuid) {
-        checkUuid(uuid);
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         DelayedJobsManager.refreshEventDestroyJob(uuid);
-        return tweetDataLogic.getEventConfig(uuid);
+        EventConfig config = tweetDataLogic.getEventConfig(uuid);
+        config.setModerated(event.isModeration());
+        config.setRetweetEnabled(event.isRetweetsEnabled());
+        return config;
     }
 
     @PUT
