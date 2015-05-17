@@ -105,7 +105,11 @@ myAppServices.factory('RequestViewsLayoutData', ['$rootScope', '$location', '$wi
         },
         userScreen: function () {
             return $rootScope.userScreens;
+        },
+        showRetweets: function () {
+            return $rootScope.showRetweets;
         }
+        
     };
 }]);
 
