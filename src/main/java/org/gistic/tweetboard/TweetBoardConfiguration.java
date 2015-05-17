@@ -19,7 +19,6 @@ public class TweetBoardConfiguration extends Configuration implements AssetsBund
     private String message;
 
     @JsonProperty
-    @NotEmpty
     private int defaultAutoShutdownDelayInHours;
 
     public int getDefaultAutoShutdownDelayInHours() {
