@@ -135,6 +135,28 @@ public class EventsResource {
                 .build();
     }
 
+    @DELETE
+    @Path("/{uuid}/retweets")
+    public Response disableRetweets(
+            @PathParam("uuid") String uuid, @Context Jedis jedis) {
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
+        event.setRetweetsEnabled(false);
+        return Response
+                .ok("")
+                .build();
+    }
+
+    @PUT
+    @Path("/{uuid}/retweets")
+    public Response enableRetweets(
+            @PathParam("uuid") String uuid, @Context Jedis jedis) {
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
+        event.setRetweetsEnabled(true);
+        return Response
+                .ok("")
+                .build();
+    }
+
     @POST
     @Path("/{uuid}/approvedTweets/{tweetId}")
     public Response approveTweet(@PathParam("uuid") String uuid, @PathParam("tweetId") String tweetId,

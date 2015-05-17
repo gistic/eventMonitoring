@@ -51,25 +51,9 @@
 	}
 }
 
-// Extended from angular-ui-switch
-.switch {
-    vertical-align: middle;
-    &.wide-2x {
-        @include size(110px, auto);
-        &.checked {
-            small {
-                left: 90px;
-            }
-        }
-    }
-    &.small {
-        height: 20px;
-        small {
-            @include size(20px);
-        }
-        .on,
-        .off {
-            top: 6%;
-        }
-    }
+// Extended from button hover
+.hvr-rectangle-out:active,
+.hvr-rectangle-out:focus,
+.hvr-rectangle-out:hover {
+    color: $white;
 }

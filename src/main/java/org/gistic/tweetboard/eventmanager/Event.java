@@ -104,4 +104,5 @@ public class Event {
     public void setModeration(boolean moderated) {
         tweetProcessor.setModerated(moderated);
     }
+    public void setRetweetsEnabled(boolean retweetsEnabled) { tweetProcessor.setRetweetEnabled(retweetsEnabled); }
 }

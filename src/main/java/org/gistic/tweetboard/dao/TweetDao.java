@@ -1,5 +1,6 @@
 package org.gistic.tweetboard.dao;
 
+import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.representations.BasicStats;
 import org.gistic.tweetboard.representations.EventConfig;
 import org.gistic.tweetboard.representations.EventMetaList;
@@ -30,6 +31,7 @@ public interface TweetDao {
     void addToArrived(String uuid, Status tweet, String statusString);
 
     void addNewTweetString(String uuid, Status tweet, String statusString, boolean newArrival);
+
 
     void removeFromArrived(String uuid, String id);
 
@@ -78,4 +80,6 @@ public interface TweetDao {
     List<String> getAllTweetIdsSentForApprovalAndDeleteFromSentForApproval(String uuid);
 
     void deleteTweetJson(String tweetId);
+
+    void setNewTweetMeta(String uuid, InternalStatus status);
 }
