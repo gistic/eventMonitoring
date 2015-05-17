@@ -6,33 +6,33 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
         // Reloading, Closing or navigatiging from the admin panel will cause event closing
 
-//        $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-//            if (fromState.name == 'admin') {
-//                var answer = confirm('Reloading or leaving this page will cause your event stopping.');
-//                if (answer == false) {
-//                    event.preventDefault();
-//                } else {
-//                    $scope.stopEventHandler();
-//                }
-//            }
-//
-//        });
+        //        $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+        //            if (fromState.name == 'admin') {
+        //                var answer = confirm('Reloading or leaving this page will cause your event stopping.');
+        //                if (answer == false) {
+        //                    event.preventDefault();
+        //                } else {
+        //                    $scope.stopEventHandler();
+        //                }
+        //            }
+        //
+        //        });
 
-//        if ($state.current.name == "admin") {
-//            window.onbeforeunload = function (event) {
-//                var message = 'Reloading or leaving this page will cause your event stopping.';
-//                return message;
-//            }
-//            $(window).on('unload', function () {
-//                $scope.stopEventHandler();
-//            });
-//        }
+        //        if ($state.current.name == "admin") {
+        //            window.onbeforeunload = function (event) {
+        //                var message = 'Reloading or leaving this page will cause your event stopping.';
+        //                return message;
+        //            }
+        //            $(window).on('unload', function () {
+        //                $scope.stopEventHandler();
+        //            });
+        //        }
 
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
 
         $scope.enableModeration = true;
-        
+
         $scope.moderationStatus = function () {
 
             if ($scope.enableModeration == false) {
@@ -49,11 +49,23 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                     console.log("#");
                 })
         };
-                                                
+
         $scope.showRetweets = true;
-                                                
+
         $scope.retweetsStatus = function () {
-            console.log($scope.showRetweets);
+            if ($scope.showRetweets == false) {
+                var requestAction = "DELETE";
+            } else {
+                var requestAction = "PUT";
+            }
+
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/retweets';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {}).error(function () {
+                    console.log("#");
+                })
         };
 
         $rootScope.getViewOptions = function () {
@@ -135,8 +147,8 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                     $scope.tweetsCount = $rootScope.totalTweetsFromServer + $scope.tweetsQueue.length;
                 }, false);
             });
-            
-            
+
+
             source.addEventListener('new-admin-opened', function (response) {
                 console.log(response);
                 source.close();
