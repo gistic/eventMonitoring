@@ -74,10 +74,12 @@ public class EventsResource {
         EventMap.put(hashTags, tweetDataLogic, uuid);
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);
-        try {
-            GmailSender.send(uuid, email);
-        } catch (MessagingException e) {
-            LoggerFactory.getLogger(this.getClass()).error("Failed to send email to: "+email+" for event: "+uuid);
+        if(!email.equalsIgnoreCase("undefined")) {
+            try {
+                GmailSender.send(uuid, email);
+            } catch (MessagingException e) {
+                LoggerFactory.getLogger(this.getClass()).error("Failed to send email to: " + email + " for event: " + uuid);
+            }
         }
         DelayedJobsManager.createEventDestroyJob(uuid);
         return eventUuid;
