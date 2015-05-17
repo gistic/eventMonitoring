@@ -7,7 +7,7 @@
 
     <div class="tweets-container">
 
-        <div class="media tweet clearfix fx-fade-down fx-easing-bounce fx-speed-1000" ng-class="{'lang-ar' : tweet.lang == 'ar', 'stared' : tweet.starred == true, 'showd' : display == block }" ng-repeat="tweet in allTweets | reverse | limitTo : 4" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
+        <div class="media tweet clearfix fx-fade-down fx-easing-bounce fx-speed-1000" ng-class="{'lang-ar' : tweet.lang == 'ar', 'stared' : tweet.starred == true, 'showd' : display == block }" ng-repeat="tweet in allTweets | reverse | limitTo : 10" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
 
             <span ng-show="{{tweet.starred == true}}">
                 <span class="star-tweet">
@@ -15,7 +15,7 @@
                 </span>
             </span>
 
-            <div class="user-img pull-left">
+            <div class="user-img">
                 <img lazy-load ll-src="{{tweet.user.profile_image_url }}" on-error-src="{{defultImage}}" />
             </div>
 

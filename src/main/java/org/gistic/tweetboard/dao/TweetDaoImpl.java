@@ -2,6 +2,7 @@ package org.gistic.tweetboard.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.gistic.tweetboard.JedisPoolContainer;
+import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.representations.BasicStats;
 import org.gistic.tweetboard.representations.EventConfig;
 import org.gistic.tweetboard.representations.EventMeta;
@@ -14,6 +15,7 @@ import redis.clients.jedis.exceptions.JedisException;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
+import twitter4j.User;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -88,14 +90,18 @@ public class TweetDaoImpl implements TweetDao {
                 String screenName = String.valueOf(tweet.getUser().getScreenName());
                 String userId = String.valueOf(tweet.getUser().getId());
                 String tweetId = String.valueOf(tweet.getId());
-                jedis.set(screenName, userId);
-                jedis.set(getUserProfileImageKey(screenName), tweet.getUser().getOriginalProfileImageURLHttps());
-                jedis.sadd(getUserTweetsSetKey(uuid, userId), tweetId);
-                jedis.zincrby(getUsersRankSetKey(uuid), 1, screenName);
+                setNewTweetMeta(uuid, tweet, jedis, screenName, userId, tweetId);
             }
         }  catch (JedisException jE) {
             jE.printStackTrace();
         }
+    }
+
+    private void setNewTweetMeta(String uuid, Status tweet, Jedis jedis, String screenName, String userId, String tweetId) {
+        jedis.set(screenName, userId);
+        jedis.set(getUserProfileImageKey(screenName), tweet.getUser().getOriginalProfileImageURLHttps());
+        jedis.sadd(getUserTweetsSetKey(uuid, userId), tweetId);
+        jedis.zincrby(getUsersRankSetKey(uuid), 1, screenName);
     }
 
     @Override
@@ -159,10 +165,7 @@ public class TweetDaoImpl implements TweetDao {
         String userId = String.valueOf(tweet.getUser().getId());
         String tweetId = String.valueOf(tweet.getId());
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.set(screenName, userId);
-            jedis.set(getUserProfileImageKey(screenName), tweet.getUser().getOriginalProfileImageURLHttps());
-            jedis.sadd(getUserTweetsSetKey(uuid, userId), tweetId);
-            jedis.zincrby(getUsersRankSetKey(uuid), 1, screenName);
+            setNewTweetMeta(uuid, tweet, jedis, screenName, userId, tweetId);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -389,6 +392,18 @@ public class TweetDaoImpl implements TweetDao {
     public void deleteTweetJson(String tweetId) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.del(tweetId);
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setNewTweetMeta(String uuid, InternalStatus status) {
+        Status tweet = status.getInternalStatus();
+        User user = tweet.getUser();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            setNewTweetMeta(uuid, tweet, jedis, tweet.getUser().getScreenName(), String.valueOf(user.getId()),
+                    String.valueOf(tweet.getId()));
         } catch(JedisException jE) {
             jE.printStackTrace();
         }

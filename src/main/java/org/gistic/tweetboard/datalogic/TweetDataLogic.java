@@ -45,6 +45,10 @@ public class TweetDataLogic {
         addToApproved(tweet);
     }
 
+    public void setNewTweetMeta(InternalStatus status) {
+        tweetDao.setNewTweetMeta(uuid, status);
+    }
+
     public void addToApproved(Status tweet) {
         String tweetId = String.valueOf(tweet.getId());
         addToApproved(tweetId, false);

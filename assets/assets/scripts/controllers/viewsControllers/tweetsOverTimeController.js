@@ -34,14 +34,31 @@ tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$roo
             'sampleRate': tweetsTimeRate,
             'period': tweetsOverSpecificTime
         };
+        
+        function colorNameToRGB(color) {
+        
+            var chartColorsArray = {
+                "black": "rgb(90, 90, 90)",
+                "turquoise": "rgb(22, 153, 140)",
+                "blue": "rgb(21, 95, 145)",
+                "violet": "rgb(182, 132, 247)",
+                "pink": "rgb(161, 21, 56)",
+                "green": "rgb(21, 123, 98)",
+                "orange": "rgb(174, 53, 31)"
+            }
 
+            return chartColorsArray[color.toLowerCase()];
+        }
+        
+        var chartBgColor = colorNameToRGB($scope.userColor);
+        
 
         RequestData.fetchData(requestAction, apiUrl, requestData)
             .then(function (response) {
                 $scope.data = response.data;
                 $scope.tweetsTime = response.data.time;
                 $scope.tweetsCount = response.data.tweets_count;
-
+            ;
                 function drawTweetsOverTimeChart() {
                     var arrayLength = $scope.data.length;
                     var tweetsCountArray = [];
@@ -59,7 +76,7 @@ tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$roo
                         connectNulls: true,
                         showInLegend: false,
                         "id": "tweetsChart",
-                        color: 'rgba(3, 19, 47,0.7)'
+                        color: chartBgColor
     }];
                     $scope.chartConfig = {
                         options: {

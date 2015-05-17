@@ -4,6 +4,10 @@
     border: 1px solid $gray-light;
     @include border-radius(5px);
     text-align: left;
+    .user-img {
+        float: left;
+        padding-right: $padding;
+    }
     img {
         @include size(72px);
     }
@@ -15,6 +19,16 @@
         width: 60%;
         word-wrap: break-word;
     }
+    .media-body {
+        margin-left: $margin;
+    }
+    .tweet-userName {
+        color: $blue;
+    }
+    .tweet-screenName {
+        font-style: italic;
+        color: darken($gray-super-light, 40%);
+    }
     &.tweet:first-child {
         opacity: 1;
     }
@@ -22,8 +36,20 @@
         position: relative;
         border: 5px solid rgba(29, 64, 141, 1);
     }
-    &.lang-en {
-        .user-img {}
+}
+
+.tweet.lang-ar {
+    @extend .tweet;
+    direction: rtl;
+    text-align: right;
+    .user-img {
+        float: right;
+        padding-right: 0;
+        padding-left: $padding;
+    }
+    .media-body {
+        margin-left: 0;
+        margin-right: $margin;
     }
 }
 
@@ -34,7 +60,7 @@
                 @include size(48px);
             }
             .btn-toolbar.tweet-options {
-                margin-top: $margin ;
+                margin-top: $margin;
             }
             .tweet-user {
                 @include font-size($font-normal);
