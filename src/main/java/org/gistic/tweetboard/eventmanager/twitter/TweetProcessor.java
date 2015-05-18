@@ -4,6 +4,7 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
+import twitter4j.Place;
 import twitter4j.Status;
 
 import java.util.ArrayList;
@@ -71,7 +72,12 @@ public class TweetProcessor {
         } else {
             tweetDataLogic.incrOriginalTweets();
         }
-
+        Place place = tweet.getPlace();
+        if (place != null) {
+            tweetDataLogic.incrCountryCounter(place.getCountryCode());
+        } else {
+            //count tweets without country specified?
+        }
         activePeopleAnalyzer.TweetArrived(tweet);
         tweetsOverTimeAnalyzer.TweetArrived(status);
 
