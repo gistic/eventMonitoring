@@ -31,7 +31,24 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
 
-        $scope.enableModeration = true;
+        $rootScope.getViewOptions = function () {
+
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/config';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $rootScope.userColor = response.backgroundColor;
+                    $rootScope.userSize = response.size;
+                    $scope.showRetweets = response.retweetEnabled;
+                    $scope.enableModeration = response.moderated;
+
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+        $rootScope.getViewOptions();
 
         $scope.moderationStatus = function () {
 
@@ -50,8 +67,6 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                 })
         };
 
-        $scope.showRetweets = true;
-
         $scope.retweetsStatus = function () {
             if ($scope.showRetweets == false) {
                 var requestAction = "DELETE";
@@ -67,22 +82,6 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                     console.log("#");
                 })
         };
-
-        $rootScope.getViewOptions = function () {
-
-            var requestAction = "GET";
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/config';
-            var requestData = "";
-
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {
-                    $rootScope.userColor = response.backgroundColor;
-                    $rootScope.userSize = response.size;
-                }).error(function () {
-                    console.log("#");
-                })
-        }
-        $rootScope.getViewOptions();
 
         $rootScope.getEventStats = function () {
 

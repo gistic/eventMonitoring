@@ -105,4 +105,9 @@ public class Event {
         tweetProcessor.setModerated(moderated);
     }
     public void setRetweetsEnabled(boolean retweetsEnabled) { tweetProcessor.setRetweetEnabled(retweetsEnabled); }
+
+    public boolean isModeration() {
+        return tweetProcessor.isModerated();
+    }
+    public boolean isRetweetsEnabled() { return tweetProcessor.isRetweetEnabled(); }
 }
