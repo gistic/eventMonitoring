@@ -1,0 +1,14 @@
+.admin-stats {
+	background: lighten($black, 20%);
+	padding: $padding*2 0;
+	strong {
+        @include font-size($font-huge);
+		font-weight: normal;
+        color: $white;
+	}
+	p {
+        @include font-size($font-small);
+		color: lighten($gray, 10%);
+		margin: 0;
+	}
+}

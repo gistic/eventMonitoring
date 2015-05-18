@@ -1,0 +1,22 @@
+.ns-box {
+    &.ns-other {
+        .ns-thumb {
+            img {
+                width: 64px;
+                height: 64px;
+            }
+        }
+        &.ns-type-success {
+            .ns-content {
+                background: $layout-green;
+                color: $white;
+            }
+        }
+        &.ns-type-error {
+            .ns-content {
+                background: $layout-pink;
+                color: $white;
+            }
+        }
+    }
+}
