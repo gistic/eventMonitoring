@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import org.gistic.tweetboard.DelayedJobsManager;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
@@ -73,11 +74,14 @@ public class EventsResource {
         EventMap.put(hashTags, tweetDataLogic, uuid);
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);
-        try {
-            GmailSender.send(uuid, email);
-        } catch (MessagingException e) {
-            LoggerFactory.getLogger(this.getClass()).error("Failed to send email to: "+email+" for event: "+uuid);
+        if(!email.equalsIgnoreCase("undefined")) {
+            try {
+                GmailSender.send(uuid, email);
+            } catch (MessagingException e) {
+                LoggerFactory.getLogger(this.getClass()).error("Failed to send email to: " + email + " for event: " + uuid);
+            }
         }
+        DelayedJobsManager.createEventDestroyJob(uuid);
         return eventUuid;
     }
 
@@ -94,9 +98,13 @@ public class EventsResource {
     @GET
     @Path("/{uuid}/config")
     public EventConfig getEventConfig(@PathParam("uuid") String uuid) {
-        checkUuid(uuid);
+        org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
-        return tweetDataLogic.getEventConfig(uuid);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
+        EventConfig config = tweetDataLogic.getEventConfig(uuid);
+        config.setModerated(event.isModeration());
+        config.setRetweetEnabled(event.isRetweetsEnabled());
+        return config;
     }
 
     @PUT
@@ -106,6 +114,7 @@ public class EventsResource {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.updateEventConfig(eventConfig);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response
                 .ok("")
                 .build();
@@ -130,6 +139,7 @@ public class EventsResource {
             @PathParam("uuid") String uuid, @Context Jedis jedis) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.setModeration(true);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response
                 .ok("")
                 .build();
@@ -165,6 +175,7 @@ public class EventsResource {
         boolean starred = Boolean.parseBoolean(star);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.addToApproved(tweetId, starred);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
     }
 
@@ -174,6 +185,7 @@ public class EventsResource {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.approveAllTweets();
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
     }
 
@@ -183,6 +195,7 @@ public class EventsResource {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.addToBlocked(tweetId);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
     }
 
@@ -194,6 +207,7 @@ public class EventsResource {
         event.addTrustedUser(screenName);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.approveAllExistingTweetsByUser(screenName);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
     }
 
@@ -202,6 +216,7 @@ public class EventsResource {
     public Response deleteTrustedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.deleteTrustedUser(screenName);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
     }
 
@@ -216,6 +231,7 @@ public class EventsResource {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return new JSONArray().toString();
     }
 
@@ -231,6 +247,7 @@ public class EventsResource {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return new JSONArray().toString();
     }
 
@@ -241,6 +258,7 @@ public class EventsResource {
         event.addBlockedUser(screenName);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         tweetDataLogic.blockAllExistingTweetsByUser(screenName);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
     }
 
@@ -249,6 +267,7 @@ public class EventsResource {
     public Response deleteBlockedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.deleteBlockedUser(screenName);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
     }
 
@@ -262,6 +281,7 @@ public class EventsResource {
         List<TopUser> topUserList = tweetDataLogic.getTopTenNUsers(count);
         TopUser[] topUsers = new TopUser[topUserList.size()];
         topUsers = topUserList.toArray(topUsers);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return new TopUsers(topUsers);
     }
 
@@ -276,6 +296,7 @@ public class EventsResource {
         for (TweetsOverTimeAnalyzer.TweetsCountPerTime TweetsPeriod : tweetsPerTime) {
             result.put(TweetsPeriod.getJsonObject());
         }
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return result.toString();
     }
 
@@ -291,6 +312,7 @@ public class EventsResource {
     public BasicStats getbasicStats(@PathParam("uuid") String uuid) {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return tweetDataLogic.getBasicStats(uuid);
     }
 
@@ -319,6 +341,7 @@ public class EventsResource {
         writeToFile(uploadedInputStream, uploadedFileLocation, fileType);
         String output = "File uploaded to : " + uploadedFileLocation;
         uploadedInputStream.close();
+        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok(output).build();
     }
 

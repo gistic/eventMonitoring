@@ -9,6 +9,8 @@ public class EventConfig {
     private String size;
     private int screenTimes[];
     private String[] hashtags;
+    private boolean moderated;
+    private boolean retweetEnabled;
 
     public int[] getScreenTimes() {
         return screenTimes;
@@ -45,5 +47,21 @@ public class EventConfig {
 
     public String[] getHashtags() {
         return hashtags;
+    }
+
+    public void setModerated(boolean moderated) {
+        this.moderated = moderated;
+    }
+
+    public boolean isModerated() {
+        return moderated;
+    }
+
+    public void setRetweetEnabled(boolean retweetEnabled) {
+        this.retweetEnabled = retweetEnabled;
+    }
+
+    public boolean isRetweetEnabled() {
+        return retweetEnabled;
     }
 }
