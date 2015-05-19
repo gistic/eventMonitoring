@@ -409,6 +409,26 @@ public class TweetDaoImpl implements TweetDao {
         }
     }
 
+    @Override
+    public void incrCountryCounter(String uuid,  String countryCode) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.zincrby(getCountryRankSetKey(uuid), 1, countryCode);
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public Set<Tuple> getTopNCountries(String uuid, Integer count) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.zrevrangeByScoreWithScores(getCountryRankSetKey(uuid), "+inf", "-inf", 0, count);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
+
 
     @Override
     public void blockAllExistingTweetsByUser(String uuid, String screenName) {
@@ -449,5 +469,9 @@ public class TweetDaoImpl implements TweetDao {
 
     private String getArrivedNotSentListKey(String uuid) {
         return uuid + ":arrivedNotSent";
+    }
+
+    private String getCountryRankSetKey(String uuid) {
+        return uuid + ":countryRank";
     }
 }

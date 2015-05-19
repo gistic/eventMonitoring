@@ -82,4 +82,8 @@ public interface TweetDao {
     void deleteTweetJson(String tweetId);
 
     void setNewTweetMeta(String uuid, InternalStatus status);
+
+    void incrCountryCounter(String uuid, String countryCode);
+
+    Set<Tuple> getTopNCountries(String uuid, Integer count);
 }

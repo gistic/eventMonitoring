@@ -286,6 +286,15 @@ public class EventsResource {
     }
 
     @GET
+    @Path("/{uuid}/topCountries/")
+    public GenericArray<TopCountry> getTopCountries(@PathParam("uuid") String uuid,
+                                @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        return tweetDataLogic.getTopNCountries(count);
+    }
+
+    @GET
     @Path("/{uuid}/overTime/")
     public String getTweetsOverTime(@PathParam("uuid") String uuid,
                                     @DefaultValue("-1") @QueryParam("period") Integer period,
