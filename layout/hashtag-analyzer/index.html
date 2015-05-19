@@ -1,79 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Hashtag Analyser</title>
+    <head>
+        <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="assets/stylesheets/screen.css">
-</head>
+        <title>HashTag Analyzer - A way to track your favorite trend</title>
+        <meta content="initial-scale=1.0, user-scalable=no" name="viewport">
 
-<body>
+        <!-- STYLESHEET -->
+        <link href="assets/stylesheets/screen.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="assets/fonts/eventboard/style.css">
+        <link rel="stylesheet" href="bower_components/sweetalert/lib/sweet-alert.css">
+        
+        <!--[if lt IE 9]>
+            <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
 
-    <!-- HEADER -->
-    <header>
-        <div class="logo"></div>
-        <input type="text">
-        <ul class="list-inline">
-            <li><a href="">Tweets</a>
-            </li>
-            <li><a href="">Media</a>
-            </li>
-        </ul>
-    </header>
+    </head>
 
-    <!-- MAIN -->
-    <div class="container">
-        <div class="row">
+    <body ng-app="trackHashtagApp">
+       
+        <div class="ui-view"></div>
+        
+        <!-- Footer -->
+        <footer class="container clearfix">
+            <small class="text-muted pull-left">HashTag Analyzer © 2015</small>
+            <ul class="list-inline social-links pull-right">
+                <li>
+                    <a href="">
+                        <span class="icon-envelope"></span>
+                    </a>
+                </li>
 
-            <aside class="col-md-7">
-                <section>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Media ></div>
-                        <div class="panel-body">
-                            images
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Map ></div>
-                        <div class="panel-body">
-                            Map
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Tweet over time ></div>
-                        <div class="panel-body">
-                            Chart
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Top people ></div>
-                        <div class="panel-body">
-                            Images
-                        </div>
-                    </div>
-                </section>
-            </aside>
+                <li>
+                    <a href="">
+                        <span class="icon-twitter"></span>
+                    </a>
+                </li>
 
-            <section class="col-md-17">
+                <li>
+                    <a href="">
+                        <span class="icon-linkedin"></span>
+                    </a>
+                </li>
 
-                <div class="col-md-6">
-                    <?php require "factory_components/hot-product.php"; ?>
-                </div>
+                <li>
+                    <a href="">
+                        <span class="icon-facebook"></span>
+                    </a>
+                </li>
+            </ul>
+        </footer>
 
-            </section>
+        <!-- SCRIPTS -->
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="http://code.highcharts.com/highcharts.js"></script>
+        
+        <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+        <script src="bower_components/highcharts-ng/src/highcharts-ng.js"></script>
+        
+        <script src="bower_components/sweetalert/lib/sweet-alert.min.js"></script>
+        <script src="bower_components/angular-sweetalert/SweetAlert.js"></script>
+        
+        <script src="assets/scripts/directives/directives.js"></script>
+        <script src="assets/scripts/filters/filters.js"></script>
+        
+        <script src="assets/scripts/app.js"></script>
 
-        </div>
-    </div>
-
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
-</body>
+    </body>
 
 </html>

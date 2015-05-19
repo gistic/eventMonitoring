@@ -1,0 +1,44 @@
+// Extended from Bootstrap Panel
+
+.panel {
+      @include box-shadow(none);
+      @include border-radius(3px);
+    .panel-body {
+        padding: $padding - 5;
+    }
+}
+
+.panel-top-people {
+    .top-user-container {
+        margin-right: $margin;
+        width: 17%;
+        margin-bottom: $margin;
+        display: inline-block;
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+    img {
+        @include size(64px);
+        @include border-radius(3px);
+    }
+}
+
+.panel-media {
+    .row {
+        margin-bottom: $margin;
+    }
+    .media-container {
+        margin-right: $margin;
+        width: 30%;
+        margin-bottom: $margin;
+        display: inline-block;
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+    img {
+        @include size(112px);
+        @include border-radius(3px);
+    }
+}

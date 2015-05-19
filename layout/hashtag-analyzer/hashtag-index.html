@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hashtag Analyser</title>
+
+    <link rel="stylesheet" href="assets/stylesheets/screen.css">
+</head>
+
+<body ng-app="myApp" ng-controller="MainController">
+
+    
+
+    <!-- MAIN -->
+    <div class="container">
+        <div class="row">
+
+            <aside class="col-md-7">
+                <section>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Media ></div>
+                        <div class="panel-body">
+                            images
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Map ></div>
+                        <div class="panel-body">
+                            Map
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Tweet over time ></div>
+                        <div class="panel-body">
+                            Chart
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Top people ></div>
+                        <div class="panel-body">
+                            Images
+                        </div>
+                    </div>
+                </section>
+            </aside>
+
+            <section class="col-md-17">
+
+                <article class="media clearfix tweet">
+                    <div class="pull-left">
+                        <img class="media-object" alt="" src="">
+                    </div>
+                    <div class="tweet-content pull-left">
+                        <h6 class="tweet-user">
+                            User name
+                            <small>
+                                <a href="#" target="_blank">
+                            @ tweet.user.screen_name
+                            </a>
+                            </small>
+                        </h6>
+                        <p>tweet.text</p>
+                    </div>
+
+                </article>
+
+            </section>
+
+        </div>
+    </div>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="assets/scripts/app.js"></script>
+    
+</body>
+
+</html>

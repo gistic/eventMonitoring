@@ -1,0 +1,16 @@
+<section class="col-md-24">
+    <aside class="tweets-queue-options clearfix">
+        <select name="" id="" class="pull-left">
+            <option value="">Most Popular</option>
+            <option value="">Most Recent</option>
+        </select>
+        <strong class="pull-right">{{mediaCount}} Pic & Videos</strong>
+    </aside>
+    
+    <div class="all-media-container col-md-4" ng-repeat="media in mediaQueue track by $index">
+        <a href="#">
+            <img class="img-responsive" lazy-load ll-src="{{tweetMedia}}" on-error-src="{{defultImage}}" />
+        </a>
+    </div>
+
+</section>
