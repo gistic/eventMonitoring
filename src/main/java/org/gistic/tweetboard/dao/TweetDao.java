@@ -86,4 +86,5 @@ public interface TweetDao {
     void incrCountryCounter(String uuid, String countryCode);
 
     Set<Tuple> getTopNCountries(String uuid, Integer count);
+    void incrMedia(String uuid);
 }
