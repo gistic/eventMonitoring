@@ -15,8 +15,19 @@ public class Event {
     private final AsyncEventBus bus;
     private final TweetProcessor tweetProcessor;
     private final TweetDataLogic tweetDataLogic;
+
+    public String getUuid() {
+        return uuid;
+    }
+
     String uuid;
     String[] hashTags;
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public boolean running = true;
     //private TwitterService twitterService;
 
     public Event(String uuid, String[] hashTags, TweetDataLogic tweetDataLogic) {
@@ -39,6 +50,7 @@ public class Event {
 
     public void delete() {
         try {
+            running = false;
             TwitterServiceManager.stop(uuid);
             tweetProcessor.stop();
         } catch (Exception e) {
