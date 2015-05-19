@@ -1,0 +1,8 @@
+.all-media-container {
+    margin-top: $margin * 2;
+    img {
+        @include size(200px);
+        margin-bottom: $margin;
+        @include border-radius(3px);
+    }
+}
