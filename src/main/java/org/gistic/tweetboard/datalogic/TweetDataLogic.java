@@ -12,6 +12,7 @@ import org.gistic.tweetboard.representations.EventConfig;
 import org.gistic.tweetboard.representations.TopUser;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
+import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -168,5 +169,9 @@ public class TweetDataLogic {
         String[] tweetIds = tweetIdsList.toArray(new String[]{});
         tweetDao.addToApprovedSentToClient(uuid, tweetIds);
         ExecutorSingleton.getInstance().execute(new SendApprovedTweets(tweetIds, tweetDao, uuid));
+    }
+
+    public void incrMediaCounter(MediaEntity mediaEntity) {
+        tweetDao.incrMedia(uuid);
     }
 }

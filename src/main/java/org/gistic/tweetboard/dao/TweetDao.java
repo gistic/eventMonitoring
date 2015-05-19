@@ -82,4 +82,6 @@ public interface TweetDao {
     void deleteTweetJson(String tweetId);
 
     void setNewTweetMeta(String uuid, InternalStatus status);
+
+    void incrMedia(String uuid);
 }
