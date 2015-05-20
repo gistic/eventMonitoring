@@ -56,8 +56,8 @@ public class TweetDataLogic {
     public void addToApproved(String tweetId, boolean starred) {
         tweetDao.removeFromSentForApproval(uuid, tweetId);
         tweetDao.addToApproved(uuid, tweetId, starred);
-        String statusString = tweetDao.getStatusString(tweetId);
-        tweetDao.deleteTweetJson(tweetId);
+        String statusString = tweetDao.getStatusString(uuid, tweetId);
+        tweetDao.deleteTweetJson(uuid, tweetId);
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
         Message msg = new Message(uuid, Message.Type.LiveTweet, statusString);
@@ -73,8 +73,8 @@ public class TweetDataLogic {
         LoggerFactory.getLogger(this.getClass()).debug("");
         if (tweetId == null || tweetId.isEmpty()) return null;
         tweetDao.addToApprovedSentToClient(uuid, tweetId);
-        Status status = tweetDao.getStatus(tweetId);
-        String statusString = tweetDao.getStatusString(tweetId);
+        Status status = tweetDao.getStatus(uuid, tweetId);
+        String statusString = tweetDao.getStatusString(uuid, tweetId);
         return new InternalStatus(status, statusString);
     }
 
@@ -95,7 +95,7 @@ public class TweetDataLogic {
             if (status == null) return null;
             String statusId = String.valueOf(status.getId());
             tweetDao.addToSentForApproval(uuid, statusId);
-            return new InternalStatus(status, tweetDao.getStatusString(statusId));
+            return new InternalStatus(status, tweetDao.getStatusString(uuid, statusId));
         } catch (TwitterException e) {
             LoggerFactory.getLogger(this.getClass()).error("error in parsing tweet string to status object");
             return null;
@@ -184,5 +184,10 @@ public class TweetDataLogic {
 
     public void incrMediaCounter(MediaEntity mediaEntity) {
         tweetDao.incrMedia(uuid);
+    }
+
+    public void incrTweetScoreAndSetCreatedTime(long retweetedStatusId, long retweetCreatedAt) {
+        tweetDao.setTweetMetaDate(uuid, retweetedStatusId, retweetCreatedAt);
+        tweetDao.incrTweetRetweets(uuid, retweetedStatusId);
     }
 }

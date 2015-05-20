@@ -53,13 +53,13 @@ public interface TweetDao {
 
     void addToApprovedSentToClient(String uuid, String... tweetIds);
 
-    Status getStatus(String tweetId) throws TwitterException;
+    Status getStatus(String uuid, String tweetId) throws TwitterException;
 
     void blockAllExistingTweetsByUser(String uuid, String screenName);
 
     void destroyEvent(String uuid);
 
-    String getStatusString(String tweetId);
+    String getStatusString(String uuid, String tweetId);
 
     void updateEventConfig(String uuid, EventConfig eventConfig);
 
@@ -79,7 +79,7 @@ public interface TweetDao {
 
     List<String> getAllTweetIdsSentForApprovalAndDeleteFromSentForApproval(String uuid);
 
-    void deleteTweetJson(String tweetId);
+    void deleteTweetJson(String uuid, String tweetId);
 
     void setNewTweetMeta(String uuid, InternalStatus status);
 
@@ -87,4 +87,8 @@ public interface TweetDao {
 
     Set<Tuple> getTopNCountries(String uuid, Integer count);
     void incrMedia(String uuid);
+
+    void setTweetMetaDate(String uuid, long retweetedStatusId, long retweetCreatedAt);
+
+    void incrTweetRetweets(String uuid, long retweetedStatusId);
 }
