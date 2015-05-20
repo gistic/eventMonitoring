@@ -190,4 +190,28 @@ public class TweetDataLogic {
         tweetDao.setTweetMetaDate(uuid, retweetedStatusId, retweetCreatedAt);
         tweetDao.incrTweetRetweets(uuid, retweetedStatusId);
     }
+
+    public GenericArray<String> getTopNTweets(Integer count) {
+        String flag = tweetDao.getTopTweetsGeneratedFlag(uuid);
+        if (flag==null){
+            tweetDao.deleteTopTweetsSortedSet(uuid);
+            tweetDao.setTopTweetsGeneratedFlag(uuid);
+            Set<String> tweetKeys = tweetDao.getKeysWithPattern(uuid + ":tweetMeta:*");
+            for (String key:tweetKeys){
+                TweetMeta tweetMeta = tweetDao.getTweetMeta(key);
+                long ageInSeconds = (System.currentTimeMillis()-tweetMeta.getCreationDate())/1000;
+                long retweetsCount = tweetMeta.getRetweetsCount();
+                double order = Math.log10((retweetsCount > 1) ? retweetsCount : 1);
+                double score = Math.round(((order + ageInSeconds / 45000) * 10000000.0)) / 10000000.0;
+                String tweetId = key.substring(key.lastIndexOf(':'));
+                tweetDao.setTweetScore(uuid, tweetId, score);
+            }
+        }
+        int n = 5;
+        Set<Tuple> topTweetsTuple = tweetDao.getTopNTweets(uuid, n);
+        if (topTweetsTuple == null) return new GenericArray<String>(new String[]{});
+        String[] topTweetIds = topTweetsTuple.stream()
+                .map(tweet -> tweet.getElement()).collect(Collectors.toList()).toArray(new String[]{});
+        return new GenericArray<String>(topTweetIds);
+    }
 }

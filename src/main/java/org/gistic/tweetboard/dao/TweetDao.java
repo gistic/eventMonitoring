@@ -1,5 +1,6 @@
 package org.gistic.tweetboard.dao;
 
+import org.gistic.tweetboard.datalogic.TweetMeta;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.representations.BasicStats;
 import org.gistic.tweetboard.representations.EventConfig;
@@ -91,4 +92,18 @@ public interface TweetDao {
     void setTweetMetaDate(String uuid, long retweetedStatusId, long retweetCreatedAt);
 
     void incrTweetRetweets(String uuid, long retweetedStatusId);
+
+    String getTopTweetsGeneratedFlag(String uuid);
+
+    void setTopTweetsGeneratedFlag(String uuid);
+
+    Set<String> getKeysWithPattern(String pattern);
+
+    TweetMeta getTweetMeta(String key);
+
+    void setTweetScore(String uuid, String tweetId, double score);
+
+    void deleteTopTweetsSortedSet(String uuid);
+
+    Set<Tuple> getTopNTweets(String uuid, int n);
 }
