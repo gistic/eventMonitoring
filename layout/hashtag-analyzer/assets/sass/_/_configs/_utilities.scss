@@ -1,0 +1,27 @@
+body {
+    background: #e2e6f1;
+    font-family: 'Roboto', sans-serif;
+}
+
+main {
+    .dashboard {
+        
+    }
+}
+
+a {
+	color: $blue;
+	&:hover, &:focus {
+		color:darken($blue, 20%);
+		outline: 0;
+	}
+}
+
+.form-control {
+	&:hover,
+	&:focus {
+		outline: 0;
+		border-color: transparent;
+		box-shadow: none;
+	}
+}

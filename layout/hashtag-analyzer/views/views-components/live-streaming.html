@@ -1,0 +1,94 @@
+<aside class="col-md-8">
+    <section>
+        <div class="panel panel-default panel-media">
+            <div class="panel-heading clearfix">
+                <a ui-sref=".media" class="text-left">Media ></a>
+                <span class="text-muted pull-right">{{totalMedia}} Pics & Videos</span>
+            </div>
+            <div class="panel-body">    
+               <div ng-repeat="row in (mediaQueue.length/3 | array) | limitTo : 3" class="row">
+                    <div class="col-md-8" ng-repeat="media in mediaQueue.slice(3*$index, 3*$index + 3) track by $index">
+                        <a href="#">
+                            <img class="img-responsive" lazy-load ll-src="{{tweetMedia}}" on-error-src="{{defultImage}}" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <a href="#" class="text-left">Map</a>
+                <span class="text-muted pull-right">29 Countries</span>
+            </div>
+            <div class="panel-body">
+                  <div google-chart chart="locationChart"> </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <a href="#" class="text-left">Tweet over time</a>
+                <span class="text-muted pull-right">{{totalTweets}} tweets</span>
+            </div>
+            <div class="panel-body">
+                <highchart id="chart1" config="chartConfig" class=""></highchart>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="panel panel-default panel-top-people">
+            <div class="panel-heading">
+                <a href="#" class="text-left">Top People</a>
+                <span class="text-muted pull-right">{{numberOfUsers}} people</span>
+            </div>
+            <div class="panel-body">
+                <div class="top-user-container" ng-repeat="user in topPeople | limitTo : 10">
+                    <a href="#">
+                        <img lazy-load ll-src="{{user.profileImageUrl}}" on-error-src="{{defultImage}}" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="panel panel-default panel-top-countries">
+            <div class="panel-heading clearfix">
+                <a href="#" class="text-left">Locations</a>
+                <span class="text-muted pull-right">29 Countries</span>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <li ng-repeat="country in topCountries" class="clearfix">
+                        <strong class="pull-left">
+                            {{country.code | isoCountry}} 
+                            <small>
+                                ( {{country.code}} )
+                            </small>
+                        </strong>
+                        <span class="pull-right">
+                            {{country.count}}    
+                        </span>
+                        
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</aside>
+
+<section class="col-md-16">
+
+    <aside class="tweets-queue-options clearfix">
+        <select name="" id="" class="pull-left">
+            <option value="">Most Popular</option>
+            <option value="">Most Recent</option>
+        </select>
+        <strong class="pull-right">{{totalTweets}} tweets</strong>
+    </aside>
+
+    <div ng-include="'views/views-components/tweetQueue.html'"></div>
+
+</section>

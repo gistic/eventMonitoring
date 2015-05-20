@@ -360,14 +360,18 @@ public class TweetDaoImpl implements TweetDao {
             Long numberOfUsers = jedis.zcard(getUsersRankSetKey(uuid));
             Long totalTweets = 0l;
             Long totalRetweets = 0l;
+            Long totalMedia = 0l;
             try {
                 totalTweets = Long.parseLong(jedis.get(getTotalTweetsKey(uuid)));
             } catch (NumberFormatException e) {}//nothing to log the value is just one
             try {
                 totalRetweets =  Long.parseLong(jedis.get(getTotalRetweetsKey(uuid)));
             } catch (NumberFormatException e) {}//nothing to log the value is just one
+            try {
+                totalMedia =  Long.parseLong(jedis.get(getTotalMediaKey(uuid)));
+            } catch (NumberFormatException e) {}//nothing to log the value is just one
             String startTime = jedis.hget(uuid, START_TIME_KEY);
-            return new BasicStats(startTime, numberOfUsers, totalTweets, totalRetweets);
+            return new BasicStats(startTime, numberOfUsers, totalTweets, totalRetweets, totalMedia);
         } catch(JedisException jE) {
             jE.printStackTrace();
         }
@@ -409,6 +413,36 @@ public class TweetDaoImpl implements TweetDao {
         }
     }
 
+    @Override
+    public void incrCountryCounter(String uuid,  String countryCode) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.zincrby(getCountryRankSetKey(uuid), 1, countryCode);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+    public void incrMedia(String uuid) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.incr(getTotalMediaKey(uuid));
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public Set<Tuple> getTopNCountries(String uuid, Integer count) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.zrevrangeByScoreWithScores(getCountryRankSetKey(uuid), "+inf", "-inf", 0, count);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
+
+    private String getTotalMediaKey(String uuid) {
+        return uuid + ":totalMedia";
+    }
 
     @Override
     public void blockAllExistingTweetsByUser(String uuid, String screenName) {
@@ -449,5 +483,9 @@ public class TweetDaoImpl implements TweetDao {
 
     private String getArrivedNotSentListKey(String uuid) {
         return uuid + ":arrivedNotSent";
+    }
+
+    private String getCountryRankSetKey(String uuid) {
+        return uuid + ":countryRank";
     }
 }

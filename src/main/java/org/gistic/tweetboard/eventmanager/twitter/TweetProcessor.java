@@ -4,6 +4,8 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
+import twitter4j.Place;
+import twitter4j.MediaEntity;
 import twitter4j.Status;
 
 import java.util.ArrayList;
@@ -66,12 +68,22 @@ public class TweetProcessor {
     @AllowConcurrentEvents
     public void onStatusUpdate(InternalStatus status) {
         Status tweet = status.getInternalStatus();
+        for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
+            //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
+            tweetDataLogic.incrMediaCounter(mediaEntity);
+        }
+
         if(tweet.isRetweet() || tweet.getText().contains("RT")) {
             tweetDataLogic.incrTotalRetweets();
         } else {
             tweetDataLogic.incrOriginalTweets();
         }
-
+        Place place = tweet.getPlace();
+        if (place != null) {
+            tweetDataLogic.incrCountryCounter(place.getCountryCode());
+        } else {
+            //count tweets without country specified?
+        }
         activePeopleAnalyzer.TweetArrived(tweet);
         tweetsOverTimeAnalyzer.TweetArrived(status);
 

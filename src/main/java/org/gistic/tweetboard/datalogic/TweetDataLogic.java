@@ -7,11 +7,10 @@ import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
 import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
-import org.gistic.tweetboard.representations.BasicStats;
-import org.gistic.tweetboard.representations.EventConfig;
-import org.gistic.tweetboard.representations.TopUser;
+import org.gistic.tweetboard.representations.*;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
+import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -168,5 +167,22 @@ public class TweetDataLogic {
         String[] tweetIds = tweetIdsList.toArray(new String[]{});
         tweetDao.addToApprovedSentToClient(uuid, tweetIds);
         ExecutorSingleton.getInstance().execute(new SendApprovedTweets(tweetIds, tweetDao, uuid));
+    }
+
+    public void incrCountryCounter(String countryCode) {
+        tweetDao.incrCountryCounter(uuid, countryCode);
+    }
+
+    public GenericArray<TopCountry> getTopNCountries(Integer count) {
+        Set<Tuple> topCountriesTuple = tweetDao.getTopNCountries(uuid, count);
+        TopCountry[] topNcountriesArray = topCountriesTuple.stream()
+                .map(country -> new TopCountry(country.getElement(), new Double(country.getScore()).intValue()))
+                .collect(Collectors.toList()).toArray(new TopCountry[]{});
+
+        return new GenericArray<TopCountry>(topNcountriesArray);
+    }
+
+    public void incrMediaCounter(MediaEntity mediaEntity) {
+        tweetDao.incrMedia(uuid);
     }
 }
