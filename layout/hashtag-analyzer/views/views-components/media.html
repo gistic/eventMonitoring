@@ -4,7 +4,7 @@
             <option value="">Most Popular</option>
             <option value="">Most Recent</option>
         </select>
-        <strong class="pull-right">{{mediaCount}} Pic & Videos</strong>
+        <strong class="pull-right">{{totalMedia}} Pic & Videos</strong>
     </aside>
     
     <div class="all-media-container col-md-4" ng-repeat="media in mediaQueue track by $index">
@@ -12,5 +12,5 @@
             <img class="img-responsive" lazy-load ll-src="{{tweetMedia}}" on-error-src="{{defultImage}}" />
         </a>
     </div>
-
+    
 </section>

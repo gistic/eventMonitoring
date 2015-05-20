@@ -1,6 +1,6 @@
 'use strict';
 
-var trackHashtagApp = angular.module('trackHashtagApp', ['ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert']);
+var trackHashtagApp = angular.module('trackHashtagApp', ['ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'akoenig.deckgrid', 'googlechart']);
 
 
 // Run : Intliaize the event admin app with this values
@@ -33,7 +33,7 @@ trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'views/views-components/media.html',
             controller: 'EventMainController'
         },
-        
+
         "superAdmin": {
             url: '/superAdmin',
             templateUrl: 'views/super-admin.html',
@@ -52,10 +52,11 @@ trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
 
 //Inputs a number and outputs an array with that length. 
 //(3 | array) => [0,1,2]
-trackHashtagApp.filter('array', function() {
-    return function(arrayLength) {
+trackHashtagApp.filter('array', function () {
+    return function (arrayLength) {
         arrayLength = Math.ceil(arrayLength);
-        var arr = new Array(arrayLength), i = 0;
+        var arr = new Array(arrayLength),
+            i = 0;
         for (; i < arrayLength; i++) {
             arr[i] = i;
         }
@@ -176,7 +177,6 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
         RequestData.startEvent()
             .success(function (response) {
                 $rootScope.eventID = response.uuid;
-
                 // Redirect the front website page to the admin page
                 $state.transitionTo('dashboard.liveStreaming', {
                     uuid: $scope.eventID
@@ -187,12 +187,95 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 
 
 // Controller : Populate the recieved data and update admin page
-trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert) {
+trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166) {
 
+        var locationChart = {};
+        $scope.locationChart = locationChart;
+
+        $scope.drawLocationChart = function () {
+
+            locationChart.type = "GeoChart";
+            locationChart.data = [['Locale', 'Count']];
+
+            locationChart.options = {
+                width: 350,
+                height: 300,
+                colorAxis: {
+                    colors: ['#00853f', 'black', '#e31b23']
+                },
+                displayMode: 'regions'
+            };
+
+            locationChart.formatters = {
+                number: [{
+                    columnNum: 1
+     }]
+            };
+
+        }
+
+        $scope.init = function () {
+            $rootScope.getLocationStats();
+        }
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
 
+        $scope.enableModeration == true;
+        $scope.moderationStatus = function () {
+
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/moderation';
+            var requestAction = "DELETE";
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {}).error(function () {
+                    console.log("#");
+                })
+        };
+        $scope.moderationStatus();
+
+        $rootScope.getLocationStats = function () {
+
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topCountries';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.topCountries = response.items;
+                    for (var i = 0; i < response.items.length; i++) {
+                        locationChart.data.push([response.items[i].code, response.items[i].count]);
+                    }
+                    console.log(locationChart.data);
+                    console.log(response.items);
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+        $rootScope.getLocationStats();
+        $scope.drawLocationChart();
+
+        $rootScope.getEventStats = function () {
+
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/basicStats';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.numberOfUsers = response.numberOfUsers;
+                    $rootScope.totalTweetsFromServer = response.totalTweets;
+                    $scope.totalRetweets = response.totalRetweets;
+                    $scope.startTime = response.startTime;
+                    $scope.totalMedia = response.totalMedia;
+                    var myDate = new Date($scope.startTime);
+                    $scope.startTimeMilliseconds = myDate.getTime();
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+        $rootScope.getEventStats();
         $rootScope.getViewOptions = function () {
 
             var requestAction = "GET";
@@ -214,29 +297,20 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $rootScope.timerRunning = false;
         $scope.tweetsQueue = [];
         $scope.mediaQueue = [];
-//        $scope.mediaCount = $scope.mediaQueue.length;
         $scope.tweet = {};
-        $scope.tweetsCount = 0;
-
 
         // Listen to new message
         $scope.startEventSource = function () {
-            $scope.eventSourceUrl = $rootScope.baseUrl + "/api/events/" + $rootScope.eventID + "/adminEventSource";
+            $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
 
             var source = new EventSource($scope.eventSourceUrl);
 
-            source.addEventListener('tweet', function (response) {
+            source.addEventListener('approved-tweets', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
-                
                 if ($scope.tweet.extended_entities != null && $scope.tweet.extended_entities.media != null) {
-//                    for each (var pic in mediaArray) {
-//                        console.log(pic);
-//                    }
                     $scope.tweetMedia = $scope.tweet.extended_entities.media[0].media_url_https;
-                    console.log($scope.tweet.extended_entities.media[0].type);
                     $scope.mediaQueue.push($scope.tweetMedia);
-                    $scope.mediaCount = $scope.mediaQueue.length;
                 }
                 $scope.$apply(function () {
                     $scope.tweetsQueue.push($scope.tweet);
@@ -244,8 +318,16 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             });
 
 
+            source.addEventListener('tweets-over-time', function (response) {
+
+                $scope.data = JSON.parse(response.data);
+                $scope.$apply(function () {
+                    $scope.tweetsQueue.push($scope.tweet);
+                }, false);
+            });
+
+
             source.addEventListener('new-admin-opened', function (response) {
-                console.log(response);
                 source.close();
             });
         }
@@ -323,6 +405,24 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.tweetsTime = [];
         $scope.tweetsCount = [];
 
+        $scope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
+
+        $scope.fetchData = function () {
+
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topUsers';
+            var topUsersCount = 10;
+
+            var requestData = {
+                "count": topUsersCount
+            };
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .then(function (response) {
+                    $scope.topPeople = response.data.topUsers;
+                });
+        }
+        $scope.fetchData();
         $scope.drawChart = function () {
 
             var requestAction = "GET";
@@ -439,12 +539,12 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.drawChart();
 
 
-//        $scope.intervalFunction = function () {
-//            $timeout(function () {
-//                $scope.drawChart();
-//                $scope.intervalFunction();
-//            }, 1000)
-//        };
-//        $scope.intervalFunction();
+        //        $scope.intervalFunction = function () {
+        //            $timeout(function () {
+        //                $scope.drawChart();
+        //                $scope.intervalFunction();
+        //            }, 1000)
+        //        };
+        //        $scope.intervalFunction();
 
 }]);

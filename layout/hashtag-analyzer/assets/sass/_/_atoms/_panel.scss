@@ -38,7 +38,19 @@
         }
     }
     img {
-        @include size(112px);
+//        @include size(112px, auto);
+        max-height: 100%;
+        max-width: 100%;
         @include border-radius(3px);
+    }
+}
+
+.panel-top-countries {
+    li {
+        padding: $padding - 5 0;
+        border-bottom: 1px solid $gray-super-light;
+    }
+    &:last-child {
+        border-bottom: none;
     }
 }

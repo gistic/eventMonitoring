@@ -3,11 +3,11 @@
         <div class="panel panel-default panel-media">
             <div class="panel-heading clearfix">
                 <a ui-sref=".media" class="text-left">Media ></a>
-                <span class="text-muted pull-right">{{mediaCount}} Pics & Videos</span>
+                <span class="text-muted pull-right">{{totalMedia}} Pics & Videos</span>
             </div>
             <div class="panel-body">    
                <div ng-repeat="row in (mediaQueue.length/3 | array) | limitTo : 3" class="row">
-                    <div class="all-media-container col-md-8" ng-repeat="media in mediaQueue.slice(3*$index, 3*$index + 3) | limitTo : 3">
+                    <div class="col-md-8" ng-repeat="media in mediaQueue.slice(3*$index, 3*$index + 3) track by $index">
                         <a href="#">
                             <img class="img-responsive" lazy-load ll-src="{{tweetMedia}}" on-error-src="{{defultImage}}" />
                         </a>
@@ -23,7 +23,7 @@
                 <span class="text-muted pull-right">29 Countries</span>
             </div>
             <div class="panel-body">
-                Map
+                  <div google-chart chart="locationChart"> </div>
             </div>
         </div>
     </section>
@@ -40,13 +40,40 @@
     </section>
     <section>
         <div class="panel panel-default panel-top-people">
-            <div class="panel-heading">Top people</div>
+            <div class="panel-heading">
+                <a href="#" class="text-left">Top People</a>
+                <span class="text-muted pull-right">{{numberOfUsers}} people</span>
+            </div>
             <div class="panel-body">
-                <div class="top-user-container" ng-repeat="tweet in tweetsQueue | limitTo : 10">
+                <div class="top-user-container" ng-repeat="user in topPeople | limitTo : 10">
                     <a href="#">
-                        <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" />
+                        <img lazy-load ll-src="{{user.profileImageUrl}}" on-error-src="{{defultImage}}" />
                     </a>
                 </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="panel panel-default panel-top-countries">
+            <div class="panel-heading clearfix">
+                <a href="#" class="text-left">Locations</a>
+                <span class="text-muted pull-right">29 Countries</span>
+            </div>
+            <div class="panel-body">
+                <ul>
+                    <li ng-repeat="country in topCountries" class="clearfix">
+                        <strong class="pull-left">
+                            {{country.code | isoCountry}} 
+                            <small>
+                                ( {{country.code}} )
+                            </small>
+                        </strong>
+                        <span class="pull-right">
+                            {{country.count}}    
+                        </span>
+                        
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
@@ -62,20 +89,6 @@
         <strong class="pull-right">{{totalTweets}} tweets</strong>
     </aside>
 
-    <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit()" data-user-id="{{tweet.user.id_str}}">
-        <div class="media-left">
-            <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
-        </div>
-        <div class="media-body tweet-content">
-            <h6 class="media-heading tweet-user">
-                        <a href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank">
-                            {{tweet.user.screen_name}}
-                        </a>
-                        <small>{{tweet.created_at}}</small>
-                    </h6>
-            <p>{{tweet.text}}</p>
-        </div>
-
-    </article>
+    <div ng-include="'views/views-components/tweetQueue.html'"></div>
 
 </section>
