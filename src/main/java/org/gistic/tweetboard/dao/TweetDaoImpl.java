@@ -458,7 +458,7 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public String getTopTweetsGeneratedFlag(String uuid) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.get(getTopTweetsGeneratedFlagKey(uuid));
+            return jedis.get(getTopTweetsGeneratedFlagKey(uuid));
         } catch(JedisException jE) {
             jE.printStackTrace();
         }

@@ -296,7 +296,7 @@ public class EventsResource {
 
     @GET
     @Path("/{uuid}/topTweets/")
-    public GenericArray<String> getTopNTweets(@PathParam("uuid") String uuid,
+    public GenericArray<String> getTopTweets(@PathParam("uuid") String uuid,
                                                     @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
@@ -352,6 +352,7 @@ public class EventsResource {
         xhr.send(formData);
          */
         System.out.println(fileDetail.getSize());
+        //todo refactor
         String uploadedFileLocation = "./assets/logo/"+uuid+"/";// + fileDetail.getFileName();
         String fileName =fileDetail.getFileName();
         System.out.println(fileName);
