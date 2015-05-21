@@ -1,6 +1,6 @@
 'use strict';
 
-var trackHashtagApp = angular.module('trackHashtagApp', ['ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'akoenig.deckgrid', 'googlechart']);
+var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'akoenig.deckgrid', 'googlechart', 'bootstrapLightbox', 'ngSanitize']);
 
 
 // Run : Intliaize the event admin app with this values
@@ -10,6 +10,23 @@ trackHashtagApp.run(function ($window, $location, $rootScope) {
     $rootScope.eventID = $location.search().uuid;
 })
 
+trackHashtagApp.config(function (LightboxProvider) {
+    // set a custom template
+    LightboxProvider.templateUrl = 'views/views-components/lightbox-modal.html';
+
+    LightboxProvider.getImageUrl = function (media) {
+        return media.url;
+    };
+
+    LightboxProvider.getImageCaption = function (media) {
+        return media.caption;
+    };
+
+    LightboxProvider.getImageType = function (media) {
+        return media.type;
+    };
+});
+    
 trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
 
     window.routes = {
@@ -187,8 +204,13 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 
 
 // Controller : Populate the recieved data and update admin page
-trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166) {
+trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce) {
+        $scope.trustSrc = function (src) {
+            return $sce.trustAsResourceUrl(src);
+        }
+                                                
+        $scope.Lightbox = Lightbox;
 
         var locationChart = {};
         $scope.locationChart = locationChart;
@@ -199,7 +221,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             locationChart.data = [['Locale', 'Count']];
 
             locationChart.options = {
-                width: 350,
                 height: 300,
                 colorAxis: {
                     colors: ['#00853f', 'black', '#e31b23']
@@ -247,8 +268,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     for (var i = 0; i < response.items.length; i++) {
                         locationChart.data.push([response.items[i].code, response.items[i].count]);
                     }
-                    console.log(locationChart.data);
-                    console.log(response.items);
                 }).error(function () {
                     console.log("#");
                 })
@@ -308,15 +327,38 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             source.addEventListener('approved-tweets', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
+
                 if ($scope.tweet.extended_entities != null && $scope.tweet.extended_entities.media != null) {
-                    $scope.tweetMedia = $scope.tweet.extended_entities.media[0].media_url_https;
-                    $scope.mediaQueue.push($scope.tweetMedia);
+
+                    $scope.tweetText = $scope.tweet.text;
+
+                    $scope.mediaType = $scope.tweet.extended_entities.media[0].type;
+                    $scope.mediaThumb = $scope.tweet.extended_entities.media[0].media_url_https;
+
+                    if ($scope.mediaType == 'video') {
+                        $scope.videoLink = $scope.tweet.extended_entities.media[0].video_info.variants[2].url;
+                        $scope.mediaQueue.push({
+                            "url": $scope.videoLink,
+                            "thumb": $scope.mediaThumb,
+                            "type": $scope.mediaType,
+                            "caption": $scope.tweetText
+                        });
+                    } else {
+                        $scope.tweetMedia = $scope.tweet.extended_entities.media[0].media_url_https;
+                        $scope.mediaQueue.push({
+                            "url": $scope.tweetMedia,
+                            "thumb": $scope.mediaThumb,
+                            "type": $scope.mediaType,
+                            "caption": $scope.tweetText
+                        });
+                    }
+
                 }
+
                 $scope.$apply(function () {
                     $scope.tweetsQueue.push($scope.tweet);
                 }, false);
             });
-
 
             source.addEventListener('tweets-over-time', function (response) {
 
@@ -333,6 +375,10 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         }
 
         $scope.startEventSource();
+
+        $scope.openLightboxModal = function (index) {
+            Lightbox.openModal($scope.mediaQueue, index);
+        };
 
         $scope.pagesShown = 1;
         $scope.pageSize = 20;

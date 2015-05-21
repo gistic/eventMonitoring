@@ -1,6 +1,6 @@
 <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue track by $index | limitTo : tweetsQueueLimit()" data-user-id="{{tweet.user.id_str}}">
     <div class="media-left">
-        <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
+<!--        <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />-->
     </div>
     <div class="media-body tweet-content">
         <h6 class="media-heading tweet-user">

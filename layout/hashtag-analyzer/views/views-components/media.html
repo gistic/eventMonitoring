@@ -8,9 +8,9 @@
     </aside>
     
     <div class="all-media-container col-md-4" ng-repeat="media in mediaQueue track by $index">
-        <a href="#">
-            <img class="img-responsive" lazy-load ll-src="{{tweetMedia}}" on-error-src="{{defultImage}}" />
+       <a ng-click="Lightbox.openModal(mediaQueue, $index)">
+            <img class="img-responsive" ng-class="{{media.type}}" lazy-load ll-src="{{media.thumb}}" on-error-src="{{defultImage}}" />
+            <h4>{{media.type}}</h4>
         </a>
     </div>
-    
 </section>

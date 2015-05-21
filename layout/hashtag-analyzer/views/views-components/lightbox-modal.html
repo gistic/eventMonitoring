@@ -1,0 +1,18 @@
+<div class="modal-body" ng-swipe-left="Lightbox.nextImage()" ng-swipe-right="Lightbox.prevImage()">
+
+    <!-- image -->
+    <div class="lightbox-image-container">
+
+        <img class="img-responsive" ng-class="{{Lightbox.image.type}}" lazy-load ll-src="{{Lightbox.imageUrl}}" on-error-src="{{defultImage}}" ng-if="Lightbox.image.type == 'photo'"/>
+        
+        <video width="400" controls ng-if="Lightbox.image.type == 'video'" >
+            <source ng-src="{{trustSrc(Lightbox.imageUrl)}}" type="video/WebM">
+        </video>
+            
+    </div>
+
+    <p>
+    {{Lightbox.imageCaption}}
+    </p>
+    
+</div>
