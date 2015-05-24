@@ -37,3 +37,21 @@ myAppFilters.filter('customFilter', function () {
         return alter;
     }
 });
+
+myAppFilters.filter('array', function () {
+    return function (arrayLength) {
+        arrayLength = Math.ceil(arrayLength);
+        var arr = new Array(arrayLength),
+            i = 0;
+        for (; i < arrayLength; i++) {
+            arr[i] = i;
+        }
+        return arr;
+    };
+});
+
+myAppFilters.filter('trusted', ['$sce', function ($sce) {
+    return function (url) {
+        return $sce.trustAsResourceUrl(url);
+    };
+}]);

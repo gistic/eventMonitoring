@@ -6,12 +6,17 @@
         </select>
         <strong class="pull-right">{{totalMedia}} Pic & Videos</strong>
     </aside>
-
-    <div class="all-media-container col-md-4" ng-repeat="media in mediaQueue track by $index">
+   
+   <div masonry column-width="20" item-selector=".mybrick" masonry-options="{ transitionDuration: '0.4s' }">
+    <div masonry-brick class="masonry-brick mybrick" ng-repeat="media in mediaQueue track by $index">
         <a ng-click="Lightbox.openModal(mediaQueue, $index)">
             <img class="img-responsive" lazy-load ll-src="{{media.thumb}}" on-error-src="{{defultImage}}" />
-            <i ng-if="media.type == 'photo'" class="fa fa-camera"></i>
-            <i ng-if="media.type == 'video'" class="fa fa-video"></i>
+            <span class="media-type-icon">
+                <i ng-if="media.type == 'photo'" class="fa fa-camera"></i>
+                <i ng-if="media.type == 'video'" class="fa fa-video"></i>
+            </span>
         </a>
     </div>
+</div>
+   
 </section>

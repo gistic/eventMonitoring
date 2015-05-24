@@ -1,0 +1,22 @@
+<div class="panel panel-default panel-top-countries">
+    <div class="panel-heading clearfix">
+        <a href="#" class="text-left">Locations</a>
+        <span class="text-muted pull-right">29 Countries</span>
+    </div>
+    <div class="panel-body">
+        <ul>
+            <li ng-repeat="country in topCountries" class="clearfix">
+                <strong class="pull-left">
+                            {{country.code | isoCountry}} 
+                            <small>
+                                ( {{country.code}} )
+                            </small>
+                        </strong>
+                <span class="pull-right">
+                            {{country.count}}    
+                        </span>
+
+            </li>
+        </ul>
+    </div>
+</div>

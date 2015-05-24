@@ -1,0 +1,11 @@
+<div class="panel panel-default panel-top-people">
+    <div class="panel-heading">
+        <strong class="text-left">Top People</strong>
+        <span class="text-muted pull-right">{{numberOfUsers}} people</span>
+    </div>
+    <div class="panel-body">
+        <div class="top-user-container" ng-repeat="user in topPeople | limitTo : 10">
+            <img lazy-load ll-src="{{user.profileImageUrl}}" on-error-src="{{defultImage}}" />
+        </div>
+    </div>
+</div>

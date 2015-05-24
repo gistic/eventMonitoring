@@ -18614,22 +18614,47 @@ footer.views--footer p {
 }
 
 /* line 10, ../sass/_/_modules/_media.scss */
-.deckgrid[deckgrid]::before {
-  /* Specifies that the grid should have a maximum of 4 columns. Each column will have the classes 'column' and 'column-1-4' */
-  content: '4 .column.column-1-4';
-  font-size: 0;
-  /* See https://github.com/akoenig/angular-deckgrid/issues/14#issuecomment-35728861 */
-  visibility: hidden;
+.masonry-brick {
+  width: 18%;
+  margin-bottom: 10px;
 }
-
-/* line 17, ../sass/_/_modules/_media.scss */
-.deckgrid .column {
-  float: left;
+/* line 13, ../sass/_/_modules/_media.scss */
+.masonry-brick img {
+  position: relative;
 }
-
-/* line 21, ../sass/_/_modules/_media.scss */
-.deckgrid .column-1-4 {
-  width: 25%;
+/* line 16, ../sass/_/_modules/_media.scss */
+.masonry-brick .media-type-icon {
+  display: none;
+  position: absolute;
+  background: rgba(29, 28, 28, 0.9);
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  margin: auto;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+/* line 29, ../sass/_/_modules/_media.scss */
+.masonry-brick .media-type-icon i {
+  margin: auto;
+  line-height: 100px;
+  color: #ffffff;
+  font-size: 21px;
+  font-size: 2.625rem;
+}
+/* line 36, ../sass/_/_modules/_media.scss */
+.masonry-brick:hover {
+  cursor: pointer;
+}
+/* line 38, ../sass/_/_modules/_media.scss */
+.masonry-brick:hover .media-type-icon {
+  display: inline-block;
 }
 
 /* line 1, ../sass/_/_modules/_maps.scss */
