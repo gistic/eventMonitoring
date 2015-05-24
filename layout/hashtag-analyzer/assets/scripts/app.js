@@ -26,7 +26,7 @@ trackHashtagApp.config(function (LightboxProvider) {
         return media.type;
     };
 });
-    
+
 trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
 
     window.routes = {
@@ -184,6 +184,12 @@ trackHashtagApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', '
 
 }]);
 
+trackHashtagApp.filter('trusted', ['$sce', function ($sce) {
+    return function (url) {
+        return $sce.trustAsResourceUrl(url);
+    };
+}]);
+
 /* Controller : Start new event */
 trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', function ($rootScope, $scope, $http, $state, RequestData) {
 
@@ -206,10 +212,12 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 // Controller : Populate the recieved data and update admin page
 trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce',
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce) {
+
+
         $scope.trustSrc = function (src) {
             return $sce.trustAsResourceUrl(src);
         }
-                                                
+
         $scope.Lightbox = Lightbox;
 
         var locationChart = {};
@@ -223,7 +231,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             locationChart.options = {
                 height: 300,
                 colorAxis: {
-                    colors: ['#00853f', 'black', '#e31b23']
+                    colors: ['rgb(0, 200, 220)', 'rgb(0, 100, 200)', 'rgb(1, 120, 183)']
                 },
                 displayMode: 'regions'
             };
@@ -330,27 +338,49 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
                 if ($scope.tweet.extended_entities != null && $scope.tweet.extended_entities.media != null) {
 
+                    var mediaArrayLength = $scope.tweet.extended_entities.media.length;
+                    
                     $scope.tweetText = $scope.tweet.text;
+                    $scope.userScreenName = $scope.tweet.user.screen_name;
+                    $scope.userProfileImage = $scope.tweet.user.profile_image_url_https;
+                    $scope.tweetCreatedAt = $scope.tweet.created_at;
 
-                    $scope.mediaType = $scope.tweet.extended_entities.media[0].type;
-                    $scope.mediaThumb = $scope.tweet.extended_entities.media[0].media_url_https;
+                    for (var i = 0; i < mediaArrayLength; i++) {
+                        
+                        $scope.mediaType = $scope.tweet.extended_entities.media[i].type;
+                        $scope.mediaThumb = $scope.tweet.extended_entities.media[i].media_url_https;
+                        
+                        // Push only MP4 videos
+                        if ($scope.mediaType == 'video') {
+                            var videoVariantsArrayLength = $scope.tweet.extended_entities.media[i].video_info.variants.length;
+                            for (var k = 0; k < videoVariantsArrayLength; k++) {
+                                var videoContentType = $scope.tweet.extended_entities.media[i].video_info.variants[k].content_type;
+                                if (videoContentType == "video/mp4") {
+                                    $scope.videoLink = $scope.tweet.extended_entities.media[i].video_info.variants[k].url;
+                                    $scope.mediaQueue.push({
+                                        "url": $scope.videoLink,
+                                        "thumb": $scope.mediaThumb,
+                                        "type": $scope.mediaType,
+                                        "caption": $scope.tweetText,
+                                        "userScreenName" : $scope.userScreenName,
+                                        "userProfileImage" : $scope.userProfileImage,
+                                        "tweetCreatedAt" : $scope.tweetCreatedAt
+                                    });
+                                }
+                            }
 
-                    if ($scope.mediaType == 'video') {
-                        $scope.videoLink = $scope.tweet.extended_entities.media[0].video_info.variants[2].url;
-                        $scope.mediaQueue.push({
-                            "url": $scope.videoLink,
-                            "thumb": $scope.mediaThumb,
-                            "type": $scope.mediaType,
-                            "caption": $scope.tweetText
-                        });
-                    } else {
-                        $scope.tweetMedia = $scope.tweet.extended_entities.media[0].media_url_https;
-                        $scope.mediaQueue.push({
-                            "url": $scope.tweetMedia,
-                            "thumb": $scope.mediaThumb,
-                            "type": $scope.mediaType,
-                            "caption": $scope.tweetText
-                        });
+                        } else {
+                            $scope.tweetMedia = $scope.tweet.extended_entities.media[i].media_url_https;
+                            $scope.mediaQueue.push({
+                                "url": $scope.tweetMedia,
+                                "thumb": $scope.mediaThumb,
+                                "type": $scope.mediaType,
+                                "caption": $scope.tweetText,
+                                "userScreenName" : $scope.userScreenName,
+                                "userProfileImage" : $scope.userProfileImage,
+                                "tweetCreatedAt" : $scope.tweetCreatedAt
+                            });
+                        }
                     }
 
                 }
