@@ -203,7 +203,7 @@ public class TweetDataLogic {
                 long retweetsCount = tweetMeta.getRetweetsCount();
                 double order = Math.log10((retweetsCount > 1) ? retweetsCount : 1);
                 double score = Math.round(((order + ageInSeconds / 45000) * 10000000.0)) / 10000000.0;
-                String tweetId = key.substring(key.lastIndexOf(':'));
+                String tweetId = key.substring(key.lastIndexOf(':')+1);
                 tweetDao.setTweetScore(uuid, tweetId, score);
             }
         }
