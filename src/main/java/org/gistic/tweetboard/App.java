@@ -12,6 +12,7 @@ import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
 import org.gistic.tweetboard.resources.AdminEventSource;
 import org.gistic.tweetboard.resources.EventsResource;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcaster;
+import org.gistic.tweetboard.resources.LoginResource;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,7 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(new EventsResource());
         e.jersey().register(new LiveTweetsBroadcaster());
         e.jersey().register(new AdminEventSource());
+        e.jersey().register(new LoginResource());
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
         DelayedJobsManager.initiate();
         //e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");

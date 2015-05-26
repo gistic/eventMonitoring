@@ -39,9 +39,9 @@ public class UserstreamRunner {
 
         TwitterStreamFactory streamFactory = new TwitterStreamFactory(new ConfigurationBuilder().setJSONStoreEnabled(true).build());
         TwitterStream sampleStream = streamFactory.getInstance();
-        sampleStream.setOAuthConsumer("YzZKKQ2v793ClhDvOvpg2XtNO", "vQToihSmBVtZK6ziYKORtGNWKxAGEVUAxo5VyuHxPRBQk8JNgw");
-        sampleStream.setOAuthAccessToken(new AccessToken("146937078-oJdMfF0B849bQgqLMNElQzvFpeD8iaeYBZ5hNeaK",
-                "g5MWqiIvkYE41Gu0BYuv0NbL3arCIIE80NzIzeIrD98ml"));
+        sampleStream.setOAuthConsumer("6PPRgLzPOf6Mvcj3NkPIlq07Y", "Xl3TKJwNQtZmbYGhLcXzUseO9CrdoMav54qODCr2CnFiSIIZpb");
+        sampleStream.setOAuthAccessToken(new AccessToken("3163968042-ZebHP949SLSOYNCNijJbet2750yrISMtGm208NV",
+                "PqWOVyOxbCqTvmBXBS25UPhJNOe2XubyosSYhUv93GsSi"));
         //TweetListener tweetListener = new TweetListener(bus, hashTags);
         //eventDetailsMap.put(uuid, new EventServiceDetails(tweetListener, bus, hashTags));
         sampleStream.addListener(listener);
