@@ -380,6 +380,7 @@ public class EventsResource {
     @GET
     @Path("/authTest")
     public String authTest(@Auth User user) {
+        if (user == null) { return "Denied!"; }
         System.out.println(user.toString());
         return "working";
     }
