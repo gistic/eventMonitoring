@@ -1,0 +1,16 @@
+<div class="panel panel-default panel-media">
+    <div class="panel-heading clearfix">
+        <a ui-sref=".media" class="text-left">Media ></a>
+        <span class="text-muted pull-right">{{totalMedia}} Pics & Videos</span>
+    </div>
+    <div class="panel-body">
+        <div ng-repeat="row in (mediaQueue.length/3 | array) | limitTo : 3" class="row">
+            <div class="col-md-8" ng-repeat="media in mediaQueue.slice(3*$index, 3*$index + 3) track by $index">
+                <a ng-click="Lightbox.openModal(mediaQueue, $index)">
+                    <img class="img-responsive" lazy-load ll-src="{{media.thumb}}" on-error-src="{{defultImage}}" />
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>

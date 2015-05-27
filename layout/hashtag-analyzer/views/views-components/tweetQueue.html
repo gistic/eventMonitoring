@@ -1,15 +1,26 @@
-<article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue track by $index | limitTo : tweetsQueueLimit()" data-user-id="{{tweet.user.id_str}}">
+<article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit() | reverseQueue track by tweet.id" data-user-id="{{tweet.user.id_str}}">
+   
     <div class="media-left">
         <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
     </div>
+    
     <div class="media-body tweet-content">
         <h6 class="media-heading tweet-user">
-                        <a href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank">
-                            {{tweet.user.screen_name}}
-                        </a>
-                        <small>{{tweet.created_at}}</small>
-                    </h6>
-        <p>{{tweet.text}}</p>
+            <a href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank">
+                {{tweet.user.screen_name}}
+            </a>
+            <small>
+                {{tweet.created_at}}
+            </small>
+        </h6>
+        <p>
+            {{tweet.text}}
+        </p>
+        <strong>{{$index}}</strong>
     </div>
 
 </article>
+
+<aside class="well tweets-gab text-center" ng-show="tweetsGabContainer()" ng-click="loadTweetsOnGab()">
+    {{remainingTweetsCount}} New Tweets
+</aside>

@@ -2,9 +2,12 @@
 
 .panel {
       @include box-shadow(none);
-      @include border-radius(3px);
+      @include border-radius(5px);
     .panel-body {
         padding: $padding - 5;
+    }
+    .panel-heading {
+        @include border-top-radius(5px);
     }
 }
 
@@ -41,7 +44,9 @@
 //        @include size(112px, auto);
         max-height: 100%;
         max-width: 100%;
+        height: auto;
         @include border-radius(3px);
+        
     }
 }
 
