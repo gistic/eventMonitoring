@@ -15,4 +15,8 @@ public interface AuthDao {
     String getUserId(String accessToken);
 
     void setUserId(String accessToken, String userIdFromTwitter);
+
+    void setTempHashtags(String token, String hashtags);
+
+    String getTempHashtags(String oauthToken);
 }
