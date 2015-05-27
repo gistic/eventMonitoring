@@ -1,0 +1,42 @@
+.all-media-container {
+    margin-top: $margin * 2;
+    img {
+        @include size(200px);
+        margin-bottom: $margin;
+        @include border-radius(3px);
+    }
+}
+
+.masonry-brick {
+    width: 18%;
+    margin-bottom: 10px;
+    img {
+        position: relative;
+    }
+    .media-type-icon {
+        display: none;
+        position: absolute;
+        background: rgba(29, 28, 28, 0.9);
+        @include size(100px);
+        text-align: center;
+        @include border-radius(50%);
+        margin: auto;
+        z-index: 9;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        i {
+            margin: auto;
+            line-height: 100px;
+            color: $white;
+            @include font-size($font-large);
+        }
+    }
+    &:hover {
+        cursor: pointer;
+        .media-type-icon {
+            display: inline-block;
+        }
+    }
+}

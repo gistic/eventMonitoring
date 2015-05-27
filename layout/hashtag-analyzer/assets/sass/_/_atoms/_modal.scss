@@ -1,0 +1,54 @@
+.modal-dialog {
+	margin: 10% auto;
+}
+.modal-backdrop {
+	bottom: 0;
+	position: fixed;
+}
+.modal-window {
+	.modal-header {
+		padding: $padding / 2;
+		background: $gray-super-light;
+	}
+	.modal-body {
+		padding: $padding / 2;
+	}
+	.input-group {
+		background: $gray-super-light;
+		padding: $padding - 5;
+		border-bottom: 1px solid #e5e5e5;
+		input.form-control {
+		background: $white;
+		@include border-left-radius(5px);
+		.btn.btn-search {
+		@include border-right-radius(5px);
+		}
+		}
+	}
+}
+
+.users-list {
+	max-height: 250px;
+	overflow: auto;
+	li {
+		padding: $padding 0;
+		border-bottom: 1px solid $gray-light;
+		&:last-child {
+			border-bottom: none;
+		}
+		img {
+			width: 48px;
+			height: 48px;
+			border-radius: 50%;
+			margin-right: 7px;
+		}
+		a {
+			color:$black;
+			&.remove-user {
+				line-height: 45px;
+				color:$red;
+			}
+		}
+
+	}
+}

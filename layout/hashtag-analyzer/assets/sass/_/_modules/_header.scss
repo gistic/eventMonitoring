@@ -1,0 +1,107 @@
+header {
+    padding: $padding - 5 0;
+    background: $white;
+    border-bottom: 1px solid $gray-light;
+    @include phone {
+        text-align: center;
+    }
+    .logo {
+        font-family: 'Lobster', cursive;
+        a {
+            color: $black;
+            &:hover, &:focus {
+                text-decoration: none;
+            }
+        }
+    }
+    .header-buttons {
+        @include phone {
+            float: none !important;
+        }
+    }
+}
+
+.header-dashboard {
+  @include background-image(linear-gradient(right, #0056bd, #015bbb, #015fb7, #0465b6, #066db2, #0872ae, #0872b0, #0877ac, #0b81a9, #0d89a5, #0e8ca2, #0d8ea1, #0f939f, #11969d, #12999c, #129d9a, #13a497, #15a895, #15a895, #15ae90));
+    margin-bottom: $margin;
+    .dashboard-nav {
+        margin-top: $margin + 5;
+        a {
+            color: $white;
+        }
+    }
+    .navbar-brand {
+        color: $white;
+        @include font-size($font-large);
+    }
+    .start-event {
+        .form-control {
+            background: $white;
+            padding: 0 $margin;
+            @include border-left-radius(3px);
+        }
+        .btn.btn-search {
+            @include border-right-radius(5px);
+            line-height: 20px;
+            margin-left: $margin;
+        }
+    }
+    .input-group {
+        @include phone {
+            text-align: center;
+            display: inline-block;
+        }
+    }
+    .header-title {
+        color: $white;
+        margin-left: $margin * 20;
+        @include font-size($font-tiny);
+        strong {
+            @include font-size($font-large);
+        }
+    }
+}
+
+.header-homepage {
+    background: $dark-green;
+    color: $white;
+    padding: $padding * 5 0;
+    @include phone {
+        padding: $padding * 2 0;
+    }
+    text-align: center;
+    .start-event {
+        margin-top: $margin * 3;
+        margin-left: auto;
+        margin-right: auto;
+        @include size(40%, auto);
+        @include phone {
+            @include size(80%, auto);
+        }
+        input {
+            @include border-radius(5px);
+            color: $white;
+            font-weight: 300;
+            background: darken($dark-green, 8%);
+            &::-webkit-input-placeholder {
+                color: darken($dark-green, 17%);
+            }
+            &:-moz-placeholder {
+                color: darken($dark-green, 17%);
+                @include opacity(1);
+            }
+            &::-moz-placeholder {
+                color: darken($dark-green, 17%);
+                @include opacity(1);
+            }
+            &:-ms-input-placeholder {
+                color: darken($dark-green, 17%);
+            }
+        }
+        .btn.btn-search {
+            background: darken($dark-green, 15%);
+            @include border-right-radius(5px);
+            line-height: 20px;
+        }
+    }
+}

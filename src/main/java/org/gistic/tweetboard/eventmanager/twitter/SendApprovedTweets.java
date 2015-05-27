@@ -26,7 +26,7 @@ public class SendApprovedTweets implements Runnable {
 
     public void run(){
         for (String tweetId : tweetIds) {
-            String statusString = tweetDao.getStatusString(tweetId);
+            String statusString = tweetDao.getStatusString(uuid, tweetId);
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
             Message msg = new Message(uuid, Message.Type.LiveTweet, statusString);
