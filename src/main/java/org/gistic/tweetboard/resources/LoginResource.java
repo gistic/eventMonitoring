@@ -98,7 +98,7 @@ public class LoginResource {
         String hashtags = authDao.getTempHashtags(oauthToken);
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
-        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/storeToken")
+        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/dashboard/liveStreaming")
                 .queryParam("token", accessToken)
                 .queryParam("hashtags", hashtags)
                 .queryParam("firstTime", String.valueOf(firstTime)).build();
