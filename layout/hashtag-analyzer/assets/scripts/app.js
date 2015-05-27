@@ -1,14 +1,17 @@
 'use strict';
 
-var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded']);
+var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies']);
 
 
 // Run : Intliaize the event admin app with this values
-trackHashtagApp.run(function ($window, $location, $rootScope) {
+trackHashtagApp.run(function ($window, $location, $rootScope, $cookies) {
     $rootScope.baseUrl = $window.location.origin;
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
     $rootScope.eventID = $location.search().uuid;
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
+
+    $cookies.userAuthentication = $rootScope.userAuthentication;
+
 })
 
 trackHashtagApp.config(function (LightboxProvider) {
@@ -193,21 +196,38 @@ trackHashtagApp.filter('trusted', ['$sce', function ($sce) {
 }]);
 
 /* Controller : Start new event */
-trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', function ($rootScope, $scope, $http, $state, RequestData) {
+trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', '$cookies', '$cookieStore', function ($rootScope, $scope, $http, $state, RequestData, $cookies, $cookieStore) {
 
     $scope.startNewEvent = function (action) {
 
-        $scope.$broadcast();
-
-        RequestData.startEvent()
-            .success(function (response) {
-                $rootScope.eventID = response.uuid;
-                // Redirect the front website page to the admin page
-                $state.transitionTo('dashboard.liveStreaming', {
-                    uuid: $scope.eventID
-                });
-            })
+        //        if ($cookies.userAuthentication == undefined) {
+        var requestAction = "GET";
+        var apiUrl = '/api/events/login/twitter';
+        var requestData = "";
+        RequestData.fetchData(requestAction, apiUrl, requestData)
+            .then(function (response) {
+                var openUrl = response.data;
+                console.log(response);
+                window.$windowScope = $scope;
+                window.open(openUrl, "Authenticate Account", "width=500, height=500");
+            });
+        //        } else {
+        //            console.log("1");
+        //        }
     };
+    //    $scope.startNewEvent = function (action) {
+    //
+    //        $scope.$broadcast();
+    //
+    //        RequestData.startEvent()
+    //            .success(function (response) {
+    //                $rootScope.eventID = response.uuid;
+    //                // Redirect the front website page to the admin page
+    //                $state.transitionTo('dashboard.liveStreaming', {
+    //                    uuid: $scope.eventID
+    //                });
+    //            })
+    //    };
 }]);
 
 
