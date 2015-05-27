@@ -38,17 +38,16 @@ trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
         },
         "dashboard": {
             url: '/dashboard?uuid',
-            templateUrl: 'views/dashboard.html'
+            templateUrl: 'views/dashboard.html',
+            controller: 'EventMainController'
         },
         "dashboard.liveStreaming": {
             url: '/liveStreaming',
-            templateUrl: 'views/views-components/live-streaming.html',
-            controller: 'EventMainController'
+            templateUrl: 'views/views-components/live-streaming.html'
         },
         "dashboard.media": {
             url: '/media',
-            templateUrl: 'views/views-components/media.html',
-            controller: 'EventMainController'
+            templateUrl: 'views/views-components/media.html'
         },
 
         "superAdmin": {
@@ -215,12 +214,12 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 // Controller : Populate the recieved data and update admin page
 trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce',
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce) {
-                                                
-                                                
+
+
         // Set event ID
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
-                                                
+
         // Truse Source : fix ng-src videos issue
         $scope.trustSrc = function (src) {
             return $sce.trustAsResourceUrl(src);
@@ -238,7 +237,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             locationChart.data = [['Locale', 'Count']];
 
             locationChart.options = {
-                height: 300,
+                height: 250,
                 colorAxis: {
                     colors: ['rgb(0, 200, 220)', 'rgb(0, 100, 200)', 'rgb(1, 120, 183)']
                 },
@@ -252,7 +251,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             };
 
         }
-        
+
         // GET : Top active people
         $scope.topPeople = [];
         $scope.getTopPeople = function () {
@@ -271,8 +270,8 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 });
         }
         $scope.getTopPeople();
-                                                
-                                                
+
+
 
         // TOP TWEETS : Not Working
         $scope.getTopTweets = function () {
@@ -340,7 +339,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 })
         }
         $rootScope.getEventStats();
-                                                
+
         $rootScope.getViewOptions = function () {
 
             var requestAction = "GET";
@@ -361,6 +360,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.eventStarted = false;
         $rootScope.timerRunning = false;
         $scope.tweetsQueue = [];
+        $scope.tweetsQueueLength = 0;
         $scope.mediaQueue = [];
         $scope.tweet = {};
 
@@ -425,6 +425,8 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
                 $scope.$apply(function () {
                     $scope.tweetsQueue.push($scope.tweet);
+                    $scope.tweetsQueueLength++;
+
                 }, false);
             });
 
@@ -438,7 +440,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
 
             source.addEventListener('new-admin-opened', function (response) {
-//                source.close();
+                //                source.close();
             });
         }
 
@@ -449,24 +451,49 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         };
 
         $scope.pagesShown = 1;
-        $scope.pageSize = 20;
+        $scope.pageSize = 1;
+        $scope.tweetsShowned = 0;
+
+        $scope.tweetsGab = false;
 
         // Tweet queue limit
         $scope.tweetsQueueLimit = function () {
+            $scope.tweetsShowned = $scope.pageSize * $scope.pagesShown;
             return $scope.pageSize * $scope.pagesShown;
         };
 
         // Show load more button
         $scope.loadMoreButton = function () {
-            return $scope.pagesShown < ($scope.tweetsCount / $scope.pageSize);
+            $scope.remainingTweetsCount = $scope.tweetsQueueLength - ($scope.pageSize * $scope.pagesShown);
+            $scope.tweetsShowned = $scope.pageSize * $scope.pagesShown;
+            return $scope.pagesShown < ($scope.tweetsQueueLength / $scope.pageSize);
+
         }
 
         // Load more tweets handler
         $scope.loadMoreTweets = function () {
-            $scope.pagesShown = $scope.pagesShown + 1;
-            $location.hash('toApproveDiv');
-            $anchorScroll();
+            if ($scope.remainingTweetsCount >= 10) {
+                //                $scope.pagesShown = $scope.pagesShown + 1;
+                $scope.pagesShown = $scope.pagesShown + ($scope.remainingTweetsCount);
+
+            } else {
+                $scope.pagesShown++;
+            }
+            $scope.remainingTweetsCount = $scope.tweetsQueueLength - ($scope.pageSize * $scope.pagesShown);
         };
+
+        // Show tweets Gab Container
+        $scope.tweetsGabContainer = function () {
+            if ($scope.remainingTweetsCount >= 10) {
+                $scope.tweetsGab = true;
+            }
+            return $scope.tweetsGab;
+        }
+
+        // Load tweets on Gab
+        $scope.loadTweetsOnGab = function () {
+
+        }
 
         // Stop Event Handler
         $scope.killEvent = function () {
@@ -488,7 +515,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     }
                 });
         };
-                                                
+
         $scope.stopEventHandler = function () {
 
             var eventID = $rootScope.eventID;
@@ -508,7 +535,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             options: {
                 chart: {
                     type: 'areaspline',
-                    height: 350,
+                    height: 250,
                     backgroundColor: 'rgba(255, 255, 255, 0.01)',
                 },
                 title: {
@@ -519,99 +546,101 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         };
         $scope.tweetsTime = [];
         $scope.tweetsCount = [];
-        
+
         $scope.drawChart = function () {
 
-                    $scope.tweetsTime = $scope.data.time;
-                    $scope.tweetsCount = $scope.data.tweets_count;
+            $scope.tweetsTime = $scope.data.time;
+            $scope.tweetsCount = $scope.data.tweets_count;
 
-                    function drawTweetsOverTimeChart() {
-                        var arrayLength = $scope.data.length;
-                        var tweetsCountArray = [];
-                        var tweetsTimeArray = [];
+            function drawTweetsOverTimeChart() {
+                var arrayLength = $scope.data.length;
+                var tweetsCountArray = [];
+                var tweetsTimeArray = [];
 
-                        $scope.totalTweets = 0;
-                        for (var i = 0; i < arrayLength; i++) {
-                            tweetsCountArray[i] = $scope.data[i].tweets_count;
-                            $scope.totalTweets += $scope.data[i].tweets_count;
-                            tweetsTimeArray[i] = $scope.data[i].time;
-                        }
+                $scope.totalTweets = 0;
+                for (var i = 0; i < arrayLength; i++) {
+                    tweetsCountArray[i] = $scope.data[i].tweets_count;
+                    $scope.totalTweets += $scope.data[i].tweets_count;
+                    tweetsTimeArray[i] = $scope.data[i].time;
+                }
 
-                        $scope.chartSeries = [{
-                            "name": "",
-                            "data": tweetsCountArray,
-                            connectNulls: true,
-                            showInLegend: false,
-                            "id": "tweetsChart",
-                            color: "rgb(22, 123, 230)"
+                $scope.chartSeries = [{
+                    "name": "Tweets count",
+                    "data": tweetsCountArray,
+                    showInLegend: false,
+                    "id": "tweetsChart",
+                    color: "rgb(22, 123, 230)"
     }];
-                        $scope.chartConfig = {
-                            options: {
-                                chart: {
-                                    type: 'areaspline',
-                                    animation: {
-                                        duration: 1500
-                                    },
-                                    height: 350,
-                                    backgroundColor: 'rgba(255, 255, 255, 0.01)'
-                                },
-                                plotOptions: {
-                                    series: {
-                                        stacking: '',
-                                        connectNulls: true
-                                    },
-                                    areaspline: {}
-                                }
+                $scope.chartConfig = {
+                    options: {
+                        chart: {
+                            type: 'areaspline',
+                            animation: {
+                                duration: 1500
                             },
-                            xAxis: {
-                                categories: tweetsTimeArray,
-                                gridLineWidth: 1,
-                                dateTimeLabelFormats: {
-                                    minute: '%H:%M',
-                                    hour: '%H:%M',
-                                },
-                                type: 'datetime',
-
-                                lineWidth: 1,
-                                //						tickPixelInterval: 150,
-                                labels: {
-                                    enabled: false,
-                                    style: {
-                                        color: '#fff',
-                                        font: '11px Trebuchet MS, Verdana, sans-serif'
-                                    }
-                                },
-                            },
-                            yAxis: {
-                                plotLines: [{
-                                    value: 0,
-                                    width: 0,
-                                    color: '#ffffff'
-                }],
-                                title: {
-                                    text: ''
-                                },
-                                labels: {
+                            height: 250,
+                            backgroundColor: 'rgba(255, 255, 255, 0.01)'
+                        },
+                        plotOptions: {
+                            series: {
+                                marker: {
                                     enabled: false
                                 },
-                                tickWidth: 0,
-                                gridLineWidth: 1
+                                stacking: '',
+                                connectNulls: false
                             },
-                            series: $scope.chartSeries,
-                            credits: {
-                                enabled: false
-                            },
-                            loading: false,
-                            title: {
-                                text: ''
+                            areaspline: {}
+                        }
+                    },
+                    xAxis: {
+                        categories: tweetsTimeArray,
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)",
+                        dateTimeLabelFormats: {
+                            minute: '%H:%M',
+                            hour: '%H:%M',
+                        },
+                        type: 'datetime',
+                        lineWidth: 1,
+                        labels: {
+                            enabled: true,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '11px Trebuchet MS, Verdana, sans-serif'
                             }
-                        };
-                        $scope.reflow = function () {
-                            $scope.$broadcast('highchartsng.reflow');
-                        };
+                        },
+                    },
+                    yAxis: {
+                        plotLines: [{
+                            value: 0,
+                            width: 0,
+                            color: '#ffffff'
+                }],
+                        title: {
+                            text: ''
+                        },
+                        labels: {
+                            enabled: false
+                        },
+                        tickWidth: 0,
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)"
+                    },
+                    series: $scope.chartSeries,
+                    credits: {
+                        enabled: false
+                    },
+                    loading: false,
+                    title: {
+                        text: ''
                     }
+                };
+                $scope.reflow = function () {
+                    $scope.$broadcast('highchartsng.reflow');
+                };
+            }
 
-                    drawTweetsOverTimeChart();
+            drawTweetsOverTimeChart();
 
         }
 
