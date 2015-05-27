@@ -236,9 +236,10 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         // Set event ID
         $rootScope.eventID = $location.search().uuid;
-        $scope.eventID = $location.search().uuid;
-        console.log($location.search());
-
+        
+        $scope.authToken = $location.search().authToken;
+        $scope.hashtags = $location.search().hashtags;
+        
         // Truse Source : fix ng-src videos issue
         $scope.trustSrc = function (src) {
             return $sce.trustAsResourceUrl(src);
@@ -470,7 +471,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         };
 
         $scope.pagesShown = 1;
-        $scope.pageSize = 1;
+        $scope.pageSize = 25;
         $scope.tweetsShowned = 0;
 
         $scope.tweetsGab = false;
