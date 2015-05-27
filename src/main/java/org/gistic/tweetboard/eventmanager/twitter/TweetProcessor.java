@@ -4,12 +4,9 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
-import twitter4j.Place;
-import twitter4j.MediaEntity;
 import twitter4j.Status;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -69,27 +66,12 @@ public class TweetProcessor {
     @AllowConcurrentEvents
     public void onStatusUpdate(InternalStatus status) {
         Status tweet = status.getInternalStatus();
-        for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
-            //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
-            tweetDataLogic.incrMediaCounter(mediaEntity);
-        }
-        boolean isRetweet = tweet.isRetweet();
-        if(isRetweet || tweet.getText().contains("RT")) {
+        if(tweet.isRetweet() || tweet.getText().contains("RT")) {
             tweetDataLogic.incrTotalRetweets();
-            if (isRetweet) {
-                long retweetedStatusId = tweet.getRetweetedStatus().getId();
-                long retweetCreatedAt = tweet.getRetweetedStatus().getCreatedAt().getTime();
-                tweetDataLogic.incrTweetScoreAndSetCreatedTime(retweetedStatusId, retweetCreatedAt);
-            }
         } else {
             tweetDataLogic.incrOriginalTweets();
         }
-        Place place = tweet.getPlace();
-        if (place != null) {
-            tweetDataLogic.incrCountryCounter(place.getCountryCode());
-        } else {
-            //count tweets without country specified?
-        }
+
         activePeopleAnalyzer.TweetArrived(tweet);
         tweetsOverTimeAnalyzer.TweetArrived(status);
 

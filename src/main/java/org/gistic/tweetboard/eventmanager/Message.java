@@ -46,6 +46,5 @@ public class Message {
     public class Type {
         public static final String LiveTweet = "liveTweet";
         public static final String UiUpdate = "uiUpdate";
-        public static final String TweetsOverTime = "tweetsOverTime";
     }
 }

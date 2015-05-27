@@ -1,6 +1,5 @@
 package org.gistic.tweetboard.dao;
 
-import org.gistic.tweetboard.datalogic.TweetMeta;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.representations.BasicStats;
 import org.gistic.tweetboard.representations.EventConfig;
@@ -54,13 +53,13 @@ public interface TweetDao {
 
     void addToApprovedSentToClient(String uuid, String... tweetIds);
 
-    Status getStatus(String uuid, String tweetId) throws TwitterException;
+    Status getStatus(String tweetId) throws TwitterException;
 
     void blockAllExistingTweetsByUser(String uuid, String screenName);
 
     void destroyEvent(String uuid);
 
-    String getStatusString(String uuid, String tweetId);
+    String getStatusString(String tweetId);
 
     void updateEventConfig(String uuid, EventConfig eventConfig);
 
@@ -80,30 +79,7 @@ public interface TweetDao {
 
     List<String> getAllTweetIdsSentForApprovalAndDeleteFromSentForApproval(String uuid);
 
-    void deleteTweetJson(String uuid, String tweetId);
+    void deleteTweetJson(String tweetId);
 
     void setNewTweetMeta(String uuid, InternalStatus status);
-
-    void incrCountryCounter(String uuid, String countryCode);
-
-    Set<Tuple> getTopNCountries(String uuid, Integer count);
-    void incrMedia(String uuid);
-
-    void setTweetMetaDate(String uuid, long retweetedStatusId, long retweetCreatedAt);
-
-    void incrTweetRetweets(String uuid, long retweetedStatusId);
-
-    String getTopTweetsGeneratedFlag(String uuid);
-
-    void setTopTweetsGeneratedFlag(String uuid);
-
-    Set<String> getKeysWithPattern(String pattern);
-
-    TweetMeta getTweetMeta(String key);
-
-    void setTweetScore(String uuid, String tweetId, double score);
-
-    void deleteTopTweetsSortedSet(String uuid);
-
-    Set<Tuple> getTopNTweets(String uuid, int n);
 }

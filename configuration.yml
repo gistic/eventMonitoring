@@ -18,7 +18,7 @@ server:
       port: 8081
 assets:
   overrides:
-    /: layout/
+    /: assets/
 message: "This is a message defined in the configuration file config.yaml."
 messageRepetitions: 5
 redis:
@@ -37,4 +37,4 @@ twitter:
   consumer-secret: ItcBh61xKfSfUBTJvLnQq1TFlx4MTpSiO08d9U2iyAtPntS2mi
   user-key: 146937078-TtZce583eladPI9e0VxRFijvWdoYzO2eJBfXsyaq
   user-secret: CinsBJTQNpyCPQ3GrdciQwCzDqSqbJ6EUcjsaW3c4cotz
-defaultAutoShutdownDelayInHours: 1
+defaultAutoShutdownDelayInHours: 24

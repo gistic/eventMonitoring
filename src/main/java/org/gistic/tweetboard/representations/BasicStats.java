@@ -4,11 +4,6 @@ package org.gistic.tweetboard.representations;
  * Created by osama-hussain on 5/6/15.
  */
 public class BasicStats {
-    public Long getTotalMedia() {
-        return totalMedia;
-    }
-
-    private final Long totalMedia;
     private String startTime;
     private Long numberOfUsers;
 
@@ -47,12 +42,11 @@ public class BasicStats {
     private Long totalTweets;
     private Long totalRetweets;
 
-    public BasicStats(String startTime, Long numberOfUsers, Long totalTweets, Long totalRetweets, Long totalMedia) {
+    public BasicStats(String startTime, Long numberOfUsers, Long totalTweets, Long totalRetweets) {
 
         this.startTime = startTime;
         this.numberOfUsers = numberOfUsers;
         this.totalTweets = totalTweets;
         this.totalRetweets = totalRetweets;
-        this.totalMedia = totalMedia;
     }
 }

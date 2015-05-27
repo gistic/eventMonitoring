@@ -3,7 +3,6 @@ package org.gistic.tweetboard.eventmanager;
 import com.bendb.dropwizard.redis.JedisFactory;
 import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
-import org.gistic.tweetboard.eventmanager.twitter.LiveStreamMetadataThread;
 import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
@@ -22,9 +21,7 @@ public class EventMap {
         twitterConfiguration = tC;
     }
     public static void put(String[] hashTags, TweetDataLogic tweetDataLogic, String uuid) {
-        Event event = new Event(uuid, hashTags, tweetDataLogic);
-        allEvents.put(uuid, event);
-        ExecutorSingleton.getInstance().submit(new LiveStreamMetadataThread(event));
+        allEvents.put(uuid, new Event(uuid, hashTags, tweetDataLogic));
     }
 
     public static Event get(String uuid) {

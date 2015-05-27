@@ -58,18 +58,6 @@ public class LiveTweetsBroadcaster {
                     LoggerFactory.getLogger(this.getClass()).info("No one listening for event: " + uuid);
                 }
                 break;
-            case Message.Type.TweetsOverTime:
-                event = eventBuilder
-                        .name("tweets-over-time")
-                        .mediaType(MediaType.TEXT_PLAIN_TYPE)
-                        .data(String.class, message)
-                        .build();
-                try {
-                    broadcasters.get(uuid).broadcast(event);
-                } catch (NullPointerException ex) {
-                    LoggerFactory.getLogger(this.getClass()).info("No one listening for event: " + uuid);
-                }
-                break;
         }
         return "{\"msg\":\"Message has been broadcasted.\"}";
     }

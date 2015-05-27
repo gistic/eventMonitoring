@@ -16,19 +16,17 @@ log/
 target/
 
 # Node
-/layout/event-monitoring/node_modules/
-/layout/hashtag-analyzer/node_modules/
+/assets/node_modules/
 
 # Sass
-/layout/event-monitoring/.sass-cache/
-/layout/hashtag-analyzer/.sass-cache/
+/assets/.sass-cache/
 
 # HTML
-/layout/data/
+/assets/data/
 
 # JS
 /dump.rdb
 
 
 # Images
-/layout/logo/
+/assets/logo/
