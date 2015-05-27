@@ -70,6 +70,25 @@ public class AuthDaoImpl implements AuthDao {
         }
     }
 
+    @Override
+    public void setTempHashtags(String token, String hashtags) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            jedis.set("hashtags:"+token, hashtags);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public String getTempHashtags(String oauthToken) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            return jedis.get("hashtags:"+oauthToken);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
     private String getTwitteruserIdKey(String accessToken) {
         return TWITTER_USER_ID_KEY_STUB+accessToken;
     }

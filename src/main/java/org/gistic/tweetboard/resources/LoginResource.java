@@ -27,7 +27,7 @@ public class LoginResource {
 
     @GET
     @Path("/login/twitter")
-    public String getEventConfig() {
+    public String getEventConfig(@QueryParam("hashtags") String hashtags) {
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(true);
         builder.setOAuthConsumerKey("6PPRgLzPOf6Mvcj3NkPIlq07Y");
@@ -44,6 +44,7 @@ public class LoginResource {
         }
         AuthDao authDao = new AuthDaoImpl();
         authDao.setRequestToken(requestToken.getToken(), requestToken.getTokenSecret());
+        authDao.setTempHashtags(requestToken.getToken(), hashtags);
         String authorizationUrl = requestToken.getAuthorizationURL();
         System.out.println(authorizationUrl);
         return "{\"url\":\""+authorizationUrl+"\"}";
@@ -94,10 +95,12 @@ public class LoginResource {
         }
 
         //String screenName = accessTokenObject.getScreenName();
+        String hashtags = authDao.getTempHashtags(oauthToken);
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
-        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/storeToken")
+        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/dashboard/liveStreaming")
                 .queryParam("token", accessToken)
+                .queryParam("hashtags", hashtags)
                 .queryParam("firstTime", String.valueOf(firstTime)).build();
         return Response.seeOther(uri).build();
 //        return Response.serverError().build();
