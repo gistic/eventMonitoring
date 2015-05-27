@@ -202,15 +202,12 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 
         //        if ($cookies.userAuthentication == undefined) {
         var requestAction = "GET";
-        var apiUrl = '/api/events/login/twitter?hashTags=' + $scope.eventHashtag;
+        var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
         var requestData = ""
         RequestData.fetchData(requestAction, apiUrl, requestData)
             .then(function (response) {
                 var openUrl = response.data.url;
-                //                $state.go(openUrl, {location :true});
-//                $window.location.href = openUrl;
-                //                window.$windowScope = $scope;
-                //                window.open(openUrl, "Authenticate Account", "width=500, height=500");
+                $window.location.href = openUrl;
             });
         //        } else {
         //            console.log("1");
@@ -240,6 +237,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         // Set event ID
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
+        console.log($location.search());
 
         // Truse Source : fix ng-src videos issue
         $scope.trustSrc = function (src) {
