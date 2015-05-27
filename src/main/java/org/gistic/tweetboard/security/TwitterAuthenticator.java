@@ -12,11 +12,10 @@ import org.gistic.tweetboard.dao.AuthDaoImpl;
 public class TwitterAuthenticator implements Authenticator<TwitterCredentials, User>{
     @Override
     public Optional<User> authenticate(TwitterCredentials credentials) throws AuthenticationException {
-
         String accessToken = credentials.getAccessToken();
         AuthDao authDao = new AuthDaoImpl();
         String accessTokenSecret = authDao.getAccessTokenSecret(accessToken);
-
-        return null;
+        if (accessTokenSecret != null) return Optional.fromNullable(new User());
+        return Optional.absent();
     }
 }

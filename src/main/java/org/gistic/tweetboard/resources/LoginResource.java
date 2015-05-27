@@ -46,7 +46,7 @@ public class LoginResource {
         authDao.setRequestToken(requestToken.getToken(), requestToken.getTokenSecret());
         String authorizationUrl = requestToken.getAuthorizationURL();
         System.out.println(authorizationUrl);
-        return authorizationUrl;
+        return "{\"url\":\""+authorizationUrl+"\"}";
     }
 
     @GET

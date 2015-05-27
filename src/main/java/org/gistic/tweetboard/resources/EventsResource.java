@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dropwizard.auth.Auth;
 import org.gistic.tweetboard.DelayedJobsManager;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
@@ -9,6 +10,7 @@ import org.gistic.tweetboard.eventmanager.*;
 import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.representations.Event;
+import org.gistic.tweetboard.security.User;
 import org.gistic.tweetboard.util.GmailSender;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -366,12 +368,20 @@ public class EventsResource {
 
     // save uploaded file to new location
     private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation, String fileType) throws IOException {
-        java.nio.file.Path outputPath = FileSystems.getDefault().getPath(uploadedFileLocation, "logo"+fileType);
+        java.nio.file.Path outputPath = FileSystems.getDefault().getPath(uploadedFileLocation, "logo" + fileType);
         System.out.println(Files.isDirectory(outputPath));
         final java.nio.file.Path tmp = outputPath.getParent();
         if (tmp != null) // null will be returned if the path has no parent
             Files.createDirectories(tmp);
 
         Files.copy(uploadedInputStream, outputPath, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    @GET
+    @Path("/authTest")
+    public String authTest(@Auth User user) {
+        if (user == null) { return "Denied!"; }
+        System.out.println(user.toString());
+        return "working";
     }
 }
