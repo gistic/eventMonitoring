@@ -2,6 +2,7 @@ package org.gistic.tweetboard.dao;
 
 import org.apache.commons.lang3.StringUtils;
 import org.gistic.tweetboard.JedisPoolContainer;
+import org.gistic.tweetboard.datalogic.TweetMeta;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.representations.BasicStats;
 import org.gistic.tweetboard.representations.EventConfig;
@@ -24,6 +25,9 @@ import java.util.stream.Collectors;
  * Created by sohussain on 4/12/15.
  */
 public class TweetDaoImpl implements TweetDao {
+    private static final int DEFAULT_TOP_TWEETS_CACHE_DURATION = 60;
+    public static final String TWEET_META_DATE_KEY = "CreationDate";
+    public static final String TWEET_META_RETWEETS_COUNT_KEY = "RetweetsCount";
     //private Jedis jedis;
     final String All_EVENTS_KEY = "event";
     final String BG_COLOR_KEY = "banckGroundColor";
@@ -72,7 +76,7 @@ public class TweetDaoImpl implements TweetDao {
     public void addToArrived(String uuid, Status tweet, String statusString) {
         String id = String.valueOf(tweet.getId());
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.set(id, statusString);
+            jedis.set(getTweetIdString(uuid, id), statusString);
             jedis.lpush(getArrivedNotSentListKey(uuid), id);
         }  catch (JedisException jE) {
             jE.printStackTrace();
@@ -85,7 +89,7 @@ public class TweetDaoImpl implements TweetDao {
         if (statusString == null || statusString.isEmpty() || id == null || id.isEmpty()) {
             LoggerFactory.getLogger(TweetDaoImpl.class).error("Status string empty!"); }
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.set(id, statusString);
+            jedis.set(getTweetIdString(uuid, id), statusString);
             if (newArrival) {
                 String screenName = String.valueOf(tweet.getUser().getScreenName());
                 String userId = String.valueOf(tweet.getUser().getId());
@@ -127,7 +131,7 @@ public class TweetDaoImpl implements TweetDao {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             String statusId = jedis.lpop(getArrivedNotSentListKey(uuid));
             if (statusId == null) return null;
-            return getStatus(statusId);
+            return getStatus(uuid, statusId);
         } catch (JedisConnectionException e) { LoggerFactory.getLogger(this.getClass()).warn("DB access: error in front end hanging request"); }
         return null;
     }
@@ -135,15 +139,19 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public void addToApproved(String uuid, String tweetId, boolean starred) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            String statusString = jedis.get(tweetId);
+            String statusString = jedis.get(getTweetIdString(uuid, tweetId));
             if (starred) { //TODO: refactor
                 statusString = statusString.substring(0, statusString.length()-1).concat(",\"starred\":true}");
             }
-            jedis.set(tweetId, statusString);
+            jedis.set(getTweetIdString(uuid, tweetId), statusString);
             jedis.lpush(getApprovedListKey(uuid), tweetId);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
+    }
+
+    private String getTweetIdString(String uuid, String tweetId) {
+        return uuid+":"+tweetId+":tweetJson";
     }
 
     private String getApprovedListKey(String uuid) {
@@ -225,16 +233,16 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public Status getStatus(String tweetId) throws TwitterException {
-        String statusString = getStatusString(tweetId);
+    public Status getStatus(String uuid, String tweetId) throws TwitterException {
+        String statusString = getStatusString(uuid, tweetId);
         if (statusString == null || statusString.isEmpty()) {LoggerFactory.getLogger(this.getClass()).error("status string not found in redis!");}
         return TwitterObjectFactory.createStatus(statusString);
     }
 
     @Override
-    public String getStatusString(String tweetId) {
+    public String getStatusString(String uuid, String tweetId) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            return jedis.get(tweetId);
+            return jedis.get(getTweetIdString(uuid, tweetId));
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -360,14 +368,18 @@ public class TweetDaoImpl implements TweetDao {
             Long numberOfUsers = jedis.zcard(getUsersRankSetKey(uuid));
             Long totalTweets = 0l;
             Long totalRetweets = 0l;
+            Long totalMedia = 0l;
             try {
                 totalTweets = Long.parseLong(jedis.get(getTotalTweetsKey(uuid)));
             } catch (NumberFormatException e) {}//nothing to log the value is just one
             try {
                 totalRetweets =  Long.parseLong(jedis.get(getTotalRetweetsKey(uuid)));
             } catch (NumberFormatException e) {}//nothing to log the value is just one
+            try {
+                totalMedia =  Long.parseLong(jedis.get(getTotalMediaKey(uuid)));
+            } catch (NumberFormatException e) {}//nothing to log the value is just one
             String startTime = jedis.hget(uuid, START_TIME_KEY);
-            return new BasicStats(startTime, numberOfUsers, totalTweets, totalRetweets);
+            return new BasicStats(startTime, numberOfUsers, totalTweets, totalRetweets, totalMedia);
         } catch(JedisException jE) {
             jE.printStackTrace();
         }
@@ -389,9 +401,9 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public void deleteTweetJson(String tweetId) {
+    public void deleteTweetJson(String uuid, String tweetId) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.del(tweetId);
+            jedis.del(getTweetIdString(uuid, tweetId));
         } catch(JedisException jE) {
             jE.printStackTrace();
         }
@@ -409,6 +421,144 @@ public class TweetDaoImpl implements TweetDao {
         }
     }
 
+    @Override
+    public void incrCountryCounter(String uuid,  String countryCode) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.zincrby(getCountryRankSetKey(uuid), 1, countryCode);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+    public void incrMedia(String uuid) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.incr(getTotalMediaKey(uuid));
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setTweetMetaDate(String uuid, long retweetedStatusId, long retweetCreatedAt) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.hset(getTweetMetaKey(uuid, Long.toString(retweetedStatusId)), TWEET_META_DATE_KEY, Long.toString(retweetCreatedAt));
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public void incrTweetRetweets(String uuid, long retweetedStatusId) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.hincrBy(getTweetMetaKey(uuid, Long.toString(retweetedStatusId)), TWEET_META_RETWEETS_COUNT_KEY, 1);
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public String getTopTweetsGeneratedFlag(String uuid) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.get(getTopTweetsGeneratedFlagKey(uuid));
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void setTopTweetsGeneratedFlag(String uuid) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.set(getTopTweetsGeneratedFlagKey(uuid), "true");
+            jedis.expire(getTopTweetsGeneratedFlagKey(uuid), DEFAULT_TOP_TWEETS_CACHE_DURATION);
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public Set<String> getKeysWithPattern(String pattern) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.keys(pattern);
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public TweetMeta getTweetMeta(String key) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            return new TweetMeta(Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY)),
+                    Long.parseLong(jedis.hget(key, TWEET_META_RETWEETS_COUNT_KEY)));
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void setTweetScore(String uuid, String tweetId, double score) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.zadd(getTweetScoreSortedSetKey(uuid), score, tweetId);
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteTopTweetsSortedSet(String uuid) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.del(getTweetScoreSortedSetKey(uuid));
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public Set<Tuple> getTopNTweets(String uuid, int n) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.zrevrangeByScoreWithScores(getTweetScoreSortedSetKey(uuid), "+inf", "-inf", 0, n);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
+
+    private String getTweetScoreSortedSetKey(String uuid) {
+        return uuid+":tweetScoreSortedSetKey";
+    }
+
+    private String getTopTweetsGeneratedFlagKey(String uuid) {
+        return uuid+":topTweetsGeneratedFlagKey";
+    }
+
+//    private String getTweetMetaDateKey(String uuid, String retweetedStatusId) {
+//        return uuid+":tweetMeta:"+retweetedStatusId+":"+ TWEET_META_DATE_KEY;
+//    }
+//
+//    private String getTweetRetweetsCountKey(String uuid, String retweetedStatusId) {
+//        return uuid+":tweetMeta:"+retweetedStatusId+":"+ TWEET_META_RETWEETS_COUNT_KEY;
+//    }
+
+    private String getTweetMetaKey(String uuid, String retweetedStatusId) {
+        return uuid+":tweetMeta:"+retweetedStatusId;
+    }
+
+    @Override
+    public Set<Tuple> getTopNCountries(String uuid, Integer count) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.zrevrangeByScoreWithScores(getCountryRankSetKey(uuid), "+inf", "-inf", 0, count);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
+
+    private String getTotalMediaKey(String uuid) {
+        return uuid + ":totalMedia";
+    }
 
     @Override
     public void blockAllExistingTweetsByUser(String uuid, String screenName) {
@@ -429,7 +579,11 @@ public class TweetDaoImpl implements TweetDao {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lrem(All_EVENTS_KEY, 0, uuid);
             jedis.del(uuid, getArrivedNotSentListKey(uuid), getApprovedSentToClientListKey(uuid),
-                    getSentForApprovalListKey(uuid), getTotalTweetsKey(uuid), getTotalRetweetsKey(uuid));
+                    getSentForApprovalListKey(uuid), getTotalTweetsKey(uuid), getTotalRetweetsKey(uuid), getCountryRankSetKey(uuid));
+            Set<String> keys = jedis.keys(uuid + ":*");
+            for (String key:keys) {
+                jedis.del(key);
+            }
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -449,5 +603,9 @@ public class TweetDaoImpl implements TweetDao {
 
     private String getArrivedNotSentListKey(String uuid) {
         return uuid + ":arrivedNotSent";
+    }
+
+    private String getCountryRankSetKey(String uuid) {
+        return uuid + ":countryRank";
     }
 }

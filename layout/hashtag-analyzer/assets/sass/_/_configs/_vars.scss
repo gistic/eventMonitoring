@@ -1,0 +1,62 @@
+@import "compass";
+
+// Prepared for multi-languages support
+$site_direction: left;
+$site_direction_ops: opposite-position($site_direction);
+
+// Colors
+$white:#ffffff;
+$green:#93c01f;
+$green-hued: #13cb0e;
+$dark-green: #26CA9F;
+$red:#ff0000;
+$black:#000000;
+$orange-light:#fff7e4;
+
+
+$gray-super-light: #fafafa;
+$gray-light: #cdd2d4;
+$turquoise: #24dfcc;
+$blue: #2493de;
+$violet: #7524df;
+$pink: #dd2452;
+$green: #0fcb9d;
+$orange: #f64728;
+
+// Descriptive COLORS
+$button-bg: $green;
+$button-save-bg: $green-hued;
+
+$layout-black: $black;
+$layout-turquoise: $turquoise;
+$layout-blue: $blue;
+$layout-violet: $violet;
+$layout-pink: $pink;
+$layout-green: $green;
+$layout-orange: $orange;
+
+// Grids
+$container-width: 960px;
+$grid-columns: 24;
+$grid-gutter-width: 20px;
+$border-radius-base: 0;
+
+$button-padding: 7px 10px;
+
+// Spaces, Gaps and Dimensions
+$margin:10px;
+$padding:15px;
+
+// Fonts
+$fa-font-path: "../fonts/fa";
+
+@import url(http://fonts.googleapis.com/css?family=Lobster);
+@import url(http://fonts.googleapis.com/css?family=Roboto);
+
+
+$font-massive: 60;
+$font-huge: 32;
+$font-large: 21;
+$font-normal: 16;
+$font-small: 14;
+$font-tiny: 11;

@@ -286,6 +286,24 @@ public class EventsResource {
     }
 
     @GET
+    @Path("/{uuid}/topCountries/")
+    public GenericArray<TopCountry> getTopCountries(@PathParam("uuid") String uuid,
+                                @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        return tweetDataLogic.getTopNCountries(count);
+    }
+
+    @GET
+    @Path("/{uuid}/topTweets/")
+    public GenericArray<String> getTopTweets(@PathParam("uuid") String uuid,
+                                                    @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        return tweetDataLogic.getTopNTweets(count);
+    }
+
+    @GET
     @Path("/{uuid}/overTime/")
     public String getTweetsOverTime(@PathParam("uuid") String uuid,
                                     @DefaultValue("-1") @QueryParam("period") Integer period,
@@ -334,6 +352,7 @@ public class EventsResource {
         xhr.send(formData);
          */
         System.out.println(fileDetail.getSize());
+        //todo refactor
         String uploadedFileLocation = "./assets/logo/"+uuid+"/";// + fileDetail.getFileName();
         String fileName =fileDetail.getFileName();
         System.out.println(fileName);

@@ -1,0 +1,37 @@
+<aside class="col-md-8">
+   
+    <section>
+        <div ng-include="'views/views-panels/media-panel.html'"></div>
+    </section>
+    
+    <section>
+        <div ng-include="'views/views-panels/tweets-location-panel.html'"></div>
+    </section>
+    
+    <section>
+        <div ng-include="'views/views-panels/tweets-overtime-panel.html'"></div>
+    </section>
+    
+    <section>
+        <div ng-include="'views/views-panels/top-people-panel.html'"></div>
+    </section>
+    
+    <section>
+        <div ng-include="'views/views-panels/tweets-per-country-panel.html'"></div>
+    </section>
+    
+</aside>
+
+<section class="col-md-16">
+    
+    <aside class="tweets-queue-options clearfix">
+        <select name="" id="" class="pull-left">
+            <option value="">Most Popular</option>
+            <option value="">Most Recent</option>
+        </select>
+        <strong class="pull-right">{{totalTweets}} tweets</strong>
+    </aside>
+
+    <div ng-include="'views/views-components/tweetQueue.html'"></div>
+
+</section>
