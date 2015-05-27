@@ -196,20 +196,21 @@ trackHashtagApp.filter('trusted', ['$sce', function ($sce) {
 }]);
 
 /* Controller : Start new event */
-trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', '$cookies', '$cookieStore', function ($rootScope, $scope, $http, $state, RequestData, $cookies, $cookieStore) {
+trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', '$cookies', '$cookieStore', '$location', '$window', function ($rootScope, $scope, $http, $state, RequestData, $cookies, $cookieStore, $location, $window) {
 
     $scope.startNewEvent = function (action) {
 
         //        if ($cookies.userAuthentication == undefined) {
         var requestAction = "GET";
-        var apiUrl = '/api/events/login/twitter';
-        var requestData = "";
+        var apiUrl = '/api/events/login/twitter?hashTags=' + $scope.eventHashtag;
+        var requestData = ""
         RequestData.fetchData(requestAction, apiUrl, requestData)
             .then(function (response) {
-                var openUrl = response.data;
-                console.log(response);
-                window.$windowScope = $scope;
-                window.open(openUrl, "Authenticate Account", "width=500, height=500");
+                var openUrl = response.data.url;
+                //                $state.go(openUrl, {location :true});
+//                $window.location.href = openUrl;
+                //                window.$windowScope = $scope;
+                //                window.open(openUrl, "Authenticate Account", "width=500, height=500");
             });
         //        } else {
         //            console.log("1");
