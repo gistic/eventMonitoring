@@ -98,10 +98,10 @@ public class LoginResource {
         String hashtags = authDao.getTempHashtags(oauthToken);
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
-        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/dashboard/liveStreaming")
-                .queryParam("token", accessToken)
-                .queryParam("hashtags", hashtags)
-                .queryParam("firstTime", String.valueOf(firstTime)).build();
+        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/dashboard/liveStreaming?hashtags="+hashtags+"&token="+accessToken).build();
+//                .queryParam("token", accessToken)
+//                .queryParam("hashtags", hashtags)
+//                .queryParam("firstTime", String.valueOf(firstTime)).build();
         return Response.seeOther(uri).build();
 //        return Response.serverError().build();
     }
