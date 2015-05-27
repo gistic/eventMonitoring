@@ -17,6 +17,6 @@ public class TwitterAuthenticator implements Authenticator<TwitterCredentials, U
         AuthDao authDao = new AuthDaoImpl();
         String accessTokenSecret = authDao.getAccessTokenSecret(accessToken);
 
-
+        return null;
     }
 }
