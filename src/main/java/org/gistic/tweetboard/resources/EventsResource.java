@@ -342,7 +342,8 @@ public class EventsResource {
     public Response uploadFile(
             @PathParam("uuid") String uuid,
             @FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
+            @FormDataParam("file") FormDataContentDisposition fileDetail
+    ) throws IOException {
         /*
         works with
         <input id="the-file" name="file" type="file">
