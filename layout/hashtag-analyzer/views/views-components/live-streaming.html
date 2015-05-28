@@ -26,12 +26,14 @@
     
     <aside class="tweets-queue-options clearfix">
         <select name="" id="" class="pull-left">
-            <option value="">Most Popular</option>
-            <option value="">Most Recent</option>
+            <option value="">All tweets</option>
+            <option value="">Most popular</option>
         </select>
         <strong class="pull-right">{{totalTweets}} tweets</strong>
     </aside>
-
+    
+    <button type="button" class="btn btn-load-more" ng-show="loadMoreButton()" ng-click="loadMoreTweets()"><strong><i class="fa fa-arrow-up"></i></strong> {{remainingTweetsCount}} New Tweets</button>
+    
     <div ng-include="'views/views-components/tweetQueue.html'"></div>
 
 </section>
