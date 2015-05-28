@@ -65,6 +65,7 @@ public class EventsResource {
 
     @POST
     public EventUuid createEvent(@Valid Event event, @DefaultValue("undefined") @QueryParam("email") String email,
+                                 @DefaultValue("undefined") @QueryParam("authToken") String authToken,
                                  @Context Jedis jedis) {
         String[] hashTags = event.getHashTags();
         for (String hashTag : hashTags) {
