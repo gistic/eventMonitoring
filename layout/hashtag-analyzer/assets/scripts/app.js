@@ -233,7 +233,6 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce',
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce) {
 
-
         // Set event ID
         $rootScope.eventID = $location.search().uuid;
         
