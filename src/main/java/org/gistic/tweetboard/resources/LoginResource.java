@@ -108,11 +108,11 @@ public class LoginResource {
 
         //make event on user's behalf
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://127.0.0.1:8080/api/events");
-        target.queryParam("authToken", accessToken);
+        WebTarget target = client.target("http://127.0.0.1:8080/api/events?authToken="+accessToken);
+        //target.queryParam("authToken", accessToken);
         Event event = new Event(hashtags.split(","));
 
-        EventUuid eventUuid = (EventUuid) target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).getEntity();
+        EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
 
         URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/home?hashtags=" +hashtags
                 +"&authToken="+accessToken
