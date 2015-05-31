@@ -31,11 +31,10 @@ trackHashtagApp.config(function (LightboxProvider) {
     };
 });
 
-trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
-
+trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {    
     window.routes = {
         "home": {
-            url: '',
+            url: '/home',
             templateUrl: 'views/index.html',
             controller: 'StartNewEventController'
         },
@@ -208,24 +207,26 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
             .then(function (response) {
                 var openUrl = response.data.url;
                 $window.location.href = openUrl;
+            console.log(response);
             });
         //        } else {
         //            console.log("1");
         //        }
     };
-    //    $scope.startNewEvent = function (action) {
-    //
-    //        $scope.$broadcast();
-    //
-    //        RequestData.startEvent()
-    //            .success(function (response) {
-    //                $rootScope.eventID = response.uuid;
-    //                // Redirect the front website page to the admin page
-    //                $state.transitionTo('dashboard.liveStreaming', {
-    //                    uuid: $scope.eventID
-    //                });
-    //            })
-    //    };
+    console.log($location.search());
+//        $scope.startNewEvent = function (action) {
+//    
+//            $scope.$broadcast();
+//    
+//            RequestData.startEvent()
+//                .success(function (response) {
+//                    $rootScope.eventID = response.uuid;
+//                    // Redirect the front website page to the admin page
+//                    $state.transitionTo('dashboard.liveStreaming', {
+//                        uuid: $scope.eventID
+//                    });
+//                })
+//        };
 }]);
 
 
