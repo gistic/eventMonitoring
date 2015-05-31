@@ -65,16 +65,24 @@ public class EventsResource {
 
     @POST
     public EventUuid createEvent(@Valid Event event, @DefaultValue("undefined") @QueryParam("email") String email,
+                                 @Context Jedis jedis,
                                  @DefaultValue("undefined") @QueryParam("authToken") String authToken,
-                                 @Context Jedis jedis) {
+                                 @Auth(required = false) User user) {
         String[] hashTags = event.getHashTags();
-        for (String hashTag : hashTags) {
-            System.out.println("Hashtag received: " + hashTag);
-            jedis.set("latestEventHashTag", hashTag);
-        }
         String uuid = UUID.randomUUID().toString();
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
-        EventMap.put(hashTags, tweetDataLogic, uuid);
+        if (user == null) {
+            //invalid token tweetboard v2.0
+            //TODO: respond with security error
+        } else if (user.isNoUser()) {
+            //for tweetboard v1.0
+            EventMap.put(hashTags, tweetDataLogic, uuid);
+            //invalid token
+        }
+        else {
+            //valid token tweetboard v2.0
+            EventMap.putV2(hashTags, tweetDataLogic, uuid, authToken);
+        }
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);
         if(!email.equalsIgnoreCase("undefined")) {
@@ -90,13 +98,17 @@ public class EventsResource {
 
     @DELETE
     @Path("/{uuid}")
-    public Response deleteEvent(@PathParam("uuid") String uuid) {
+    public Response deleteEvent(@PathParam("uuid") String uuid,
+                                @DefaultValue("undefined") @QueryParam("authToken") String authToken,
+                                @Auth(required = false) User user) {
         checkUuid(uuid);
         EventMap.delete(uuid);
         return Response
                 .ok()
                 .build();
     }
+
+
 
     @GET
     @Path("/{uuid}/config")

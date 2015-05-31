@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.InternalServerErrorException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 
 /**
@@ -18,9 +19,17 @@ public class TwitterAuthFactory<T> extends AuthFactory<TwitterCredentials, T> {
 
     private UnauthorizedHandler unauthorizedHandler = new DefaultUnauthorizedHandler();
     private final Class<T> generatedClass;
+    private final boolean required;
 
     public TwitterAuthFactory(Authenticator<TwitterCredentials, T> authenticator, Class<T> generatedClass) {
         super(authenticator);
+        this.required = false;
+        this.generatedClass = generatedClass;
+    }
+
+    public TwitterAuthFactory(boolean required, Authenticator<TwitterCredentials, T> authenticator, Class<T> generatedClass) {
+        super(authenticator);
+        this.required = required;
         this.generatedClass = generatedClass;
     }
 
@@ -30,8 +39,8 @@ public class TwitterAuthFactory<T> extends AuthFactory<TwitterCredentials, T> {
     }
 
     @Override
-    public AuthFactory<TwitterCredentials, T> clone(boolean b) {
-        return new TwitterAuthFactory<>(authenticator(), this.generatedClass).responseBuilder(unauthorizedHandler);
+    public AuthFactory<TwitterCredentials, T> clone(boolean required) {
+        return new TwitterAuthFactory<>(required, authenticator(), this.generatedClass).responseBuilder(unauthorizedHandler);
     }
 
     public TwitterAuthFactory<T> responseBuilder(UnauthorizedHandler unauthorizedHandler) {
@@ -62,6 +71,10 @@ public class TwitterAuthFactory<T> extends AuthFactory<TwitterCredentials, T> {
                     return result.get();
                 }
             }
+        }
+        if (required) {
+            //TODO
+            throw new WebApplicationException(unauthorizedHandler.buildResponse("", ""));
         }
         return null;
     }
