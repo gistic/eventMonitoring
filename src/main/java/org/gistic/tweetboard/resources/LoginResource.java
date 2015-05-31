@@ -99,10 +99,11 @@ public class LoginResource {
         String hashtags = authDao.getTempHashtags(oauthToken);
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
-        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/?hashtags=" +hashtags
+        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/home?hashtags=" +hashtags
                 +"&authToken="+accessToken
                 +"&userId="+userId
                 +"&screenName="+screenName).build();
+                //+"&uuid="+uuid)
 //                .queryParam("token", accessToken)
 //                .queryParam("hashtags", hashtags)
 //                .queryParam("firstTime", String.valueOf(firstTime)).build();
