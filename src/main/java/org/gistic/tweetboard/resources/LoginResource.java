@@ -114,7 +114,7 @@ public class LoginResource {
 
         EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
 
-        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/home?hashtags=" +hashtags
+        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/dashboard/liveStreaming?hashtags=" +hashtags
                 +"&authToken="+accessToken
                 +"&userId="+userId
                 +"&screenName="+screenName
