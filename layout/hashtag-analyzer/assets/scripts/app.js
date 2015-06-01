@@ -239,6 +239,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $rootScope.hashtags = $location.search().hashtags;
         $rootScope.authoUserName = $location.search().screenName;
         $rootScope.authoUserID = $location.search().userId;
+        $rootScope.authoUserPicture = $location.search().userId;
         
         // Truse Source : fix ng-src videos issue
         $scope.trustSrc = function (src) {

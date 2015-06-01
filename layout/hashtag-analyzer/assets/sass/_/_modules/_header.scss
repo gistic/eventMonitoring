@@ -61,6 +61,11 @@ header {
             @include font-size($font-large);
         }
     }
+    .nav-user {
+        a {
+            color: $white;
+        }
+    }
 }
 
 .header-homepage {
