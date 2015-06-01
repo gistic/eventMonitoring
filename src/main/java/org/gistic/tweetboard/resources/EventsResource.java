@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.resources;
 
 import com.codahale.metrics.annotation.Timed;
+import io.dropwizard.auth.Auth;
 import org.gistic.tweetboard.DelayedJobsManager;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
@@ -9,6 +10,7 @@ import org.gistic.tweetboard.eventmanager.*;
 import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.representations.Event;
+import org.gistic.tweetboard.security.User;
 import org.gistic.tweetboard.util.GmailSender;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -63,15 +65,24 @@ public class EventsResource {
 
     @POST
     public EventUuid createEvent(@Valid Event event, @DefaultValue("undefined") @QueryParam("email") String email,
-                                 @Context Jedis jedis) {
+                                 @Context Jedis jedis,
+                                 @DefaultValue("undefined") @QueryParam("authToken") String authToken,
+                                 @Auth(required = false) User user) {
         String[] hashTags = event.getHashTags();
-        for (String hashTag : hashTags) {
-            System.out.println("Hashtag received: " + hashTag);
-            jedis.set("latestEventHashTag", hashTag);
-        }
         String uuid = UUID.randomUUID().toString();
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
-        EventMap.put(hashTags, tweetDataLogic, uuid);
+        if (user == null) {
+            //invalid token tweetboard v2.0
+            //TODO: respond with security error
+        } else if (user.isNoUser()) {
+            //for tweetboard v1.0
+            EventMap.put(hashTags, tweetDataLogic, uuid);
+            //invalid token
+        }
+        else {
+            //valid token tweetboard v2.0
+            EventMap.putV2(hashTags, tweetDataLogic, uuid, authToken);
+        }
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);
         if(!email.equalsIgnoreCase("undefined")) {
@@ -87,13 +98,17 @@ public class EventsResource {
 
     @DELETE
     @Path("/{uuid}")
-    public Response deleteEvent(@PathParam("uuid") String uuid) {
+    public Response deleteEvent(@PathParam("uuid") String uuid,
+                                @DefaultValue("undefined") @QueryParam("authToken") String authToken,
+                                @Auth(required = false) User user) {
         checkUuid(uuid);
         EventMap.delete(uuid);
         return Response
                 .ok()
                 .build();
     }
+
+
 
     @GET
     @Path("/{uuid}/config")
@@ -286,6 +301,31 @@ public class EventsResource {
     }
 
     @GET
+    @Path("/{uuid}/topCountries/")
+    public GenericArray<TopCountry> getTopCountries(@PathParam("uuid") String uuid,
+                                @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        return tweetDataLogic.getTopNCountries(count);
+    }
+
+    @GET
+    @Path("/{uuid}/topTweets/")
+    public GenericArray<String> getTopTweets(@PathParam("uuid") String uuid,
+                                             @DefaultValue("10") @QueryParam("count") Integer count,
+                                             @DefaultValue("undefined") @QueryParam("authToken") String authToken,
+                                             @Auth(required = false) User user) {
+        checkUuid(uuid);
+        if (user==null) {
+            Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+                    .entity("incorrect uuid")
+                    .build();
+        }
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        return tweetDataLogic.getTopNTweets(count, authToken);
+    }
+
+    @GET
     @Path("/{uuid}/overTime/")
     public String getTweetsOverTime(@PathParam("uuid") String uuid,
                                     @DefaultValue("-1") @QueryParam("period") Integer period,
@@ -322,7 +362,8 @@ public class EventsResource {
     public Response uploadFile(
             @PathParam("uuid") String uuid,
             @FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException {
+            @FormDataParam("file") FormDataContentDisposition fileDetail
+    ) throws IOException {
         /*
         works with
         <input id="the-file" name="file" type="file">
@@ -334,6 +375,7 @@ public class EventsResource {
         xhr.send(formData);
          */
         System.out.println(fileDetail.getSize());
+        //todo refactor
         String uploadedFileLocation = "./assets/logo/"+uuid+"/";// + fileDetail.getFileName();
         String fileName =fileDetail.getFileName();
         System.out.println(fileName);
@@ -347,12 +389,20 @@ public class EventsResource {
 
     // save uploaded file to new location
     private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation, String fileType) throws IOException {
-        java.nio.file.Path outputPath = FileSystems.getDefault().getPath(uploadedFileLocation, "logo"+fileType);
+        java.nio.file.Path outputPath = FileSystems.getDefault().getPath(uploadedFileLocation, "logo" + fileType);
         System.out.println(Files.isDirectory(outputPath));
         final java.nio.file.Path tmp = outputPath.getParent();
         if (tmp != null) // null will be returned if the path has no parent
             Files.createDirectories(tmp);
 
         Files.copy(uploadedInputStream, outputPath, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    @GET
+    @Path("/authTest")
+    public String authTest(@Auth User user) {
+        if (user == null) { return "Denied!"; }
+        System.out.println(user.toString());
+        return "working";
     }
 }

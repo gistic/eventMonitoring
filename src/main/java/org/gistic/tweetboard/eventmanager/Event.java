@@ -2,6 +2,11 @@ package org.gistic.tweetboard.eventmanager;
 
 import com.google.common.eventbus.AsyncEventBus;
 import org.gistic.tweetboard.ConfigurationSingleton;
+import org.gistic.tweetboard.TwitterConfiguration;
+import org.gistic.tweetboard.dao.AuthDao;
+import org.gistic.tweetboard.dao.AuthDaoImpl;
+import org.gistic.tweetboard.dao.TweetDao;
+import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.twitter.*;
 import org.slf4j.LoggerFactory;
@@ -15,17 +20,42 @@ public class Event {
     private final AsyncEventBus bus;
     private final TweetProcessor tweetProcessor;
     private final TweetDataLogic tweetDataLogic;
+    private final boolean v2;
+    private final TwitterServiceManagerV2 twitterServiceManagerV2;
+    private final String accesstoken;
+
+    public String getUuid() {
+        return uuid;
+    }
+
     String uuid;
     String[] hashTags;
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    private volatile boolean running = true;
     //private TwitterService twitterService;
 
-    public Event(String uuid, String[] hashTags, TweetDataLogic tweetDataLogic) {
+    public Event(String uuid, String[] hashTags, TweetDataLogic tweetDataLogic, boolean v2, String accessToken, TwitterServiceManagerV2 twitterServiceManagerV2) {
+        this.v2 = v2;
         this.uuid = uuid;
         this.hashTags = hashTags;
         this.tweetDataLogic = tweetDataLogic;
+        this.twitterServiceManagerV2 = twitterServiceManagerV2;
+        this.accesstoken = accessToken;
+        TwitterConfiguration twitterConfiguration = ConfigurationSingleton.
+                getInstance().getTwitterConfiguration();
         bus = new AsyncEventBus(ExecutorSingleton.getInstance());
-        TwitterServiceManager.make(ConfigurationSingleton.
-                getInstance().getTwitterConfiguration(), bus, hashTags, uuid);
+        if (!v2) {
+            TwitterServiceManager.make(twitterConfiguration, bus, hashTags, uuid);
+        } else {
+            //twitterServiceManagerV2 = new TwitterServiceManagerV2(twitterConfiguration);
+            AuthDao authDao = new AuthDaoImpl();
+            String accessTokenSecret = authDao.getAccessTokenSecret(accessToken);
+            twitterServiceManagerV2.make(bus, hashTags, uuid, accessToken, accessTokenSecret);
+        }
         tweetProcessor = new TweetProcessor(bus, tweetDataLogic);
         try {
             tweetProcessor.start();
@@ -37,9 +67,18 @@ public class Event {
         tweetDataLogic.createNewEvent(hashTags);
     }
 
+    public Event(String uuid, String[] hashTags, TweetDataLogic tweetDataLogic) {
+        this(uuid, hashTags, tweetDataLogic, false, null, null); //v2 flag set to false by default for eventmonitoring v1
+    }
+
     public void delete() {
         try {
-            TwitterServiceManager.stop(uuid);
+            running = false;
+            if (v2) {
+                twitterServiceManagerV2.stop(accesstoken);
+            } else {
+                TwitterServiceManager.stop(uuid);
+            }
             tweetProcessor.stop();
         } catch (Exception e) {
             LoggerFactory.getLogger(this.getClass()).error("Error: Failure in stopping twitter stream logic!");

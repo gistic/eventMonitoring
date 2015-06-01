@@ -1,0 +1,67 @@
+<div class="modal-body" ng-swipe-left="Lightbox.nextImage()" ng-swipe-right="Lightbox.prevImage()">
+
+    <!-- image -->
+    <div class="lightbox-image-container" ng-if="Lightbox.image.type == 'photo'">
+
+        <img class="img-responsive" ng-class="{{Lightbox.image.type}}" lazy-load ll-src="{{Lightbox.imageUrl}}" on-error-src="{{defultImage}}" />
+        
+        <article class="media clearfix tweet">
+
+        <div class="media-left">
+            <img lazy-load ll-src="{{Lightbox.image.userProfileImage}}" on-error-src="{{defultImage}}" class="media-object user-img" />
+        </div>
+
+        <div class="media-body tweet-content">
+            <h6 class="media-heading tweet-user">
+                <a href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank">
+                    {{Lightbox.image.userScreenName}}
+                </a>
+                <small>
+                    {{Lightbox.image.tweetCreatedAt}}
+                </small>
+            </h6>
+            <p>
+                {{Lightbox.imageCaption}}
+            </p>
+        </div>
+
+    </article>
+
+    </div>
+    
+    <!-- video -->
+    <div class="lightbox-image-container" ng-if="Lightbox.image.type == 'video'">
+
+        <!-- <video controls preload="none">
+            <source ng-src="{{Lightbox.image.url | trusted}}" type="video/mp4">
+        </video> -->
+
+         <video width="500" controls preload="none" ng-src="{{Lightbox.image.url | trusted}}" ></video> 
+
+         <!-- <iframe width="560" height="315" ng-src="{{Lightbox.image.url | trusted}}" frameborder="0" allowfullscreen ng-if="Lightbox.image.type == 'video'" ></iframe> -->
+        
+        <article class="media clearfix tweet">
+
+        <div class="media-left">
+            <img lazy-load ll-src="{{Lightbox.image.userProfileImage}}" on-error-src="{{defultImage}}" class="media-object user-img" />
+        </div>
+
+        <div class="media-body tweet-content">
+            <h6 class="media-heading tweet-user">
+                <a href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank">
+                    {{Lightbox.image.userScreenName}}
+                </a>
+                <small>
+                    {{Lightbox.image.tweetCreatedAt}}
+                </small>
+            </h6>
+            <p>
+                {{Lightbox.image.caption}}
+            </p>
+        </div>
+
+    </article>
+
+    </div>
+    
+</div>

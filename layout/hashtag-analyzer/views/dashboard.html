@@ -1,0 +1,33 @@
+<!-- HEADER -->
+<header class="header-dashboard clearfix">
+    <div class="container">
+        <a class="navbar-brand brand" href="#">
+            <strong class="icon icon-bird"></strong>
+        </a>
+
+        <form class="navbar-form pull-left" role="search">
+            <div class="form-group">
+                <div class="input-group start-event">
+                    <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startEventHandler()">
+                    <span class="input-group-btn">
+                <button class="btn btn-search" type="button" ng-click="startEventHandler()"><i class="fa fa-search"></i></button>
+                <button type="button" ng-click="killEvent()" class="btn btn-stop btn-sm"><i class="fa fa-close"></i></button>
+            </span>
+                </div>
+            </div>
+        </form>
+            
+        <ul class="pull-right list-inline dashboard-nav">
+            <li>
+                <a ui-sref=".liveStreaming">Tweets</a>
+            </li>
+            <li>
+                <a ui-sref=".media">Media</a>
+            </li>
+        </ul>
+    </div>
+</header>
+
+<main class="container dashboard">
+    <div class="row" ui-view></div>
+</main>

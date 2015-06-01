@@ -1,0 +1,61 @@
+// Extended from Bootstrap Panel
+
+.panel {
+      @include box-shadow(none);
+      @include border-radius(5px);
+    .panel-body {
+        padding: $padding - 5;
+    }
+    .panel-heading {
+        @include border-top-radius(5px);
+    }
+}
+
+.panel-top-people {
+    .top-user-container {
+        margin-right: $margin;
+        width: 17%;
+        margin-bottom: $margin;
+        display: inline-block;
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+    img {
+        @include size(64px);
+        @include border-radius(3px);
+    }
+}
+
+.panel-media {
+    .row {
+        margin-bottom: $margin;
+    }
+    .media-container {
+        margin-right: $margin;
+        width: 30%;
+        margin-bottom: $margin;
+        display: inline-block;
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+    img {
+//        @include size(112px, auto);
+        max-height: 100%;
+        max-width: 100%;
+        height: auto;
+        @include border-radius(3px);
+        
+    }
+}
+
+.panel-top-countries {
+    li {
+        padding: $padding - 5 0;
+        border-bottom: 1px solid $gray-super-light;
+    }
+    &:last-child {
+        border-bottom: none;
+    }
+}
