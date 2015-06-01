@@ -19,8 +19,9 @@
             </div>
         </form>
 
-        <div class="navs pull-right">
-            <ul class="list-inline dashboard-nav">
+        <div class="navs pull-right clearfix">
+           
+            <ul class="list-inline dashboard-nav pull-left">
                 <li>
                     <a ui-sref=".liveStreaming">Tweets</a>
                 </li>
@@ -29,15 +30,18 @@
                 </li>
             </ul>
 
-            <ul class="nav nav-pills nav-user pull-right">
+            <ul class="nav-user pull-right">
                 <li role="presentation" class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                        <img lazy-load ll-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="media-object user-img" /> {{authoUserName}}
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
+                        <img lazy-load ll-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li>
-                            <a href="" ng-click="logOutUser">Logout</a>
+                            <a ng-click="logOutUser">Go to profile</a>
+                        </li>
+                        <li>
+                            <a ng-click="logOutUser">Logout</a>
                         </li>
                     </ul>
                 </li>

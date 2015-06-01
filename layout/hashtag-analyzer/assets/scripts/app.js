@@ -9,9 +9,6 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies) {
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
     $rootScope.eventID = $location.search().uuid;
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
-
-    $cookies.userAuthentication = $rootScope.userAuthentication;
-
 })
 
 trackHashtagApp.config(function (LightboxProvider) {
@@ -31,15 +28,15 @@ trackHashtagApp.config(function (LightboxProvider) {
     };
 });
 
-trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {    
+trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
     window.routes = {
         "home": {
-            url: '/home',
+            url: '',
             templateUrl: 'views/index.html',
             controller: 'StartNewEventController'
         },
         "dashboard": {
-            url: '/dashboard?uuid',
+            url: '/dashboard?uuid,hashtags',
             templateUrl: 'views/dashboard.html',
             controller: 'EventMainController'
         },
@@ -117,7 +114,7 @@ trackHashtagApp.factory('CreateEventSource', ['$rootScope', '$location', 'Reques
 }]);
 
 // Factory : Request data factory for : Start event & Any other request
-trackHashtagApp.factory('RequestData', ['$rootScope', '$http', '$location', '$window', function ($rootScope, $http, $location, $window) {
+trackHashtagApp.factory('RequestData', ['$rootScope', '$http', '$location', '$window', '$cookies', function ($rootScope, $http, $location, $window, $cookies) {
 
     return {
         fetchData: function (requestAction, apiUrl, requestData) {
@@ -139,7 +136,7 @@ trackHashtagApp.factory('RequestData', ['$rootScope', '$http', '$location', '$wi
         startEvent: function (requestAction) {
 
             var eventHashtag = $('#eventHashtag').val();
-            var requestUrl = $rootScope.baseUrl + '/api/events';
+            var requestUrl = $rootScope.baseUrl + '/api/events?authToken=' + $cookies.userAuthentication;
 
             return $http({
                 method: 'POST',
@@ -198,49 +195,49 @@ trackHashtagApp.filter('trusted', ['$sce', function ($sce) {
 trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', '$cookies', '$cookieStore', '$location', '$window', function ($rootScope, $scope, $http, $state, RequestData, $cookies, $cookieStore, $location, $window) {
 
     $scope.startNewEvent = function (action) {
-
-        //        if ($cookies.userAuthentication == undefined) {
-        var requestAction = "GET";
-        var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
-        var requestData = ""
-        RequestData.fetchData(requestAction, apiUrl, requestData)
-            .then(function (response) {
-                var openUrl = response.data.url;
-                $window.location.href = openUrl;
-            console.log(response);
-            });
-        //        } else {
-        //            console.log("1");
-        //        }
+        // Check if there is an authentication key in the browser cookies
+        if ($cookies.userAuthentication == undefined) {
+            
+            var requestAction = "GET";
+            var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
+            var requestData = ""
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .then(function (response) {
+                    var openUrl = response.data.url;
+                    $window.location.href = openUrl;
+                    console.log(response);
+                });
+        } else {
+            
+            $scope.$broadcast();
+            RequestData.startEvent()
+                .success(function (response) {
+                    $rootScope.eventID = response.uuid;
+                    // Redirect the front website page to the admin page
+                    $state.transitionTo('dashboard.liveStreaming', {
+                        uuid: $scope.eventID
+                    });
+                })
+        }
     };
-//        $scope.startNewEvent = function (action) {
-//    
-//            $scope.$broadcast();
-//    
-//            RequestData.startEvent()
-//                .success(function (response) {
-//                    $rootScope.eventID = response.uuid;
-//                    // Redirect the front website page to the admin page
-//                    $state.transitionTo('dashboard.liveStreaming', {
-//                        uuid: $scope.eventID
-//                    });
-//                })
-//        };
 }]);
 
 
 // Controller : Populate the recieved data and update admin page
-trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce) {
+trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies) {
 
         // Set event ID
         $rootScope.eventID = $location.search().uuid;
+
         $rootScope.authToken = $location.search().authToken;
+        $cookies.userAuthentication = $rootScope.authToken;
+
         $rootScope.hashtags = $location.search().hashtags;
         $rootScope.authoUserName = $location.search().screenName;
         $rootScope.authoUserID = $location.search().userId;
-        $rootScope.authoUserPicture = $location.search().userId;
-        
+        $rootScope.authoUserPicture = $location.search().profileImageUrl;
+
         // Truse Source : fix ng-src videos issue
         $scope.trustSrc = function (src) {
             return $sce.trustAsResourceUrl(src);
@@ -541,7 +538,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
             var eventID = $rootScope.eventID;
             var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID;
+            var apiUrl = '/api/events/' + eventID + "?authToken=" + $cookies.userAuthentication;
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
