@@ -312,10 +312,17 @@ public class EventsResource {
     @GET
     @Path("/{uuid}/topTweets/")
     public GenericArray<String> getTopTweets(@PathParam("uuid") String uuid,
-                                                    @DefaultValue("10") @QueryParam("count") Integer count) {
+                                             @DefaultValue("10") @QueryParam("count") Integer count,
+                                             @DefaultValue("undefined") @QueryParam("authToken") String authToken,
+                                             @Auth(required = false) User user) {
         checkUuid(uuid);
+        if (user==null) {
+            Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+                    .entity("incorrect uuid")
+                    .build();
+        }
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
-        return tweetDataLogic.getTopNTweets(count);
+        return tweetDataLogic.getTopNTweets(count, authToken);
     }
 
     @GET
