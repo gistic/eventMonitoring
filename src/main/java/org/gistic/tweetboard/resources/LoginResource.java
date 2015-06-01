@@ -115,7 +115,7 @@ public class LoginResource {
         String profileImageUrl = "http://s.twimg.com/a/1292022067/images/default_profile_2_reasonably_small.png";
         EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
         try {
-            profileImageUrl = twitter.showUser(Long.parseLong(userId)).getBiggerProfileImageURLHttps();
+            profileImageUrl = twitter.showUser(Long.parseLong(userIdFromTwitter)).getBiggerProfileImageURLHttps();
         } catch (TwitterException e) {
             e.printStackTrace();
         }

@@ -35,7 +35,7 @@ public class Event {
         return running;
     }
 
-    public boolean running = true;
+    private volatile boolean running = true;
     //private TwitterService twitterService;
 
     public Event(String uuid, String[] hashTags, TweetDataLogic tweetDataLogic, boolean v2, String accessToken, TwitterServiceManagerV2 twitterServiceManagerV2) {
@@ -51,7 +51,7 @@ public class Event {
         if (!v2) {
             TwitterServiceManager.make(twitterConfiguration, bus, hashTags, uuid);
         } else {
-            twitterServiceManagerV2 = new TwitterServiceManagerV2(twitterConfiguration);
+            //twitterServiceManagerV2 = new TwitterServiceManagerV2(twitterConfiguration);
             AuthDao authDao = new AuthDaoImpl();
             String accessTokenSecret = authDao.getAccessTokenSecret(accessToken);
             twitterServiceManagerV2.make(bus, hashTags, uuid, accessToken, accessTokenSecret);
