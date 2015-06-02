@@ -36,7 +36,7 @@ trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
             controller: 'StartNewEventController'
         },
         "dashboard": {
-            url: '/dashboard?uuid,hashtags',
+            url: '/dashboard?uuid',
             templateUrl: 'views/dashboard.html',
             controller: 'EventMainController'
         },
@@ -197,7 +197,7 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
     $scope.startNewEvent = function (action) {
         // Check if there is an authentication key in the browser cookies
         if ($cookies.userAuthentication == undefined) {
-            
+
             var requestAction = "GET";
             var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
             var requestData = ""
@@ -208,7 +208,7 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
                     console.log(response);
                 });
         } else {
-            
+
             $scope.$broadcast();
             RequestData.startEvent()
                 .success(function (response) {
@@ -224,19 +224,55 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 
 
 // Controller : Populate the recieved data and update admin page
-trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies) {
+trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
+                                                
+                                                
+                                                $scope.dynamicPopover = {
+    content: 'Hello, World!',
+    templateUrl: 'myPopoverTemplate.html',
+    title: 'Title'
+  };
 
-        // Set event ID
+        // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
         $rootScope.eventID = $location.search().uuid;
 
-        $rootScope.authToken = $location.search().authToken;
-        $cookies.userAuthentication = $rootScope.authToken;
+        if ($cookies.userAuthentication == undefined) {
+            $rootScope.authToken = $location.search().authToken;
+            $cookies.userAuthentication = $rootScope.authToken;
+        } else {
+            $rootScope.authToken = $cookies.userAuthentication;
+        }
 
-        $rootScope.hashtags = $location.search().hashtags;
-        $rootScope.authoUserName = $location.search().screenName;
-        $rootScope.authoUserID = $location.search().userId;
-        $rootScope.authoUserPicture = $location.search().profileImageUrl;
+        if ($cookies.hashtags == undefined) {
+            $rootScope.hashtags = $location.search().hashtags;
+            $cookies.hashtags = $rootScope.hashtags;
+        } else {
+            $rootScope.hashtags = $cookies.hashtags;
+        }
+
+        if ($cookies.authoUserName == undefined) {
+            $rootScope.authoUserName = $location.search().screenName;
+            $cookies.authoUserName = $rootScope.authoUserName;
+        } else {
+            $rootScope.authoUserName = $cookies.authoUserName;
+        }
+
+
+        if ($cookies.authoUserID == undefined) {
+            $rootScope.authoUserID = $location.search().userId;
+            $cookies.authoUserID = $rootScope.authoUserID
+        } else {
+            $rootScope.authoUserID = $cookies.authoUserID;
+        }
+
+
+        if ($cookies.authoUserPicture == undefined) {
+            $rootScope.authoUserPicture = $location.search().profileImageUrl;
+            $cookies.authoUserPicture = $rootScope.authoUserPicture
+        } else {
+            $rootScope.authoUserPicture = $cookies.authoUserPicture;
+        }
 
         // Truse Source : fix ng-src videos issue
         $scope.trustSrc = function (src) {
@@ -378,6 +414,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.eventStarted = false;
         $rootScope.timerRunning = false;
         $scope.tweetsQueue = [];
+        $scope.lastNewTweets = [];
         $scope.tweetsQueueLength = 0;
         $scope.mediaQueue = [];
         $scope.tweet = {};
@@ -387,6 +424,10 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
 
             var source = new EventSource($scope.eventSourceUrl);
+            console.log(source);
+            console.log(CreateEventSource.getSourceObject());
+            console.log(CreateEventSource.closeEventSource());
+
 
             source.addEventListener('approved-tweets', function (response) {
 
@@ -442,7 +483,12 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 }
 
                 $scope.$apply(function () {
-                    $scope.tweetsQueue.push($scope.tweet);
+
+                    if ($scope.tweetsQueue.length < 25) {
+                        $scope.tweetsQueue.push($scope.tweet);
+                    } else {
+                        $scope.lastNewTweets.push($scope.tweet);
+                    }
                     $scope.tweetsQueueLength++;
 
                 }, false);
@@ -491,8 +537,8 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         // Load more tweets handler
         $scope.loadMoreTweets = function () {
             if ($scope.remainingTweetsCount >= 10) {
-                //                $scope.pagesShown = $scope.pagesShown + 1;
-                $scope.pagesShown = $scope.pagesShown + ($scope.remainingTweetsCount);
+                $scope.pagesShown = $scope.pagesShown + 1;
+                //                $scope.pagesShown = $scope.pagesShown + ($scope.remainingTweetsCount);
 
             } else {
                 $scope.pagesShown++;
@@ -526,6 +572,32 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 },
                 function (isConfirm) {
                     if (isConfirm) {
+                        $scope.stopEventHandler();
+                        SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+                    } else {
+                        SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
+                    }
+                });
+        };
+    
+    // Logout
+    $scope.logOutUser = function () {
+            SweetAlert.swal({
+                    title: "Are you sure?",
+                    text: "Your will not be able to recover this hashtag tracking!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, stop it!",
+                    closeOnConfirm: false
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $cookieStore .remove("authoUserID");
+                        $cookieStore .remove("authoUserName");
+                        $cookieStore .remove("authoUserPicture");
+                        $cookieStore .remove("hashtags");
+                        $cookieStore .remove("userAuthentication");
                         $scope.stopEventHandler();
                         SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
                     } else {

@@ -5,7 +5,28 @@
     </div>
     <div class="panel-body">
         <div class="top-user-container" ng-repeat="user in topPeople | limitTo : 10">
-            <img lazy-load ll-src="{{user.profileImageUrl}}" on-error-src="{{defultImage}}" />
+            
+            <img lazy-load ll-src="{{user.profileImageUrl}}" on-error-src="{{defultImage}}" popover-template="dynamicPopover.templateUrl" popover-trigger="mouseenter" />
+            
+            <script type="text/ng-template" id="myPopoverTemplate.html">
+               
+               <div class="profile-sidebar">
+				<!-- SIDEBAR USERPIC -->
+				<div class="profile-userpic">
+					<img lazy-load ll-src="{{user.profileImageUrl}}" on-error-src="{{defultImage}}" class="img-responsive" alt="">
+				</div>
+				<!-- END SIDEBAR USERPIC -->
+				<!-- SIDEBAR USER TITLE -->
+				<div class="profile-usertitle">
+					<div class="profile-usertitle-name">
+						<a href="http://twitter.com/{{user.userId}}"></a>{{user.screenName}}
+					</div>
+					<div class="profile-user-count">
+					    Tweet count: {{user.score}}
+					</div>
+
         </div>
+        </script>
     </div>
+</div>
 </div>

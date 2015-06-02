@@ -23,13 +23,17 @@ header {
 .header-dashboard {
     @include background-image(linear-gradient(right, #0056bd, #015bbb, #015fb7, #0465b6, #066db2, #0872ae, #0872b0, #0877ac, #0b81a9, #0d89a5, #0e8ca2, #0d8ea1, #0f939f, #11969d, #12999c, #129d9a, #13a497, #15a895, #15a895, #15ae90));
     margin-bottom: $margin;
-    padding: $padding / 2 0;
+    padding: $padding / 3 0;
+    .navbar-form {
+        margin: 0;
+        line-height: 28px;
+    }
+    .dashboard-nav {
+        line-height: 32px;
+    }
     .navs {
         a {
             color: $white;
-        }
-        .dashboard-nav {
-            margin-top: $margin + 5;
         }
         .nav-user {
             margin-left: $margin * 3;
@@ -39,17 +43,18 @@ header {
                 }
             }
             img {
-                @include size(48px);
+                @include size(32px);
                 @include border-radius(50%);
             }
             .dropdown-menu {
-                background: #0b81a9;
+                background: rgba(253, 253, 253, 0.9);
                 @include box-shadow(none);
                 border: none;
                 top: 115%;
                 padding: 0;
                 li {
                     a {
+                        color: $gray;
                         padding: $padding - 5 $padding + 5;
                         &:hover,
                         &:focus {
@@ -61,21 +66,23 @@ header {
             }
         }
     }
-    .navbar-brand {
+    .navbar-logo {
         color: $white;
-        @include font-size($font-large);
+        @include font-size($font-normal);
+        margin-right: $margin;
+        line-height: 32px;
     }
     .start-event {
         .form-control {
             background: $white;
             padding: 0 $margin;
             @include border-left-radius(3px);
-            height: 30px;
+            height: 29px;
         }
         .btn.btn-search {
             @include border-right-radius(5px);
-            line-height: 15px;
             margin-left: $margin * 2;
+            padding: $padding / 3 $padding;
         }
     }
     .input-group {

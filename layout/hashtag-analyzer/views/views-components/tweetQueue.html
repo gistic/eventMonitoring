@@ -16,11 +16,14 @@
         <p>
             {{tweet.text}}
         </p>
-        <strong>{{$index}}</strong>
+        <strong class="text-muted">{{tweet.user.location}}</strong>
     </div>
+
+<!--
+   <aside ng-if="$index==20" class="well tweets-gab text-center" ng-show="tweetsGabContainer()" ng-click="loadTweetsOnGab()">
+        {{remainingTweetsCount}} New Tweets
+    </aside>
+-->
 
 </article>
 
-<aside class="well tweets-gab text-center" ng-show="tweetsGabContainer()" ng-click="loadTweetsOnGab()">
-    {{remainingTweetsCount}} New Tweets
-</aside>
