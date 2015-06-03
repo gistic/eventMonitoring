@@ -35,7 +35,8 @@
     "angular-images-loaded": "~0.0.8",
     "jquery-bridget": "~1.1.0",
     "angular-cookies": "~1.4.0",
-    "angular": "~1.4.0"
+    "angular": "~1.4.0",
+    "angular-moment": "~0.10.1"
   },
   "devDependencies": {
     "modularized-normalize-scss": "~3.0.3"

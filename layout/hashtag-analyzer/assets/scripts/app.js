@@ -1,6 +1,6 @@
 'use strict';
 
-var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies']);
+var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies', 'angularMoment']);
 
 
 // Run : Intliaize the event admin app with this values
@@ -483,12 +483,12 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 }
 
                 $scope.$apply(function () {
-
-                    if ($scope.tweetsQueue.length < 25) {
-                        $scope.tweetsQueue.push($scope.tweet);
-                    } else {
-                        $scope.lastNewTweets.push($scope.tweet);
-                    }
+                    $scope.tweetsQueue.push($scope.tweet);
+//                    if ($scope.tweetsQueue.length < 25) {
+//                        $scope.tweetsQueue.push($scope.tweet);
+//                    } else {
+//                        $scope.lastNewTweets.unshift($scope.tweet);
+//                    }
                     $scope.tweetsQueueLength++;
 
                 }, false);
@@ -536,28 +536,26 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         // Load more tweets handler
         $scope.loadMoreTweets = function () {
-            if ($scope.remainingTweetsCount >= 10) {
-                $scope.pagesShown = $scope.pagesShown + 1;
-                //                $scope.pagesShown = $scope.pagesShown + ($scope.remainingTweetsCount);
-
-            } else {
-                $scope.pagesShown++;
-            }
+            $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.lastNewTweets);
+            $scope.pagesShown++;
+            $scope.lastNewTweets = [];
+            console.log($scope.lastNewTweets.length);
+            console.log($scope.tweetsQueue.length);
             $scope.remainingTweetsCount = $scope.tweetsQueueLength - ($scope.pageSize * $scope.pagesShown);
         };
 
         // Show tweets Gab Container
-        $scope.tweetsGabContainer = function () {
-            if ($scope.remainingTweetsCount >= 10) {
-                $scope.tweetsGab = true;
-            }
-            return $scope.tweetsGab;
-        }
+//        $scope.tweetsGabContainer = function () {
+//            if ($scope.remainingTweetsCount >= 10) {
+//                $scope.tweetsGab = true;
+//            }
+//            return $scope.tweetsGab;
+//        }
 
         // Load tweets on Gab
-        $scope.loadTweetsOnGab = function () {
-
-        }
+//        $scope.loadTweetsOnGab = function () {
+//
+//        }
 
         // Stop Event Handler
         $scope.killEvent = function () {
