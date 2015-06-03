@@ -80,12 +80,6 @@ public class TweetDataLogic {
         return new InternalStatus(status, statusString);
     }
 
-    public void newArrived(InternalStatus tweet) {
-        tweetDao.addNewTweetString(uuid, tweet.getInternalStatus(), tweet.getStatusString(), false);
-        tweetDao.addToArrived(uuid, tweet.getInternalStatus(), tweet.getStatusString());
-        tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
-    }
-
     public void createNewEvent(String[] hashTags) {
         tweetDao.addNewEventToList(uuid);
         tweetDao.setDefaultEventProperties(uuid, hashTags);
@@ -241,5 +235,55 @@ public class TweetDataLogic {
         }
 
         return new GenericArray<String>(new String[]{});
+    }
+
+    public void newArrived(InternalStatus tweet) {
+        tweetDao.addNewTweetString(uuid, tweet.getInternalStatus(), tweet.getStatusString(), false);
+        tweetDao.addToArrived(uuid, tweet.getInternalStatus(), tweet.getStatusString());
+        tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
+    }
+
+    public void addToCache(InternalStatus status) {
+        tweetDao.addToTweetStringCache(uuid, status);
+        long currentCacheSize = tweetDao.addToCache(uuid, status);
+        if (currentCacheSize > 25l) {
+            String poppedTweetId = tweetDao.popFromCache(uuid);
+            tweetDao.removeFromTweetStringCache(uuid, poppedTweetId);
+        }
+//        tweetDao.addNewTweetString(uuid, tweet.getInternalStatus(), tweet.getStatusString(), false);
+//        tweetDao.addToArrived(uuid, tweet.getInternalStatus(), tweet.getStatusString());
+//        tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
+    }
+
+    public void warmupStats(List<Status> tweets) {
+        for (Status tweet : tweets) {
+            for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
+                //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
+                incrMediaCounter(mediaEntity);
+            }
+            boolean isRetweet = tweet.isRetweet();
+            if(isRetweet || tweet.getText().contains("RT")) {
+                incrTotalRetweets();
+                if (isRetweet) {
+                    long retweetedStatusId = tweet.getRetweetedStatus().getId();
+                    long retweetCreatedAt = tweet.getRetweetedStatus().getCreatedAt().getTime();
+                    incrTweetScoreAndSetCreatedTime(retweetedStatusId, retweetCreatedAt);
+                }
+            } else {
+                incrOriginalTweets();
+            }
+            Place place = tweet.getPlace();
+            if (place != null) {
+                incrCountryCounter(place.getCountryCode());
+            } else {
+                //count tweets without country specified?
+            }
+            //tweetsOverTimeAnalyzer.TweetArrived(status); //TODO resolve hard to find reference issue
+            this.setNewTweetMeta(tweet);
+        }
+    }
+
+    private void setNewTweetMeta(Status tweet) {
+        this.tweetDao.setNewTweetMeta(uuid, tweet);
     }
 }

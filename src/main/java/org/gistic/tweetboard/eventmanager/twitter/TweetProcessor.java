@@ -3,6 +3,7 @@ package org.gistic.tweetboard.eventmanager.twitter;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import twitter4j.Place;
 import twitter4j.MediaEntity;
@@ -69,6 +70,7 @@ public class TweetProcessor {
     @AllowConcurrentEvents
     public void onStatusUpdate(InternalStatus status) {
         Status tweet = status.getInternalStatus();
+        //status.getInternalStatus().getRetweetCount();
         for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
             //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
             tweetDataLogic.incrMediaCounter(mediaEntity);
@@ -171,6 +173,9 @@ public class TweetProcessor {
             }
         } else {
             tweetDataLogic.addToApproved(status, true);
+            if (ConfigurationSingleton.getInstance().isV2()) {
+                tweetDataLogic.addToCache(status);
+            }
         }
     }
 

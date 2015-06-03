@@ -8,6 +8,7 @@ import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.*;
 import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
+import org.gistic.tweetboard.eventmanager.twitter.WarmupRunnable;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.representations.Event;
 import org.gistic.tweetboard.security.User;
@@ -82,6 +83,7 @@ public class EventsResource {
         else {
             //valid token tweetboard v2.0
             EventMap.putV2(hashTags, tweetDataLogic, uuid, authToken);
+            ExecutorSingleton.getInstance().submit(new WarmupRunnable(checkUuid(uuid), tweetDataLogic, hashTags, authToken));
         }
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);

@@ -149,4 +149,8 @@ public class Event {
         return tweetProcessor.isModerated();
     }
     public boolean isRetweetsEnabled() { return tweetProcessor.isRetweetEnabled(); }
+
+    public void postTweetToBus(InternalStatus iStatus) {
+        bus.post(iStatus);
+    }
 }
