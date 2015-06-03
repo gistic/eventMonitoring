@@ -226,13 +226,13 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 // Controller : Populate the recieved data and update admin page
 trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
-                                                
-                                                
-                                                $scope.dynamicPopover = {
-    content: 'Hello, World!',
-    templateUrl: 'myPopoverTemplate.html',
-    title: 'Title'
-  };
+
+
+        $scope.dynamicPopover = {
+            content: 'Hello, World!',
+            templateUrl: 'myPopoverTemplate.html',
+            title: 'Title'
+        };
 
         // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
         $rootScope.eventID = $location.search().uuid;
@@ -324,21 +324,27 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 });
         }
         $scope.getTopPeople();
-
-
-
-        // TOP TWEETS : Not Working
+                                                                        
+        // TOP TWEETS
+        $scope.topTweets = [];
         $scope.getTopTweets = function () {
 
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets';
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets?authToken=' + $cookies.userAuthentication;;
             var requestAction = "GET";
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {}).error(function () {
-                    console.log(response);
+                .success(function (response) {
+                console.log();
+                for (var i = 0; i < response.items.length; i++) {
+                    $scope.tweet = JSON.parse(response.items[i]);
+                    $scope.topTweets.push($scope.tweet);
+                }
+                }).error(function () {
+                    console.log("#");
                 })
         };
+        $scope.getTopTweets();
 
         $scope.enableModeration = false;
         $scope.moderationStatus = function () {
@@ -484,11 +490,11 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
                 $scope.$apply(function () {
                     $scope.tweetsQueue.push($scope.tweet);
-//                    if ($scope.tweetsQueue.length < 25) {
-//                        $scope.tweetsQueue.push($scope.tweet);
-//                    } else {
-//                        $scope.lastNewTweets.unshift($scope.tweet);
-//                    }
+                    //                    if ($scope.tweetsQueue.length < 25) {
+                    //                        $scope.tweetsQueue.push($scope.tweet);
+                    //                    } else {
+                    //                        $scope.lastNewTweets.unshift($scope.tweet);
+                    //                    }
                     $scope.tweetsQueueLength++;
 
                 }, false);
@@ -545,17 +551,17 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         };
 
         // Show tweets Gab Container
-//        $scope.tweetsGabContainer = function () {
-//            if ($scope.remainingTweetsCount >= 10) {
-//                $scope.tweetsGab = true;
-//            }
-//            return $scope.tweetsGab;
-//        }
+        //        $scope.tweetsGabContainer = function () {
+        //            if ($scope.remainingTweetsCount >= 10) {
+        //                $scope.tweetsGab = true;
+        //            }
+        //            return $scope.tweetsGab;
+        //        }
 
         // Load tweets on Gab
-//        $scope.loadTweetsOnGab = function () {
-//
-//        }
+        //        $scope.loadTweetsOnGab = function () {
+        //
+        //        }
 
         // Stop Event Handler
         $scope.killEvent = function () {
@@ -577,9 +583,9 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     }
                 });
         };
-    
-    // Logout
-    $scope.logOutUser = function () {
+
+        // Logout
+        $scope.logOutUser = function () {
             SweetAlert.swal({
                     title: "Are you sure?",
                     text: "Your will not be able to recover this hashtag tracking!",
@@ -591,11 +597,11 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 },
                 function (isConfirm) {
                     if (isConfirm) {
-                        $cookieStore .remove("authoUserID");
-                        $cookieStore .remove("authoUserName");
-                        $cookieStore .remove("authoUserPicture");
-                        $cookieStore .remove("hashtags");
-                        $cookieStore .remove("userAuthentication");
+                        $cookieStore.remove("authoUserID");
+                        $cookieStore.remove("authoUserName");
+                        $cookieStore.remove("authoUserPicture");
+                        $cookieStore.remove("hashtags");
+                        $cookieStore.remove("userAuthentication");
                         $scope.stopEventHandler();
                         SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
                     } else {

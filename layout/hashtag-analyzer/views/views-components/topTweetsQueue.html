@@ -1,4 +1,4 @@
-<article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit() | reverseQueue track by tweet.id" data-user-id="{{tweet.user.id_str}}">
+<article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in topTweets | limitTo : tweetsQueueLimit() | reverseQueue track by tweet.id" data-user-id="{{tweet.user.id_str}}">
    
     <div class="media-left">
         <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
@@ -18,12 +18,6 @@
         </p>
         <strong class="text-muted">{{tweet.user.location}}</strong>
     </div>
-
-<!--
-   <aside ng-if="$index==20" class="well tweets-gab text-center" ng-show="tweetsGabContainer()" ng-click="loadTweetsOnGab()">
-        {{remainingTweetsCount}} New Tweets
-    </aside>
--->
 
 </article>
 
