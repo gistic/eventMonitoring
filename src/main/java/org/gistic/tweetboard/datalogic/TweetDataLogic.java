@@ -2,6 +2,9 @@ package org.gistic.tweetboard.datalogic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.ArrayUtils;
+import org.gistic.tweetboard.dao.AuthDao;
+import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
 import org.gistic.tweetboard.eventmanager.Message;
@@ -10,18 +13,17 @@ import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.*;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
-import twitter4j.MediaEntity;
-import twitter4j.Status;
-import twitter4j.TwitterException;
+import twitter4j.*;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.json.DataObjectFactory;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -191,7 +193,7 @@ public class TweetDataLogic {
         tweetDao.incrTweetRetweets(uuid, retweetedStatusId);
     }
 
-    public GenericArray<String> getTopNTweets(Integer count) {
+    public GenericArray<String> getTopNTweets(Integer count, String accessToken) {
         String flag = tweetDao.getTopTweetsGeneratedFlag(uuid);
         if (flag==null){
             tweetDao.deleteTopTweetsSortedSet(uuid);
@@ -207,11 +209,37 @@ public class TweetDataLogic {
                 tweetDao.setTweetScore(uuid, tweetId, score);
             }
         }
-        int n = 5;
-        Set<Tuple> topTweetsTuple = tweetDao.getTopNTweets(uuid, n);
+        //int n = 5;
+        Set<Tuple> topTweetsTuple = tweetDao.getTopNTweets(uuid, count);
         if (topTweetsTuple == null) return new GenericArray<String>(new String[]{});
-        String[] topTweetIds = topTweetsTuple.stream()
-                .map(tweet -> tweet.getElement()).collect(Collectors.toList()).toArray(new String[]{});
-        return new GenericArray<String>(topTweetIds);
+        Long[] topTweetIds = topTweetsTuple.stream()
+                .map(tweet -> Long.parseLong(tweet.getElement()) ).collect(Collectors.toList()).toArray(new Long[]{});
+
+
+
+        AuthDao authDao = new AuthDaoImpl();
+        String accessTokenSecret = authDao.getAccessTokenSecret(accessToken);
+        ConfigurationBuilder builder = new ConfigurationBuilder();
+        builder.setJSONStoreEnabled(true);
+        builder.setOAuthConsumerKey("6PPRgLzPOf6Mvcj3NkPIlq07Y");
+        builder.setOAuthConsumerSecret("Xl3TKJwNQtZmbYGhLcXzUseO9CrdoMav54qODCr2CnFiSIIZpb");
+        builder.setOAuthAccessToken(accessToken);
+        builder.setOAuthAccessTokenSecret(accessTokenSecret);
+        Configuration configuration = builder.build();
+
+        TwitterFactory factory = new TwitterFactory(configuration);
+        Twitter twitter = factory.getInstance();
+        try {
+            ResponseList<Status> statuses = twitter.lookup(ArrayUtils.toPrimitive(topTweetIds));
+            List<String> statusesList = new ArrayList<>();
+            for (Status status:statuses) {
+                statusesList.add(TwitterObjectFactory.getRawJSON(status));
+            }
+            return new GenericArray<String>(statusesList.toArray(new String[]{}));
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+
+        return new GenericArray<String>(new String[]{});
     }
 }
