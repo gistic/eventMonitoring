@@ -92,12 +92,12 @@ public class TweetProcessor {
         }
         activePeopleAnalyzer.TweetArrived(tweet);
         tweetsOverTimeAnalyzer.TweetArrived(status);
-
+        tweetDataLogic.setNewTweetMeta(status);
         if (retweetEnabled) {
             checkModeratedAndThen(status, tweet);
         } else {
             if (tweet.isRetweet() || tweet.getText().contains("RT")) {
-                tweetDataLogic.setNewTweetMeta(status);
+                //tweetDataLogic.setNewTweetMeta(status);
             } else {
                 checkModeratedAndThen(status, tweet);
             }
@@ -153,8 +153,9 @@ public class TweetProcessor {
 
     private void checkModeratedAndThen(InternalStatus status, Status tweet) {
         if (moderated) {
+            //tweetDataLogic.setNewTweetMeta(status); MOVED TO onStatusUpdate
             if (isBlockedUserTweet(tweet) || isBadKeywordTweet(tweet)) {
-                tweetDataLogic.setNewTweetMeta(status);
+//                tweetDataLogic.setNewTweetMeta(status);  MOVED UP
                 System.out.println("blocked user detected "
                         + tweet.getUser().getScreenName() + ":" + tweet.getText());
                 System.out.println(" OR bad tweet detected " + tweet.getText());
