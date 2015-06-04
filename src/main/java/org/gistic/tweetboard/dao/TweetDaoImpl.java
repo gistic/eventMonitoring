@@ -76,7 +76,6 @@ public class TweetDaoImpl implements TweetDao {
     public void addToArrived(String uuid, Status tweet, String statusString) {
         String id = String.valueOf(tweet.getId());
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            //jedis.set(getTweetIdString(uuid, id), statusString);
             jedis.lpush(getArrivedNotSentListKey(uuid), id);
         }  catch (JedisException jE) {
             jE.printStackTrace();
@@ -86,27 +85,36 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public void addNewTweetString(String uuid, Status tweet, String statusString, boolean newArrival) {
         String id = String.valueOf(tweet.getId());
-        if (statusString == null || statusString.isEmpty() || id == null || id.isEmpty()) {
+        if (statusString == null || statusString.isEmpty() || id.isEmpty()) {
             LoggerFactory.getLogger(TweetDaoImpl.class).error("Status string empty!"); }
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.set(getTweetIdString(uuid, id), statusString);
-            if (newArrival) {
-                String screenName = String.valueOf(tweet.getUser().getScreenName());
-                String userId = String.valueOf(tweet.getUser().getId());
-                String tweetId = String.valueOf(tweet.getId());
-                //setNewTweetMeta(uuid, tweet, jedis, screenName, userId, tweetId);
-            }
+//            if (newArrival) {
+//                String screenName = String.valueOf(tweet.getUser().getScreenName());
+//                String userId = String.valueOf(tweet.getUser().getId());
+//                String tweetId = String.valueOf(tweet.getId());
+//                //setNewTweetMeta(uuid, tweet, jedis, screenName, userId, tweetId);
+//            }
         }  catch (JedisException jE) {
             jE.printStackTrace();
         }
     }
 
     private void setNewTweetMeta(String uuid, Status tweet, Jedis jedis, String screenName, String userId, String tweetId) {
-        jedis.set(screenName, userId);
-        jedis.set(getUserProfileImageKey(screenName), tweet.getUser().getOriginalProfileImageURLHttps());
+        jedis.sadd(getAllTweetsIdsSetKey(uuid), tweetId);
+        jedis.set(getUserIdKey(uuid, screenName), userId);
+        jedis.set(getUserProfileImageKey(uuid, screenName), tweet.getUser().getOriginalProfileImageURLHttps());
         jedis.sadd(getUserTweetsSetKey(uuid, userId), tweetId);
         jedis.zincrby(getUsersRankSetKey(uuid), 1, screenName);
         incrTweetRetweetsByN(uuid, tweet.getId(), tweet.getRetweetCount());
+    }
+
+    private String getAllTweetsIdsSetKey(String uuid) {
+        return uuid+":allTweetsIdsSetKey";
+    }
+
+    private String getUserIdKey(String uuid, String screenName) {
+        return uuid+":userIdKey:"+screenName;
     }
 
     @Override
@@ -180,8 +188,8 @@ public class TweetDaoImpl implements TweetDao {
         }
     }
 
-    private String getUserProfileImageKey(String screenName) {
-        return screenName + ":profileImageUrl";
+    private String getUserProfileImageKey(String uuid, String screenName) {
+        return uuid + ":profileImageUrl:" + screenName;
     }
 
     @Override
@@ -196,9 +204,9 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public String getGetUserId(String screenName) {
+    public String getGetUserId(String screenName, String uuid) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            return jedis.get(screenName);
+            return jedis.get(getUserIdKey(uuid, screenName));
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -297,7 +305,7 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public void approveAllExistingTweetsByUser(String uuid, String screenName) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            String userId = jedis.get(screenName);
+            String userId = jedis.get(getUserIdKey(screenName, uuid));
             Set<String> tweetIds = jedis.smembers(getUserTweetsSetKey(uuid, userId));
             for (String tweetId : tweetIds) {
                 removeFromArrived(uuid, tweetId);
@@ -310,9 +318,9 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public String getProfileImageUrl(String screenName) {
+    public String getProfileImageUrl(String uuid, String screenName) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            return jedis.get(getUserProfileImageKey(screenName));
+            return jedis.get(getUserProfileImageKey(uuid, screenName));
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -510,9 +518,12 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public TweetMeta getTweetMeta(String key) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
-            System.out.println("key is get tweet meta is: "+key);
-            return new TweetMeta(Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY)),
-                    Long.parseLong(jedis.hget(key, TWEET_META_RETWEETS_COUNT_KEY)));
+            //System.out.println("key is get tweet meta is: "+key);
+            long date = Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY));
+            String retweetsStr = jedis.hget(key, TWEET_META_RETWEETS_COUNT_KEY);
+            long retweetsCount = 0l;
+            if (retweetsStr!=null) retweetsCount = Long.parseLong(retweetsStr);
+            return new TweetMeta(date, retweetsCount);
         } catch(JedisException jE) {
             jE.printStackTrace();
         }
@@ -606,6 +617,17 @@ public class TweetDaoImpl implements TweetDao {
         return null;
     }
 
+    @Override
+    public Set<String> getAllTweetsIds(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            //jedis.set(getTweetIdString(uuid, id), statusString);
+            return jedis.smembers(getAllTweetsIdsSetKey(uuid));
+        }  catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
     private String getTweetStringCache(String uuid, String id) {
         return uuid+":tweetStringCache:"+id;
     }
@@ -630,7 +652,7 @@ public class TweetDaoImpl implements TweetDao {
 //        return uuid+":tweetMeta:"+retweetedStatusId+":"+ TWEET_META_RETWEETS_COUNT_KEY;
 //    }
 
-    private String getTweetMetaKey(String uuid, String retweetedStatusId) {
+    public String getTweetMetaKey(String uuid, String retweetedStatusId) {
         return uuid+":tweetMeta:"+retweetedStatusId;
     }
 
@@ -652,7 +674,7 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public void blockAllExistingTweetsByUser(String uuid, String screenName) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            String userId = jedis.get(screenName);
+            String userId = jedis.get(getUserIdKey(screenName, uuid));
             Set<String> tweetIds = jedis.smembers(getUserTweetsSetKey(uuid, userId));
             for (String tweetId : tweetIds) {
                 removeFromArrived(uuid, tweetId);
