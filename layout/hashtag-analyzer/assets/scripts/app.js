@@ -542,8 +542,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             } else {
                 $scope.tweetsHistory = $scope.tweetsHistory.concat($scope.tweetsQueue);
                 var queueLength = $scope.tweetsQueue.length;
-//                $scope.tweetsQueue.splice(0, queueLength);
-//                $scope.tweetsQueue = [];
                 for (var i = 0; i < $scope.lastNewTweets.length; i++) {
                     if (i < $scope.pageSize) {
                         $scope.tweetsQueue.push($scope.lastNewTweets[$scope.lastNewTweets.length - i - 1]);
@@ -551,6 +549,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                         $scope.tweetsHistory.push($scope.lastNewTweets[$scope.lastNewTweets.length - i - 1]);
                     }
                 }
+                $scope.tweetsQueue.splice(0, queueLength);
             }
             $scope.lastNewTweets = [];
 
@@ -562,11 +561,15 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         }
 
         $scope.loadMoreTweetsFromHistory = function () {
+            console.log($scope.tweetsQueue);
+            $scope.loadTweetsFromHistoryArray= [];
             for (var i = 0; i < $scope.pageSize && $scope.tweetsHistory.length > i; i++) {
                 $scope.loadTweetsFromHistoryArray.push($scope.tweetsHistory[$scope.tweetsHistory.length - i - 1]);
-                $scope.tweetsQueue = $scope.loadTweetsFromHistoryArray.concat($scope.tweetsQueue);
+                console.log($scope.loadTweetsFromHistoryArray.slice());
             }
-            $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize - 1, $scope.pageSize);
+            $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.loadTweetsFromHistoryArray);
+            console.log($scope.tweetsQueue.slice());
+            $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize, $scope.pageSize);
         }
 
         // Stop Event Handler
