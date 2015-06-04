@@ -246,7 +246,7 @@ public class TweetDataLogic {
             ResponseList<Status> statuses = twitter.lookup(ArrayUtils.toPrimitive(topTweetIds));
             List<String> statusesList = new ArrayList<>();
             for (Status status:statuses) {
-                statusesList.add(TwitterObjectFactory.getRawJSON(status));
+                statusesList.add(TwitterObjectFactory.getRawJSON(status).replace("_normal",""));
             }
             return new GenericArray<String>(statusesList.toArray(new String[]{}));
         } catch (TwitterException e) {
