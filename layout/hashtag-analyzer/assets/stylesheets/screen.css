@@ -17982,6 +17982,17 @@ input[type=search].form-control {
   box-shadow: none;
 }
 
+/* line 13, ../sass/_/_atoms/_forms.scss */
+.tweets-queue-options .active a {
+  color: #555555;
+  cursor: none;
+}
+/* line 16, ../sass/_/_atoms/_forms.scss */
+.tweets-queue-options .active a:hover
+.tweets-queue-options .active a:focus {
+  text-decoration: none;
+}
+
 /* line 1, ../sass/_/_atoms/_typography.scss */
 h1,
 h2,
@@ -18587,6 +18598,16 @@ footer.views--footer p {
 /* line 38, ../sass/_/_modules/_media.scss */
 .masonry-brick:hover .media-type-icon {
   display: inline-block;
+}
+
+/* line 44, ../sass/_/_modules/_media.scss */
+.masonry-brick-media-panel {
+  width: 25%;
+  margin-bottom: 10px;
+}
+/* line 47, ../sass/_/_modules/_media.scss */
+.masonry-brick-media-panel img {
+  position: relative;
 }
 
 /* line 1, ../sass/_/_modules/_maps.scss */

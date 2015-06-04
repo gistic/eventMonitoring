@@ -461,7 +461,9 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public void setTweetMetaDate(String uuid, long retweetedStatusId, long retweetCreatedAt) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.hset(getTweetMetaKey(uuid, Long.toString(retweetedStatusId)), TWEET_META_DATE_KEY, Long.toString(retweetCreatedAt));
+            String createdAtString = Long.toString(retweetCreatedAt);
+            if(createdAtString== null || createdAtString.isEmpty()) System.out.println("EERRRRROOOORRRR  EERRRRORRRRRR");
+            jedis.hset(getTweetMetaKey(uuid, Long.toString(retweetedStatusId)), TWEET_META_DATE_KEY, createdAtString);
         } catch(JedisException jE) {
             jE.printStackTrace();
         }
@@ -519,7 +521,12 @@ public class TweetDaoImpl implements TweetDao {
     public TweetMeta getTweetMeta(String key) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
             //System.out.println("key is get tweet meta is: "+key);
-            long date = Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY));
+            long date = 0l;
+            try {
+                date = Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
             String retweetsStr = jedis.hget(key, TWEET_META_RETWEETS_COUNT_KEY);
             long retweetsCount = 0l;
             if (retweetsStr!=null) retweetsCount = Long.parseLong(retweetsStr);
@@ -585,7 +592,7 @@ public class TweetDaoImpl implements TweetDao {
     public void addToTweetStringCache(String uuid, InternalStatus status) {
         String id = String.valueOf(status.getInternalStatus().getId());
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.set(getTweetStringCache(uuid, id), status.getStatusString());
+            jedis.set(getTweetStringCache(uuid, id), status.getStatusString().replace("_normal", ""));
         }
     }
 

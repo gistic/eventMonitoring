@@ -223,12 +223,9 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 // Controller : Populate the recieved data and update admin page
 trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
-
-
+                                                
         $scope.dynamicPopover = {
-            content: 'Hello, World!',
-            templateUrl: 'myPopoverTemplate.html',
-            title: 'Title'
+            templateUrl: 'myPopoverTemplate.html'
         };
 
         // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
@@ -316,8 +313,15 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     console.log("#");
                 })
         };
-
+                                                
+        $scope.showLoadMore = true;
+        $scope.showLoadMoreButton = function() {
+            $scope.showLoadMore = true;
+            $scope.loadMoreButton();
+        }              
+        
         $scope.loadMostPopular = function () {
+            $scope.showLoadMore = false;
             $scope.getTopTweets();
         }
 
@@ -474,7 +478,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 
                 $scope.$apply(function () {
                     var countryUpdated = false;
-                    for (var i = 0; i < locationChart.data.length; i++) {
+                    for (var i = 0; i < $scope.topCountries.length; i++) {
                         if (locationChart.data[i][0] == $scope.topCountrey.code) {
                             locationChart.data[i][1] = $scope.topCountrey.count;
                             $scope.topCountries[i].count = $scope.topCountrey.count;
@@ -557,8 +561,9 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.loadMoreButton = function () {
             $scope.remainingTweetsCount = $scope.lastNewTweets.length;
             $scope.tweetsShowned = $scope.pageSize * $scope.pagesShown;
-            return $scope.lastNewTweets.length != 0;
-
+            if ($scope.showLoadMore && $scope.lastNewTweets.length != 0) {
+                return true;
+            }
         }
 
         // Load more tweets handler

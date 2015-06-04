@@ -7,3 +7,16 @@ input[type=search].form-control {
 	background: lighten($gray-light, 10%);
     box-shadow: none;
 }
+
+.tweets-queue-options {
+    .active {
+        a {
+            color: $gray;
+            cursor: none;
+            &:hover
+            &:focus {
+                text-decoration: none;
+            }
+        }
+    }
+}
