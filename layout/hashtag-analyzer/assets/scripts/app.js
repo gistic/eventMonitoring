@@ -449,7 +449,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     }
 
                 }
-
+                
                 $scope.$apply(function () {
                     if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
                         $scope.tweetsQueue.unshift($scope.tweet);
