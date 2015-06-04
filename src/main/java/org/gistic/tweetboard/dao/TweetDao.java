@@ -84,6 +84,8 @@ public interface TweetDao {
 
     void setNewTweetMeta(String uuid, InternalStatus status);
 
+    void setNewTweetMeta(String uuid, Status tweet);
+
     void incrCountryCounter(String uuid, String countryCode);
 
     Set<Tuple> getTopNCountries(String uuid, Integer count);
@@ -92,6 +94,8 @@ public interface TweetDao {
     void setTweetMetaDate(String uuid, long retweetedStatusId, long retweetCreatedAt);
 
     void incrTweetRetweets(String uuid, long retweetedStatusId);
+
+    void incrTweetRetweetsByN(String uuid, long retweetedStatusId, int n);
 
     String getTopTweetsGeneratedFlag(String uuid);
 
@@ -106,4 +110,16 @@ public interface TweetDao {
     void deleteTopTweetsSortedSet(String uuid);
 
     Set<Tuple> getTopNTweets(String uuid, int n);
+
+    Long addToCache(String uuid, InternalStatus status);
+
+    String popFromCache(String uuid);
+
+    void addToTweetStringCache(String uuid, InternalStatus status);
+
+    void removeFromTweetStringCache(String uuid, String poppedTweetId);
+
+    String getTweetStringsCache(String uuid, String id);
+
+    List<String> getIdsFromTweetCache(String uuid);
 }

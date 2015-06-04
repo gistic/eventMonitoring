@@ -3,7 +3,9 @@ package org.gistic.tweetboard.eventmanager.twitter;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
+import org.slf4j.LoggerFactory;
 import twitter4j.Place;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
@@ -62,13 +64,18 @@ public class TweetProcessor {
     }
 
     public void stop() throws Exception {
-        bus.unregister(this);
+        try {
+            bus.unregister(this);
+        } catch(IllegalArgumentException e) {
+            LoggerFactory.getLogger(this.getClass()).info("Bus already unregistered.");
+        }
     }
 
     @Subscribe
     @AllowConcurrentEvents
     public void onStatusUpdate(InternalStatus status) {
         Status tweet = status.getInternalStatus();
+        //status.getInternalStatus().getRetweetCount();
         for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
             //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
             tweetDataLogic.incrMediaCounter(mediaEntity);
@@ -92,12 +99,12 @@ public class TweetProcessor {
         }
         activePeopleAnalyzer.TweetArrived(tweet);
         tweetsOverTimeAnalyzer.TweetArrived(status);
-
+        tweetDataLogic.setNewTweetMeta(status);
         if (retweetEnabled) {
             checkModeratedAndThen(status, tweet);
         } else {
             if (tweet.isRetweet() || tweet.getText().contains("RT")) {
-                tweetDataLogic.setNewTweetMeta(status);
+                //tweetDataLogic.setNewTweetMeta(status);
             } else {
                 checkModeratedAndThen(status, tweet);
             }
@@ -153,8 +160,9 @@ public class TweetProcessor {
 
     private void checkModeratedAndThen(InternalStatus status, Status tweet) {
         if (moderated) {
+            //tweetDataLogic.setNewTweetMeta(status); MOVED TO onStatusUpdate
             if (isBlockedUserTweet(tweet) || isBadKeywordTweet(tweet)) {
-                tweetDataLogic.setNewTweetMeta(status);
+//                tweetDataLogic.setNewTweetMeta(status);  MOVED UP
                 System.out.println("blocked user detected "
                         + tweet.getUser().getScreenName() + ":" + tweet.getText());
                 System.out.println(" OR bad tweet detected " + tweet.getText());
@@ -170,6 +178,9 @@ public class TweetProcessor {
             }
         } else {
             tweetDataLogic.addToApproved(status, true);
+            if (ConfigurationSingleton.getInstance().isV2()) {
+                tweetDataLogic.addToCache(status);
+            }
         }
     }
 

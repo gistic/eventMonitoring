@@ -8,6 +8,7 @@ import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.*;
 import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
+import org.gistic.tweetboard.eventmanager.twitter.WarmupRunnable;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.representations.Event;
 import org.gistic.tweetboard.security.User;
@@ -18,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+import twitter4j.Status;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -82,6 +84,7 @@ public class EventsResource {
         else {
             //valid token tweetboard v2.0
             EventMap.putV2(hashTags, tweetDataLogic, uuid, authToken);
+            ExecutorSingleton.getInstance().submit(new WarmupRunnable(checkUuid(uuid), tweetDataLogic, hashTags, authToken));
         }
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);
@@ -315,6 +318,7 @@ public class EventsResource {
                                              @DefaultValue("10") @QueryParam("count") Integer count,
                                              @DefaultValue("undefined") @QueryParam("authToken") String authToken,
                                              @Auth(required = false) User user) {
+        //TODO test auth!
         checkUuid(uuid);
         if (user==null) {
             Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
@@ -399,10 +403,19 @@ public class EventsResource {
     }
 
     @GET
-    @Path("/authTest")
-    public String authTest(@Auth User user) {
-        if (user == null) { return "Denied!"; }
-        System.out.println(user.toString());
-        return "working";
+    @Path("/{uuid}/cachedTweets")
+    public GenericArray<Status> getCachedTweets(@PathParam("uuid") String uuid,
+                                             @DefaultValue("undefined") @QueryParam("authToken") String authToken,
+                                             @Auth(required = false) User user) {
+        checkUuid(uuid);
+        if (user==null) {
+            Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+                    .entity("incorrect uuid")
+                    .build();
+        }
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        return tweetDataLogic.getCachedTweets();
     }
+
+
 }

@@ -11,6 +11,8 @@ import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.*;
+import org.slf4j.*;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
 import twitter4j.*;
@@ -30,12 +32,14 @@ import java.util.stream.Collectors;
  * Created by sohussain on 4/12/15.
  */
 public class TweetDataLogic {
+    private final Logger logger;
     private TweetDao tweetDao;
     String uuid;
 
     public TweetDataLogic(TweetDao tweetDao, String uuid) {
         this.tweetDao = tweetDao;
         this.uuid = uuid;
+        this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
     public void addToApproved(InternalStatus status, boolean newArrival) {
@@ -78,12 +82,6 @@ public class TweetDataLogic {
         Status status = tweetDao.getStatus(uuid, tweetId);
         String statusString = tweetDao.getStatusString(uuid, tweetId);
         return new InternalStatus(status, statusString);
-    }
-
-    public void newArrived(InternalStatus tweet) {
-        tweetDao.addNewTweetString(uuid, tweet.getInternalStatus(), tweet.getStatusString(), false);
-        tweetDao.addToArrived(uuid, tweet.getInternalStatus(), tweet.getStatusString());
-        tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
     }
 
     public void createNewEvent(String[] hashTags) {
@@ -241,5 +239,72 @@ public class TweetDataLogic {
         }
 
         return new GenericArray<String>(new String[]{});
+    }
+
+    public void newArrived(InternalStatus tweet) {
+        tweetDao.addNewTweetString(uuid, tweet.getInternalStatus(), tweet.getStatusString(), false);
+        tweetDao.addToArrived(uuid, tweet.getInternalStatus(), tweet.getStatusString());
+        tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
+    }
+
+    public void addToCache(InternalStatus status) {
+        tweetDao.addToTweetStringCache(uuid, status);
+        long currentCacheSize = tweetDao.addToCache(uuid, status);
+        if (currentCacheSize > 25l) {
+            String poppedTweetId = tweetDao.popFromCache(uuid);
+            tweetDao.removeFromTweetStringCache(uuid, poppedTweetId);
+        }
+//        tweetDao.addNewTweetString(uuid, tweet.getInternalStatus(), tweet.getStatusString(), false);
+//        tweetDao.addToArrived(uuid, tweet.getInternalStatus(), tweet.getStatusString());
+//        tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
+    }
+
+    public void warmupStats(List<Status> tweets) {
+        for (Status tweet : tweets) {
+            for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
+                //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
+                incrMediaCounter(mediaEntity);
+            }
+            boolean isRetweet = tweet.isRetweet();
+            if(isRetweet || tweet.getText().contains("RT")) {
+                incrTotalRetweets();
+                if (isRetweet) {
+                    long retweetedStatusId = tweet.getRetweetedStatus().getId();
+                    long retweetCreatedAt = tweet.getRetweetedStatus().getCreatedAt().getTime();
+                    incrTweetScoreAndSetCreatedTime(retweetedStatusId, retweetCreatedAt);
+                }
+            } else {
+                incrOriginalTweets();
+            }
+            Place place = tweet.getPlace();
+            if (place != null) {
+                incrCountryCounter(place.getCountryCode());
+            } else {
+                //count tweets without country specified?
+            }
+            //tweetsOverTimeAnalyzer.TweetArrived(status); //TODO resolve hard to find reference issue
+            this.setNewTweetMeta(tweet);
+            tweetDao.setTweetMetaDate(uuid, tweet.getId(), tweet.getCreatedAt().getTime());
+        }
+    }
+
+    private void setNewTweetMeta(Status tweet) {
+        this.tweetDao.setNewTweetMeta(uuid, tweet);
+    }
+
+    public GenericArray<Status> getCachedTweets() {
+        List<String> tweetIds = tweetDao.getIdsFromTweetCache(uuid);
+        List<Status> cachedStatuses = new ArrayList<>();
+        for (String tweetId : tweetIds) {
+            String tweetString = tweetDao.getTweetStringsCache(uuid, tweetId);
+            try {
+                Status status = TwitterObjectFactory.createStatus(tweetString);
+                cachedStatuses.add(status);
+            } catch (TwitterException | NullPointerException e) {
+                logger.error("Failed to make status from string from tweets cache. String was: "+tweetString);
+                e.printStackTrace();
+            }
+        }
+        return new GenericArray<Status>(cachedStatuses.toArray(new Status[]{}));
     }
 }
