@@ -9,7 +9,7 @@
 
 .masonry-brick {
     width: 18%;
-    margin-bottom: 10px;
+    margin-bottom: $margin;
     img {
         position: relative;
     }
@@ -38,13 +38,5 @@
         .media-type-icon {
             display: inline-block;
         }
-    }
-}
-
-.masonry-brick-media-panel {
-    width: 25%;
-    margin-bottom: 10px;
-    img {
-        position: relative;
     }
 }

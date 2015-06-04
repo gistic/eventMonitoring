@@ -18113,7 +18113,7 @@ ol {
   color: #ff0000;
 }
 
-/* line 3, ../sass/_/_atoms/_panel.scss */
+/* line 2, ../sass/_/_atoms/_panel.scss */
 .panel {
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -18121,28 +18121,28 @@ ol {
   -webkit-border-radius: 5px;
   border-radius: 5px;
 }
-/* line 6, ../sass/_/_atoms/_panel.scss */
+/* line 5, ../sass/_/_atoms/_panel.scss */
 .panel .panel-body {
   padding: 10px;
 }
-/* line 9, ../sass/_/_atoms/_panel.scss */
+/* line 8, ../sass/_/_atoms/_panel.scss */
 .panel .panel-heading {
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
 }
 
-/* line 15, ../sass/_/_atoms/_panel.scss */
+/* line 14, ../sass/_/_atoms/_panel.scss */
 .panel-top-people .top-user-container {
   margin-right: 10px;
   width: 17%;
   margin-bottom: 10px;
   display: inline-block;
 }
-/* line 20, ../sass/_/_atoms/_panel.scss */
+/* line 19, ../sass/_/_atoms/_panel.scss */
 .panel-top-people .top-user-container:last-child {
   margin-right: 0;
 }
-/* line 24, ../sass/_/_atoms/_panel.scss */
+/* line 23, ../sass/_/_atoms/_panel.scss */
 .panel-top-people img {
   width: 64px;
   height: 64px;
@@ -18151,9 +18151,10 @@ ol {
   border-radius: 3px;
 }
 
-/* line 31, ../sass/_/_atoms/_panel.scss */
+/* line 30, ../sass/_/_atoms/_panel.scss */
+.panel-media .row-gab,
 .panel-media .row {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 /* line 34, ../sass/_/_atoms/_panel.scss */
 .panel-media .media-container {
@@ -18167,21 +18168,34 @@ ol {
   margin-right: 0;
 }
 /* line 43, ../sass/_/_atoms/_panel.scss */
-.panel-media img {
-  max-height: 100%;
-  max-width: 100%;
-  height: auto;
+.panel-media .media-box {
+  display: block;
+  position: relative;
+  height: 0;
+  padding: 25% 0 5% 0;
+  overflow: hidden;
+}
+/* line 49, ../sass/_/_atoms/_panel.scss */
+.panel-media .media-box img {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
+  position: absolute;
+  min-width: 100%;
+  min-height: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
 
-/* line 54, ../sass/_/_atoms/_panel.scss */
+/* line 64, ../sass/_/_atoms/_panel.scss */
 .panel-top-countries li {
   padding: 10px 0;
   border-bottom: 1px solid #fafafa;
 }
-/* line 58, ../sass/_/_atoms/_panel.scss */
+/* line 68, ../sass/_/_atoms/_panel.scss */
 .panel-top-countries:last-child {
   border-bottom: none;
 }
@@ -18598,16 +18612,6 @@ footer.views--footer p {
 /* line 38, ../sass/_/_modules/_media.scss */
 .masonry-brick:hover .media-type-icon {
   display: inline-block;
-}
-
-/* line 44, ../sass/_/_modules/_media.scss */
-.masonry-brick-media-panel {
-  width: 25%;
-  margin-bottom: 10px;
-}
-/* line 47, ../sass/_/_modules/_media.scss */
-.masonry-brick-media-panel img {
-  position: relative;
 }
 
 /* line 1, ../sass/_/_modules/_maps.scss */
