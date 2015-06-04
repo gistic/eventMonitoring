@@ -592,7 +592,7 @@ public class TweetDaoImpl implements TweetDao {
     public void addToTweetStringCache(String uuid, InternalStatus status) {
         String id = String.valueOf(status.getInternalStatus().getId());
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.set(getTweetStringCache(uuid, id), status.getStatusString());
+            jedis.set(getTweetStringCache(uuid, id), status.getStatusString().replace("_normal", ""));
         }
     }
 
