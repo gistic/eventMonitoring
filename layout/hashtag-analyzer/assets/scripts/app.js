@@ -613,6 +613,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                         $cookieStore.remove("hashtags");
                         $cookieStore.remove("userAuthentication");
                         $scope.stopEventHandler();
+                        $state.transitionTo('home');
                         SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
                     } else {
                         SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
