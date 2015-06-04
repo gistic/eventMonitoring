@@ -1,7 +1,7 @@
-<article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit() | reverseQueue track by tweet.id" data-user-id="{{tweet.user.id_str}}">
+<article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue track by $index" data-user-id="{{tweet.user.id_str}}">
    
     <div class="media-left">
-        <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
+        <img lazy-load ng-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
     </div>
     
     <div class="media-body tweet-content">
@@ -9,21 +9,20 @@
             <a ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank" class="pull-left">
                 {{tweet.user.screen_name}}
             </a>
-           <a class="pull-right" ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}/status/{{tweet.id_str}}" target="_blank">
+           <a class="pull-right" ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}/status/{{tweet.id_str}}" target="_blank" title="{{tweet.created_at}}">
                <small am-time-ago="tweet.created_at"></small>
            </a>
         </h6>
         <p>
             {{tweet.text}}
         </p>
+        <p>{{$index}}</p>
+        <p>{{tweet.id}}</p>
         <strong class="text-muted">{{tweet.user.location}}</strong>
     </div>
 
-<!--
-   <aside ng-if="$index==20" class="well tweets-gab text-center" ng-show="tweetsGabContainer()" ng-click="loadTweetsOnGab()">
-        {{remainingTweetsCount}} New Tweets
-    </aside>
--->
 
 </article>
+
+<button type="button" class="btn btn-block" ng-show="loadMoreButtonFromHistory()" ng-click="loadMoreTweetsFromHistory()"><strong><i class="fa fa-arrow-up"></i></strong> Load more</button>
 

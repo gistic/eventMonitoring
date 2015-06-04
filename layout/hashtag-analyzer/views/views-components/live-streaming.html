@@ -31,7 +31,7 @@
             <li ng-class="{active:tab===1}">
                 <a href ng-click="tab = 1">All tweets</a>
             </li>
-            <li ng-class="{active:tab===2}">
+            <li ng-class="{active:tab===2}" ng-click="loadMostPopular()">
                 <a href ng-click="tab = 2">Most popular</a>
             </li>
         </ul>

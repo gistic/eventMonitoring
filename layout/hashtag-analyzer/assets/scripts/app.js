@@ -324,7 +324,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 });
         }
         $scope.getTopPeople();
-                                                                        
+
         // TOP TWEETS
         $scope.topTweets = [];
         $scope.getTopTweets = function () {
@@ -335,16 +335,18 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                console.log();
-                for (var i = 0; i < response.items.length; i++) {
-                    $scope.tweet = JSON.parse(response.items[i]);
-                    $scope.topTweets.push($scope.tweet);
-                }
+                    for (var i = 0; i < response.items.length; i++) {
+                        $scope.tweet = JSON.parse(response.items[i]);
+                        $scope.topTweets.push($scope.tweet);
+                    }
                 }).error(function () {
                     console.log("#");
                 })
         };
-        $scope.getTopTweets();
+
+        $scope.loadMostPopular = function () {
+            $scope.getTopTweets();
+        }
 
         $scope.enableModeration = false;
         $scope.moderationStatus = function () {
@@ -419,10 +421,18 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         // Start New Event Handler
         $scope.eventStarted = false;
         $rootScope.timerRunning = false;
-        $scope.tweetsQueue = [];
-        $scope.lastNewTweets = [];
+
+        $scope.tweetsQueue = []; // display
+        $scope.lastNewTweets = []; // for button
+        $scope.tweetsHistory = []; // history
+        $scope.loadTweetsFromHistoryArray = [];
+
         $scope.tweetsQueueLength = 0;
+        $scope.lastNewTweetsLength = 0;
+
         $scope.mediaQueue = [];
+
+
         $scope.tweet = {};
 
         // Listen to new message
@@ -430,10 +440,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
 
             var source = new EventSource($scope.eventSourceUrl);
-            console.log(source);
-            console.log(CreateEventSource.getSourceObject());
-            console.log(CreateEventSource.closeEventSource());
-
 
             source.addEventListener('approved-tweets', function (response) {
 
@@ -489,14 +495,11 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 }
 
                 $scope.$apply(function () {
-                    $scope.tweetsQueue.push($scope.tweet);
-                    //                    if ($scope.tweetsQueue.length < 25) {
-                    //                        $scope.tweetsQueue.push($scope.tweet);
-                    //                    } else {
-                    //                        $scope.lastNewTweets.unshift($scope.tweet);
-                    //                    }
-                    $scope.tweetsQueueLength++;
-
+                    if ($scope.tweetsQueue.length < 5 && $scope.tweetsHistory.length == 0) {
+                        $scope.tweetsQueue.unshift($scope.tweet);
+                    } else {
+                        $scope.lastNewTweets.push($scope.tweet);
+                    }
                 }, false);
             });
 
@@ -508,23 +511,14 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 }, false);
             });
 
-
-            source.addEventListener('new-admin-opened', function (response) {
-                //                source.close();
-            });
         }
 
         $scope.startEventSource();
 
-        $scope.openLightboxModal = function (index) {
-            Lightbox.openModal($scope.mediaQueue, index);
-        };
-
         $scope.pagesShown = 1;
-        $scope.pageSize = 25;
-        $scope.tweetsShowned = 0;
+        $scope.pageSize = 5;
 
-        $scope.tweetsGab = false;
+        $scope.tweetsShowned = 0;
 
         // Tweet queue limit
         $scope.tweetsQueueLimit = function () {
@@ -534,34 +528,46 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         // Show load more button
         $scope.loadMoreButton = function () {
-            $scope.remainingTweetsCount = $scope.tweetsQueueLength - ($scope.pageSize * $scope.pagesShown);
+            $scope.remainingTweetsCount = $scope.lastNewTweets.length;
             $scope.tweetsShowned = $scope.pageSize * $scope.pagesShown;
-            return $scope.pagesShown < ($scope.tweetsQueueLength / $scope.pageSize);
+            return $scope.lastNewTweets.length != 0;
 
         }
 
         // Load more tweets handler
         $scope.loadMoreTweets = function () {
-            $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.lastNewTweets);
-            $scope.pagesShown++;
+            if ($scope.lastNewTweets.length <= 10) {
+                $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.lastNewTweets);
+                $scope.pagesShown = $scope.pagesShown + $scope.lastNewTweets.length % $scope.pageSize;
+            } else {
+                $scope.tweetsHistory = $scope.tweetsHistory.concat($scope.tweetsQueue);
+                var queueLength = $scope.tweetsQueue.length;
+//                $scope.tweetsQueue.splice(0, queueLength);
+//                $scope.tweetsQueue = [];
+                for (var i = 0; i < $scope.lastNewTweets.length; i++) {
+                    if (i < $scope.pageSize) {
+                        $scope.tweetsQueue.push($scope.lastNewTweets[$scope.lastNewTweets.length - i - 1]);
+                    } else {
+                        $scope.tweetsHistory.push($scope.lastNewTweets[$scope.lastNewTweets.length - i - 1]);
+                    }
+                }
+            }
             $scope.lastNewTweets = [];
-            console.log($scope.lastNewTweets.length);
-            console.log($scope.tweetsQueue.length);
+
             $scope.remainingTweetsCount = $scope.tweetsQueueLength - ($scope.pageSize * $scope.pagesShown);
         };
 
-        // Show tweets Gab Container
-        //        $scope.tweetsGabContainer = function () {
-        //            if ($scope.remainingTweetsCount >= 10) {
-        //                $scope.tweetsGab = true;
-        //            }
-        //            return $scope.tweetsGab;
-        //        }
+        $scope.loadMoreButtonFromHistory = function () {
+            return $scope.tweetsHistory.length > 0;
+        }
 
-        // Load tweets on Gab
-        //        $scope.loadTweetsOnGab = function () {
-        //
-        //        }
+        $scope.loadMoreTweetsFromHistory = function () {
+            for (var i = 0; i < $scope.pageSize && $scope.tweetsHistory.length > i; i++) {
+                $scope.loadTweetsFromHistoryArray.push($scope.tweetsHistory[$scope.tweetsHistory.length - i - 1]);
+                $scope.tweetsQueue = $scope.loadTweetsFromHistoryArray.concat($scope.tweetsQueue);
+            }
+            $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize - 1, $scope.pageSize);
+        }
 
         // Stop Event Handler
         $scope.killEvent = function () {
@@ -582,6 +588,10 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                         SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
                     }
                 });
+        };
+
+        $scope.openLightboxModal = function (index) {
+            Lightbox.openModal($scope.mediaQueue, index);
         };
 
         // Logout
