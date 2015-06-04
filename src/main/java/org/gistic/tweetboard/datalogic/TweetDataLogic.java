@@ -11,14 +11,12 @@ import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.*;
-import org.slf4j.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
-import twitter4j.json.DataObjectFactory;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -199,9 +197,12 @@ public class TweetDataLogic {
         tweetDao.incrMedia(uuid);
     }
 
-    public void incrTweetScoreAndSetCreatedTime(long retweetedStatusId, long retweetCreatedAt) {
-        tweetDao.setTweetMetaDate(uuid, retweetedStatusId, retweetCreatedAt);
+    public void incrTweetScore(long retweetedStatusId, long retweetCreatedAt) {
         tweetDao.incrTweetRetweets(uuid, retweetedStatusId);
+    }
+
+    public void setCreatedDate(long statusId, long createdAt) {
+        tweetDao.setTweetMetaDate(uuid, statusId, createdAt);
     }
 
     public GenericArray<String> getTopNTweets(Integer count, String accessToken) {
@@ -275,6 +276,8 @@ public class TweetDataLogic {
 
     public void warmupStats(List<Status> tweets) {
         for (Status tweet : tweets) {
+
+            tweetDao.setTweetMetaDate(uuid, tweet.getId(), tweet.getCreatedAt().getTime());
             for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
                 //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
                 incrMediaCounter(mediaEntity);
@@ -285,11 +288,13 @@ public class TweetDataLogic {
                 if (isRetweet) {
                     long retweetedStatusId = tweet.getRetweetedStatus().getId();
                     long retweetCreatedAt = tweet.getRetweetedStatus().getCreatedAt().getTime();
-                    incrTweetScoreAndSetCreatedTime(retweetedStatusId, retweetCreatedAt);
+                    this.incrTweetScore(retweetedStatusId, retweetCreatedAt);
                 }
             } else {
                 incrOriginalTweets();
             }
+            this.setCreatedDate(tweet.getId(), tweet.getCreatedAt().getTime());
+            this.setNewTweetMeta(tweet);
             Place place = tweet.getPlace();
             if (place != null) {
                 incrCountryCounter(place.getCountryCode());
@@ -297,8 +302,7 @@ public class TweetDataLogic {
                 //count tweets without country specified?
             }
             //tweetsOverTimeAnalyzer.TweetArrived(status); //TODO resolve hard to find reference issue
-            this.setNewTweetMeta(tweet);
-            tweetDao.setTweetMetaDate(uuid, tweet.getId(), tweet.getCreatedAt().getTime());
+
         }
     }
 
