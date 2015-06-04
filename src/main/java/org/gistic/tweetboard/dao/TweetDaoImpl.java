@@ -434,12 +434,13 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public void incrCountryCounter(String uuid,  String countryCode) {
+    public Double incrCountryCounter(String uuid, String countryCode) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.zincrby(getCountryRankSetKey(uuid), 1, countryCode);
+            return jedis.zincrby(getCountryRankSetKey(uuid), 1, countryCode);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
+        return 0.0;
     }
     public void incrMedia(String uuid) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
