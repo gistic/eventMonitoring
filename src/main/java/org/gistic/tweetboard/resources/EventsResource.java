@@ -319,10 +319,11 @@ public class EventsResource {
                                              @DefaultValue("undefined") @QueryParam("authToken") String authToken,
                                              @Auth(required = false) User user) {
         //TODO test auth!
+
         checkUuid(uuid);
-        if (user==null) {
+        if (user==null || user.isNoUser()) {
             Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                    .entity("incorrect uuid")
+                    .entity("incorrect auth token")
                     .build();
         }
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);

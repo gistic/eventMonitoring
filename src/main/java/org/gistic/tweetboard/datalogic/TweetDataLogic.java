@@ -144,8 +144,8 @@ public class TweetDataLogic {
         Set<Tuple> topUsers = tweetDao.getTopNUsers(uuid, count);
 
         return topUsers.stream()
-                .map(user -> new TopUser(tweetDao.getGetUserId(user.getElement()), user.getElement(), user.getScore(),
-                        tweetDao.getProfileImageUrl(user.getElement())))
+                .map(user -> new TopUser(tweetDao.getGetUserId(user.getElement(), uuid), user.getElement(), user.getScore(),
+                        tweetDao.getProfileImageUrl(uuid, user.getElement())))
                 .collect(Collectors.toList());
     }
 
@@ -209,14 +209,15 @@ public class TweetDataLogic {
         if (flag==null){
             tweetDao.deleteTopTweetsSortedSet(uuid);
             tweetDao.setTopTweetsGeneratedFlag(uuid);
-            Set<String> tweetKeys = tweetDao.getKeysWithPattern(uuid + ":tweetMeta:*");
-            for (String key:tweetKeys){
-                TweetMeta tweetMeta = tweetDao.getTweetMeta(key);
+            Set<String> ids = tweetDao.getAllTweetsIds(uuid);
+            for (String id : ids){
+                //System.out.println("key is: " + id);
+                TweetMeta tweetMeta = tweetDao.getTweetMeta(tweetDao.getTweetMetaKey(uuid, id));
                 long ageInSeconds = (System.currentTimeMillis()-tweetMeta.getCreationDate())/1000;
                 long retweetsCount = tweetMeta.getRetweetsCount();
                 double order = Math.log10((retweetsCount > 1) ? retweetsCount : 1);
                 double score = Math.round(((order + ageInSeconds / 45000) * 10000000.0)) / 10000000.0;
-                String tweetId = key.substring(key.lastIndexOf(':')+1);
+                String tweetId = id; //key.substring(key.lastIndexOf(':')+1);
                 tweetDao.setTweetScore(uuid, tweetId, score);
             }
         }
