@@ -144,8 +144,8 @@ public class TweetDataLogic {
         Set<Tuple> topUsers = tweetDao.getTopNUsers(uuid, count);
 
         return topUsers.stream()
-                .map(user -> new TopUser(tweetDao.getGetUserId(user.getElement()), user.getElement(), user.getScore(),
-                        tweetDao.getProfileImageUrl(user.getElement())))
+                .map(user -> new TopUser(tweetDao.getGetUserId(user.getElement(), uuid), user.getElement(), user.getScore(),
+                        tweetDao.getProfileImageUrl(uuid, user.getElement())))
                 .collect(Collectors.toList());
     }
 

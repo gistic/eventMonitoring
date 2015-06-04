@@ -48,7 +48,7 @@ public interface TweetDao {
 
     Set<Tuple> getTopNUsers(String uuid, int topN);
 
-    String getGetUserId(String screenName);
+    String getGetUserId(String screenName, String uuid);
 
     String removeFromApproved(String uuid);
 
@@ -68,7 +68,7 @@ public interface TweetDao {
 
     void approveAllExistingTweetsByUser(String uuid, String screenName);
 
-    String getProfileImageUrl(String element);
+    String getProfileImageUrl(String uuid, String element);
 
     EventMetaList getEventMetaList();
 
