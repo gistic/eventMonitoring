@@ -150,7 +150,8 @@ public class Event {
     }
     public boolean isRetweetsEnabled() { return tweetProcessor.isRetweetEnabled(); }
 
-    public void postTweetToBus(InternalStatus iStatus) {
-        bus.post(iStatus);
+    //TODO rename
+    public void postTweetToEvent(InternalStatus iStatus) {
+        tweetProcessor.onStatusUpdate(iStatus);
     }
 }

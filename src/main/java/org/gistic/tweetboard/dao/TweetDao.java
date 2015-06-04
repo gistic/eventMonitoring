@@ -118,4 +118,8 @@ public interface TweetDao {
     void addToTweetStringCache(String uuid, InternalStatus status);
 
     void removeFromTweetStringCache(String uuid, String poppedTweetId);
+
+    String getTweetStringsCache(String uuid, String id);
+
+    List<String> getIdsFromTweetCache(String uuid);
 }

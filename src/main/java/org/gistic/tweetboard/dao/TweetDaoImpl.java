@@ -509,6 +509,7 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public TweetMeta getTweetMeta(String key) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            System.out.println("key is get tweet meta is: "+key);
             return new TweetMeta(Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY)),
                     Long.parseLong(jedis.hget(key, TWEET_META_RETWEETS_COUNT_KEY)));
         } catch(JedisException jE) {
@@ -581,6 +582,27 @@ public class TweetDaoImpl implements TweetDao {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.del(getTweetStringCache(uuid, poppedTweetId));
         }
+    }
+
+    @Override
+    public String getTweetStringsCache(String uuid, String id) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.get(getTweetStringCache(uuid, id));
+        } catch (JedisException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getIdsFromTweetCache(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            //jedis.set(getTweetIdString(uuid, id), statusString);
+            return jedis.lrange(getTweetCacheKey(uuid), 0, -1);
+        }  catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
     }
 
     private String getTweetStringCache(String uuid, String id) {

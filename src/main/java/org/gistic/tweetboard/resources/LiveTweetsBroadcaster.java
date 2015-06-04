@@ -14,6 +14,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by osama-hussain on 5/4/15.
@@ -22,13 +24,13 @@ import java.util.Map;
 @Path("/liveTweets")
 public class LiveTweetsBroadcaster {
 
-    private Map<String, SseBroadcaster> broadcasters = new HashMap<>();
+    private ConcurrentMap<String, SseBroadcaster> broadcasters = new ConcurrentHashMap<>();
 
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public synchronized String broadcastMessage(Message msg) {
+    public String broadcastMessage(Message msg) {
         String uuid = msg.getUuid();
         String message = msg.getMsg();
         OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
@@ -40,12 +42,7 @@ public class LiveTweetsBroadcaster {
                         .mediaType(MediaType.TEXT_PLAIN_TYPE)
                         .data(String.class, message.replace("_normal", ""))
                         .build();
-                try {
-                    SseBroadcaster broadcaster = broadcasters.get(uuid);
-                    broadcaster.broadcast(event);
-                } catch (NullPointerException ex) {
-                    LoggerFactory.getLogger(this.getClass()).info("No one listening for event: " + uuid);
-                }
+                doBroadcast(uuid, event);
                 break;
             case Message.Type.UiUpdate:
                 event = eventBuilder
@@ -53,11 +50,7 @@ public class LiveTweetsBroadcaster {
                         .mediaType(MediaType.TEXT_PLAIN_TYPE)
                         .data(String.class, message)
                         .build();
-                try {
-                    broadcasters.get(uuid).broadcast(event);
-                } catch (NullPointerException ex) {
-                    LoggerFactory.getLogger(this.getClass()).info("No one listening for event: " + uuid);
-                }
+                doBroadcast(uuid, event);
                 break;
             case Message.Type.TweetsOverTime:
                 event = eventBuilder
@@ -65,19 +58,24 @@ public class LiveTweetsBroadcaster {
                         .mediaType(MediaType.TEXT_PLAIN_TYPE)
                         .data(String.class, message)
                         .build();
-                try {
-                    broadcasters.get(uuid).broadcast(event);
-                } catch (NullPointerException ex) {
-                    LoggerFactory.getLogger(this.getClass()).info("No one listening for event: " + uuid);
-                }
+                doBroadcast(uuid, event);
                 break;
         }
         return "{\"msg\":\"Message has been broadcasted.\"}";
     }
 
+    private synchronized void doBroadcast(String uuid, OutboundEvent event) {
+        try {
+            SseBroadcaster broadcaster = broadcasters.get(uuid);
+            broadcaster.broadcast(event);
+        } catch (NullPointerException ex) {
+            LoggerFactory.getLogger(this.getClass()).info("No one listening for event: " + uuid);
+        }
+    }
+
     @GET
     @Produces(SseFeature.SERVER_SENT_EVENTS)
-    public synchronized EventOutput listenToBroadcast(@NotNull @QueryParam("uuid") String uuid) {
+    public EventOutput listenToBroadcast(@NotNull @QueryParam("uuid") String uuid) {
         final EventOutput eventOutput = new EventOutput();
         SseBroadcaster broadcaster = this.broadcasters.get(uuid);
         if (broadcaster == null) {

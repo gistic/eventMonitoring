@@ -73,7 +73,6 @@ public class TweetBoardConfiguration extends Configuration implements AssetsBund
     }
 
     @JsonProperty
-    @NotEmpty
     private boolean v2;
 
     public boolean isV2() { return v2; }
