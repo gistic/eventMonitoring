@@ -1,13 +1,9 @@
 <section class="col-md-24">
     <aside class="tweets-queue-options clearfix">
-        <select name="" id="" class="pull-left">
-            <option value="">Most Popular</option>
-            <option value="">Most Recent</option>
-        </select>
         <strong class="pull-right">{{totalMedia}} Pic & Videos</strong>
     </aside>
    
-   <div masonry column-width="20" item-selector=".mybrick" masonry-options="{ transitionDuration: '0.4s' }">
+   <div masonry  preserve-order column-width="20" item-selector=".mybrick" masonry-options="{ transitionDuration: '0.4s' }">
     <div masonry-brick class="masonry-brick mybrick" ng-repeat="media in mediaQueue track by $index">
         <a ng-click="Lightbox.openModal(mediaQueue, $index)">
             <img class="img-responsive" lazy-load ll-src="{{media.thumb}}" on-error-src="{{defultImage}}" />
