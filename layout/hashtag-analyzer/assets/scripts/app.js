@@ -385,7 +385,8 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.tweetsQueueLength = 0;
         $scope.lastNewTweetsLength = 0;
 
-        $scope.mediaQueue = [];
+        $scope.mediaQueue = [];                       
+        $scope.topCountries = [];
 
 
         $scope.tweet = {};
@@ -465,6 +466,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     $scope.drawChart($scope.data);
                 }, false);
             });
+            
 
             source.addEventListener('country-update', function (response) {
                 
@@ -483,6 +485,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                         locationChart.data.push([$scope.topCountrey.code, $scope.topCountrey.count]);
                         $scope.topCountries.push($scope.topCountrey);
                     }
+                    $scope.topCountriesLength = $scope.topCountries.length;
     
                 }, false);
             });
@@ -535,6 +538,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     console.log("#");
                 })
         }
+                                                
         $rootScope.getLocationStats();
         $scope.drawLocationChart();
 
