@@ -17982,6 +17982,17 @@ input[type=search].form-control {
   box-shadow: none;
 }
 
+/* line 13, ../sass/_/_atoms/_forms.scss */
+.tweets-queue-options .active a {
+  color: #555555;
+  cursor: none;
+}
+/* line 16, ../sass/_/_atoms/_forms.scss */
+.tweets-queue-options .active a:hover
+.tweets-queue-options .active a:focus {
+  text-decoration: none;
+}
+
 /* line 1, ../sass/_/_atoms/_typography.scss */
 h1,
 h2,

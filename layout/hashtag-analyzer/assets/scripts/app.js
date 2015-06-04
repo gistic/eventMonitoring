@@ -223,8 +223,7 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 // Controller : Populate the recieved data and update admin page
 trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
-
-
+                                                
         $scope.dynamicPopover = {
             content: 'Hello, World!',
             templateUrl: 'myPopoverTemplate.html',
@@ -474,7 +473,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 
                 $scope.$apply(function () {
                     var countryUpdated = false;
-                    for (var i = 0; i < locationChart.data.length; i++) {
+                    for (var i = 0; i < $scope.topCountries.length; i++) {
                         if (locationChart.data[i][0] == $scope.topCountrey.code) {
                             locationChart.data[i][1] = $scope.topCountrey.count;
                             $scope.topCountries[i].count = $scope.topCountrey.count;
