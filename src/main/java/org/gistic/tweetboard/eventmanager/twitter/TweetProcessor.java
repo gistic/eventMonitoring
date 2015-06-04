@@ -74,6 +74,7 @@ public class TweetProcessor {
     @Subscribe
     @AllowConcurrentEvents
     public void onStatusUpdate(InternalStatus status) {
+        tweetDataLogic.setNewTweetMeta(status);
         Status tweet = status.getInternalStatus();
         //status.getInternalStatus().getRetweetCount();
         for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
@@ -99,7 +100,6 @@ public class TweetProcessor {
         }
         activePeopleAnalyzer.TweetArrived(tweet);
         tweetsOverTimeAnalyzer.TweetArrived(status);
-        tweetDataLogic.setNewTweetMeta(status);
         if (retweetEnabled) {
             checkModeratedAndThen(status, tweet);
         } else {
