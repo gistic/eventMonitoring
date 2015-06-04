@@ -64,10 +64,12 @@ public class LiveTweetsBroadcaster {
         return "{\"msg\":\"Message has been broadcasted.\"}";
     }
 
-    private synchronized void doBroadcast(String uuid, OutboundEvent event) {
+    private void doBroadcast(String uuid, OutboundEvent event) {
         try {
             SseBroadcaster broadcaster = broadcasters.get(uuid);
-            broadcaster.broadcast(event);
+            synchronized (broadcaster) {
+                broadcaster.broadcast(event);
+            }
         } catch (NullPointerException ex) {
             LoggerFactory.getLogger(this.getClass()).info("No one listening for event: " + uuid);
         }
