@@ -1,39 +1,49 @@
 <aside class="col-md-8">
-   
+
     <section>
         <div ng-include="'views/views-panels/media-panel.html'"></div>
     </section>
-    
+
     <section>
         <div ng-include="'views/views-panels/tweets-location-panel.html'"></div>
     </section>
-    
+
     <section>
         <div ng-include="'views/views-panels/tweets-overtime-panel.html'"></div>
     </section>
-    
+
     <section>
         <div ng-include="'views/views-panels/top-people-panel.html'"></div>
     </section>
-    
+
     <section>
         <div ng-include="'views/views-panels/tweets-per-country-panel.html'"></div>
     </section>
-    
+
 </aside>
 
 <section class="col-md-16">
-    
+
     <aside class="tweets-queue-options clearfix">
-        <select name="" id="" class="pull-left">
-            <option value="">All tweets</option>
-            <option value="">Most popular</option>
-        </select>
+
+
+        <ul class="list-inline pull-left" ng-init="tab = 1">
+            <li ng-class="{active:tab===1}">
+                <a href ng-click="tab = 1">All tweets</a>
+            </li>
+            <li ng-class="{active:tab===2}" ng-click="loadMostPopular()">
+                <a href ng-click="tab = 2">Most popular</a>
+            </li>
+        </ul>
+
+
         <strong class="pull-right">{{totalTweets}} tweets</strong>
     </aside>
-    
+
     <button type="button" class="btn btn-load-more" ng-show="loadMoreButton()" ng-click="loadMoreTweets()"><strong><i class="fa fa-arrow-up"></i></strong> {{remainingTweetsCount}} New Tweets</button>
-    
-    <div ng-include="'views/views-components/tweetQueue.html'"></div>
+
+
+    <div ng-show="tab === 1" ng-include="'views/views-components/tweetQueue.html'"></div>
+    <div ng-show="tab === 2" ng-include="'views/views-components/topTweetsQueue.html'"></div>
 
 </section>

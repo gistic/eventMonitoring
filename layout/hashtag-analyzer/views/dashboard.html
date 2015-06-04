@@ -1,7 +1,9 @@
 <!-- HEADER -->
 <header class="header-dashboard clearfix">
+   
     <div class="container">
-        <a class="navbar-brand brand" href="#">
+       
+        <a class="navbar-logo pull-left" href="#">
             <strong class="icon icon-bird"></strong>
         </a>
 
@@ -10,24 +12,49 @@
                 <div class="input-group start-event">
                     <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startEventHandler()">
                     <span class="input-group-btn">
-                <button class="btn btn-search" type="button" ng-click="startEventHandler()"><i class="fa fa-search"></i></button>
-                <button type="button" ng-click="killEvent()" class="btn btn-stop btn-sm"><i class="fa fa-close"></i></button>
-            </span>
+                        <button class="btn btn-search" type="button" ng-click="startEventHandler()"><i class="fa fa-search"></i></button>
+                    </span>
                 </div>
             </div>
         </form>
-            
-        <ul class="pull-right list-inline dashboard-nav">
-            <li>
-                <a ui-sref=".liveStreaming">Tweets</a>
-            </li>
-            <li>
-                <a ui-sref=".media">Media</a>
-            </li>
-        </ul>
-    </div>
+
+        <div class="navs pull-right clearfix">
+           
+            <ul class="list-inline dashboard-nav pull-left">
+                <li>
+                    <a ui-sref=".liveStreaming">Tweets</a>
+                </li>
+                <li>
+                    <a ui-sref=".media">Media</a>
+                </li>
+            </ul>
+
+            <ul class="nav-user pull-right">
+                <li role="presentation" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
+                        <img lazy-load ll-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a ng-href="https://twitter.com/intent/user?user_id={{authoUserID}}" target="_blank">Go to profile</a>
+                        </li>
+                        <li>
+                            <a ng-click="logOutUser()">Logout</a>
+                        </li>
+                        <li>
+                           <a ng-click="killEvent()">Stop event [ Test ]</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+    </div
+    >
 </header>
 
+<!-- Main Content [ Using UI-Router @ /views-components ] -->
 <main class="container dashboard">
     <div class="row" ui-view></div>
 </main>

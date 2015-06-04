@@ -2,6 +2,8 @@ package org.gistic.tweetboard.resources;
 
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
+import org.gistic.tweetboard.representations.Event;
+import org.gistic.tweetboard.representations.EventUuid;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -11,6 +13,10 @@ import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 import javax.ws.rs.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -84,6 +90,7 @@ public class LoginResource {
         String accessTokenSecret =  accessTokenObject.getTokenSecret();
 
         String userId = authDao.getUserId(accessToken);
+        String screenName  = accessTokenObject.getScreenName();
         String userIdFromTwitter = String.valueOf( accessTokenObject.getUserId() );
         boolean firstTime = false;
         if (userId == null) {
@@ -98,7 +105,26 @@ public class LoginResource {
         String hashtags = authDao.getTempHashtags(oauthToken);
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
-        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/dashboard/liveStreaming?hashtags="+hashtags+"&authToken="+accessToken).build();
+
+        //make event on user's behalf
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://127.0.0.1:8080/api/events?authToken="+accessToken);
+        //target.queryParam("authToken", accessToken);
+        Event event = new Event(hashtags.split(","));
+        //set default profile image
+        String profileImageUrl = "http://s.twimg.com/a/1292022067/images/default_profile_2_reasonably_small.png";
+        EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
+        try {
+            profileImageUrl = twitter.showUser(Long.parseLong(userIdFromTwitter)).getBiggerProfileImageURLHttps();
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/dashboard/liveStreaming?hashtags=" +hashtags
+                +"&authToken="+accessToken
+                +"&userId="+userId
+                +"&screenName="+screenName
+                +"&uuid="+eventUuid.getUuid()
+                +"&profileImageUrl="+profileImageUrl).build();
 //                .queryParam("token", accessToken)
 //                .queryParam("hashtags", hashtags)
 //                .queryParam("firstTime", String.valueOf(firstTime)).build();

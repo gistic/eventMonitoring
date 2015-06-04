@@ -28,7 +28,7 @@ public class Event {
 
     Event() {}
 
-    Event(String[] hashTags) {
+    public Event(String[] hashTags) {
         this.hashTags = hashTags;
     }
     public String[] getHashTags() {

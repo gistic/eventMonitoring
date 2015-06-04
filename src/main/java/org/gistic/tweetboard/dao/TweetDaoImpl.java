@@ -76,7 +76,7 @@ public class TweetDaoImpl implements TweetDao {
     public void addToArrived(String uuid, Status tweet, String statusString) {
         String id = String.valueOf(tweet.getId());
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.set(getTweetIdString(uuid, id), statusString);
+            //jedis.set(getTweetIdString(uuid, id), statusString);
             jedis.lpush(getArrivedNotSentListKey(uuid), id);
         }  catch (JedisException jE) {
             jE.printStackTrace();
@@ -94,7 +94,7 @@ public class TweetDaoImpl implements TweetDao {
                 String screenName = String.valueOf(tweet.getUser().getScreenName());
                 String userId = String.valueOf(tweet.getUser().getId());
                 String tweetId = String.valueOf(tweet.getId());
-                setNewTweetMeta(uuid, tweet, jedis, screenName, userId, tweetId);
+                //setNewTweetMeta(uuid, tweet, jedis, screenName, userId, tweetId);
             }
         }  catch (JedisException jE) {
             jE.printStackTrace();
@@ -106,6 +106,7 @@ public class TweetDaoImpl implements TweetDao {
         jedis.set(getUserProfileImageKey(screenName), tweet.getUser().getOriginalProfileImageURLHttps());
         jedis.sadd(getUserTweetsSetKey(uuid, userId), tweetId);
         jedis.zincrby(getUsersRankSetKey(uuid), 1, screenName);
+        incrTweetRetweetsByN(uuid, tweet.getId(), tweet.getRetweetCount());
     }
 
     @Override
@@ -422,12 +423,24 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public void incrCountryCounter(String uuid,  String countryCode) {
+    public void setNewTweetMeta(String uuid, Status tweet) {
+        User user = tweet.getUser();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            setNewTweetMeta(uuid, tweet, jedis, tweet.getUser().getScreenName(), String.valueOf(user.getId()),
+                    String.valueOf(tweet.getId()));
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public Double incrCountryCounter(String uuid, String countryCode) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.zincrby(getCountryRankSetKey(uuid), 1, countryCode);
+            return jedis.zincrby(getCountryRankSetKey(uuid), 1, countryCode);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
+        return 0.0;
     }
     public void incrMedia(String uuid) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
@@ -450,6 +463,15 @@ public class TweetDaoImpl implements TweetDao {
     public void incrTweetRetweets(String uuid, long retweetedStatusId) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hincrBy(getTweetMetaKey(uuid, Long.toString(retweetedStatusId)), TWEET_META_RETWEETS_COUNT_KEY, 1);
+        } catch(JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public void incrTweetRetweetsByN(String uuid, long retweetedStatusId, int n) {
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.hincrBy(getTweetMetaKey(uuid, Long.toString(retweetedStatusId)), TWEET_META_RETWEETS_COUNT_KEY, n);
         } catch(JedisException jE) {
             jE.printStackTrace();
         }
@@ -488,6 +510,7 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public TweetMeta getTweetMeta(String key) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
+            System.out.println("key is get tweet meta is: "+key);
             return new TweetMeta(Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY)),
                     Long.parseLong(jedis.hget(key, TWEET_META_RETWEETS_COUNT_KEY)));
         } catch(JedisException jE) {
@@ -523,6 +546,72 @@ public class TweetDaoImpl implements TweetDao {
         }
         //TODO: error module
         return null;
+    }
+
+    @Override
+    public Long addToCache(String uuid, InternalStatus status) {
+        Status tweet = status.getInternalStatus();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            //jedis.set(getTweetIdString(uuid, id), statusString);
+            return jedis.lpush(getTweetCacheKey(uuid), String.valueOf(tweet.getId()));
+        }  catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return 0l;
+    }
+
+    @Override
+    public String popFromCache(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.rpop(getTweetCacheKey(uuid));
+        }  catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void addToTweetStringCache(String uuid, InternalStatus status) {
+        String id = String.valueOf(status.getInternalStatus().getId());
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.set(getTweetStringCache(uuid, id), status.getStatusString());
+        }
+    }
+
+    @Override
+    public void removeFromTweetStringCache(String uuid, String poppedTweetId) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.del(getTweetStringCache(uuid, poppedTweetId));
+        }
+    }
+
+    @Override
+    public String getTweetStringsCache(String uuid, String id) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.get(getTweetStringCache(uuid, id));
+        } catch (JedisException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getIdsFromTweetCache(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            //jedis.set(getTweetIdString(uuid, id), statusString);
+            return jedis.lrange(getTweetCacheKey(uuid), 0, -1);
+        }  catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
+    private String getTweetStringCache(String uuid, String id) {
+        return uuid+":tweetStringCache:"+id;
+    }
+
+    private String getTweetCacheKey(String uuid) {
+        return uuid + ":tweetCacheList";
     }
 
     private String getTweetScoreSortedSetKey(String uuid) {

@@ -71,4 +71,9 @@ public class TweetBoardConfiguration extends Configuration implements AssetsBund
     public AssetsConfiguration getAssetsConfiguration() {
         return assets;
     }
+
+    @JsonProperty
+    private boolean v2;
+
+    public boolean isV2() { return v2; }
 }

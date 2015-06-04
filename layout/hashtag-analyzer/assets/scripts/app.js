@@ -1,6 +1,6 @@
 'use strict';
 
-var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies']);
+var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies', 'angularMoment']);
 
 
 // Run : Intliaize the event admin app with this values
@@ -9,9 +9,6 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies) {
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
     $rootScope.eventID = $location.search().uuid;
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
-
-    $cookies.userAuthentication = $rootScope.userAuthentication;
-
 })
 
 trackHashtagApp.config(function (LightboxProvider) {
@@ -32,7 +29,6 @@ trackHashtagApp.config(function (LightboxProvider) {
 });
 
 trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
-
     window.routes = {
         "home": {
             url: '',
@@ -118,7 +114,7 @@ trackHashtagApp.factory('CreateEventSource', ['$rootScope', '$location', 'Reques
 }]);
 
 // Factory : Request data factory for : Start event & Any other request
-trackHashtagApp.factory('RequestData', ['$rootScope', '$http', '$location', '$window', function ($rootScope, $http, $location, $window) {
+trackHashtagApp.factory('RequestData', ['$rootScope', '$http', '$location', '$window', '$cookies', function ($rootScope, $http, $location, $window, $cookies) {
 
     return {
         fetchData: function (requestAction, apiUrl, requestData) {
@@ -140,7 +136,7 @@ trackHashtagApp.factory('RequestData', ['$rootScope', '$http', '$location', '$wi
         startEvent: function (requestAction) {
 
             var eventHashtag = $('#eventHashtag').val();
-            var requestUrl = $rootScope.baseUrl + '/api/events';
+            var requestUrl = $rootScope.baseUrl + '/api/events?authToken=' + $cookies.userAuthentication;
 
             return $http({
                 method: 'POST',
@@ -181,9 +177,7 @@ trackHashtagApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', '
         var requestData = "";
 
         RequestData.fetchData(requestAction, apiUrl, requestData)
-            .then(function (response) {
-                console.log(response);
-            })
+            .then(function (response) {})
 
     }
 
@@ -199,47 +193,84 @@ trackHashtagApp.filter('trusted', ['$sce', function ($sce) {
 trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', '$cookies', '$cookieStore', '$location', '$window', function ($rootScope, $scope, $http, $state, RequestData, $cookies, $cookieStore, $location, $window) {
 
     $scope.startNewEvent = function (action) {
+        // Check if there is an authentication key in the browser cookies
+        if ($cookies.userAuthentication == undefined) {
 
-        //        if ($cookies.userAuthentication == undefined) {
-        var requestAction = "GET";
-        var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
-        var requestData = ""
-        RequestData.fetchData(requestAction, apiUrl, requestData)
-            .then(function (response) {
-                var openUrl = response.data.url;
-                $window.location.href = openUrl;
-            });
-        //        } else {
-        //            console.log("1");
-        //        }
+            var requestAction = "GET";
+            var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
+            var requestData = ""
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .then(function (response) {
+                    var openUrl = response.data.url;
+                    $window.location.href = openUrl;
+                });
+        } else {
+
+            $scope.$broadcast();
+            RequestData.startEvent()
+                .success(function (response) {
+                    $rootScope.eventID = response.uuid;
+                    // Redirect the front website page to the admin page
+                    $state.transitionTo('dashboard.liveStreaming', {
+                        uuid: $scope.eventID
+                    });
+                })
+        }
     };
-    //    $scope.startNewEvent = function (action) {
-    //
-    //        $scope.$broadcast();
-    //
-    //        RequestData.startEvent()
-    //            .success(function (response) {
-    //                $rootScope.eventID = response.uuid;
-    //                // Redirect the front website page to the admin page
-    //                $state.transitionTo('dashboard.liveStreaming', {
-    //                    uuid: $scope.eventID
-    //                });
-    //            })
-    //    };
 }]);
 
 
 // Controller : Populate the recieved data and update admin page
-trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce) {
+trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
 
 
-        // Set event ID
+        $scope.dynamicPopover = {
+            content: 'Hello, World!',
+            templateUrl: 'myPopoverTemplate.html',
+            title: 'Title'
+        };
+
+        // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
         $rootScope.eventID = $location.search().uuid;
-        
-        $scope.authToken = $location.search().authToken;
-        $scope.hashtags = $location.search().hashtags;
-        
+
+        if ($cookies.userAuthentication == undefined) {
+            $rootScope.authToken = $location.search().authToken;
+            $cookies.userAuthentication = $rootScope.authToken;
+        } else {
+            $rootScope.authToken = $cookies.userAuthentication;
+        }
+
+        if ($cookies.hashtags == undefined) {
+            $rootScope.hashtags = $location.search().hashtags;
+            $cookies.hashtags = $rootScope.hashtags;
+        } else {
+            $rootScope.hashtags = $cookies.hashtags;
+        }
+
+        if ($cookies.authoUserName == undefined) {
+            $rootScope.authoUserName = $location.search().screenName;
+            $cookies.authoUserName = $rootScope.authoUserName;
+        } else {
+            $rootScope.authoUserName = $cookies.authoUserName;
+        }
+
+
+        if ($cookies.authoUserID == undefined) {
+            $rootScope.authoUserID = $location.search().userId;
+            $cookies.authoUserID = $rootScope.authoUserID
+        } else {
+            $rootScope.authoUserID = $cookies.authoUserID;
+        }
+
+
+        if ($cookies.authoUserPicture == undefined) {
+            $rootScope.authoUserPicture = $location.search().profileImageUrl;
+            $cookies.authoUserPicture = $rootScope.authoUserPicture
+        } else {
+            $rootScope.authoUserPicture = $cookies.authoUserPicture;
+        }
+
         // Truse Source : fix ng-src videos issue
         $scope.trustSrc = function (src) {
             return $sce.trustAsResourceUrl(src);
@@ -247,30 +278,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         // Lightbox for media
         $scope.Lightbox = Lightbox;
-
-        var locationChart = {};
-        $scope.locationChart = locationChart;
-
-        $scope.drawLocationChart = function () {
-
-            locationChart.type = "GeoChart";
-            locationChart.data = [['Locale', 'Count']];
-
-            locationChart.options = {
-                height: 250,
-                colorAxis: {
-                    colors: ['rgb(0, 200, 220)', 'rgb(0, 100, 200)', 'rgb(1, 120, 183)']
-                },
-                displayMode: 'regions'
-            };
-
-            locationChart.formatters = {
-                number: [{
-                    columnNum: 1
-                }]
-            };
-
-        }
 
         // GET : Top active people
         $scope.topPeople = [];
@@ -291,20 +298,28 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         }
         $scope.getTopPeople();
 
-
-
-        // TOP TWEETS : Not Working
+        // TOP TWEETS
+        $scope.topTweets = [];
         $scope.getTopTweets = function () {
 
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets';
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets?authToken=' + $cookies.userAuthentication;;
             var requestAction = "GET";
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {}).error(function () {
-                    console.log(response);
+                .success(function (response) {
+                    for (var i = 0; i < response.items.length; i++) {
+                        $scope.tweet = JSON.parse(response.items[i]);
+                        $scope.topTweets.push($scope.tweet);
+                    }
+                }).error(function () {
+                    console.log("#");
                 })
         };
+
+        $scope.loadMostPopular = function () {
+            $scope.getTopTweets();
+        }
 
         $scope.enableModeration = false;
         $scope.moderationStatus = function () {
@@ -320,24 +335,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         };
         $scope.moderationStatus();
 
-        $rootScope.getLocationStats = function () {
-
-            var requestAction = "GET";
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/topCountries';
-            var requestData = "";
-
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {
-                    $scope.topCountries = response.items;
-                    for (var i = 0; i < response.items.length; i++) {
-                        locationChart.data.push([response.items[i].code, response.items[i].count]);
-                    }
-                }).error(function () {
-                    console.log("#");
-                })
-        }
-        $rootScope.getLocationStats();
-        $scope.drawLocationChart();
 
         $rootScope.getEventStats = function () {
 
@@ -379,9 +376,18 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         // Start New Event Handler
         $scope.eventStarted = false;
         $rootScope.timerRunning = false;
-        $scope.tweetsQueue = [];
+
+        $scope.tweetsQueue = []; // display
+        $scope.lastNewTweets = []; // for button
+        $scope.tweetsHistory = []; // history
+        $scope.loadTweetsFromHistoryArray = [];
+
         $scope.tweetsQueueLength = 0;
+        $scope.lastNewTweetsLength = 0;
+
         $scope.mediaQueue = [];
+
+
         $scope.tweet = {};
 
         // Listen to new message
@@ -444,9 +450,11 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 }
 
                 $scope.$apply(function () {
-                    $scope.tweetsQueue.push($scope.tweet);
-                    $scope.tweetsQueueLength++;
-
+                    if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
+                        $scope.tweetsQueue.unshift($scope.tweet);
+                    } else {
+                        $scope.lastNewTweets.push($scope.tweet);
+                    }
                 }, false);
             });
 
@@ -458,23 +466,82 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 }, false);
             });
 
-
-            source.addEventListener('new-admin-opened', function (response) {
-                //                source.close();
+            source.addEventListener('country-update', function (response) {
+                
+                $scope.topCountrey = JSON.parse(response.data);
+                
+                $scope.$apply(function () {
+                    var countryUpdated = false;
+                    for (var i = 0; i < locationChart.data.length; i++) {
+                        if (locationChart.data[i][0] == $scope.topCountrey.code) {
+                            locationChart.data[i][1] = $scope.topCountrey.count;
+                            $scope.topCountries[i].count = $scope.topCountrey.count;
+                             countryUpdated = true;
+                        }
+                    }
+                    if (!countryUpdated) {
+                        locationChart.data.push([$scope.topCountrey.code, $scope.topCountrey.count]);
+                        $scope.topCountries.push($scope.topCountrey);
+                    }
+    
+                }, false);
             });
+
         }
 
         $scope.startEventSource();
 
-        $scope.openLightboxModal = function (index) {
-            Lightbox.openModal($scope.mediaQueue, index);
-        };
+
+        var locationChart = {};
+        $scope.locationChart = locationChart;
+
+        $scope.drawLocationChart = function () {
+
+            locationChart.type = "GeoChart";
+            locationChart.data = [['Locale', 'Count']];
+
+            locationChart.options = {
+                height: 250,
+                colorAxis: {
+                    colors: ['rgb(0, 200, 220)', 'rgb(0, 100, 200)', 'rgb(1, 120, 183)']
+                },
+                displayMode: 'regions'
+            };
+
+            locationChart.formatters = {
+                number: [{
+                    columnNum: 1
+                }]
+            };
+
+        }
+
+        $rootScope.getLocationStats = function () {
+
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topCountries';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.topCountries = response.items;
+                
+                    // MAP
+                    for (var i = 0; i < response.items.length; i++) {
+                        locationChart.data.push([response.items[i].code, response.items[i].count]);
+                    }
+                
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+        $rootScope.getLocationStats();
+        $scope.drawLocationChart();
 
         $scope.pagesShown = 1;
-        $scope.pageSize = 25;
-        $scope.tweetsShowned = 0;
+        $scope.pageSize = 50;
 
-        $scope.tweetsGab = false;
+        $scope.tweetsShowned = 0;
 
         // Tweet queue limit
         $scope.tweetsQueueLimit = function () {
@@ -484,35 +551,46 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         // Show load more button
         $scope.loadMoreButton = function () {
-            $scope.remainingTweetsCount = $scope.tweetsQueueLength - ($scope.pageSize * $scope.pagesShown);
+            $scope.remainingTweetsCount = $scope.lastNewTweets.length;
             $scope.tweetsShowned = $scope.pageSize * $scope.pagesShown;
-            return $scope.pagesShown < ($scope.tweetsQueueLength / $scope.pageSize);
+            return $scope.lastNewTweets.length != 0;
 
         }
 
         // Load more tweets handler
         $scope.loadMoreTweets = function () {
-            if ($scope.remainingTweetsCount >= 10) {
-                //                $scope.pagesShown = $scope.pagesShown + 1;
-                $scope.pagesShown = $scope.pagesShown + ($scope.remainingTweetsCount);
-
+            if ($scope.lastNewTweets.length <= 25) {
+                $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.lastNewTweets);
+                $scope.pagesShown = $scope.pagesShown + $scope.lastNewTweets.length % $scope.pageSize;
             } else {
-                $scope.pagesShown++;
+                $scope.tweetsHistory = $scope.tweetsHistory.concat($scope.tweetsQueue);
+                var queueLength = $scope.tweetsQueue.length;
+                for (var i = 0; i < $scope.lastNewTweets.length; i++) {
+                    if (i < $scope.pageSize) {
+                        $scope.tweetsQueue.push($scope.lastNewTweets[$scope.lastNewTweets.length - i - 1]);
+                    } else {
+                        $scope.tweetsHistory.push($scope.lastNewTweets[$scope.lastNewTweets.length - i - 1]);
+                    }
+                }
+                $scope.tweetsQueue.splice(0, queueLength);
             }
+            $scope.lastNewTweets = [];
+
             $scope.remainingTweetsCount = $scope.tweetsQueueLength - ($scope.pageSize * $scope.pagesShown);
         };
 
-        // Show tweets Gab Container
-        $scope.tweetsGabContainer = function () {
-            if ($scope.remainingTweetsCount >= 10) {
-                $scope.tweetsGab = true;
-            }
-            return $scope.tweetsGab;
+        $scope.loadMoreButtonFromHistory = function () {
+            return $scope.tweetsHistory.length > 0;
         }
 
-        // Load tweets on Gab
-        $scope.loadTweetsOnGab = function () {
-
+        $scope.loadMoreTweetsFromHistory = function () {
+            $scope.loadTweetsFromHistoryArray = [];
+            for (var i = 0; i < $scope.pageSize && $scope.tweetsHistory.length > i; i++) {
+                $scope.loadTweetsFromHistoryArray.push($scope.tweetsHistory[$scope.tweetsHistory.length - i - 1]);
+                
+            }
+            $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.loadTweetsFromHistoryArray);
+            $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize, $scope.pageSize);
         }
 
         // Stop Event Handler
@@ -536,11 +614,42 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 });
         };
 
+        $scope.openLightboxModal = function (index) {
+            Lightbox.openModal($scope.mediaQueue, index);
+        };
+
+        // Logout
+        $scope.logOutUser = function () {
+            SweetAlert.swal({
+                    title: "Are you sure?",
+                    text: "Your will not be able to recover this hashtag tracking!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, stop it!",
+                    closeOnConfirm: false
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $cookieStore.remove("authoUserID");
+                        $cookieStore.remove("authoUserName");
+                        $cookieStore.remove("authoUserPicture");
+                        $cookieStore.remove("hashtags");
+                        $cookieStore.remove("userAuthentication");
+                        $scope.stopEventHandler();
+                        $state.transitionTo('home');
+                        SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+                    } else {
+                        SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
+                    }
+                });
+        };
+
         $scope.stopEventHandler = function () {
 
             var eventID = $rootScope.eventID;
             var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID;
+            var apiUrl = '/api/events/' + eventID + "?authToken=" + $cookies.userAuthentication;
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
