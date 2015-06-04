@@ -49,16 +49,6 @@ public class WarmupRunnable implements Runnable {
 
         TwitterFactory factory = new TwitterFactory(configuration);
         this.twitter = factory.getInstance();
-
-    }
-
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         boolean firstTime = true;
         QueryResult queryResult = null;
         try {
@@ -85,7 +75,7 @@ public class WarmupRunnable implements Runnable {
 
         int index = 0;
         query.count(100);
-        while (event.isRunning() && !reachedEnd && index<5) {
+        while (!reachedEnd && index<5) {
             query.sinceId(sinceId);
             try {
                 queryResult = twitter.search(query);
@@ -100,5 +90,55 @@ public class WarmupRunnable implements Runnable {
                 break;
             }
         }
+    }
+
+    @Override
+    public void run() {
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        boolean firstTime = true;
+//        QueryResult queryResult = null;
+//        try {
+//            queryResult = twitter.search(query);
+//            int resultCount = queryResult.getCount();
+//            System.out.println("result count is: "+resultCount);
+//            sinceId = queryResult.getSinceId();
+//            if (resultCount < 25) reachedEnd = true;
+//            List<Status> tweets = queryResult.getTweets();
+//            Collections.reverse(tweets);
+//            for (Status tweet : tweets){
+//                event.postTweetToEvent(new InternalStatus(tweet, TwitterObjectFactory.getRawJSON(tweet)));
+////                try {
+////                    Thread.sleep(1000);
+////                } catch (InterruptedException e) {
+////                    e.printStackTrace();
+////                }
+//            }
+//        } catch (TwitterException e) {
+//            e.printStackTrace();
+//            reachedEnd = true;
+//        }
+//
+//
+//        int index = 0;
+//        query.count(100);
+//        while (event.isRunning() && !reachedEnd && index<5) {
+//            query.sinceId(sinceId);
+//            try {
+//                queryResult = twitter.search(query);
+//                int resultCount = queryResult.getCount();
+//                if (resultCount<100) reachedEnd = true;
+//                System.out.println("result count is: "+resultCount);
+//                tweets = queryResult.getTweets();
+//                tweetDataLogic.warmupStats(tweets);
+//                index++;
+//            } catch (TwitterException e) {
+//                e.printStackTrace();
+//                break;
+//            }
+//        }
     }
 }
