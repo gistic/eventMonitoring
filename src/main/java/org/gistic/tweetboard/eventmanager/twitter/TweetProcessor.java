@@ -5,6 +5,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
+import org.slf4j.LoggerFactory;
 import twitter4j.Place;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
@@ -63,7 +64,11 @@ public class TweetProcessor {
     }
 
     public void stop() throws Exception {
-        bus.unregister(this);
+        try {
+            bus.unregister(this);
+        } catch(IllegalArgumentException e) {
+            LoggerFactory.getLogger(this.getClass()).info("Bus already unregistered.");
+        }
     }
 
     @Subscribe
