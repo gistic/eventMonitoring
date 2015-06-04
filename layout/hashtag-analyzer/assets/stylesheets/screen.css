@@ -18600,6 +18600,16 @@ footer.views--footer p {
   display: inline-block;
 }
 
+/* line 44, ../sass/_/_modules/_media.scss */
+.masonry-brick-media-panel {
+  width: 25%;
+  margin-bottom: 10px;
+}
+/* line 47, ../sass/_/_modules/_media.scss */
+.masonry-brick-media-panel img {
+  position: relative;
+}
+
 /* line 1, ../sass/_/_modules/_maps.scss */
 .angular-google-map-container {
   height: 400px;

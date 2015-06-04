@@ -314,9 +314,14 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 })
         };
                                                 
-        $scope.showLoadMoreButton = true;
+        $scope.showLoadMore = true;
+        $scope.showLoadMoreButton = function() {
+            $scope.showLoadMore = true;
+            $scope.loadMoreButton();
+        }              
+        
         $scope.loadMostPopular = function () {
-            $scope.showLoadMoreButton = false;
+            $scope.showLoadMore = false;
             $scope.getTopTweets();
         }
 
@@ -556,7 +561,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.loadMoreButton = function () {
             $scope.remainingTweetsCount = $scope.lastNewTweets.length;
             $scope.tweetsShowned = $scope.pageSize * $scope.pagesShown;
-            if ($scope.showLoadMoreButton && $scope.lastNewTweets.length != 0) {
+            if ($scope.showLoadMore && $scope.lastNewTweets.length != 0) {
                 return true;
             }
         }
