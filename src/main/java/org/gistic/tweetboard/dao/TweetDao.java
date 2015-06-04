@@ -122,4 +122,8 @@ public interface TweetDao {
     String getTweetStringsCache(String uuid, String id);
 
     List<String> getIdsFromTweetCache(String uuid);
+
+    Set<String> getAllTweetsIds(String uuid);
+
+    String getTweetMetaKey(String uuid, String key);
 }

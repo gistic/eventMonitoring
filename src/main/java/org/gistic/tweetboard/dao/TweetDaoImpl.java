@@ -101,11 +101,16 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     private void setNewTweetMeta(String uuid, Status tweet, Jedis jedis, String screenName, String userId, String tweetId) {
+        jedis.sadd(getAllTweetsIdsSetKey(uuid), tweetId);
         jedis.set(getUserIdKey(uuid, screenName), userId);
         jedis.set(getUserProfileImageKey(uuid, screenName), tweet.getUser().getOriginalProfileImageURLHttps());
         jedis.sadd(getUserTweetsSetKey(uuid, userId), tweetId);
         jedis.zincrby(getUsersRankSetKey(uuid), 1, screenName);
         incrTweetRetweetsByN(uuid, tweet.getId(), tweet.getRetweetCount());
+    }
+
+    private String getAllTweetsIdsSetKey(String uuid) {
+        return uuid+":allTweetsIdsSetKey";
     }
 
     private String getUserIdKey(String uuid, String screenName) {
@@ -609,6 +614,17 @@ public class TweetDaoImpl implements TweetDao {
         return null;
     }
 
+    @Override
+    public Set<String> getAllTweetsIds(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            //jedis.set(getTweetIdString(uuid, id), statusString);
+            return jedis.smembers(getAllTweetsIdsSetKey(uuid));
+        }  catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
     private String getTweetStringCache(String uuid, String id) {
         return uuid+":tweetStringCache:"+id;
     }
@@ -633,7 +649,7 @@ public class TweetDaoImpl implements TweetDao {
 //        return uuid+":tweetMeta:"+retweetedStatusId+":"+ TWEET_META_RETWEETS_COUNT_KEY;
 //    }
 
-    private String getTweetMetaKey(String uuid, String retweetedStatusId) {
+    public String getTweetMetaKey(String uuid, String retweetedStatusId) {
         return uuid+":tweetMeta:"+retweetedStatusId;
     }
 
