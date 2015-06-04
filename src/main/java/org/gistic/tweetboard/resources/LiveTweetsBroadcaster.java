@@ -24,10 +24,11 @@ public class LiveTweetsBroadcaster {
 
     private Map<String, SseBroadcaster> broadcasters = new HashMap<>();
 
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String broadcastMessage(Message msg) {
+    public synchronized String broadcastMessage(Message msg) {
         String uuid = msg.getUuid();
         String message = msg.getMsg();
         OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
@@ -76,7 +77,7 @@ public class LiveTweetsBroadcaster {
 
     @GET
     @Produces(SseFeature.SERVER_SENT_EVENTS)
-    public EventOutput listenToBroadcast(@NotNull @QueryParam("uuid") String uuid) {
+    public synchronized EventOutput listenToBroadcast(@NotNull @QueryParam("uuid") String uuid) {
         final EventOutput eventOutput = new EventOutput();
         SseBroadcaster broadcaster = this.broadcasters.get(uuid);
         if (broadcaster == null) {
