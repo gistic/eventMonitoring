@@ -225,9 +225,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
                                                 
         $scope.dynamicPopover = {
-            content: 'Hello, World!',
-            templateUrl: 'myPopoverTemplate.html',
-            title: 'Title'
+            templateUrl: 'myPopoverTemplate.html'
         };
 
         // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
@@ -315,8 +313,10 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     console.log("#");
                 })
         };
-
+                                                
+        $scope.showLoadMoreButton = true;
         $scope.loadMostPopular = function () {
+            $scope.showLoadMoreButton = false;
             $scope.getTopTweets();
         }
 
@@ -556,8 +556,9 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.loadMoreButton = function () {
             $scope.remainingTweetsCount = $scope.lastNewTweets.length;
             $scope.tweetsShowned = $scope.pageSize * $scope.pagesShown;
-            return $scope.lastNewTweets.length != 0;
-
+            if ($scope.showLoadMoreButton && $scope.lastNewTweets.length != 0) {
+                return true;
+            }
         }
 
         // Load more tweets handler
