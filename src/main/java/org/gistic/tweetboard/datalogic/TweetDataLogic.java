@@ -170,7 +170,20 @@ public class TweetDataLogic {
     }
 
     public void incrCountryCounter(String countryCode) {
-        tweetDao.incrCountryCounter(uuid, countryCode);
+        double count = tweetDao.incrCountryCounter(uuid, countryCode);
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
+        Message msg = new Message(uuid, Message.Type.CountryUpdate, createCountryUpdateMessage(countryCode, count));
+        target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
+    }
+
+    private String createCountryUpdateMessage(String countryCode, double count) {
+        try {
+            return new JSONObject().put("code", countryCode).put("count", new Double(count).intValue()).toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "ERROR";
     }
 
     public GenericArray<TopCountry> getTopNCountries(Integer count) {

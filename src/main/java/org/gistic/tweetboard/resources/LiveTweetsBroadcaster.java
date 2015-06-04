@@ -60,6 +60,14 @@ public class LiveTweetsBroadcaster {
                         .build();
                 doBroadcast(uuid, event);
                 break;
+            case Message.Type.CountryUpdate:
+                event = eventBuilder
+                        .name("country-update")
+                        .mediaType(MediaType.TEXT_PLAIN_TYPE)
+                        .data(String.class, message)
+                        .build();
+                doBroadcast(uuid, event);
+                break;
         }
         return "{\"msg\":\"Message has been broadcasted.\"}";
     }

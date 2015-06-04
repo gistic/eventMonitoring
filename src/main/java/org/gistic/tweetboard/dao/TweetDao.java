@@ -86,7 +86,7 @@ public interface TweetDao {
 
     void setNewTweetMeta(String uuid, Status tweet);
 
-    void incrCountryCounter(String uuid, String countryCode);
+    Double incrCountryCounter(String uuid, String countryCode);
 
     Set<Tuple> getTopNCountries(String uuid, Integer count);
     void incrMedia(String uuid);
