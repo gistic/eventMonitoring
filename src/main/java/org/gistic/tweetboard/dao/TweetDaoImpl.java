@@ -519,8 +519,11 @@ public class TweetDaoImpl implements TweetDao {
     public TweetMeta getTweetMeta(String key) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
             //System.out.println("key is get tweet meta is: "+key);
-            return new TweetMeta(Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY)),
-                    Long.parseLong(jedis.hget(key, TWEET_META_RETWEETS_COUNT_KEY)));
+            long date = Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY));
+            String retweetsStr = jedis.hget(key, TWEET_META_RETWEETS_COUNT_KEY);
+            long retweetsCount = 0l;
+            if (retweetsStr!=null) retweetsCount = Long.parseLong(retweetsStr);
+            return new TweetMeta(date, retweetsCount);
         } catch(JedisException jE) {
             jE.printStackTrace();
         }
