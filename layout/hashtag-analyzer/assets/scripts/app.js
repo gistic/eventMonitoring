@@ -223,10 +223,19 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 // Controller : Populate the recieved data and update admin page
 trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
-                                                
+
         $scope.dynamicPopover = {
             templateUrl: 'myPopoverTemplate.html'
         };
+
+        Array.prototype.chunk = function (chunkSize) {
+            var array = this;
+            return [].concat.apply([],
+                array.map(function (elem, i) {
+                    return i % chunkSize ? [] : [array.slice(i, i + chunkSize)];
+                })
+            );
+        }
 
         // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
         $rootScope.eventID = $location.search().uuid;
@@ -313,13 +322,13 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     console.log("#");
                 })
         };
-                                                
+
         $scope.showLoadMore = true;
-        $scope.showLoadMoreButton = function() {
+        $scope.showLoadMoreButton = function () {
             $scope.showLoadMore = true;
             $scope.loadMoreButton();
-        }              
-        
+        }
+
         $scope.loadMostPopular = function () {
             $scope.showLoadMore = false;
             $scope.getTopTweets();
@@ -389,7 +398,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.tweetsQueueLength = 0;
         $scope.lastNewTweetsLength = 0;
 
-        $scope.mediaQueue = [];                       
+        $scope.mediaQueue = [];
         $scope.topCountries = [];
 
 
@@ -453,7 +462,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     }
 
                 }
-                
+
                 $scope.$apply(function () {
                     if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
                         $scope.tweetsQueue.unshift($scope.tweet);
@@ -470,19 +479,19 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     $scope.drawChart($scope.data);
                 }, false);
             });
-            
+
 
             source.addEventListener('country-update', function (response) {
-                
+
                 $scope.topCountrey = JSON.parse(response.data);
-                
+
                 $scope.$apply(function () {
                     var countryUpdated = false;
                     for (var i = 0; i < $scope.topCountries.length; i++) {
                         if (locationChart.data[i][0] == $scope.topCountrey.code) {
                             locationChart.data[i][1] = $scope.topCountrey.count;
                             $scope.topCountries[i].count = $scope.topCountrey.count;
-                             countryUpdated = true;
+                            countryUpdated = true;
                         }
                     }
                     if (!countryUpdated) {
@@ -490,7 +499,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                         $scope.topCountries.push($scope.topCountrey);
                     }
                     $scope.topCountriesLength = $scope.topCountries.length;
-    
+
                 }, false);
             });
 
@@ -532,17 +541,17 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
                     $scope.topCountries = response.items;
-                
+
                     // MAP
                     for (var i = 0; i < response.items.length; i++) {
                         locationChart.data.push([response.items[i].code, response.items[i].count]);
                     }
-                
+
                 }).error(function () {
                     console.log("#");
                 })
         }
-                                                
+
         $rootScope.getLocationStats();
         $scope.drawLocationChart();
 
@@ -596,7 +605,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             $scope.loadTweetsFromHistoryArray = [];
             for (var i = 0; i < $scope.pageSize && $scope.tweetsHistory.length > i; i++) {
                 $scope.loadTweetsFromHistoryArray.push($scope.tweetsHistory[$scope.tweetsHistory.length - i - 1]);
-                
+
             }
             $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.loadTweetsFromHistoryArray);
             $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize, $scope.pageSize);
