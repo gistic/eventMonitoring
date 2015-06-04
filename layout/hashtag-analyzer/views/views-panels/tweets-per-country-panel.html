@@ -5,7 +5,7 @@
     </div>
     <div class="panel-body">
         <ul>
-            <li ng-repeat="country in topCountries" class="clearfix">
+            <li ng-repeat="country in topCountries | orderBy : 'count':true | limitTo : 10" class="clearfix">
                 <strong class="pull-left">
                             {{country.code | isoCountry}} 
                             <small>

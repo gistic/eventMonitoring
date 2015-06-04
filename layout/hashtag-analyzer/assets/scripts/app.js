@@ -177,9 +177,7 @@ trackHashtagApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', '
         var requestData = "";
 
         RequestData.fetchData(requestAction, apiUrl, requestData)
-            .then(function (response) {
-                console.log(response);
-            })
+            .then(function (response) {})
 
     }
 
@@ -205,7 +203,6 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
                 .then(function (response) {
                     var openUrl = response.data.url;
                     $window.location.href = openUrl;
-                    console.log(response);
                 });
         } else {
 
@@ -282,30 +279,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         // Lightbox for media
         $scope.Lightbox = Lightbox;
 
-        var locationChart = {};
-        $scope.locationChart = locationChart;
-
-        $scope.drawLocationChart = function () {
-
-            locationChart.type = "GeoChart";
-            locationChart.data = [['Locale', 'Count']];
-
-            locationChart.options = {
-                height: 250,
-                colorAxis: {
-                    colors: ['rgb(0, 200, 220)', 'rgb(0, 100, 200)', 'rgb(1, 120, 183)']
-                },
-                displayMode: 'regions'
-            };
-
-            locationChart.formatters = {
-                number: [{
-                    columnNum: 1
-                }]
-            };
-
-        }
-
         // GET : Top active people
         $scope.topPeople = [];
         $scope.getTopPeople = function () {
@@ -362,24 +335,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         };
         $scope.moderationStatus();
 
-        $rootScope.getLocationStats = function () {
-
-            var requestAction = "GET";
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/topCountries';
-            var requestData = "";
-
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {
-                    $scope.topCountries = response.items;
-                    for (var i = 0; i < response.items.length; i++) {
-                        locationChart.data.push([response.items[i].code, response.items[i].count]);
-                    }
-                }).error(function () {
-                    console.log("#");
-                })
-        }
-        $rootScope.getLocationStats();
-        $scope.drawLocationChart();
 
         $rootScope.getEventStats = function () {
 
@@ -495,7 +450,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 }
 
                 $scope.$apply(function () {
-                    if ($scope.tweetsQueue.length < 5 && $scope.tweetsHistory.length == 0) {
+                    if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
                         $scope.tweetsQueue.unshift($scope.tweet);
                     } else {
                         $scope.lastNewTweets.push($scope.tweet);
@@ -511,12 +466,80 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 }, false);
             });
 
+            source.addEventListener('country-update', function (response) {
+                
+                $scope.topCountrey = JSON.parse(response.data);
+                
+                $scope.$apply(function () {
+                    var countryUpdated = false;
+                    for (var i = 0; i < locationChart.data.length; i++) {
+                        if (locationChart.data[i][0] == $scope.topCountrey.code) {
+                            locationChart.data[i][1] = $scope.topCountrey.count;
+                            $scope.topCountries[i].count = $scope.topCountrey.count;
+                             countryUpdated = true;
+                        }
+                    }
+                    if (!countryUpdated) {
+                        locationChart.data.push([$scope.topCountrey.code, $scope.topCountrey.count]);
+                        $scope.topCountries.push($scope.topCountrey);
+                    }
+    
+                }, false);
+            });
+
         }
 
         $scope.startEventSource();
 
+
+        var locationChart = {};
+        $scope.locationChart = locationChart;
+
+        $scope.drawLocationChart = function () {
+
+            locationChart.type = "GeoChart";
+            locationChart.data = [['Locale', 'Count']];
+
+            locationChart.options = {
+                height: 250,
+                colorAxis: {
+                    colors: ['rgb(0, 200, 220)', 'rgb(0, 100, 200)', 'rgb(1, 120, 183)']
+                },
+                displayMode: 'regions'
+            };
+
+            locationChart.formatters = {
+                number: [{
+                    columnNum: 1
+                }]
+            };
+
+        }
+
+        $rootScope.getLocationStats = function () {
+
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topCountries';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.topCountries = response.items;
+                
+                    // MAP
+                    for (var i = 0; i < response.items.length; i++) {
+                        locationChart.data.push([response.items[i].code, response.items[i].count]);
+                    }
+                
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+        $rootScope.getLocationStats();
+        $scope.drawLocationChart();
+
         $scope.pagesShown = 1;
-        $scope.pageSize = 5;
+        $scope.pageSize = 50;
 
         $scope.tweetsShowned = 0;
 
@@ -536,7 +559,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         // Load more tweets handler
         $scope.loadMoreTweets = function () {
-            if ($scope.lastNewTweets.length <= 10) {
+            if ($scope.lastNewTweets.length <= 25) {
                 $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.lastNewTweets);
                 $scope.pagesShown = $scope.pagesShown + $scope.lastNewTweets.length % $scope.pageSize;
             } else {
@@ -561,14 +584,12 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         }
 
         $scope.loadMoreTweetsFromHistory = function () {
-            console.log($scope.tweetsQueue);
-            $scope.loadTweetsFromHistoryArray= [];
+            $scope.loadTweetsFromHistoryArray = [];
             for (var i = 0; i < $scope.pageSize && $scope.tweetsHistory.length > i; i++) {
                 $scope.loadTweetsFromHistoryArray.push($scope.tweetsHistory[$scope.tweetsHistory.length - i - 1]);
-                console.log($scope.loadTweetsFromHistoryArray.slice());
+                
             }
             $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.loadTweetsFromHistoryArray);
-            console.log($scope.tweetsQueue.slice());
             $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize, $scope.pageSize);
         }
 
