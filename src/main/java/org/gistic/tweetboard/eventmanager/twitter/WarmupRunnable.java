@@ -71,11 +71,11 @@ public class WarmupRunnable implements Runnable {
             Collections.reverse(tweets);
             for (Status tweet : tweets){
                 event.postTweetToEvent(new InternalStatus(tweet, TwitterObjectFactory.getRawJSON(tweet)));
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
             }
         } catch (TwitterException e) {
             e.printStackTrace();
@@ -85,7 +85,7 @@ public class WarmupRunnable implements Runnable {
 
         int index = 0;
         query.count(100);
-        while (event.isRunning() && !reachedEnd && index<2) {
+        while (event.isRunning() && !reachedEnd && index<5) {
             query.sinceId(sinceId);
             try {
                 queryResult = twitter.search(query);
