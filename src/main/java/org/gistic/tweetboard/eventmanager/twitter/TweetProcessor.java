@@ -11,7 +11,6 @@ import twitter4j.MediaEntity;
 import twitter4j.Status;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -74,24 +73,28 @@ public class TweetProcessor {
     @Subscribe
     @AllowConcurrentEvents
     public void onStatusUpdate(InternalStatus status) {
-        tweetDataLogic.setNewTweetMeta(status);
+
         Status tweet = status.getInternalStatus();
         //status.getInternalStatus().getRetweetCount();
         for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
             //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
             tweetDataLogic.incrMediaCounter(mediaEntity);
         }
+
+
         boolean isRetweet = tweet.isRetweet();
         if(isRetweet || tweet.getText().contains("RT")) {
             tweetDataLogic.incrTotalRetweets();
             if (isRetweet) {
                 long retweetedStatusId = tweet.getRetweetedStatus().getId();
                 long retweetCreatedAt = tweet.getRetweetedStatus().getCreatedAt().getTime();
-                tweetDataLogic.incrTweetScoreAndSetCreatedTime(retweetedStatusId, retweetCreatedAt);
+                tweetDataLogic.incrTweetScore(retweetedStatusId, retweetCreatedAt);
             }
         } else {
             tweetDataLogic.incrOriginalTweets();
         }
+        tweetDataLogic.setCreatedDate(tweet.getId(), tweet.getCreatedAt().getTime());
+        tweetDataLogic.setNewTweetMeta(status);
         Place place = tweet.getPlace();
         if (place != null) {
             tweetDataLogic.incrCountryCounter(place.getCountryCode());
