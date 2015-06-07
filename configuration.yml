@@ -39,3 +39,4 @@ twitter:
   user-secret: CinsBJTQNpyCPQ3GrdciQwCzDqSqbJ6EUcjsaW3c4cotz
 defaultAutoShutdownDelayInHours: 1
 v2: true
+baseDomain: localhost:8080

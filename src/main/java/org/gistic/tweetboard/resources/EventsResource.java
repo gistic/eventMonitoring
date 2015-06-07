@@ -75,7 +75,11 @@ public class EventsResource {
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         if (user == null) {
             //invalid token tweetboard v2.0
-            //TODO: respond with security error
+            throw new WebApplicationException(
+                    Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+                            .entity("incorrect token")
+                            .build()
+            );
         } else if (user.isNoUser()) {
             //for tweetboard v1.0
             EventMap.put(hashTags, tweetDataLogic, uuid);
