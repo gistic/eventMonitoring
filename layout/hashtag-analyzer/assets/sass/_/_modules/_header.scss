@@ -36,15 +36,15 @@ header {
             color: $white;
         }
         .nav-user {
-            margin-left: $margin * 3;
+            margin-left: $margin * 5;
             a {
                 &:hover, &:focus {
                     text-decoration: none;
                 }
             }
             img {
-                @include size(32px);
-                @include border-radius(50%);
+                @include size(28px);
+                @include border-radius(10%);
             }
             .dropdown-menu {
                 background: rgba(253, 253, 253, 0.9);

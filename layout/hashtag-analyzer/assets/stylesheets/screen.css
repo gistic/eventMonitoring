@@ -17970,80 +17970,6 @@ a:hover, a:focus {
   color: #ffffff;
 }
 
-/* line 62, ../sass/_/_atoms/_buttons.scss */
-.loader {
-  z-index: 99;
-}
-
-/* line 66, ../sass/_/_atoms/_buttons.scss */
-.overlay {
-  z-index: 9;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: black center center no-repeat;
-  opacity: .9;
-}
-/* line 73, ../sass/_/_atoms/_buttons.scss */
-.overlay .loader {
-  margin: auto;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: block;
-  position: absolute;
-}
-
-/* line 84, ../sass/_/_atoms/_buttons.scss */
-.spinner {
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  z-index: 9;
-  margin: 8px 20px;
-  opacity: 0;
-  left: 80%;
-}
-
-/* line 93, ../sass/_/_atoms/_buttons.scss */
-.double-bounce1, .double-bounce2 {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: #333;
-  opacity: 0.6;
-  position: absolute;
-  top: 0;
-  left: 0;
-  -webkit-animation: bounce 2.0s infinite ease-in-out;
-  animation: bounce 2.0s infinite ease-in-out;
-}
-
-/* line 107, ../sass/_/_atoms/_buttons.scss */
-.double-bounce2 {
-  -webkit-animation-delay: -1.0s;
-  animation-delay: -1.0s;
-}
-
-@-webkit-keyframes bounce {
-  0%, 100% {
-    -webkit-transform: scale(0);
-  }
-  50% {
-    -webkit-transform: scale(1);
-  }
-}
-@keyframes bounce {
-  0%, 100% {
-    transform: scale(0);
-    -webkit-transform: scale(0);
-  }
-  50% {
-    transform: scale(1);
-    -webkit-transform: scale(1);
-  }
-}
 /* line 1, ../sass/_/_atoms/_forms.scss */
 input,
 .form-control {
@@ -18274,6 +18200,80 @@ ol {
   border-bottom: none;
 }
 
+/* line 2, ../sass/_/_atoms/_spinner.scss */
+.loader {
+  z-index: 99;
+}
+
+/* line 6, ../sass/_/_atoms/_spinner.scss */
+.overlay {
+  z-index: 9;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: black center center no-repeat;
+  opacity: .9;
+}
+/* line 13, ../sass/_/_atoms/_spinner.scss */
+.overlay .loader {
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: block;
+  position: absolute;
+}
+
+/* line 24, ../sass/_/_atoms/_spinner.scss */
+.spinner {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  z-index: 9;
+  margin: 8px 20px;
+  opacity: 0;
+  left: 80%;
+}
+
+/* line 33, ../sass/_/_atoms/_spinner.scss */
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #333;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-animation: bounce 2.0s infinite ease-in-out;
+  animation: bounce 2.0s infinite ease-in-out;
+}
+
+/* line 47, ../sass/_/_atoms/_spinner.scss */
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes bounce {
+  0%, 100% {
+    -webkit-transform: scale(0);
+  }
+  50% {
+    -webkit-transform: scale(1);
+  }
+}
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+}
 /* line 1, ../sass/_/_modules/_header.scss */
 header {
   background: #ffffff;
@@ -18330,7 +18330,7 @@ header .logo a:hover, header .logo a:focus {
 }
 /* line 38, ../sass/_/_modules/_header.scss */
 .header-dashboard .navs .nav-user {
-  margin-left: 30px;
+  margin-left: 50px;
 }
 /* line 41, ../sass/_/_modules/_header.scss */
 .header-dashboard .navs .nav-user a:hover, .header-dashboard .navs .nav-user a:focus {
@@ -18338,11 +18338,11 @@ header .logo a:hover, header .logo a:focus {
 }
 /* line 45, ../sass/_/_modules/_header.scss */
 .header-dashboard .navs .nav-user img {
-  width: 32px;
-  height: 32px;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  -moz-border-radius: 10%;
+  -webkit-border-radius: 10%;
+  border-radius: 10%;
 }
 /* line 49, ../sass/_/_modules/_header.scss */
 .header-dashboard .navs .nav-user .dropdown-menu {
@@ -18505,43 +18505,44 @@ header .logo a:hover, header .logo a:focus {
 /* line 19, ../sass/_/_modules/_tweet.scss */
 .tweet .tweet-userName {
   color: #2493de;
+  font-weight: 100;
 }
-/* line 22, ../sass/_/_modules/_tweet.scss */
+/* line 23, ../sass/_/_modules/_tweet.scss */
 .tweet .tweet-screenName {
   font-style: italic;
   color: #949494;
 }
-/* line 26, ../sass/_/_modules/_tweet.scss */
+/* line 27, ../sass/_/_modules/_tweet.scss */
 .tweet.tweet:first-child {
   opacity: 1;
 }
 
-/* line 31, ../sass/_/_modules/_tweet.scss */
+/* line 32, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar {
   direction: rtl;
   text-align: right;
 }
-/* line 35, ../sass/_/_modules/_tweet.scss */
+/* line 36, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar .user-img {
   float: right;
   padding-right: 0;
   padding-left: 15px;
 }
-/* line 40, ../sass/_/_modules/_tweet.scss */
+/* line 41, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar .media-body {
   margin-left: 0;
   margin-right: 10px;
 }
 
 @media (max-width: 480px) {
-  /* line 49, ../sass/_/_modules/_tweet.scss */
+  /* line 50, ../sass/_/_modules/_tweet.scss */
   .tweets-queue .tweet img {
     width: 48px;
     height: 48px;
   }
 }
 
-/* line 56, ../sass/_/_modules/_tweet.scss */
+/* line 57, ../sass/_/_modules/_tweet.scss */
 .tweets-queue-options {
   margin-bottom: 10px;
 }

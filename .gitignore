@@ -28,7 +28,7 @@ target/
 
 # JS
 /dump.rdb
-
+**/dump.rdb
 
 # Images
 /layout/logo/

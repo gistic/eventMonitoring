@@ -6,7 +6,7 @@
     
     <div class="media-body tweet-content">
         <h6 class="media-heading tweet-user clearfix">
-            <a ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank" class="pull-left">
+            <a ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank" class="pull-left tweet-userName">
                 {{tweet.user.screen_name}}
             </a>
            <a class="pull-right" ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}/status/{{tweet.id_str}}" target="_blank" title="{{tweet.created_at}}">
