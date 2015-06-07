@@ -48,7 +48,7 @@ public class LoginResource {
         Twitter twitter = factory.getInstance();
         RequestToken requestToken = null;
         try {
-            requestToken = twitter.getOAuthRequestToken("http://127.0.0.1:8080/api/events/login/twitter/proxyToken");
+            requestToken = twitter.getOAuthRequestToken("http://"+baseDomain+"/api/events/login/twitter/proxyToken");
         } catch (TwitterException e) {
             e.printStackTrace();
         }
