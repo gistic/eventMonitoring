@@ -28,19 +28,19 @@ eventAdminApp.run(function ($window, $location, $rootScope) {
 eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {
 
     window.routes = {
-        "/": {
+        "home": {
             url: '',
-            templateUrl: '/../../views/admin/index.html',
+            templateUrl: 'views/admin/index.html',
             controller: 'StartNewEventController'
         },
         "admin": {
             url: '/admin?uuid',
-            templateUrl: '/../../views/admin/admin.html',
+            templateUrl: 'views/admin/admin.html',
             controller: 'EventMainController'
         },
         "superAdmin": {
             url: '/superAdmin',
-            templateUrl: '/../../views/admin/super-admin.html',
+            templateUrl: 'views/admin/super-admin.html',
             controller: 'SuperAdminCtrl'
         }
     };
