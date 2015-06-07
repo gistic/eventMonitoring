@@ -78,6 +78,7 @@ public class LoginResource {
         Twitter twitter = factory.getInstance();
         AuthDao authDao = new AuthDaoImpl();
         String oauthTokenSecret = authDao.getRequestToken(oauthToken);
+        authDao.deleteRequestToken(oauthToken);
         if (oauthTokenSecret == null) return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
                 .entity("incorrect token")
                 .build();
@@ -109,6 +110,7 @@ public class LoginResource {
 
         //String screenName = accessTokenObject.getScreenName();
         String hashtags = authDao.getTempHashtags(oauthToken);
+        authDao.deleteTempHashTags(oauthToken);
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
 
