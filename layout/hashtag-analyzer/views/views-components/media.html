@@ -3,9 +3,9 @@
         <strong class="pull-right">{{totalMedia}} Pic & Videos</strong>
     </aside>
 
-    <div masonry preserve-order column-width="20" item-selector=".mybrick" masonry-options="{ transitionDuration: '0.4s' }">
-        <div masonry-brick class="masonry-brick mybrick" ng-repeat="media in mediaQueue track by $index">
-            <a ng-click="Lightbox.openModal(mediaQueue, $index)">
+    <div masonry preserve-order column-width="20" item-selector=".mybrick" masonry-options="{ transitionDuration: '0.4s' }" infinite-scroll='loadMoreMedia()' infinite-scroll-distance='2'>
+        <div masonry-brick class="masonry-brick mybrick" ng-repeat="media in images track by $index">
+            <a ng-click="Lightbox.openModal(images, $index)">
                 <img class="img-responsive" lazy-load ll-src="{{media.thumb}}" on-error-src="{{defultImage}}" />
                 <span class="media-type-icon">
                 <i ng-if="media.type == 'photo'" class="fa fa-camera"></i>

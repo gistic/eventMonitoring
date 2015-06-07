@@ -17970,6 +17970,80 @@ a:hover, a:focus {
   color: #ffffff;
 }
 
+/* line 62, ../sass/_/_atoms/_buttons.scss */
+.loader {
+  z-index: 99;
+}
+
+/* line 66, ../sass/_/_atoms/_buttons.scss */
+.overlay {
+  z-index: 9;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: black center center no-repeat;
+  opacity: .9;
+}
+/* line 73, ../sass/_/_atoms/_buttons.scss */
+.overlay .loader {
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: block;
+  position: absolute;
+}
+
+/* line 84, ../sass/_/_atoms/_buttons.scss */
+.spinner {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  z-index: 9;
+  margin: 8px 20px;
+  opacity: 0;
+  left: 80%;
+}
+
+/* line 93, ../sass/_/_atoms/_buttons.scss */
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #333;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-animation: bounce 2.0s infinite ease-in-out;
+  animation: bounce 2.0s infinite ease-in-out;
+}
+
+/* line 107, ../sass/_/_atoms/_buttons.scss */
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes bounce {
+  0%, 100% {
+    -webkit-transform: scale(0);
+  }
+  50% {
+    -webkit-transform: scale(1);
+  }
+}
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+}
 /* line 1, ../sass/_/_atoms/_forms.scss */
 input,
 .form-control {

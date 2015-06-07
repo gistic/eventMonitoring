@@ -1,6 +1,6 @@
 'use strict';
 
-var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies', 'angularMoment']);
+var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies', 'angularMoment', 'infinite-scroll']);
 
 
 // Run : Intliaize the event admin app with this values
@@ -194,8 +194,9 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 
     $scope.startNewEvent = function (action) {
         // Check if there is an authentication key in the browser cookies
+        // if "no"  --> redirect to Twitter App
+        $(".spinner").css("opacity", 1);
         if ($cookies.userAuthentication == undefined) {
-
             var requestAction = "GET";
             var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
             var requestData = ""
@@ -204,8 +205,7 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
                     var openUrl = response.data.url;
                     $window.location.href = openUrl;
                 });
-        } else {
-
+        } else { // if "yes"  --> redirect to dashboard page
             $scope.$broadcast();
             RequestData.startEvent()
                 .success(function (response) {
@@ -227,15 +227,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.dynamicPopover = {
             templateUrl: 'myPopoverTemplate.html'
         };
-
-        Array.prototype.chunk = function (chunkSize) {
-            var array = this;
-            return [].concat.apply([],
-                array.map(function (elem, i) {
-                    return i % chunkSize ? [] : [array.slice(i, i + chunkSize)];
-                })
-            );
-        }
 
         // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
         $rootScope.eventID = $location.search().uuid;
@@ -463,6 +454,15 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
                 }
 
+                $scope.images = [];
+                for (var i=0; i<$scope.mediaQueue.length; i++) {
+                    $scope.images.push($scope.mediaQueue[i]);
+                }
+                console.log($scope.mediaQueue.length);
+                
+                $scope.loadMoreMedia = function () {
+                };
+
                 $scope.$apply(function () {
                     if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
                         $scope.tweetsQueue.unshift($scope.tweet);
@@ -507,7 +507,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         $scope.startEventSource();
 
-
         var locationChart = {};
         $scope.locationChart = locationChart;
 
@@ -522,12 +521,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     colors: ['rgb(0, 200, 220)', 'rgb(0, 100, 200)', 'rgb(1, 120, 183)']
                 },
                 displayMode: 'regions'
-            };
-
-            locationChart.formatters = {
-                number: [{
-                    columnNum: 1
-                }]
             };
 
         }
