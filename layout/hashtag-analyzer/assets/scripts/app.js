@@ -110,12 +110,6 @@ trackHashtagApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', '
 
 }]);
 
-trackHashtagApp.filter('trusted', ['$sce', function ($sce) {
-    return function (url) {
-        return $sce.trustAsResourceUrl(url);
-    };
-}]);
-
 /* Controller : Start new event */
 trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', '$cookies', '$cookieStore', '$location', '$window', function ($rootScope, $scope, $http, $state, RequestData, $cookies, $cookieStore, $location, $window) {
 
@@ -205,9 +199,10 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         // Intialize
         $scope.initData = function () {
+            $(".spinner").css("opacity", 1);
             $scope.getViewOptions();
             $scope.getEventStats();
-            $scope.getUserData();
+//            $scope.getUserData();
         }
 
 
@@ -238,7 +233,8 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         // TOP TWEETS
         $scope.topTweets = [];
         $scope.getTopTweets = function () {
-
+            $(".spinner").css("opacity", 1);
+            
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets?authToken=' + $cookies.userAuthentication;;
             var requestAction = "GET";
             var requestData = "";
@@ -304,7 +300,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             var source = new EventSource($scope.eventSourceUrl);
 
             source.addEventListener('approved-tweets', function (response) {
-
+                
                 $scope.tweet = JSON.parse(response.data);
 
                 $scope.totalTweetsCount++;
@@ -389,6 +385,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     } else {
                         $scope.lastNewTweets.push($scope.tweet);
                     }
+                    
                 }, false);
 
             });

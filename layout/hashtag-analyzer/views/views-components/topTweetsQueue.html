@@ -1,9 +1,9 @@
 <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in topTweets track by $index" data-user-id="{{tweet.user.id_str}}">
-   
+
     <div class="media-left">
         <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
     </div>
-    
+
     <div class="media-body tweet-content">
         <h6 class="media-heading tweet-user clearfix">
             <a ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank" class="pull-left">
@@ -20,4 +20,3 @@
     </div>
 
 </article>
-
