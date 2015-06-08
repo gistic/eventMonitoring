@@ -1,4 +1,4 @@
-# Eclipse
+g# Eclipse
 .classpath
 .project
 .settings/
@@ -32,3 +32,5 @@ target/
 
 # Images
 /layout/logo/
+
+configuration.yml

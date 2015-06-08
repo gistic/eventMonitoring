@@ -189,7 +189,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         // GET : User data
         $scope.getUserData = function () {
 
-            var apiUrl = '/api/twitterUsers/' + $rootScope.authoUserName + '/?authToken=' + $cookies.userAuthentication;;
+            var apiUrl = '/api/twitterUsers' + '/?authToken=' + $cookies.userAuthentication;;
             var requestAction = "GET";
             var requestData = "";
 
@@ -366,15 +366,21 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
                         } else {
                             $scope.tweetMedia = $scope.tweet.extended_entities.media[i].media_url_https;
-                            $scope.mediaQueue.push({
-                                "url": $scope.tweetMedia,
-                                "thumb": $scope.mediaThumb,
-                                "type": $scope.mediaType,
-                                "caption": $scope.tweetText,
-                                "userScreenName": $scope.userScreenName,
-                                "userProfileImage": $scope.userProfileImage,
-                                "tweetCreatedAt": $scope.tweetCreatedAt
-                            });
+                            for (var x in $scope.mediaQueue) {
+                                if ($scope.mediaQueue[x].url != $scope.tweetMedia) {
+                                    $scope.mediaQueue.push({
+                                        "url": $scope.tweetMedia,
+                                        "thumb": $scope.mediaThumb,
+                                        "type": $scope.mediaType,
+                                        "caption": $scope.tweetText,
+                                        "userScreenName": $scope.userScreenName,
+                                        "userProfileImage": $scope.userProfileImage,
+                                        "tweetCreatedAt": $scope.tweetCreatedAt
+                                    });
+                                } else {
+                                    console.log("Repeated Media");
+                                }
+                            }
                         }
                     }
 
