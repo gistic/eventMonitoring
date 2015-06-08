@@ -18694,124 +18694,35 @@ footer.views--footer p {
   height: 400px;
 }
 
-/* Profile container */
-/* line 2, ../sass/_/_modules/_user-card.scss */
-.profile {
-  margin: 20px 0;
-}
-
-/* Profile sidebar */
-/* line 7, ../sass/_/_modules/_user-card.scss */
-.profile-sidebar {
-  padding: 20px 0 10px 0;
-  background: #fff;
-}
-
-/* line 12, ../sass/_/_modules/_user-card.scss */
-.profile-userpic img {
-  float: none;
-  margin: 0 auto;
-  width: 50%;
-  height: 50%;
-  -webkit-border-radius: 50% !important;
-  -moz-border-radius: 50% !important;
-  border-radius: 50% !important;
-}
-
-/* line 22, ../sass/_/_modules/_user-card.scss */
-.profile-usertitle {
+/* line 2, ../sass/_/_modules/_popover.scss */
+.ns-popover-custom-theme .profile-sidebar {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #cdd2d4;
+  padding: 15px 30px;
+  background: #ffffff;
   text-align: center;
-  margin-top: 20px;
 }
-
-/* line 27, ../sass/_/_modules/_user-card.scss */
-.profile-usertitle-name {
-  color: #5a7391;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 7px;
+/* line 9, ../sass/_/_modules/_popover.scss */
+.ns-popover-custom-theme .profile-userpic {
+  display: inline-block;
 }
-
-/* line 34, ../sass/_/_modules/_user-card.scss */
-.profile-usertitle-job {
-  text-transform: uppercase;
-  color: #5b9bd1;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 15px;
+/* line 11, ../sass/_/_modules/_popover.scss */
+.ns-popover-custom-theme .profile-userpic img {
+  width: 72px;
+  height: 72px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
 }
-
-/* line 42, ../sass/_/_modules/_user-card.scss */
-.profile-userbuttons {
-  text-align: center;
-  margin-top: 10px;
-}
-
-/* line 47, ../sass/_/_modules/_user-card.scss */
-.profile-userbuttons .btn {
-  text-transform: uppercase;
+/* line 16, ../sass/_/_modules/_popover.scss */
+.ns-popover-custom-theme .profile-user-count {
   font-size: 11px;
-  font-weight: 600;
-  padding: 6px 15px;
-  margin-right: 5px;
+  font-size: 1.375rem;
 }
-
-/* line 55, ../sass/_/_modules/_user-card.scss */
-.profile-userbuttons .btn:last-child {
-  margin-right: 0px;
-}
-
-/* line 59, ../sass/_/_modules/_user-card.scss */
-.profile-usermenu {
-  margin-top: 30px;
-}
-
-/* line 63, ../sass/_/_modules/_user-card.scss */
-.profile-usermenu ul li {
-  border-bottom: 1px solid #f0f4f7;
-}
-
-/* line 67, ../sass/_/_modules/_user-card.scss */
-.profile-usermenu ul li:last-child {
-  border-bottom: none;
-}
-
-/* line 71, ../sass/_/_modules/_user-card.scss */
-.profile-usermenu ul li a {
-  color: #93a3b5;
+/* line 19, ../sass/_/_modules/_popover.scss */
+.ns-popover-custom-theme .profile-usertitle-name {
   font-size: 14px;
-  font-weight: 400;
-}
-
-/* line 77, ../sass/_/_modules/_user-card.scss */
-.profile-usermenu ul li a i {
-  margin-right: 8px;
-  font-size: 14px;
-}
-
-/* line 82, ../sass/_/_modules/_user-card.scss */
-.profile-usermenu ul li a:hover {
-  background-color: #fafcfd;
-  color: #5b9bd1;
-}
-
-/* line 87, ../sass/_/_modules/_user-card.scss */
-.profile-usermenu ul li.active {
-  border-bottom: none;
-}
-
-/* line 91, ../sass/_/_modules/_user-card.scss */
-.profile-usermenu ul li.active a {
-  color: #5b9bd1;
-  background-color: #f6f9fb;
-  border-left: 2px solid #5b9bd1;
-  margin-left: -2px;
-}
-
-/* Profile Content */
-/* line 99, ../sass/_/_modules/_user-card.scss */
-.profile-content {
-  padding: 20px;
-  background: #fff;
-  min-height: 460px;
+  font-size: 1.75rem;
 }

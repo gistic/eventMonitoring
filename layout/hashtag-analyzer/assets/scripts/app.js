@@ -1,6 +1,6 @@
 'use strict';
 
-var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'myAppServices', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies', 'angularMoment', 'infinite-scroll', 'ngFx', 'ngAnimate']);
+var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'myAppServices', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies', 'angularMoment', 'infinite-scroll', 'ngFx', 'ngAnimate', 'nsPopover']);
 
 
 // Run : Intliaize the event admin app with this values
