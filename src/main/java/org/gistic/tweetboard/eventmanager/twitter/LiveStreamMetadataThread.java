@@ -1,8 +1,11 @@
 package org.gistic.tweetboard.eventmanager.twitter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gistic.tweetboard.DelayedJobsManager;
 import org.gistic.tweetboard.eventmanager.Event;
 import org.gistic.tweetboard.eventmanager.Message;
+import org.gistic.tweetboard.resources.EventsResource;
 import org.json.JSONArray;
 
 import javax.ws.rs.client.Client;
@@ -19,11 +22,13 @@ public class LiveStreamMetadataThread implements Runnable {
     final int defaultSampleRate = 1;
     final int defaultPeriod = 25;
     final int defaultBroadcastIntervalInSecs = 10;
+    private final EventsResource eventResource;
 
     Event event;
 
     public LiveStreamMetadataThread(Event event) {
         this.event = event;
+        this.eventResource = new EventsResource();
     }
 
     @Override
@@ -46,6 +51,15 @@ public class LiveStreamMetadataThread implements Runnable {
             WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
             Message msg = new Message(event.getUuid(), Message.Type.TweetsOverTime, results);
             target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
+
+            try {
+                results = new ObjectMapper().writeValueAsString(eventResource.getTopUsers(event.getUuid(), 10));
+                msg = new Message(event.getUuid(), Message.Type.TopPeople, results);
+                target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+
             //interval between each broadcast
             try {
                 Thread.sleep(defaultBroadcastIntervalInSecs * 1000);
