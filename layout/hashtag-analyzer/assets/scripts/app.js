@@ -352,34 +352,50 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                                 var videoContentType = $scope.tweet.extended_entities.media[i].video_info.variants[k].content_type;
                                 if (videoContentType == "video/mp4") {
                                     $scope.videoLink = $scope.tweet.extended_entities.media[i].video_info.variants[k].url;
-                                    $scope.mediaQueue.push({
-                                        "url": $scope.videoLink,
-                                        "thumb": $scope.mediaThumb,
-                                        "type": $scope.mediaType,
-                                        "caption": $scope.tweetText,
-                                        "userScreenName": $scope.userScreenName,
-                                        "userProfileImage": $scope.userProfileImage,
-                                        "tweetCreatedAt": $scope.tweetCreatedAt
-                                    });
+                                    var duplicatedMedia = false;
+                                    for (var key in $scope.mediaQueue) {
+                                        if ($scope.videoLink == $scope.mediaQueue[key].url) {
+                                            duplicatedMedia = true;
+                                            break;
+                                        } else {
+                                            duplicatedMedia = false;
+                                        }
+                                    }
+                                    if (!duplicatedMedia) {
+                                        $scope.mediaQueue.push({
+                                            "url": $scope.videoLink,
+                                            "thumb": $scope.mediaThumb,
+                                            "type": $scope.mediaType,
+                                            "caption": $scope.tweetText,
+                                            "userScreenName": $scope.userScreenName,
+                                            "userProfileImage": $scope.userProfileImage,
+                                            "tweetCreatedAt": $scope.tweetCreatedAt
+                                        });
+                                    }
                                 }
                             }
 
                         } else {
                             $scope.tweetMedia = $scope.tweet.extended_entities.media[i].media_url_https;
-                            for (var x in $scope.mediaQueue) {
-                                if ($scope.mediaQueue[x].url != $scope.tweetMedia) {
-                                    $scope.mediaQueue.push({
-                                        "url": $scope.tweetMedia,
-                                        "thumb": $scope.mediaThumb,
-                                        "type": $scope.mediaType,
-                                        "caption": $scope.tweetText,
-                                        "userScreenName": $scope.userScreenName,
-                                        "userProfileImage": $scope.userProfileImage,
-                                        "tweetCreatedAt": $scope.tweetCreatedAt
-                                    });
+                            var duplicatedMedia = false;
+                            for (var key in $scope.mediaQueue) {
+                                if ($scope.tweetMedia == $scope.mediaQueue[key].url) {
+                                    duplicatedMedia = true;
+                                    break;
                                 } else {
-                                    console.log("Repeated Media");
+                                    duplicatedMedia = false;
                                 }
+                            }
+                            if (!duplicatedMedia) {
+                                $scope.mediaQueue.push({
+                                    "url": $scope.tweetMedia,
+                                    "thumb": $scope.mediaThumb,
+                                    "type": $scope.mediaType,
+                                    "caption": $scope.tweetText,
+                                    "userScreenName": $scope.userScreenName,
+                                    "userProfileImage": $scope.userProfileImage,
+                                    "tweetCreatedAt": $scope.tweetCreatedAt
+                                });
                             }
                         }
                     }

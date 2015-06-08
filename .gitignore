@@ -34,3 +34,4 @@ target/
 /layout/logo/
 
 configuration.yml
+/layout/hashtag-analyzer/dump.rdb
