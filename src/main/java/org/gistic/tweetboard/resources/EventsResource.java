@@ -59,7 +59,7 @@ public class EventsResource {
         org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
         if (event == null) throw new WebApplicationException(
                 Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                        .entity("incorrect uuid")
+                        .entity("{'error':'incorrect uuid'}")
                         .build()
         );
         return event;
@@ -77,7 +77,7 @@ public class EventsResource {
             //invalid token tweetboard v2.0
             throw new WebApplicationException(
                     Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                            .entity("incorrect token")
+                            .entity("{'error':'incorrect token'}")
                             .build()
             );
         } else if (user.isNoUser()) {
@@ -327,7 +327,7 @@ public class EventsResource {
         checkUuid(uuid);
         if (user==null || user.isNoUser()) {
             Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                    .entity("incorrect auth token")
+                    .entity("{'error':'incorrect token'}")
                     .build();
         }
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
@@ -415,7 +415,7 @@ public class EventsResource {
         checkUuid(uuid);
         if (user==null) {
             Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                    .entity("incorrect uuid")
+                    .entity("{'error':'incorrect token'}")
                     .build();
         }
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);

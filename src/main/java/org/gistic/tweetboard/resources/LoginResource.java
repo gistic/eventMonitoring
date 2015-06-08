@@ -51,6 +51,7 @@ public class LoginResource {
             requestToken = twitter.getOAuthRequestToken("http://"+baseDomain+"/api/events/login/twitter/proxyToken");
         } catch (TwitterException e) {
             e.printStackTrace();
+            return "{'error':'could not generate unique twitter token URL'}";
         }
         AuthDao authDao = new AuthDaoImpl();
         authDao.setRequestToken(requestToken.getToken(), requestToken.getTokenSecret());
@@ -80,7 +81,7 @@ public class LoginResource {
         String oauthTokenSecret = authDao.getRequestToken(oauthToken);
         authDao.deleteRequestToken(oauthToken);
         if (oauthTokenSecret == null) return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
-                .entity("incorrect token")
+                .entity("{'error':'incorrect token'}")
                 .build();
 
         //Get access token from request token
