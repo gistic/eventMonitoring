@@ -28,6 +28,7 @@ target/
 
 # JS
 /dump.rdb
+**/dump.rdb
 
 
 # Images
