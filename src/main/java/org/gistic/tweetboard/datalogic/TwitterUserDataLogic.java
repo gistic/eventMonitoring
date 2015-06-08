@@ -15,6 +15,21 @@ import twitter4j.conf.ConfigurationBuilder;
 public class TwitterUserDataLogic {
 
     public twitter4j.User getUserProfile(User user, String screenName) {
+        Twitter twitter = getTwitter(user);
+        try {
+            return twitter.showUser(screenName);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public twitter4j.User getUserProfile(User user) throws TwitterException {
+        Twitter twitter = getTwitter(user);
+        return twitter.verifyCredentials();
+    }
+
+    private Twitter getTwitter(User user) {
         TwitterConfiguration twitterConfiguration = ConfigurationSingleton.
                 getInstance().getTwitterConfiguration();
         ConfigurationBuilder builder = new ConfigurationBuilder();
@@ -26,12 +41,6 @@ public class TwitterUserDataLogic {
         Configuration configuration = builder.build();
 
         TwitterFactory factory = new TwitterFactory(configuration);
-        Twitter twitter = factory.getInstance();
-        try {
-            return twitter.showUser(screenName);
-        } catch (TwitterException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return factory.getInstance();
     }
 }
