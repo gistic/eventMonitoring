@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.resources;
 
 import org.gistic.tweetboard.ConfigurationSingleton;
+import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.representations.Event;
@@ -38,10 +39,11 @@ public class LoginResource {
     @GET
     @Path("/login/twitter")
     public String getEventConfig(@QueryParam("hashtags") String hashtags) {
+        TwitterConfiguration config = ConfigurationSingleton.getInstance().getTwitterConfiguration();
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(true);
-        builder.setOAuthConsumerKey("6PPRgLzPOf6Mvcj3NkPIlq07Y");
-        builder.setOAuthConsumerSecret("Xl3TKJwNQtZmbYGhLcXzUseO9CrdoMav54qODCr2CnFiSIIZpb");
+        builder.setOAuthConsumerKey(config.getConsumerKey());
+        builder.setOAuthConsumerSecret(config.getConsumerSecret());
         Configuration configuration = builder.build();
 
         TwitterFactory factory = new TwitterFactory(configuration);
@@ -67,12 +69,13 @@ public class LoginResource {
                                  @QueryParam("oauth_verifier") String oauthVerifier) {
         System.out.println(oauthToken);
         System.out.println(oauthVerifier);
+        TwitterConfiguration config = ConfigurationSingleton.getInstance().getTwitterConfiguration();
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(true);
-        builder.setOAuthConsumerKey("6PPRgLzPOf6Mvcj3NkPIlq07Y");
-        builder.setOAuthConsumerSecret("Xl3TKJwNQtZmbYGhLcXzUseO9CrdoMav54qODCr2CnFiSIIZpb");
-        builder.setOAuthAccessToken("1974931724-iUek6BFqWg3SSyuTMfTDhvL5DrzDGDkClgd9yB");
-        builder.setOAuthAccessTokenSecret("3SrUJH57ROyLlIoTle81CP1LDtbWDlGf4ew4tocDekuil");
+        builder.setOAuthConsumerKey(config.getConsumerKey());
+        builder.setOAuthConsumerSecret(config.getConsumerSecret());
+        builder.setOAuthAccessToken(config.getUserKey());
+        builder.setOAuthAccessTokenSecret(config.getUserSecret());
         Configuration configuration = builder.build();
 
         TwitterFactory factory = new TwitterFactory(configuration);

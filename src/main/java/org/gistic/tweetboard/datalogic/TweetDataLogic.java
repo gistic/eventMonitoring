@@ -232,14 +232,14 @@ public class TweetDataLogic {
         Long[] topTweetIds = topTweetsTuple.stream()
                 .map(tweet -> Long.parseLong(tweet.getElement()) ).collect(Collectors.toList()).toArray(new Long[]{});
 
-
+        TwitterConfiguration config = ConfigurationSingleton.getInstance().getTwitterConfiguration();
 
         AuthDao authDao = new AuthDaoImpl();
         String accessTokenSecret = authDao.getAccessTokenSecret(accessToken);
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setJSONStoreEnabled(true);
-        builder.setOAuthConsumerKey("6PPRgLzPOf6Mvcj3NkPIlq07Y");
-        builder.setOAuthConsumerSecret("Xl3TKJwNQtZmbYGhLcXzUseO9CrdoMav54qODCr2CnFiSIIZpb");
+        builder.setOAuthConsumerKey(config.getConsumerKey());
+        builder.setOAuthConsumerSecret(config.getConsumerSecret());
         builder.setOAuthAccessToken(accessToken);
         builder.setOAuthAccessTokenSecret(accessTokenSecret);
         Configuration configuration = builder.build();

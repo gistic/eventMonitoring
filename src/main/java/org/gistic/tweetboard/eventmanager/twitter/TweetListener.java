@@ -27,6 +27,7 @@ public final class TweetListener extends StatusAdapter {
                 String tweet = TwitterObjectFactory.getRawJSON(status);
                 InternalStatus iStatus = new InternalStatus(status, tweet);
                 bus.post(iStatus);
+                return;
             }
         }
     }

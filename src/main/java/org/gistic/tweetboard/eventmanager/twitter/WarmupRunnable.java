@@ -1,5 +1,7 @@
 package org.gistic.tweetboard.eventmanager.twitter;
 
+import org.gistic.tweetboard.ConfigurationSingleton;
+import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
@@ -35,10 +37,12 @@ public class WarmupRunnable implements Runnable {
         AuthDao authDao= new AuthDaoImpl();
         this.accessTokenSecret = authDao.getAccessTokenSecret(authToken);
 
+        TwitterConfiguration config = ConfigurationSingleton.getInstance().getTwitterConfiguration();
+
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(true);
-        builder.setOAuthConsumerKey("6PPRgLzPOf6Mvcj3NkPIlq07Y");
-        builder.setOAuthConsumerSecret("Xl3TKJwNQtZmbYGhLcXzUseO9CrdoMav54qODCr2CnFiSIIZpb");
+        builder.setOAuthConsumerKey(config.getConsumerKey());
+        builder.setOAuthConsumerSecret(config.getConsumerSecret());
         builder.setOAuthAccessToken(authToken);
         builder.setOAuthAccessTokenSecret(accessTokenSecret);
         builder.setJSONStoreEnabled(true);
