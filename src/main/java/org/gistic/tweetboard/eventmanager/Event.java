@@ -24,6 +24,8 @@ public class Event {
     private final TwitterServiceManagerV2 twitterServiceManagerV2;
     private final String accesstoken;
 
+    public void updateStats
+
     public String getUuid() {
         return uuid;
     }
