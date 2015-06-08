@@ -39,7 +39,9 @@
         <strong class="pull-right">{{totalTweetsCount}} tweets</strong>
     </aside>
     
-    <div class="spinner whirly-loader" style="display:none;">Loading…</div>
+    <div class="row text-center">
+        <div class="loading throbber-loader">Loading…</div>
+    </div>
 
     <button type="button" class="btn btn-load-more" ng-show="loadMoreButton()" ng-click="loadMoreTweets()"><strong><i class="fa fa-arrow-up"></i></strong> {{remainingTweetsCount}} New Tweets</button>
 

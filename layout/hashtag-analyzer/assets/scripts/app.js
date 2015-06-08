@@ -174,15 +174,29 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     $scope.totalMediaCount = response.totalMedia;
                     $scope.totalUsersCount = response.numberOfUsers;
                     $scope.totalTweetsCount = response.totalTweets;
-                    console.log(response);
                 }).error(function () {
                     console.log("#");
                 })
         }
+        
+        // GET : Warm up data for event
+        $scope.getWarmupData = function () {
+            $(".loading").show();
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/cachedTweets';
+            var requestAction = "GET";
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+//                    $scope.tweetsQueue = response.items;
+                }).error(function () {
+                    console.log("#");
+                })
+        };
 
         // GET : User data
         $scope.getUserData = function () {
-            var apiUrl = '/api/twitterUsers' + '?authToken=' + $cookies.userAuthentication;;
+            var apiUrl = '/api/twitterUsers' + '?authToken=' + $cookies.userAuthentication;
             var requestAction = "GET";
             var requestData = "";
 
@@ -191,7 +205,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     $rootScope.authoUserName = response.screenName;
                     $rootScope.authoUserID = response.id;
                     $rootScope.authoUserPicture = response.originalProfileImageURLHttps;
-                    console.log(response);
                 }).error(function () {
                     console.log("#");
                 })
@@ -199,10 +212,11 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         // Intialize
         $scope.initData = function () {
-            $(".spinner").css("opacity", 1);
+            $(".loading").show();
+            $scope.getWarmupData();
             $scope.getViewOptions();
             $scope.getEventStats();
-//            $scope.getUserData();
+            $scope.getUserData();
         }
 
 
@@ -229,18 +243,17 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         // Lightbox for media
         $scope.Lightbox = Lightbox;
 
-
         // TOP TWEETS
         $scope.topTweets = [];
         $scope.getTopTweets = function () {
-            $(".spinner").css("opacity", 1);
-            
+            $(".loading").show();
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets?authToken=' + $cookies.userAuthentication;;
             var requestAction = "GET";
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
+                    $(".loading").hide();
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.topTweets.push($scope.tweet);
@@ -292,7 +305,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.topPeople = [];
 
         $scope.tweet = {};
-
+        
         // Listen to new message
         $scope.startEventSource = function () {
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
@@ -381,11 +394,11 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
                 $scope.$apply(function () {
                     if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
-                        $scope.tweetsQueue.unshift($scope.tweet);
+                        $scope.tweetsQueue.push($scope.tweet);
                     } else {
                         $scope.lastNewTweets.push($scope.tweet);
                     }
-                    
+                    $(".loading").hide();
                 }, false);
 
             });
