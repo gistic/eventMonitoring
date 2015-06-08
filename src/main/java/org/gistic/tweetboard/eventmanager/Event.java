@@ -10,6 +10,7 @@ import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.twitter.*;
 import org.slf4j.LoggerFactory;
+import twitter4j.Status;
 
 import java.util.List;
 
@@ -24,7 +25,9 @@ public class Event {
     private final TwitterServiceManagerV2 twitterServiceManagerV2;
     private final String accesstoken;
 
-    public void updateStats
+    public void updateStats(Status status) {
+        tweetProcessor.updateStats(status);
+    }
 
     public String getUuid() {
         return uuid;

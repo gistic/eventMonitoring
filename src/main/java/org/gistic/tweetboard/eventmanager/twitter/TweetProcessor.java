@@ -212,4 +212,8 @@ public class TweetProcessor {
     public List<TweetsOverTimeAnalyzer.TweetsCountPerTime> getTweetsPerTime(int sampleRate, int period) {
         return tweetsOverTimeAnalyzer.getTweetsPerTime(sampleRate, period);
     }
+
+    public void updateStats(Status status) {
+        tweetsOverTimeAnalyzer.tweetArrived(status);
+    }
 }

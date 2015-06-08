@@ -119,7 +119,7 @@ public class WarmupRunnable implements Runnable {
                 if (resultCount<100) reachedEnd = true;
                 System.out.println("result count is: "+resultCount);
                 tweets = queryResult.getTweets();
-                tweetDataLogic.warmupStats(tweets);
+                tweetDataLogic.warmupStats(tweets, event);
                 index++;
             } catch (TwitterException e) {
                 e.printStackTrace();

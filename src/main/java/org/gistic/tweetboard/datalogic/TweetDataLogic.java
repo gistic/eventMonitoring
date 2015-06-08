@@ -8,8 +8,8 @@ import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.dao.TweetDao;
-import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
-import org.gistic.tweetboard.eventmanager.Message;
+import org.gistic.tweetboard.eventmanager.*;
+import org.gistic.tweetboard.eventmanager.Event;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.*;
@@ -278,7 +278,7 @@ public class TweetDataLogic {
 //        tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
     }
 
-    public void warmupStats(List<Status> tweets) {
+    public void warmupStats(List<Status> tweets, Event event) {
         for (Status tweet : tweets) {
 
             tweetDao.setTweetMetaDate(uuid, tweet.getId(), tweet.getCreatedAt().getTime());
@@ -305,7 +305,8 @@ public class TweetDataLogic {
             } else {
                 //count tweets without country specified?
             }
-            //tweetsOverTimeAnalyzer.TweetArrived(status); //TODO resolve hard to find reference issue
+            //tweetsOverTimeAnalyzer.TweetArrived(status);
+            //event.updateStats(tweet);
 
         }
     }
