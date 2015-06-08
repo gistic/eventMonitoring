@@ -18,6 +18,14 @@ public class TweetBoardConfiguration extends Configuration implements AssetsBund
     @NotEmpty
     private String message;
 
+    public String getBaseDomain() {
+        return baseDomain;
+    }
+
+    @JsonProperty
+    @NotEmpty
+    private String baseDomain;
+
     @JsonProperty
     private int defaultAutoShutdownDelayInHours;
 

@@ -19,4 +19,8 @@ public interface AuthDao {
     void setTempHashtags(String token, String hashtags);
 
     String getTempHashtags(String oauthToken);
+
+    void deleteRequestToken(String oauthToken);
+
+    void deleteTempHashTags(String oauthToken);
 }

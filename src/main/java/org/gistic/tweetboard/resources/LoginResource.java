@@ -1,5 +1,6 @@
 package org.gistic.tweetboard.resources;
 
+import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.representations.Event;
@@ -20,6 +21,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -30,6 +32,8 @@ import java.net.URISyntaxException;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class LoginResource {
+
+    private final String baseDomain = ConfigurationSingleton.getInstance().getBaseDomain();
 
     @GET
     @Path("/login/twitter")
@@ -44,9 +48,10 @@ public class LoginResource {
         Twitter twitter = factory.getInstance();
         RequestToken requestToken = null;
         try {
-            requestToken = twitter.getOAuthRequestToken("http://localhost:8080/api/events/login/twitter/proxyToken");
+            requestToken = twitter.getOAuthRequestToken("http://"+baseDomain+"/api/events/login/twitter/proxyToken");
         } catch (TwitterException e) {
             e.printStackTrace();
+            return "{'error':'could not generate unique twitter token URL'}";
         }
         AuthDao authDao = new AuthDaoImpl();
         authDao.setRequestToken(requestToken.getToken(), requestToken.getTokenSecret());
@@ -74,7 +79,10 @@ public class LoginResource {
         Twitter twitter = factory.getInstance();
         AuthDao authDao = new AuthDaoImpl();
         String oauthTokenSecret = authDao.getRequestToken(oauthToken);
-        if (oauthTokenSecret == null) return Response.serverError().build();//"invalid oauth token";
+        authDao.deleteRequestToken(oauthToken);
+        if (oauthTokenSecret == null) return Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+                .entity("{'error':'incorrect token'}")
+                .build();
 
         //Get access token from request token
         AccessToken accessTokenObject = null;
@@ -103,6 +111,7 @@ public class LoginResource {
 
         //String screenName = accessTokenObject.getScreenName();
         String hashtags = authDao.getTempHashtags(oauthToken);
+        authDao.deleteTempHashTags(oauthToken);
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
 
@@ -119,7 +128,7 @@ public class LoginResource {
         } catch (TwitterException e) {
             e.printStackTrace();
         }
-        URI uri = UriBuilder.fromUri("http://localhost:8080/hashtag-analyzer/#/dashboard/liveStreaming?hashtags=" +hashtags
+        URI uri = UriBuilder.fromUri("http://"+baseDomain+"/hashtag-analyzer/#/dashboard/liveStreaming?hashtags=" +hashtags
                 +"&authToken="+accessToken
                 +"&userId="+userId
                 +"&screenName="+screenName
