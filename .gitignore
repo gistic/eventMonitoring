@@ -27,11 +27,14 @@ target/
 /layout/data/
 
 # JS
-/dump.rdb
 **/dump.rdb
 
 # Images
 /layout/logo/
 
 configuration.yml
+/layout/hashtag-analyzer/README.md
+/layout/hashtag-analyzer/package.json
+/layout/hashtag-analyzer/Gruntfile.js
 /layout/hashtag-analyzer/dump.rdb
+/dump.rdb
