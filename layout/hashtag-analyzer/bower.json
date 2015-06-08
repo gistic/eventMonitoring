@@ -37,7 +37,8 @@
     "angular-cookies": "~1.4.0",
     "angular": "~1.4.0",
     "angular-moment": "~0.10.1",
-    "ngInfiniteScroll": "~1.2.1"
+    "ngInfiniteScroll": "~1.2.1",
+    "ngFx": "~1.1.0"
   },
   "devDependencies": {
     "modularized-normalize-scss": "~3.0.3"

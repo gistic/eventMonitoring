@@ -1,4 +1,4 @@
-<article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue track by $index" data-user-id="{{tweet.user.id_str}}">
+<article class="media clearfix tweet fx-fade-down fx-easing-bounce fx-speed-1000" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue track by $index" data-user-id="{{tweet.user.id_str}}">
    
     <div class="media-left">
         <img lazy-load ng-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
@@ -14,7 +14,6 @@
            </a>
         </h6>
         <p ng-bind-html="tweet.text |  linky:'_blank'"></p>
-        {{tweet.text | parseUrl}}
         <strong class="text-muted">{{tweet.user.location}}</strong>
     </div>
 

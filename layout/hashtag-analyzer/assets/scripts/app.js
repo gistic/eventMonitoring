@@ -1,6 +1,6 @@
 'use strict';
 
-var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'myAppServices', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies', 'angularMoment', 'infinite-scroll']);
+var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.router', 'myAppDirectives', 'myAppFilters', 'myAppServices', 'highcharts-ng', 'oitozero.ngSweetAlert', 'iso-3166-country-codes', 'googlechart', 'bootstrapLightbox', 'ngSanitize', 'wu.masonry', 'angular-images-loaded', 'ngCookies', 'angularMoment', 'infinite-scroll', 'ngFx', 'ngAnimate']);
 
 
 // Run : Intliaize the event admin app with this values
@@ -123,6 +123,8 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
         // Check if there is an authentication key in the browser cookies
         // if "no"  --> redirect to Twitter App
         $(".spinner").css("opacity", 1);
+
+        // {'error':'incorrect token'}
         if ($cookies.userAuthentication == undefined) {
             var requestAction = "GET";
             var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
@@ -184,10 +186,27 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 })
         }
 
+        // GET : User data
+        $scope.getUserData = function () {
+
+            var apiUrl = '/api/twitterUsers/' + $rootScope.authoUserName + '/?authToken=' + $cookies.userAuthentication;;
+            var requestAction = "GET";
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $rootScope.authoUserName = response.screenName;
+                    console.log(response);
+                }).error(function () {
+                    console.log("#");
+                })
+        };
+
         // Intialize
         $scope.initData = function () {
             $scope.getViewOptions();
             $scope.getEventStats();
+            $scope.getUserData();
         }
 
 
@@ -197,6 +216,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
         $rootScope.eventID = $location.search().uuid;
+        $rootScope.authoUserName = $location.search().screenName;
 
         if ($cookies.userAuthentication == undefined) {
             $rootScope.authToken = $location.search().authToken;
@@ -205,19 +225,12 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             $rootScope.authToken = $cookies.userAuthentication;
         }
 
-        //        if ($cookies.hashtags == undefined) {
-        //            $rootScope.hashtags = $location.search().hashtags;
-        //            $cookies.hashtags = $rootScope.hashtags;
-        //        } else {
-        //            $rootScope.hashtags = $cookies.hashtags;
-        //        }
+        //        if ($cookies.authoUserName == undefined) {
 
-        if ($cookies.authoUserName == undefined) {
-            $rootScope.authoUserName = $location.search().screenName;
-            $cookies.authoUserName = $rootScope.authoUserName;
-        } else {
-            $rootScope.authoUserName = $cookies.authoUserName;
-        }
+        //            $cookies.authoUserName = $rootScope.authoUserName;
+        //        } else {
+        //            $rootScope.authoUserName = $cookies.authoUserName;
+        //        }
 
 
         if ($cookies.authoUserID == undefined) {
@@ -243,24 +256,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         // Lightbox for media
         $scope.Lightbox = Lightbox;
 
-        // GET : Top active people
-        $scope.topPeople = [];
-        $scope.getTopPeople = function () {
-
-            var requestAction = "GET";
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/topUsers';
-            var topUsersCount = 10;
-
-            var requestData = {
-                "count": topUsersCount
-            };
-
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    $scope.topPeople = response.data.topUsers;
-                });
-        }
-        $scope.getTopPeople();
 
         // TOP TWEETS
         $scope.topTweets = [];
@@ -320,9 +315,10 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         $scope.mediaQueue = [];
         $scope.topCountries = [];
+        $scope.topPeople = [];
 
         $scope.tweet = {};
-        
+
         // Listen to new message
         $scope.startEventSource = function () {
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
@@ -332,9 +328,9 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             source.addEventListener('approved-tweets', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
-                
+
                 $scope.totalTweetsCount++;
-                
+
                 if ($scope.tweet.extended_entities != null && $scope.tweet.extended_entities.media != null) {
 
                     var mediaArrayLength = $scope.tweet.extended_entities.media.length;
@@ -387,7 +383,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
                 $scope.loadMoreMedia = function () {};
 
-
                 $scope.$apply(function () {
                     if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
                         $scope.tweetsQueue.unshift($scope.tweet);
@@ -395,6 +390,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                         $scope.lastNewTweets.push($scope.tweet);
                     }
                 }, false);
+
             });
 
             source.addEventListener('tweets-over-time', function (response) {
@@ -404,6 +400,12 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                 }, false);
             });
 
+            source.addEventListener('top-people', function (response) {
+                $scope.data = JSON.parse(response.data);
+                $scope.$apply(function () {
+                    $scope.topPeople = $scope.data.topUsers;
+                }, false);
+            });
 
             source.addEventListener('country-update', function (response) {
                 $scope.topCountrey = JSON.parse(response.data);
