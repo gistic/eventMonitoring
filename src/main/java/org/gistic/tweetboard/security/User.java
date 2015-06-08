@@ -5,6 +5,12 @@ package org.gistic.tweetboard.security;
  */
 public class User {
 
+    public String getAccessTokenSecret() {
+        return accessTokenSecret;
+    }
+
+    private String accessTokenSecret;
+
     public User() {
     }
     public User(boolean noUser) {
@@ -17,8 +23,9 @@ public class User {
         return accessToken;
     }
 
-    public User(String accessToken) {
+    public User(String accessToken, String accessTokenSecret) {
         this.accessToken = accessToken;
+        this.accessTokenSecret = accessTokenSecret;
     }
 
     boolean noUser = false;
