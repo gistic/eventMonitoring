@@ -28,27 +28,9 @@
         <footer class="container clearfix">
             <small class="text-muted pull-left">{{appName}} © 2015 - {{appVersion}}</small>
             <ul class="list-inline social-links pull-right">
-                <li>
-                    <a href="">
-                        <span class="icon-envelope"></span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="">
-                        <span class="icon-twitter"></span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="">
-                        <span class="icon-linkedin"></span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="">
-                        <span class="icon-facebook"></span>
+                <li ng-repeat="link in socialLink">
+                    <a href="{{link.url}}" title="{{link.title}}">
+                        <span class="icon-{{link.icon}}"></span>
                     </a>
                 </li>
             </ul>

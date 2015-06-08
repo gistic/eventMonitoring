@@ -13,9 +13,8 @@
                <small am-time-ago="tweet.created_at"></small>
            </a>
         </h6>
-        <p>
-            {{tweet.text}}
-        </p>
+        <p ng-bind-html="tweet.text |  linky:'_blank'"></p>
+        {{tweet.text | parseUrl}}
         <strong class="text-muted">{{tweet.user.location}}</strong>
     </div>
 

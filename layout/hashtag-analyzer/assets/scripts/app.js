@@ -7,6 +7,23 @@ var trackHashtagApp = angular.module('trackHashtagApp', ['ui.bootstrap', 'ui.rou
 trackHashtagApp.run(function ($window, $location, $rootScope, $cookies) {
     $rootScope.appName = "Hashtag Analyser";
     $rootScope.appVersion = "V.1.0.0";
+    $rootScope.socialLink = [{
+        "title": "Linkedin",
+        "url": "http://www.linkedin.com",
+        "icon": "linkedin"
+    }, {
+        "title": "twitter",
+        "url": "http://www.twitter.com",
+        "icon": "twitter"
+    }, {
+        "title": "facebook",
+        "url": "http://www.facebook.com",
+        "icon": "facebook"
+    }, {
+        "title": "Email",
+        "url": "http://mailto:",
+        "icon": "envelope"
+    }];
     $rootScope.baseUrl = $window.location.origin;
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
     $rootScope.eventID = $location.search().uuid;
@@ -133,7 +150,7 @@ trackHashtagApp.controller('StartNewEventController', ['$rootScope', '$scope', '
 // Controller : Populate the recieved data and update admin page
 trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
-                                                
+
         // GET : View options
         $scope.getViewOptions = function () {
 
@@ -148,7 +165,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     console.log("#");
                 })
         }
-        
+
         // GET : Event basic stats
         $scope.getEventStats = function () {
 
@@ -161,12 +178,12 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                     $scope.totalMediaCount = response.totalMedia;
                     $scope.totalUsersCount = response.numberOfUsers;
                     $scope.totalTweetsCount = response.totalTweets;
-                console.log(response);
+                    console.log(response);
                 }).error(function () {
                     console.log("#");
                 })
         }
-        
+
         // Intialize
         $scope.initData = function () {
             $scope.getViewOptions();
@@ -188,12 +205,12 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             $rootScope.authToken = $cookies.userAuthentication;
         }
 
-//        if ($cookies.hashtags == undefined) {
-//            $rootScope.hashtags = $location.search().hashtags;
-//            $cookies.hashtags = $rootScope.hashtags;
-//        } else {
-//            $rootScope.hashtags = $cookies.hashtags;
-//        }
+        //        if ($cookies.hashtags == undefined) {
+        //            $rootScope.hashtags = $location.search().hashtags;
+        //            $cookies.hashtags = $rootScope.hashtags;
+        //        } else {
+        //            $rootScope.hashtags = $cookies.hashtags;
+        //        }
 
         if ($cookies.authoUserName == undefined) {
             $rootScope.authoUserName = $location.search().screenName;
@@ -305,7 +322,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
         $scope.topCountries = [];
 
         $scope.tweet = {};
-
+        
         // Listen to new message
         $scope.startEventSource = function () {
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
@@ -315,6 +332,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             source.addEventListener('approved-tweets', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
+                
                 $scope.totalTweetsCount++;
                 
                 if ($scope.tweet.extended_entities != null && $scope.tweet.extended_entities.media != null) {
@@ -363,13 +381,13 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
                             });
                         }
                     }
-                    
+
                     $scope.totalMediaCount++;
                 }
 
                 $scope.loadMoreMedia = function () {};
-                
-                
+
+
                 $scope.$apply(function () {
                     if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
                         $scope.tweetsQueue.unshift($scope.tweet);
