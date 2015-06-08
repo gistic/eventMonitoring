@@ -124,19 +124,22 @@ public class LoginResource {
         //target.queryParam("authToken", accessToken);
         Event event = new Event(hashtags.split(","));
         //set default profile image
-        String profileImageUrl = "http://s.twimg.com/a/1292022067/images/default_profile_2_reasonably_small.png";
+        //String profileImageUrl = "http://s.twimg.com/a/1292022067/images/default_profile_2_reasonably_small.png";
         EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
-        try {
-            profileImageUrl = twitter.showUser(Long.parseLong(userIdFromTwitter)).getBiggerProfileImageURLHttps();
-        } catch (TwitterException e) {
-            e.printStackTrace();
-        }
-        URI uri = UriBuilder.fromUri("http://"+baseDomain+"/hashtag-analyzer/#/dashboard/liveStreaming?hashtags=" +hashtags
-                +"&authToken="+accessToken
-                +"&userId="+userId
-                +"&screenName="+screenName
-                +"&uuid="+eventUuid.getUuid()
-                +"&profileImageUrl="+profileImageUrl).build();
+//        try {
+//            profileImageUrl = twitter.showUser(Long.parseLong(userIdFromTwitter)).getBiggerProfileImageURLHttps();
+//        } catch (TwitterException e) {
+//            e.printStackTrace();
+//        }
+        URI uri = UriBuilder.fromUri(
+                    "http://"+baseDomain+"/hashtag-analyzer/#/dashboard/liveStreaming?hashtags=" +hashtags
+                    +"&authToken="+accessToken
+                    +"&userId="+userId
+                    +"&screenName="+screenName
+                    +"&uuid="+eventUuid.getUuid()
+                    //+"&profileImageUrl="+profileImageUrl
+                )
+                .build();
 //                .queryParam("token", accessToken)
 //                .queryParam("hashtags", hashtags)
 //                .queryParam("firstTime", String.valueOf(firstTime)).build();
