@@ -188,8 +188,7 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
 
         // GET : User data
         $scope.getUserData = function () {
-
-            var apiUrl = '/api/twitterUsers' + '/?authToken=' + $cookies.userAuthentication;;
+            var apiUrl = '/api/twitterUsers' + '?authToken=' + $cookies.userAuthentication;;
             var requestAction = "GET";
             var requestData = "";
 

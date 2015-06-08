@@ -6,7 +6,35 @@
     <div class="panel-body">
        
         <div class="row">
-            <div class="col-md-8 media-box" ng-repeat-start="media in mediaQueue | limitTo:12">
+<!--
+fade-down
+fade-down-big
+fade-left
+fade-left-big
+fade-right
+fade-right-big
+fade-up
+fade-up-big
+
+bounce-normal
+bounce-down
+bounce-left
+bounce-up
+bounce-right
+
+rotate-clock
+rotate-counterclock
+rotate-clock-left
+rotate-counterclock-right
+rotate-counterclock-up
+
+zoom-normal
+zoom-up
+zoom-down
+zoom-left
+zoom-right
+-->
+            <div class="col-md-8 media-box fx-fade-normal fx-easing-quad fx-speed-100" ng-repeat-start="media in mediaQueue | orderBy:'tweetCreatedAt':true | limitTo:12">
                 <a ng-click="Lightbox.openModal(mediaQueue, $index)">
                     <img class="img-responsive" lazy-load ll-src="{{media.thumb}}" on-error-src="{{defultImage}}" />
                 </a>
