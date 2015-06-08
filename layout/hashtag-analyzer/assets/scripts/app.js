@@ -195,6 +195,8 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
                     $rootScope.authoUserName = response.screenName;
+                    $rootScope.authoUserID = response.id;
+                    $rootScope.authoUserPicture = response.originalProfileImageURLHttps;
                     console.log(response);
                 }).error(function () {
                     console.log("#");
@@ -222,29 +224,6 @@ trackHashtagApp.controller('EventMainController', ['$rootScope', '$scope', '$htt
             $cookies.userAuthentication = $rootScope.authToken;
         } else {
             $rootScope.authToken = $cookies.userAuthentication;
-        }
-
-        //        if ($cookies.authoUserName == undefined) {
-
-        //            $cookies.authoUserName = $rootScope.authoUserName;
-        //        } else {
-        //            $rootScope.authoUserName = $cookies.authoUserName;
-        //        }
-
-
-        if ($cookies.authoUserID == undefined) {
-            $rootScope.authoUserID = $location.search().userId;
-            $cookies.authoUserID = $rootScope.authoUserID
-        } else {
-            $rootScope.authoUserID = $cookies.authoUserID;
-        }
-
-
-        if ($cookies.authoUserPicture == undefined) {
-            $rootScope.authoUserPicture = $location.search().profileImageUrl;
-            $cookies.authoUserPicture = $rootScope.authoUserPicture
-        } else {
-            $rootScope.authoUserPicture = $cookies.authoUserPicture;
         }
 
         // Truse Source : fix ng-src videos issue
