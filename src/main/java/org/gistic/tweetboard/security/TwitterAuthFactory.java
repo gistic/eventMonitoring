@@ -57,7 +57,7 @@ public class TwitterAuthFactory<T> extends AuthFactory<TwitterCredentials, T> {
     public T provide() {
         if (request != null) {
             final String token = request.getParameter("authToken");
-            if (token != null && !token.isEmpty()) {
+            //if (token != null && !token.isEmpty()) {
                 final TwitterCredentials credentials = new TwitterCredentials(token);
                 final Optional<T> result;
                 try {
@@ -70,7 +70,7 @@ public class TwitterAuthFactory<T> extends AuthFactory<TwitterCredentials, T> {
                 if (result.isPresent()) {
                     return result.get();
                 }
-            }
+            //}
         }
         if (required) {
             //TODO

@@ -21,7 +21,7 @@ public class TwitterAuthenticator implements Authenticator<TwitterCredentials, U
     public Optional<User> authenticate(TwitterCredentials credentials) throws AuthenticationException {
         String accessToken = credentials.getAccessToken();
         AuthDao authDao = new AuthDaoImpl();
-        if (accessToken == null) {return Optional.fromNullable(new User(true));}
+        if (accessToken == null || accessToken.equalsIgnoreCase("undefined")) {return Optional.fromNullable(new User(true));}
         String accessTokenSecret = authDao.getAccessTokenSecret(accessToken);
         if (accessTokenSecret == null || accessTokenSecret.isEmpty()) return Optional.absent();
 
