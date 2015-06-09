@@ -1,8 +1,14 @@
 package org.gistic.tweetboard.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gistic.tweetboard.JedisPoolContainer;
+import org.gistic.tweetboard.util.Misc;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisException;
+import twitter4j.TwitterException;
+import twitter4j.TwitterObjectFactory;
+import twitter4j.User;
 
 /**
  * Created by osama-hussain on 5/26/15.
@@ -107,6 +113,36 @@ public class AuthDaoImpl implements AuthDao {
         }
     }
 
+    @Override
+    public User getOrUpdateUserDetailsInCache(org.gistic.tweetboard.security.User user) throws TwitterException {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            String userDetailsString = null;
+            User twitterUser = null;
+            userDetailsString =jedis.get(getTwitterUserDetails(user.getAccessToken(), user.getAccessTokenSecret()));
+            if (userDetailsString==null || userDetailsString.isEmpty()) {
+                twitterUser = Misc.getTwitter(user).verifyCredentials();
+//                userDetailsString = TwitterObjectFactory.getRawJSON(twitterUser);
+                try {
+                    userDetailsString = new ObjectMapper().writeValueAsString(twitterUser);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+                System.out.println("userDetailsString is: "+ userDetailsString);
+                String accessToken = user.getAccessToken();
+                String accessTokenSecret = user.getAccessTokenSecret();
+                jedis.set(getTwitterUserDetails(accessToken, accessTokenSecret), userDetailsString);
+                jedis.expire(getTwitterUserDetails(accessToken, accessTokenSecret), 90);
+                return twitterUser;
+            } else {
+                return TwitterObjectFactory.createUser(userDetailsString);
+            }
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
     private String getTwitteruserIdKey(String accessToken) {
         return TWITTER_USER_ID_KEY_STUB+accessToken;
     }
@@ -118,4 +154,9 @@ public class AuthDaoImpl implements AuthDao {
     private String getTwitterRequestTokenKey(String requestToken) {
         return TWITTER_REQUEST_TOKEN_KEY_STUB+requestToken;
     }
+
+    private String getTwitterUserDetails(String accessToken, String accessTokenSecret) {
+        return accessToken+":"+accessTokenSecret+":userDetails";
+    }
 }
+

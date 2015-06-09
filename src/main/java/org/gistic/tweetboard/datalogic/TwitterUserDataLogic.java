@@ -1,13 +1,11 @@
 package org.gistic.tweetboard.datalogic;
 
-import org.gistic.tweetboard.ConfigurationSingleton;
-import org.gistic.tweetboard.TwitterConfiguration;
+import org.gistic.tweetboard.dao.AuthDao;
+import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.security.User;
+import org.gistic.tweetboard.util.Misc;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
 
 /**
  * Created by osama-hussain on 6/8/15.
@@ -15,7 +13,7 @@ import twitter4j.conf.ConfigurationBuilder;
 public class TwitterUserDataLogic {
 
     public twitter4j.User getUserProfile(User user, String screenName) {
-        Twitter twitter = getTwitter(user);
+        Twitter twitter = Misc.getTwitter(user);
         try {
             return twitter.showUser(screenName);
         } catch (TwitterException e) {
@@ -25,22 +23,11 @@ public class TwitterUserDataLogic {
     }
 
     public twitter4j.User getUserProfile(User user) throws TwitterException {
-        Twitter twitter = getTwitter(user);
-        return twitter.verifyCredentials();
+        Twitter twitter = Misc.getTwitter(user);
+        AuthDao authDao = new AuthDaoImpl();
+        return authDao.getOrUpdateUserDetailsInCache(user);
+        //return twitter.verifyCredentials();
     }
 
-    private Twitter getTwitter(User user) {
-        TwitterConfiguration twitterConfiguration = ConfigurationSingleton.
-                getInstance().getTwitterConfiguration();
-        ConfigurationBuilder builder = new ConfigurationBuilder();
-        builder.setDebugEnabled(true);
-        builder.setOAuthConsumerKey(twitterConfiguration.getConsumerKey());
-        builder.setOAuthConsumerSecret(twitterConfiguration.getConsumerSecret());
-        builder.setOAuthAccessToken(user.getAccessToken());
-        builder.setOAuthAccessTokenSecret(user.getAccessTokenSecret());
-        Configuration configuration = builder.build();
 
-        TwitterFactory factory = new TwitterFactory(configuration);
-        return factory.getInstance();
-    }
 }
