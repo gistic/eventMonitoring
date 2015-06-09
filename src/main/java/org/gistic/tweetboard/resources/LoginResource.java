@@ -6,6 +6,8 @@ import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.representations.Event;
 import org.gistic.tweetboard.representations.EventUuid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -67,8 +69,9 @@ public class LoginResource {
     @Path("/login/twitter/proxyToken")
     public Response getEventConfig(@QueryParam("oauth_token") String oauthToken,
                                  @QueryParam("oauth_verifier") String oauthVerifier) {
-        System.out.println(oauthToken);
-        System.out.println(oauthVerifier);
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+//        System.out.println(oauthToken);
+//        System.out.println(oauthVerifier);
         TwitterConfiguration config = ConfigurationSingleton.getInstance().getTwitterConfiguration();
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(true);
@@ -89,6 +92,7 @@ public class LoginResource {
 
         //Get access token from request token
         AccessToken accessTokenObject = null;
+        logger.info("getting oauth access token");
         try {
             accessTokenObject = twitter.getOAuthAccessToken(new RequestToken(oauthToken,
                     oauthTokenSecret), oauthVerifier);
@@ -99,7 +103,7 @@ public class LoginResource {
 
         String accessToken = accessTokenObject.getToken();
         String accessTokenSecret =  accessTokenObject.getTokenSecret();
-
+        logger.info("got oauth access token: " + accessToken);
         String userId = authDao.getUserId(accessToken);
         String screenName  = accessTokenObject.getScreenName();
         String userIdFromTwitter = String.valueOf( accessTokenObject.getUserId() );
@@ -119,6 +123,7 @@ public class LoginResource {
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
 
         //make event on user's behalf
+        logger.info("making event");
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://127.0.0.1:8080/api/events?authToken="+accessToken);
         //target.queryParam("authToken", accessToken);
@@ -126,6 +131,7 @@ public class LoginResource {
         //set default profile image
         //String profileImageUrl = "http://s.twimg.com/a/1292022067/images/default_profile_2_reasonably_small.png";
         EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
+        logger.info("made event with uuid: "+ eventUuid.getUuid());
 //        try {
 //            profileImageUrl = twitter.showUser(Long.parseLong(userIdFromTwitter)).getBiggerProfileImageURLHttps();
 //        } catch (TwitterException e) {
