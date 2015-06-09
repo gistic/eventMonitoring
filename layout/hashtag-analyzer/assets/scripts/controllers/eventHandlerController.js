@@ -46,7 +46,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
                 for (var i = 0; i < response.items.length; i++) {
-                    $scope.tweetsQueue.push(response.items[i]);
+                    $scope.tweet = JSON.parse(response.items[i]);
+                    $scope.tweetsQueue.push($scope.tweet)
+                    console.log($scope.tweet.id_str);
+                    console.log($scope.tweet);
                 }
                 }).error(function () {
                     console.log("#");
