@@ -45,10 +45,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    for (var key in response.items) {
-                        $scope.tweetsQueue.push(response.items[key]);
-                        console.log($scope.tweetsQueue.length);
-                    }
+                for (var i = 0; i < response.items.length; i++) {
+                    $scope.tweetsQueue.push(response.items[i]);
+                }
                 }).error(function () {
                     console.log("#");
                 })
@@ -76,7 +75,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             $scope.getWarmupData();
             $scope.getViewOptions();
             $scope.getEventStats();
-//            $scope.getUserData();
+            $scope.getUserData();
         }
 
 
@@ -133,20 +132,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             $scope.showLoadMore = false;
             $scope.getTopTweets();
         }
-
-        $scope.enableModeration = false;
-        $scope.moderationStatus = function () {
-
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/moderation';
-            var requestAction = "DELETE";
-            var requestData = "";
-
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {}).error(function () {
-                    console.log("#");
-                })
-        };
-        $scope.moderationStatus();
 
         // Start New Event Handler
         $scope.eventStarted = false;
@@ -257,19 +242,20 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                     $scope.totalMediaCount++;
                 }
 
-//                $scope.$apply(function () {
+                $scope.$apply(function () {
+                    $scope.lastNewTweets.push($scope.tweet);
 //                    if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
 //                        $scope.tweetsQueue.push($scope.tweet);
 //                    } else {
 //                        $scope.lastNewTweets.push($scope.tweet);
 //                    }
-//                    $(".loading").hide();
-//                }, false);
+                    $(".loading").hide();
+                }, false);
 
             });
 
             source.addEventListener('tweets-over-time', function (response) {
-                $scope.data = JSON.parse(response.data);
+               $scope.data = JSON.parse(response.data);
                 $scope.$apply(function () {
                     $scope.drawChart($scope.data);
                 }, false);
