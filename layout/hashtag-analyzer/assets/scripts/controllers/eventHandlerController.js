@@ -45,7 +45,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    //                    $scope.tweetsQueue = response.items;
+                    for (var key in response.items) {
+                        $scope.tweetsQueue.push(response.items[key]);
+                        console.log($scope.tweetsQueue.length);
+                    }
                 }).error(function () {
                     console.log("#");
                 })
@@ -73,7 +76,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             $scope.getWarmupData();
             $scope.getViewOptions();
             $scope.getEventStats();
-            $scope.getUserData();
+//            $scope.getUserData();
         }
 
 
@@ -176,7 +179,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 $scope.tweet = JSON.parse(response.data);
 
                 $scope.totalTweetsCount++;
-
+                
+                // Media
                 if ($scope.tweet.extended_entities != null && $scope.tweet.extended_entities.media != null) {
 
                     var mediaArrayLength = $scope.tweet.extended_entities.media.length;
@@ -253,14 +257,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                     $scope.totalMediaCount++;
                 }
 
-                $scope.$apply(function () {
-                    if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
-                        $scope.tweetsQueue.push($scope.tweet);
-                    } else {
-                        $scope.lastNewTweets.push($scope.tweet);
-                    }
-                    $(".loading").hide();
-                }, false);
+//                $scope.$apply(function () {
+//                    if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
+//                        $scope.tweetsQueue.push($scope.tweet);
+//                    } else {
+//                        $scope.lastNewTweets.push($scope.tweet);
+//                    }
+//                    $(".loading").hide();
+//                }, false);
 
             });
 
