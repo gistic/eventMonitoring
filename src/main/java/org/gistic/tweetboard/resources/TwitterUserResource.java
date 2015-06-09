@@ -24,7 +24,7 @@ public class TwitterUserResource {
     @GET
     @Path("/{screenName}")
     public twitter4j.User getUserFromScreenName(@PathParam("screenName") String screenName,
-                                       @Auth(required = true) User user) {
+                                       @Auth User user) {
         if (user==null || user.isNoUser()) {
             Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
                     .entity("incorrect auth token")
