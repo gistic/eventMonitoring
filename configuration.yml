@@ -1,0 +1,46 @@
+server:
+  gzip:
+    enabled: false
+#  softNofileLimit: 1000
+#  hardNofileLimit: 1000
+  rootPath: /api/*
+  applicationConnectors:
+    - type: http
+      port: 8080
+# this requires the npn-boot library on the JVM's boot classpath
+#    - type: spdy3
+#      port: 8445
+#      keyStorePath: example.keystore
+#      keyStorePassword: example
+#      validateCerts: false
+  adminConnectors:
+    - type: http
+      port: 8081
+assets:
+  overrides:
+    /: layout/
+message: "This is a message defined in the configuration file config.yaml."
+messageRepetitions: 5
+redis:
+  # The redis server's address; required.
+  endpoint: localhost:6379
+  # Auth password for redis server connection.  (default: null)
+  # password: null
+  # The minimum number of idle connections to maintain in the pool.  (default: 0)
+  minIdle: 5
+  # The maximum number of idle connections allowed in the pool.  (default: 0)
+  maxIdle: 10
+  # The maximum number of connections allowed in the pool.  (default: 1024)
+  maxTotal: 1924
+twitter:
+#  consumer-key: 6PPRgLzPOf6Mvcj3NkPIlq07Y
+#  consumer-secret: Xl3TKJwNQtZmbYGhLcXzUseO9CrdoMav54qODCr2CnFiSIIZpb
+#  user-key: 1974931724-iUek6BFqWg3SSyuTMfTDhvL5DrzDGDkClgd9yB0
+#  user-secret: 3SrUJH57ROyLlIoTle81CP1LDtbWDlGf4ew4tocDekuil
+  consumer-key: NOtR3vUPHLg9SkQZ8xPKUWNuB
+  consumer-secret: e3TrmlIMDUeaDFOvnVzWXF09FU7yK8G40Ju6eryazzaOLn7IUJ
+  user-key: 1974931724-eOfQXnlkGUKq1Nh7x3dElaGMUwu00dFOrZbkuIi
+  user-secret: E86Yjk5ZPNnFqVQzRE0UlxiTdp82SjBX4tXUnr7kcM7eN
+defaultAutoShutdownDelayInHours: 1
+v2: true
+baseDomain: localhost:8080
