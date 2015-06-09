@@ -53,6 +53,7 @@ public class Event {
         TwitterConfiguration twitterConfiguration = ConfigurationSingleton.
                 getInstance().getTwitterConfiguration();
         bus = new AsyncEventBus(ExecutorSingleton.getInstance());
+        tweetProcessor = new TweetProcessor(bus, tweetDataLogic);
         if (!v2) {
             TwitterServiceManager.make(twitterConfiguration, bus, hashTags, uuid);
         } else {
@@ -60,8 +61,10 @@ public class Event {
             AuthDao authDao = new AuthDaoImpl();
             String accessTokenSecret = authDao.getAccessTokenSecret(accessToken);
             twitterServiceManagerV2.make(bus, hashTags, uuid, accessToken, accessTokenSecret);
+            tweetProcessor.setModerated(false);
         }
-        tweetProcessor = new TweetProcessor(bus, tweetDataLogic);
+
+
         try {
             tweetProcessor.start();
         } catch (Exception e) {
