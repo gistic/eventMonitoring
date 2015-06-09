@@ -32,7 +32,7 @@ target/
 # Images
 /layout/logo/
 
-configuration.yml
+# configuration.yml
 /layout/hashtag-analyzer/README.md
 /layout/hashtag-analyzer/package.json
 /layout/hashtag-analyzer/Gruntfile.js
