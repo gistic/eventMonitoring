@@ -315,19 +315,19 @@ public class TweetDataLogic {
         this.tweetDao.setNewTweetMeta(uuid, tweet);
     }
 
-    public GenericArray<Status> getCachedTweets() {
+    public GenericArray<String> getCachedTweets() {
         List<String> tweetIds = tweetDao.getIdsFromTweetCache(uuid);
-        List<Status> cachedStatuses = new ArrayList<>();
+        List<String> cachedStatuses = new ArrayList<>();
         for (String tweetId : tweetIds) {
             String tweetString = tweetDao.getTweetStringsCache(uuid, tweetId);
-            try {
-                Status status = TwitterObjectFactory.createStatus(tweetString);
-                cachedStatuses.add(status);
-            } catch (TwitterException | NullPointerException e) {
-                logger.error("Failed to make status from string from tweets cache. String was: "+tweetString);
-                e.printStackTrace();
-            }
+//            try {
+                //Status status = TwitterObjectFactory.createStatus(tweetString);
+                cachedStatuses.add(tweetString);
+//            } catch (TwitterException | NullPointerException e) {
+//                logger.error("Failed to make status from string from tweets cache. String was: "+tweetString);
+//                e.printStackTrace();
+//            }
         }
-        return new GenericArray<Status>(cachedStatuses.toArray(new Status[]{}));
+        return new GenericArray<String>(cachedStatuses.toArray(new String[]{}));
     }
 }

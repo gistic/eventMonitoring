@@ -409,7 +409,7 @@ public class EventsResource {
 
     @GET
     @Path("/{uuid}/cachedTweets")
-    public GenericArray<Status> getCachedTweets(@PathParam("uuid") String uuid,
+    public GenericArray<String> getCachedTweets(@PathParam("uuid") String uuid,
                                              @DefaultValue("undefined") @QueryParam("authToken") String authToken,
                                              @Auth(required = false) User user) {
         checkUuid(uuid);
