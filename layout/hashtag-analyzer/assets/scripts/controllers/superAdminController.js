@@ -1,7 +1,7 @@
-var superAdminApp = angular.module('superAdminApp', []);
+var superAdminController = angular.module('superAdminController', []);
 
 /* Controller : Super admin page */
-superAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', 'RequestData', function ($rootScope, $scope, $http, RequestData) {
+superAdminController.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', 'RequestData', function ($rootScope, $scope, $http, RequestData) {
 
     var requestAction = "GET";
     var apiUrl = '/api/events/superAdmin/';
@@ -21,9 +21,7 @@ superAdminApp.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$http', 'Re
         var requestData = "";
 
         RequestData.fetchData(requestAction, apiUrl, requestData)
-            .then(function (response) {
-                console.log(response);
-            })
+            .then(function (response) {})
 
     }
 

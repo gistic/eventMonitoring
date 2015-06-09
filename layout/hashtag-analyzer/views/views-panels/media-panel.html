@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-md-8 media-box" ng-repeat-start="media in mediaQueue | orderBy:'tweetCreatedAt':true | limitTo:12">
                 <a ng-click="Lightbox.openModal(mediaQueue, $index)">
-<!--                    <img class="img-responsive" lazy-load ll-src="{{media.thumb}}" on-error-src="{{defultImage}}" />-->
+                    <img class="img-responsive" lazy-load ll-src="{{media.thumb}}" on-error-src="{{defultImage}}" />
                 </a>
             </div>
             <div class="clearfix row-gab" ng-if="$index%3==2"></div>

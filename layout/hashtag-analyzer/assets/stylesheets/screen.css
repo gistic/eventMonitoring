@@ -17883,21 +17883,32 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-/* line 12, ../sass/_/_configs/_utilities.scss */
+/* line 6, ../sass/_/_configs/_utilities.scss */
 a {
   color: #2493de;
 }
-/* line 14, ../sass/_/_configs/_utilities.scss */
+/* line 8, ../sass/_/_configs/_utilities.scss */
 a:hover, a:focus {
   color: #145988;
   outline: 0;
 }
 
-/* line 21, ../sass/_/_configs/_utilities.scss */
+/* line 15, ../sass/_/_configs/_utilities.scss */
 .form-control:hover, .form-control:focus {
   outline: 0;
   border-color: transparent;
   box-shadow: none;
+}
+
+/* line 24, ../sass/_/_configs/_utilities.scss */
+img {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  -webkit-filter: blur(10px);
+  -moz-filter: blur(10px);
+  -o-filter: blur(10px);
+  -ms-filter: blur(10px);
+  filter: blur(10px);
 }
 
 /* line 1, ../sass/_/_atoms/_buttons.scss */

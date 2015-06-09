@@ -1,11 +1,12 @@
 <section class="col-md-24">
     <aside class="tweets-queue-options clearfix">
         <strong class="pull-right">{{totalMediaCount}} Pic & Videos</strong>
+        <strong style="position:fixed;top:100px;left:200px;">{{pagesShown}} Pages</strong>
     </aside>
-    <div masonry preserve-order column-width="20" item-selector=".mybrick" masonry-options="{ transitionDuration: '0.4s' }" infinite-scroll='loadMoreMedia()' infinite-scroll-distance='2'>
-        <div masonry-brick class="masonry-brick mybrick" ng-repeat="media in mediaQueue track by $index">
+    <div masonry preserve-order column-width="20" item-selector=".mybrick" masonry-options="{ transitionDuration: '0.4s' }" infinite-scroll='loadMoreMedia()' infinite-scroll-distance='1'>
+        <div masonry-brick class="masonry-brick mybrick" ng-repeat="media in mediaQueue | limitTo : tweetsQueueLimit() track by $index ">
             <a ng-click="Lightbox.openModal(mediaQueue, $index)">
-                <img class="img-responsive" lazy-load ll-src="{{media.thumb}}" on-error-src="{{defultImage}}" />
+                <img class="img-responsive" lazy-load ll-src="{{media.thumb}}" on-error-src="{{defultImage}}"/>
                 <span class="media-type-icon">
                 <i ng-if="media.type == 'photo'" class="fa fa-camera"></i>
                 <i ng-if="media.type == 'video'" class="fa fa-video"></i>

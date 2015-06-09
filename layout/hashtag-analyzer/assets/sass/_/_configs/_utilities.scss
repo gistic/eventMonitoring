@@ -3,12 +3,6 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-main {
-    .dashboard {
-        
-    }
-}
-
 a {
 	color: $blue;
 	&:hover, &:focus {
@@ -24,4 +18,14 @@ a {
 		border-color: transparent;
 		box-shadow: none;
 	}
+}
+
+// TODO : Remove this for production
+img {
+    @include opacity(0.5);
+    -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    -o-filter: blur(10px);
+    -ms-filter: blur(10px);
+    filter: blur(10px);
 }
