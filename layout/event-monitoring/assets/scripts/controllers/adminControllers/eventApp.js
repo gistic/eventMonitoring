@@ -115,7 +115,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
 
         $scope.goLive = function () {
-            $window.open($rootScope.baseUrl + "/views/presentation/#/live?uuid=" + $rootScope.eventID, '_blank');
+            $window.open($rootScope.baseUrl + "/event-monitoring/views/presentation/#/live?uuid=" + $rootScope.eventID, '_blank');
         }
 
         // Layout : Color
