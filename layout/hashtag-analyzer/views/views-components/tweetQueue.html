@@ -3,7 +3,6 @@
     <div class="media-left">
         <img lazy-load ng-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
     </div>
-    
     <div class="media-body tweet-content">
         <h6 class="media-heading tweet-user clearfix">
             <a ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank" class="pull-left tweet-userName">
@@ -21,7 +20,7 @@
 </article>
 
 <div class="text-center">
-   <hr>
+<!--   <hr>-->
     <a class="btn-link btn-block" ng-show="loadMoreButtonFromHistory()" ng-click="loadMoreTweetsFromHistory()">Load More</a>
 </div>
 

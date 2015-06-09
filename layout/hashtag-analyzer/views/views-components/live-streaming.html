@@ -45,6 +45,7 @@
 
     <button type="button" class="btn btn-load-more" ng-show="loadMoreButton()" ng-click="loadMoreTweets()"><strong><i class="fa fa-arrow-up"></i></strong> {{remainingTweetsCount}} New Tweets</button>
 
+<!--    <div ng-show="tab === 1" ng-include="'views/views-components/tweetQueue.html'"  infinite-scroll='loadMoreTweetsFromHistory()' infinite-scroll-distance='0'></div>-->
     <div ng-show="tab === 1" ng-include="'views/views-components/tweetQueue.html'"></div>
     <div ng-show="tab === 2" ng-include="'views/views-components/topTweetsQueue.html'"></div>
 

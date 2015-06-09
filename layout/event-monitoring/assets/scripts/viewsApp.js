@@ -31,17 +31,17 @@ eventViewsApp.config(function ($stateProvider, $urlRouterProvider) {
     window.routes = {
         "live": {
             url: '/live?uuid',
-            templateUrl: '../../views/presentation/live-stream.html',
+            templateUrl: 'views/presentation/live-stream.html',
             controller: 'LiveStreamController'
         },
         "top": {
             url: '/top?uuid',
-            templateUrl: '../../views/presentation/active-people.html',
+            templateUrl: 'views/presentation/active-people.html',
             controller: 'ActivePeopleController'
         },
         "overtime": {
             url: '/overtime?uuid',
-            templateUrl: '../../views/presentation/tweets-overtime.html',
+            templateUrl: 'views/presentation/tweets-overtime.html',
             controller: 'TweetsOverTimeController'
         }
     };

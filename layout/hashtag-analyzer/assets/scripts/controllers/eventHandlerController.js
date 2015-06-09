@@ -45,7 +45,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    //                    $scope.tweetsQueue = response.items;
+                for (var i = 0; i < response.items.length; i++) {
+                    $scope.tweet = JSON.parse(response.items[i]);
+                    $scope.tweetsQueue.push($scope.tweet);
+                }
                 }).error(function () {
                     console.log("#");
                 })
@@ -131,20 +134,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             $scope.getTopTweets();
         }
 
-        $scope.enableModeration = false;
-        $scope.moderationStatus = function () {
-
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/moderation';
-            var requestAction = "DELETE";
-            var requestData = "";
-
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {}).error(function () {
-                    console.log("#");
-                })
-        };
-        $scope.moderationStatus();
-
         // Start New Event Handler
         $scope.eventStarted = false;
         $rootScope.timerRunning = false;
@@ -174,9 +163,11 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             source.addEventListener('approved-tweets', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
+//                console.log($scope.tweet.lang);
 
                 $scope.totalTweetsCount++;
-
+                
+                // Media
                 if ($scope.tweet.extended_entities != null && $scope.tweet.extended_entities.media != null) {
 
                     var mediaArrayLength = $scope.tweet.extended_entities.media.length;
@@ -254,18 +245,19 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 }
 
                 $scope.$apply(function () {
-                    if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
-                        $scope.tweetsQueue.push($scope.tweet);
-                    } else {
-                        $scope.lastNewTweets.push($scope.tweet);
-                    }
+                    $scope.lastNewTweets.push($scope.tweet);
+//                    if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
+//                        $scope.tweetsQueue.push($scope.tweet);
+//                    } else {
+//                        $scope.lastNewTweets.push($scope.tweet);
+//                    }
                     $(".loading").hide();
                 }, false);
 
             });
 
             source.addEventListener('tweets-over-time', function (response) {
-                $scope.data = JSON.parse(response.data);
+               $scope.data = JSON.parse(response.data);
                 $scope.$apply(function () {
                     $scope.drawChart($scope.data);
                 }, false);
@@ -280,18 +272,18 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             source.addEventListener('country-update', function (response) {
                 $scope.topCountrey = JSON.parse(response.data);
-
+                
                 $scope.$apply(function () {
                     var countryUpdated = false;
                     for (var i = 0; i < $scope.topCountries.length; i++) {
                         if (locationChart.data[i][0] == $scope.topCountrey.code) {
-                            locationChart.data[i][1] = $scope.topCountrey.count;
+//                            locationChart.data[i][1] = $scope.topCountrey.count;
                             $scope.topCountries[i].count = $scope.topCountrey.count;
                             countryUpdated = true;
                         }
                     }
                     if (!countryUpdated) {
-                        locationChart.data.push([$scope.topCountrey.code, $scope.topCountrey.count]);
+//                        locationChart.data.push([$scope.topCountrey.code, $scope.topCountrey.count]);
                         $scope.topCountries.push($scope.topCountrey);
                     }
                     $scope.topCountriesLength = $scope.topCountries.length;
@@ -320,7 +312,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             };
 
         }
-
+        
+        // GET : the last stats of top countries
         $rootScope.getLocationStats = function () {
 
             var requestAction = "GET";
@@ -330,7 +323,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
                     $scope.topCountries = response.items;
-
                     // MAP
                     for (var i = 0; i < response.items.length; i++) {
                         locationChart.data.push([response.items[i].code, response.items[i].count]);
@@ -370,8 +362,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             // Load more tweets handler
         $scope.loadMoreMedia = function () {
             $scope.pagesShown++;
-            console.log($scope.pagesShown);
-            console.log("more");
         };
 
         // Load more tweets handler
