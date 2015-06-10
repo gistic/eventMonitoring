@@ -7,6 +7,7 @@ import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
+import org.gistic.tweetboard.datalogic.TwitterUserDataLogic;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -44,7 +45,7 @@ public class TwitterAuthenticator implements Authenticator<TwitterCredentials, U
 
         TwitterFactory factory = new TwitterFactory(configuration);
         try {
-            return factory.getInstance().verifyCredentials() != null;
+            return new TwitterUserDataLogic().getUserProfile(user) != null;
         } catch (TwitterException e) {
             e.printStackTrace();
         }

@@ -1,5 +1,8 @@
 package org.gistic.tweetboard.dao;
 
+import org.gistic.tweetboard.security.User;
+import twitter4j.TwitterException;
+
 /**
  * Created by osama-hussain on 5/26/15.
  */
@@ -23,4 +26,6 @@ public interface AuthDao {
     void deleteRequestToken(String oauthToken);
 
     void deleteTempHashTags(String oauthToken);
+
+    twitter4j.User getOrUpdateUserDetailsInCache(User user) throws TwitterException;
 }
