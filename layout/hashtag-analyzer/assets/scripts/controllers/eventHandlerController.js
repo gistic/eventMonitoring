@@ -108,7 +108,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                console.log(response);
+                    console.log(response);
                     $rootScope.authoUserName = response.screenName;
                     $rootScope.authoUserID = response.id;
                     $rootScope.authoUserPicture = response.originalProfileImageURLHttps;
@@ -164,7 +164,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.topTweets.push($scope.tweet);
                     }
-                $(".loading").hide();
+                    $(".loading").hide();
                 }).error(function () {
                     console.log("#");
                 })
@@ -200,12 +200,24 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
         $scope.topPeople = [];
 
         $scope.tweet = {};
+                                                
+                                                
+        // Close event source if he leave the media or tweet stream stats
+        $rootScope.$on('$stateChangeStart',
+            function (event, toState, toParams, fromState, fromParams) {
+            if ( toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" ) {
+            } else {
+                CreateEventSource.closeEventSource();
+            }
+        })
 
         // Listen to new message
         $scope.startEventSource = function () {
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
 
-            var source = new EventSource($scope.eventSourceUrl);
+            //            var source = new EventSource($scope.eventSourceUrl);
+            //            var source = CreateEventSource.getSourceObject($scope.eventSourceUrl);
+            var source = CreateEventSource.createSource($scope.eventSourceUrl);
 
             source.addEventListener('approved-tweets', function (response) {
 
@@ -314,7 +326,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             source.addEventListener('country-update', function (response) {
                 $scope.topCountrey = JSON.parse(response.data);
-                $scope.countryName = ISO3166.getCountryName($scope.topCountrey.code); 
+                $scope.countryName = ISO3166.getCountryName($scope.topCountrey.code);
                 $scope.$apply(function () {
                     var countryUpdated = false;
                     for (var i = 0; i < $scope.topCountries.length; i++) {
@@ -375,11 +387,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 .success(function (response) {
                     // MAP
                     for (var i = 0; i < response.items.length; i++) {
-                        $scope.countryName = ISO3166.getCountryName(response.items[i].code); 
-                        $scope.countryCount = response.items[i].count; 
-                        
+                        $scope.countryName = ISO3166.getCountryName(response.items[i].code);
+                        $scope.countryCount = response.items[i].count;
+
                         locationChart.data.push([$scope.countryName, $scope.countryCount]);
-                        $scope.topCountries.push({code:$scope.countryName, count:$scope.countryCount});
+                        $scope.topCountries.push({
+                            code: $scope.countryName,
+                            count: $scope.countryCount
+                        });
                     }
                 }).error(function () {
                     console.log("#");
