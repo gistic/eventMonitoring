@@ -277,15 +277,18 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                     var countryUpdated = false;
                     for (var i = 0; i < $scope.topCountries.length; i++) {
                         if (locationChart.data[i][0] == $scope.topCountrey.code) {
-//                            locationChart.data[i][1] = $scope.topCountrey.count;
-                            $scope.topCountries[i].count = $scope.topCountrey.count;
+                            locationChart.data[i][1] = $scope.topCountrey.count;
+                            $scope.topCountries[i-1].count = $scope.topCountrey.count;
                             countryUpdated = true;
+                            break;
                         }
                     }
+                    
                     if (!countryUpdated) {
-//                        locationChart.data.push([$scope.topCountrey.code, $scope.topCountrey.count]);
+                        locationChart.data.push([$scope.topCountrey.code, $scope.topCountrey.count]);
                         $scope.topCountries.push($scope.topCountrey);
                     }
+                    
                     $scope.topCountriesLength = $scope.topCountries.length;
 
                 }, false);
@@ -304,11 +307,17 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             locationChart.data = [['Locale', 'Count']];
 
             locationChart.options = {
+                tooltip : {
+                    textStyle: {
+                        color: '#191919'
+                    },
+                    showColorCode: true
+                },
                 height: 250,
                 colorAxis: {
                     colors: ['rgb(0, 200, 220)', 'rgb(0, 100, 200)', 'rgb(1, 120, 183)']
                 },
-                displayMode: 'regions'
+                displayMode: 'auto'
             };
 
         }
@@ -355,7 +364,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 return true;
             }
         }
-        console.log($scope.pagesShown);
+        
         $scope.loadMoreMediaButton = function () {
                 return $scope.pagesShown < ($scope.mediaQueue.length / $scope.pageSize);
             }
