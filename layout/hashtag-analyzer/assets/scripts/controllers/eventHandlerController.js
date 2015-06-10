@@ -373,7 +373,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-//                    $scope.topCountries = response.items;
                     // MAP
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.countryName = ISO3166.getCountryName(response.items[i].code); 
@@ -382,8 +381,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                         locationChart.data.push([$scope.countryName, $scope.countryCount]);
                         $scope.topCountries.push({code:$scope.countryName, count:$scope.countryCount});
                     }
-console.log($scope.topCountries);
-console.log(response.items);
                 }).error(function () {
                     console.log("#");
                 })
