@@ -117,6 +117,11 @@
             <artifactId>jesque</artifactId>
             <version>2.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>hbc-twitter4j</artifactId> <!-- or hbc-twitter4j -->
+            <version>2.2.0</version> <!-- or whatever the latest version is -->
+        </dependency>
     </dependencies>
     <build>
         <plugins>
