@@ -109,6 +109,6 @@ trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider.state(path, window.routes[path]);
     }
 
-    $urlRouterProvider.otherwise('home');
+    $urlRouterProvider.otherwise('');
 
 });

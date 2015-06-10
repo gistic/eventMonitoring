@@ -1,4 +1,4 @@
-<article class="media clearfix tweet fx-fade-down fx-speed-2000" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | orderBy:'created_at':true" data-user-id="{{tweet.user.id_str}}">
+<article class="media clearfix tweet fx-fade fx-speed-2000" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | orderBy:'created_at':true track by $index" data-user-id="{{tweet.user.id_str}}">
    
     <div class="media-left">
         <img lazy-load ng-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
@@ -20,6 +20,6 @@
 </article>
 
 <div class="text-center">
-    <a class="btn btn-link btn-block btn-load-history"  ng-click="loadMoreTweetsFromHistory()">Load More</a>
+    <a class="btn btn-link btn-block btn-load-history" ng-show="loadMoreButtonFromHistory()" ng-click="loadMoreTweetsFromHistory()">Load More</a>
 </div>
 

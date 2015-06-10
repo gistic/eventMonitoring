@@ -1,14 +1,14 @@
 var EventHandlerController = angular.module('EventHandlerController', []);
 
 // Controller : Populate the recieved data and update Dashboard
-EventHandlerController.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore', 'StartNewEventController',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, StartNewEventController) {
+EventHandlerController.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
 
         // Search from the dashboard
         $scope.dashboardSearch = function () {
             SweetAlert.swal({
                     title: "Are you sure?",
-                    text: "Your will not be able to recover this hashtag tracking!",
+                    text: "If you start a new event you will not be able to recover this hashtag tracking!",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
@@ -19,6 +19,30 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                     if (isConfirm) {
                         $scope.stopEventHandler();
                         SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+                        $scope.startNewEvent = function (action) {
+                            // Check if there is an authentication key in the browser cookies
+                            if ($cookies.userAuthentication == undefined) {
+                                var requestAction = "GET";
+                                var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
+                                var requestData = ""
+                                RequestData.fetchData(requestAction, apiUrl, requestData)
+                                    .then(function (response) {
+                                        var openUrl = response.data.url;
+                                        $window.location.href = openUrl;
+                                    });
+                            } else { // if "yes"  --> redirect to dashboard page
+                                $scope.$broadcast();
+                                RequestData.startEvent()
+                                    .success(function (response) {
+                                        $rootScope.eventID = response.uuid;
+                                        // Redirect the front website page to the admin page
+                                        $state.transitionTo('dashboard.liveStreaming', {
+                                            uuid: $scope.eventID
+                                        });
+                                        $scope.initData();
+                                    })
+                            }
+                        };
                         $scope.startNewEvent();
                     } else {
                         SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
@@ -84,6 +108,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
+                console.log(response);
                     $rootScope.authoUserName = response.screenName;
                     $rootScope.authoUserID = response.id;
                     $rootScope.authoUserPicture = response.originalProfileImageURLHttps;
@@ -135,11 +160,11 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    $(".loading").hide();
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.topTweets.push($scope.tweet);
                     }
+                $(".loading").hide();
                 }).error(function () {
                     console.log("#");
                 })
@@ -268,11 +293,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
                 $scope.$apply(function () {
                     $scope.lastNewTweets.push($scope.tweet);
-                    //                    if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
-                    //                        $scope.tweetsQueue.push($scope.tweet);
-                    //                    } else {
-                    //                        $scope.lastNewTweets.push($scope.tweet);
-                    //                    }
                     $(".loading").hide();
                 }, false);
 
@@ -294,11 +314,11 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             source.addEventListener('country-update', function (response) {
                 $scope.topCountrey = JSON.parse(response.data);
-
+                $scope.countryName = ISO3166.getCountryName($scope.topCountrey.code); 
                 $scope.$apply(function () {
                     var countryUpdated = false;
                     for (var i = 0; i < $scope.topCountries.length; i++) {
-                        if (locationChart.data[i][0] == $scope.topCountrey.code) {
+                        if (locationChart.data[i][0] == $scope.countryName) {
                             locationChart.data[i][1] = $scope.topCountrey.count;
                             $scope.topCountries[i - 1].count = $scope.topCountrey.count;
                             countryUpdated = true;
@@ -307,7 +327,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                     }
 
                     if (!countryUpdated) {
-                        locationChart.data.push([$scope.topCountrey.code, $scope.topCountrey.count]);
+                        locationChart.data.push([$scope.countryName, $scope.topCountrey.count]);
                         $scope.topCountries.push($scope.topCountrey);
                     }
 
@@ -337,9 +357,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 },
                 height: 250,
                 colorAxis: {
-                    colors: ['rgb(0, 200, 220)', 'rgb(0, 100, 200)', 'rgb(1, 120, 183)']
+                    colors: ['#deebf7', '#9ecae1', '#3182bd']
                 },
-                displayMode: 'auto'
+                displayMode: 'regions'
             };
 
         }
@@ -353,12 +373,17 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    $scope.topCountries = response.items;
+//                    $scope.topCountries = response.items;
                     // MAP
                     for (var i = 0; i < response.items.length; i++) {
-                        locationChart.data.push([response.items[i].code, response.items[i].count]);
+                        $scope.countryName = ISO3166.getCountryName(response.items[i].code); 
+                        $scope.countryCount = response.items[i].count; 
+                        
+                        locationChart.data.push([$scope.countryName, $scope.countryCount]);
+                        $scope.topCountries.push({code:$scope.countryName, count:$scope.countryCount});
                     }
-
+console.log($scope.topCountries);
+console.log(response.items);
                 }).error(function () {
                     console.log("#");
                 })
@@ -429,6 +454,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             }
             $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.loadTweetsFromHistoryArray);
             $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize, $scope.pageSize);
+            console.log($scope.tweetsHistory.length);
         }
 
         // Stop Event Handler
@@ -445,6 +471,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 function (isConfirm) {
                     if (isConfirm) {
                         $scope.stopEventHandler();
+                        $state.transitionTo('home');
                         SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
                     } else {
                         SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
@@ -469,10 +496,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 },
                 function (isConfirm) {
                     if (isConfirm) {
-                        $cookieStore.remove("authoUserID");
-                        $cookieStore.remove("authoUserName");
-                        $cookieStore.remove("authoUserPicture");
-                        $cookieStore.remove("hashtags");
                         $cookieStore.remove("userAuthentication");
                         $scope.stopEventHandler();
                         $state.transitionTo('home');
@@ -484,7 +507,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
         };
 
         $scope.stopEventHandler = function () {
-
             var eventID = $rootScope.eventID;
             var requestAction = "DELETE";
             var apiUrl = '/api/events/' + eventID + "?authToken=" + $cookies.userAuthentication;
@@ -493,7 +515,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
                     $scope.eventStarted = false;
-                    $state.transitionTo('home');
                 })
         }
 
