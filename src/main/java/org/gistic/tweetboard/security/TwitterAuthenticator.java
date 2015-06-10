@@ -33,17 +33,17 @@ public class TwitterAuthenticator implements Authenticator<TwitterCredentials, U
     }
 
     private boolean checkUser(User user) {
-        TwitterConfiguration twitterConfiguration = ConfigurationSingleton.
-                getInstance().getTwitterConfiguration();
-        ConfigurationBuilder builder = new ConfigurationBuilder();
-        builder.setDebugEnabled(true);
-        builder.setOAuthConsumerKey(twitterConfiguration.getConsumerKey());
-        builder.setOAuthConsumerSecret(twitterConfiguration.getConsumerSecret());
-        builder.setOAuthAccessToken(user.getAccessToken());
-        builder.setOAuthAccessTokenSecret(user.getAccessTokenSecret());
-        Configuration configuration = builder.build();
-
-        TwitterFactory factory = new TwitterFactory(configuration);
+//        TwitterConfiguration twitterConfiguration = ConfigurationSingleton.
+//                getInstance().getTwitterConfiguration();
+//        ConfigurationBuilder builder = new ConfigurationBuilder();
+//        builder.setDebugEnabled(true);
+//        builder.setOAuthConsumerKey(twitterConfiguration.getConsumerKey());
+//        builder.setOAuthConsumerSecret(twitterConfiguration.getConsumerSecret());
+//        builder.setOAuthAccessToken(user.getAccessToken());
+//        builder.setOAuthAccessTokenSecret(user.getAccessTokenSecret());
+//        Configuration configuration = builder.build();
+//
+//        TwitterFactory factory = new TwitterFactory(configuration);
         try {
             return new TwitterUserDataLogic().getUserProfile(user) != null;
         } catch (TwitterException e) {

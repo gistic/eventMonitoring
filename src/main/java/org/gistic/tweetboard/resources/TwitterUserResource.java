@@ -35,7 +35,7 @@ public class TwitterUserResource {
     }
 
     @GET
-    public twitter4j.User getLoggedInUser(@Auth(required = true) User user) {
+    public String getLoggedInUser(@Auth(required = true) User user) {
         if (user==null || user.isNoUser()) {
             Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
                     .entity("incorrect auth token")

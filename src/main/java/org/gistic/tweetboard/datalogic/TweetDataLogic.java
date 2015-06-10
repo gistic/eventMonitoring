@@ -301,6 +301,7 @@ public class TweetDataLogic {
             this.setNewTweetMeta(tweet);
             Place place = tweet.getPlace();
             if (place != null) {
+                System.out.println("found place:" + place.getCountryCode());
                 incrCountryCounter(place.getCountryCode());
             } else {
                 //count tweets without country specified?

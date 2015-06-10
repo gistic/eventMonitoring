@@ -6,6 +6,8 @@ import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.Event;
+import org.slf4j.*;
+import org.slf4j.LoggerFactory;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
@@ -48,9 +50,11 @@ public class WarmupRunnable implements Runnable {
         builder.setJSONStoreEnabled(true);
         Configuration configuration = builder.build();
 
-        String queryString = "#" + (hashTags[0].replace("#", ""));
+        String queryString = String.join(",", hashTags);//"#" + (hashTags[0].replace("#", ""));
+//         LoggerFactory.getLogger(this.getClass()).info("searching for : " + queryString);
         query = new Query(queryString);
         query.setCount(25);
+        query.setResultType(Query.ResultType.recent);
 
         TwitterFactory factory = new TwitterFactory(configuration);
         this.twitter = factory.getInstance();
@@ -61,6 +65,7 @@ public class WarmupRunnable implements Runnable {
             int resultCount = queryResult.getCount();
             System.out.println("result count is: "+resultCount);
             sinceId = queryResult.getSinceId();
+            //sinceId =  newId > sinceId ? newId : sinceId;
             if (resultCount < 25) reachedEnd = true;
             List<Status> tweets = queryResult.getTweets();
             Collections.reverse(tweets);
@@ -72,6 +77,7 @@ public class WarmupRunnable implements Runnable {
 //                    e.printStackTrace();
 //                }
             }
+            query.setMaxId(sinceId);
         } catch (TwitterException e) {
             e.printStackTrace();
             reachedEnd = true;
@@ -116,19 +122,21 @@ public class WarmupRunnable implements Runnable {
         int index = 0;
         query.count(100);
         while (!reachedEnd && index< 10 * MAX_NUMBER_OF_TWEETS_TO_GET_IN_THOUSANDS) {
-            query.sinceId(sinceId);
+            query.setMaxId(sinceId);
             try {
                 queryResult = twitter.search(query);
-                int resultCount = queryResult.getCount();
-                if (resultCount<100) reachedEnd = true;
-                System.out.println("result count is: "+resultCount);
-                tweets = queryResult.getTweets();
-                tweetDataLogic.warmupStats(tweets, event);
-                index++;
             } catch (TwitterException e) {
-                e.printStackTrace();
+                LoggerFactory.getLogger(this.getClass()).info("Reached warmup api calls limit!");
                 break;
             }
+            sinceId = queryResult.getSinceId();
+            int resultCount = queryResult.getCount();
+            if (resultCount<100) reachedEnd = true;
+            System.out.println("result count is: "+resultCount);
+            tweets = queryResult.getTweets();
+            tweetDataLogic.warmupStats(tweets, event);
+            index++;
+
         }
     }
 }

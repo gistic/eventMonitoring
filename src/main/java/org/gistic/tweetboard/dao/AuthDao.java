@@ -27,5 +27,5 @@ public interface AuthDao {
 
     void deleteTempHashTags(String oauthToken);
 
-    twitter4j.User getOrUpdateUserDetailsInCache(User user) throws TwitterException;
+    String getOrUpdateUserDetailsInCache(User user) throws TwitterException;
 }
