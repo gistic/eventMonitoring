@@ -1,7 +1,7 @@
-var StartNewEventController = angular.module('StartNewEventController', []);
+var StartNewEvent = angular.module('StartNewEvent', []);
 
 /* Controller : Start new event */
-StartNewEventController.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', '$cookies', '$cookieStore', '$location', '$window', function ($rootScope, $scope, $http, $state, RequestData, $cookies, $cookieStore, $location, $window) {
+StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', '$cookies', '$cookieStore', '$location', '$window', function ($rootScope, $scope, $http, $state, RequestData, $cookies, $cookieStore, $location, $window) {
 
     $scope.startNewEvent = function (action) {
         // Check if there is an authentication key in the browser cookies

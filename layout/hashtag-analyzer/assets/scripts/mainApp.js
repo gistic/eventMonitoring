@@ -13,7 +13,7 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'myAppServices',
     
     'superAdminController',  // Custome application dependencies [Controllers]
-    'StartNewEventController',
+    'StartNewEvent',
     'EventHandlerController',
     
     'highcharts-ng',

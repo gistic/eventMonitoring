@@ -39,7 +39,8 @@
     "angular-moment": "~0.10.1",
     "ngInfiniteScroll": "~1.2.1",
     "ngFx": "~1.1.0",
-    "nsPopover": "~0.6.7"
+    "nsPopover": "~0.6.7",
+    "Hover": "~2.0.2"
   },
   "devDependencies": {
     "modularized-normalize-scss": "~3.0.3"

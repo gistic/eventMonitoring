@@ -1,8 +1,30 @@
 var EventHandlerController = angular.module('EventHandlerController', []);
 
 // Controller : Populate the recieved data and update Dashboard
-EventHandlerController.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
+EventHandlerController.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore', 'StartNewEventController',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, StartNewEventController) {
+
+        // Search from the dashboard
+        $scope.dashboardSearch = function () {
+            SweetAlert.swal({
+                    title: "Are you sure?",
+                    text: "Your will not be able to recover this hashtag tracking!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, stop it!",
+                    closeOnConfirm: false
+                },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $scope.stopEventHandler();
+                        SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+                        $scope.startNewEvent();
+                    } else {
+                        SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
+                    }
+                });
+        }
 
         // GET : View options
         $scope.getViewOptions = function () {
@@ -45,10 +67,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                for (var i = 0; i < response.items.length; i++) {
-                    $scope.tweet = JSON.parse(response.items[i]);
-                    $scope.tweetsQueue.push($scope.tweet);
-                }
+                    for (var i = 0; i < response.items.length; i++) {
+                        $scope.tweet = JSON.parse(response.items[i]);
+                        $scope.tweetsQueue.push($scope.tweet);
+                    }
                 }).error(function () {
                     console.log("#");
                 })
@@ -163,10 +185,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             source.addEventListener('approved-tweets', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
-//                console.log($scope.tweet.lang);
+                //                console.log($scope.tweet.lang);
 
                 $scope.totalTweetsCount++;
-                
+
                 // Media
                 if ($scope.tweet.extended_entities != null && $scope.tweet.extended_entities.media != null) {
 
@@ -246,18 +268,18 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
                 $scope.$apply(function () {
                     $scope.lastNewTweets.push($scope.tweet);
-//                    if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
-//                        $scope.tweetsQueue.push($scope.tweet);
-//                    } else {
-//                        $scope.lastNewTweets.push($scope.tweet);
-//                    }
+                    //                    if ($scope.tweetsQueue.length < 50 && $scope.tweetsHistory.length == 0) {
+                    //                        $scope.tweetsQueue.push($scope.tweet);
+                    //                    } else {
+                    //                        $scope.lastNewTweets.push($scope.tweet);
+                    //                    }
                     $(".loading").hide();
                 }, false);
 
             });
 
             source.addEventListener('tweets-over-time', function (response) {
-               $scope.data = JSON.parse(response.data);
+                $scope.data = JSON.parse(response.data);
                 $scope.$apply(function () {
                     $scope.drawChart($scope.data);
                 }, false);
@@ -272,23 +294,23 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             source.addEventListener('country-update', function (response) {
                 $scope.topCountrey = JSON.parse(response.data);
-                
+
                 $scope.$apply(function () {
                     var countryUpdated = false;
                     for (var i = 0; i < $scope.topCountries.length; i++) {
                         if (locationChart.data[i][0] == $scope.topCountrey.code) {
                             locationChart.data[i][1] = $scope.topCountrey.count;
-                            $scope.topCountries[i-1].count = $scope.topCountrey.count;
+                            $scope.topCountries[i - 1].count = $scope.topCountrey.count;
                             countryUpdated = true;
                             break;
                         }
                     }
-                    
+
                     if (!countryUpdated) {
                         locationChart.data.push([$scope.topCountrey.code, $scope.topCountrey.count]);
                         $scope.topCountries.push($scope.topCountrey);
                     }
-                    
+
                     $scope.topCountriesLength = $scope.topCountries.length;
 
                 }, false);
@@ -307,7 +329,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             locationChart.data = [['Locale', 'Count']];
 
             locationChart.options = {
-                tooltip : {
+                tooltip: {
                     textStyle: {
                         color: '#191919'
                     },
@@ -321,7 +343,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             };
 
         }
-        
+
         // GET : the last stats of top countries
         $rootScope.getLocationStats = function () {
 
@@ -364,7 +386,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 return true;
             }
         }
-        
+
         $scope.loadMoreMediaButton = function () {
                 return $scope.pagesShown < ($scope.mediaQueue.length / $scope.pageSize);
             }
@@ -425,7 +447,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                         $scope.stopEventHandler();
                         SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
                     } else {
-                        SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
+                        SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
                     }
                 });
         };

@@ -23,12 +23,12 @@
 		background: $orange;
 	}
 	&.btn-load-more {
+        padding: $padding / 2 $padding;
 		background: $blue;
 		position: fixed;
 		z-index: 9;
 		right: 30px;
 		bottom: 25px;
-        @include size(150px, 40px);
 		@include border-radius(50px);
 		@include box-shadow(rgba(darken($blue, 50%), 0.2) 0 0 15px);
 		strong {
@@ -41,6 +41,12 @@
 			}
 		}
 	}
+    &.btn-load-history {
+        margin: $margin 0 0;
+        background: $gray-light;
+        padding: $padding 0;
+        color: $gray;
+    }
 }
 
 .tweet-options {
