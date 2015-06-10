@@ -34,7 +34,7 @@ myAppServices.factory('CreateEventSource', ['$rootScope', '$location', 'RequestD
 }]);
 
 // Factory : Request data factory for : Start event & Any other request
-myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$window', '$cookies', function ($rootScope, $http, $location, $window, $cookies) {
+myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$window', '$cookies', '$cookieStore', function ($rootScope, $http, $location, $window, $cookies, $cookieStore) {
 
     return {
         fetchData: function (requestAction, apiUrl, requestData) {
@@ -68,7 +68,8 @@ myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$wind
                 $rootScope.eventHashtag = eventHashtag;
                 $rootScope.eventID = response.uuid;
                 return response.uuid;
-            }).error(function () {
+            }).error(function (response) {
+                $cookieStore.remove("userAuthentication");
                 console.log("Request failed");
             });
         }
