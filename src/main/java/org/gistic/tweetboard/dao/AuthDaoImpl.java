@@ -114,7 +114,7 @@ public class AuthDaoImpl implements AuthDao {
     }
 
     @Override
-    public User getOrUpdateUserDetailsInCache(org.gistic.tweetboard.security.User user) throws TwitterException {
+    public String getOrUpdateUserDetailsInCache(org.gistic.tweetboard.security.User user) throws TwitterException {
         try (Jedis jedis = JedisPoolContainer.getInstance()){
             String userDetailsString = null;
             User twitterUser = null;
@@ -133,10 +133,11 @@ public class AuthDaoImpl implements AuthDao {
                 String accessTokenSecret = user.getAccessTokenSecret();
                 jedis.set(getTwitterUserDetails(accessToken, accessTokenSecret), userDetailsString);
                 jedis.expire(getTwitterUserDetails(accessToken, accessTokenSecret), 90);
-                return twitterUser;
+//                return user;
             } else {
-                return TwitterObjectFactory.createUser(userDetailsString);
+                //return TwitterObjectFactory.createUser(userDetailsString);
             }
+            return userDetailsString;
         } catch (JedisException jE) {
             jE.printStackTrace();
         }

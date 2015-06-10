@@ -22,7 +22,7 @@ public class TwitterUserDataLogic {
         return null;
     }
 
-    public twitter4j.User getUserProfile(User user) throws TwitterException {
+    public String getUserProfile(User user) throws TwitterException {
         Twitter twitter = Misc.getTwitter(user);
         AuthDao authDao = new AuthDaoImpl();
         return authDao.getOrUpdateUserDetailsInCache(user);
