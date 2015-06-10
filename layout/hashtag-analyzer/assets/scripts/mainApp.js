@@ -28,7 +28,8 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'angularMoment',
     'infinite-scroll',
     'ngFx',
-    'nsPopover'
+    'nsPopover',
+    'me-lazyload'
 ]);
 
 // Run : Intliaize the event admin app with this values

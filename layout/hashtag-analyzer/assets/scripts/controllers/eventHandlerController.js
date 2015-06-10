@@ -222,8 +222,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             source.addEventListener('approved-tweets', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
-                //                console.log($scope.tweet.lang);
-
+                
                 $scope.totalTweetsCount++;
 
                 // Media
@@ -527,6 +526,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
                     $scope.eventStarted = false;
+                    CreateEventSource.closeEventSource();
                 })
         }
 
