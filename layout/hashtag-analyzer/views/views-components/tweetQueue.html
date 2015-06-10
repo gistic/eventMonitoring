@@ -1,7 +1,7 @@
 <article class="media clearfix tweet fx-fade fx-speed-2000" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | orderBy:'created_at':true track by $index" data-user-id="{{tweet.user.id_str}}">
    
     <div class="media-left">
-        <img lazy-load ng-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
+        <img lazy-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object user-img" />
     </div>
     <div class="media-body tweet-content">
         <h6 class="media-heading tweet-user clearfix">
