@@ -88,7 +88,7 @@ public class EventsResource {
         else {
             //valid token tweetboard v2.0
             EventMap.putV2(hashTags, tweetDataLogic, uuid, authToken);
-            //ExecutorSingleton.getInstance().submit(new WarmupRunnable(checkUuid(uuid), tweetDataLogic, hashTags, authToken));
+            ExecutorSingleton.getInstance().submit(new WarmupRunnable(checkUuid(uuid), tweetDataLogic, hashTags, authToken));
         }
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);

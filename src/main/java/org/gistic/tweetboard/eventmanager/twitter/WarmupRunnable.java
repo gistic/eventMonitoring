@@ -1,5 +1,8 @@
 package org.gistic.tweetboard.eventmanager.twitter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.dao.AuthDao;
@@ -69,8 +72,14 @@ public class WarmupRunnable implements Runnable {
             if (resultCount < 25) reachedEnd = true;
             List<Status> tweets = queryResult.getTweets();
             Collections.reverse(tweets);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
             for (Status tweet : tweets){
-                event.postTweetToEvent(new InternalStatus(tweet, TwitterObjectFactory.getRawJSON(tweet)));
+                try {
+                    event.postTweetToEvent(new InternalStatus(tweet, mapper.writeValueAsString(tweet)));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
 //                try {
 //                    Thread.sleep(1000);
 //                } catch (InterruptedException e) {
