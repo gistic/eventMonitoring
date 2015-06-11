@@ -440,7 +440,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
         // Load more tweets handler
         $scope.loadMoreTweets = function () {
             if ($scope.lastNewTweets.length <= 25) {
-                $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.lastNewTweets);
+                $scope.tweetsQueue = $scope.lastNewTweets.concat($scope.tweetsQueue);
                 $scope.pagesShown = $scope.pagesShown + $scope.lastNewTweets.length % $scope.pageSize;
             } else {
                 $scope.tweetsHistory = $scope.tweetsHistory.concat($scope.tweetsQueue);
