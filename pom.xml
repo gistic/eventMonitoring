@@ -64,7 +64,7 @@
         <dependency>
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-stream</artifactId>
-            <version>4.0.2</version>
+            <version>4.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>
@@ -120,7 +120,7 @@
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>hbc-twitter4j</artifactId> <!-- or hbc-twitter4j -->
-            <version>2.2.0</version> <!-- or whatever the latest version is -->
+            <version>2.2.1-SNAPSHOT</version> <!-- or whatever the latest version is -->
         </dependency>
     </dependencies>
     <build>

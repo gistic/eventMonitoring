@@ -76,8 +76,8 @@ public class TweetProcessor {
 
         Status tweet = status.getInternalStatus();
         //status.getInternalStatus().getRetweetCount();
-        for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
-            //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
+        for (MediaEntity mediaEntity : tweet.getExtendedMediaEntities()) {
+            //System.out.println("media!! "+mediaEntity.getType() + ": " + mediaEntity.getMediaURL()+ ": " + mediaEntity.getDisplayURL()+ ": " + mediaEntity.getExpandedURL());
             tweetDataLogic.incrMediaCounter(mediaEntity);
         }
 
