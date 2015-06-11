@@ -58,7 +58,9 @@ public class App extends Application<TweetBoardConfiguration> {
                 User.class)));
         e.jersey().register(MultiPartFeature.class);
         e.jersey().register(new EventsResource());
-        e.jersey().register(new LiveTweetsBroadcaster());
+        LiveTweetsBroadcaster broadcaster = new LiveTweetsBroadcaster();
+        LiveTweetsBroadcasterSingleton.set( broadcaster );
+        e.jersey().register(broadcaster);
         e.jersey().register(new AdminEventSource());
         e.jersey().register(new LoginResource());
         e.jersey().register(new TwitterUserResource());

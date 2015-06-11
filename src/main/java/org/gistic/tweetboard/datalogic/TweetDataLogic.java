@@ -13,6 +13,7 @@ import org.gistic.tweetboard.eventmanager.Event;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.*;
+import org.gistic.tweetboard.resources.LiveTweetsBroadcasterSingleton;
 import org.gistic.tweetboard.security.*;
 import org.gistic.tweetboard.security.User;
 import org.slf4j.Logger;
@@ -66,10 +67,11 @@ public class TweetDataLogic {
         tweetDao.addToApproved(uuid, tweetId, starred);
         String statusString = tweetDao.getStatusString(uuid, tweetId);
         tweetDao.deleteTweetJson(uuid, tweetId);
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
+//        Client client = ClientBuilder.newClient();
+//        WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
         Message msg = new Message(uuid, Message.Type.LiveTweet, statusString);
-        target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
+        LiveTweetsBroadcasterSingleton.broadcast(msg);
+        //target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
     }
 
     public void addToBlocked(String tweetId) {

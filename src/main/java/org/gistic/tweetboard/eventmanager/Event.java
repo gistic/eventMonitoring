@@ -54,6 +54,14 @@ public class Event {
                 getInstance().getTwitterConfiguration();
         bus = new AsyncEventBus(ExecutorSingleton.getInstance());
         tweetProcessor = new TweetProcessor(bus, tweetDataLogic);
+
+        try {
+            tweetProcessor.start();
+        } catch (Exception e) {
+            LoggerFactory.getLogger(this.getClass()).error("Error: Failure in starting twitter stream logic!");
+            e.printStackTrace();
+            //TODO: throw
+        }
         if (!v2) {
             TwitterServiceManager.make(twitterConfiguration, bus, hashTags, uuid);
         } else {
@@ -65,13 +73,7 @@ public class Event {
         }
 
 
-        try {
-            tweetProcessor.start();
-        } catch (Exception e) {
-            LoggerFactory.getLogger(this.getClass()).error("Error: Failure in starting twitter stream logic!");
-            e.printStackTrace();
-            //TODO: throw
-        }
+
         tweetDataLogic.createNewEvent(hashTags);
     }
 

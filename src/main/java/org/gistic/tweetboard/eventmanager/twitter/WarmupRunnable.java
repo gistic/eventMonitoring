@@ -19,7 +19,7 @@ import java.util.List;
  * Created by osama-hussain on 6/3/15.
  */
 public class WarmupRunnable implements Runnable {
-    private static final int MAX_NUMBER_OF_TWEETS_TO_GET_IN_THOUSANDS = 5;
+    private static final int MAX_NUMBER_OF_TWEETS_TO_GET_IN_THOUSANDS = 1;
     private final Event event;
     private final TweetDataLogic tweetDataLogic;
     private final String[] hashTags;
