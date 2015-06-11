@@ -81,6 +81,13 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                     console.log("#");
                 })
         }
+        
+        $scope.intervalFunction = function () {
+            $timeout(function () {
+                $scope.getEventStats();
+            }, 1800000)
+        };                                                  
+        $scope.intervalFunction();
 
         // GET : Warm up data for event
         $scope.getWarmupData = function () {
@@ -108,7 +115,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    console.log(response);
                     $rootScope.authoUserName = response.screenName;
                     $rootScope.authoUserID = response.id;
                     $rootScope.authoUserPicture = response.originalProfileImageURLHttps;
@@ -241,13 +247,11 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
                         // Push only MP4 videos
                         if ($scope.mediaType == 'video') {
-                            console.log($scope.mediaType);
-                            console.log($scope.tweet);
-                            var videoVariantsArrayLength = $scope.tweet.extended_media_entities[i].video_info.variants.length;
+                            var videoVariantsArrayLength = $scope.tweet.extended_media_entities[i].video_variants.length;
                             for (var k = 0; k < videoVariantsArrayLength; k++) {
-                                var videoContentType = $scope.tweet.extended_media_entities[i].video_info.variants[k].content_type;
+                                var videoContentType = $scope.tweet.extended_media_entities[i].video_variants[k].content_type;
                                 if (videoContentType == "video/mp4") {
-                                    $scope.videoLink = $scope.tweet.extended_media_entities[i].video_info.variants[k].url;
+                                    $scope.videoLink = $scope.tweet.extended_media_entities[i].video_variants[k].url;
                                     var duplicatedMedia = false;
                                     for (var key in $scope.mediaQueue) {
                                         if ($scope.videoLink == $scope.mediaQueue[key].url) {
