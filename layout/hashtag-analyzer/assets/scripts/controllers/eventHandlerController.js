@@ -226,27 +226,29 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 $scope.totalTweetsCount++;
 
                 // Media
-                if ($scope.tweet.extended_entities != null && $scope.tweet.extended_entities.media != null) {
+                if ($scope.tweet.extended_media_entities != null) {
 
-                    var mediaArrayLength = $scope.tweet.extended_entities.media.length;
+                    var mediaArrayLength = $scope.tweet.extended_media_entities.length;
 
                     $scope.tweetText = $scope.tweet.text;
                     $scope.userScreenName = $scope.tweet.user.screen_name;
-                    $scope.userProfileImage = $scope.tweet.user.profile_image_url_https;
+                    $scope.userProfileImage = $scope.tweet.user.original_profile_image_urlhttps;
                     $scope.tweetCreatedAt = $scope.tweet.created_at;
 
                     for (var i = 0; i < mediaArrayLength; i++) {
 
-                        $scope.mediaType = $scope.tweet.extended_entities.media[i].type;
-                        $scope.mediaThumb = $scope.tweet.extended_entities.media[i].media_url_https;
+                        $scope.mediaType = $scope.tweet.extended_media_entities[i].type;
+                        $scope.mediaThumb = $scope.tweet.extended_media_entities[i].media_urlhttps;
 
                         // Push only MP4 videos
                         if ($scope.mediaType == 'video') {
-                            var videoVariantsArrayLength = $scope.tweet.extended_entities.media[i].video_info.variants.length;
+                            console.log($scope.mediaType);
+                            console.log($scope.tweet);
+                            var videoVariantsArrayLength = $scope.tweet.extended_media_entities[i].video_info.variants.length;
                             for (var k = 0; k < videoVariantsArrayLength; k++) {
-                                var videoContentType = $scope.tweet.extended_entities.media[i].video_info.variants[k].content_type;
+                                var videoContentType = $scope.tweet.extended_media_entities[i].video_info.variants[k].content_type;
                                 if (videoContentType == "video/mp4") {
-                                    $scope.videoLink = $scope.tweet.extended_entities.media[i].video_info.variants[k].url;
+                                    $scope.videoLink = $scope.tweet.extended_media_entities[i].video_info.variants[k].url;
                                     var duplicatedMedia = false;
                                     for (var key in $scope.mediaQueue) {
                                         if ($scope.videoLink == $scope.mediaQueue[key].url) {
@@ -273,7 +275,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                             }
 
                         } else {
-                            $scope.tweetMedia = $scope.tweet.extended_entities.media[i].media_url_https;
+                            $scope.tweetMedia = $scope.tweet.extended_media_entities[i].media_urlhttps;
                             var duplicatedMedia = false;
                             for (var key in $scope.mediaQueue) {
                                 if ($scope.tweetMedia == $scope.mediaQueue[key].url) {
