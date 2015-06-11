@@ -1,0 +1,20 @@
+<!-- Header -->
+<header class="header-homepage">
+    <h1 class="icon icon-massive icon-bird"></h1>
+    <h1>TweetBoard</h1>
+    <small>Show realtime tweets for your events</small>
+
+    <div class="input-group start-event">
+        <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startNewEvent()">
+        <span class="input-group-btn">
+            <button class="btn btn-search" type="button" ng-click="startNewEvent()">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+        <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
+
+</header>

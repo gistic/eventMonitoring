@@ -213,10 +213,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
         // Listen to new message
         $scope.startEventSource = function () {
+            
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
 
-            //            var source = new EventSource($scope.eventSourceUrl);
-            //            var source = CreateEventSource.getSourceObject($scope.eventSourceUrl);
             var source = CreateEventSource.createSource($scope.eventSourceUrl);
 
             source.addEventListener('approved-tweets', function (response) {
@@ -293,7 +292,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                                     "caption": $scope.tweetText,
                                     "userScreenName": $scope.userScreenName,
                                     "userProfileImage": $scope.userProfileImage,
-                                    "tweetCreatedAt": $scope.tweetCreatedAt
+                                    "tweetCreatedAt": $scope.tweetCreatedAt,
+                                    "index" : $scope.mediaQueue.length
                                 };
                                 $scope.mediaQueue.push($scope.mediaImageObject);
 
@@ -463,11 +463,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             $scope.loadTweetsFromHistoryArray = [];
             for (var i = 0; i < $scope.pageSize && $scope.tweetsHistory.length > i; i++) {
                 $scope.loadTweetsFromHistoryArray.push($scope.tweetsHistory[$scope.tweetsHistory.length - i - 1]);
-
             }
             $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.loadTweetsFromHistoryArray);
             $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize, $scope.pageSize);
-            console.log($scope.tweetsHistory.length);
         }
 
         // Stop Event Handler
