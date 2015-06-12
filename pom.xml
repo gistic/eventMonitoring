@@ -11,6 +11,14 @@
     <url>http://maven.apache.org</url>
     <repositories>
         <repository>
+            <id>hbc-mvn-repo</id>
+            <url>https://raw.github.com/sohussain/hbc/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
             <id>snapshot-repository.java.net</id>
             <name>Java.net Snapshot Repository for Maven</name>
             <url>https://maven.java.net/content/repositories/snapshots/</url>
