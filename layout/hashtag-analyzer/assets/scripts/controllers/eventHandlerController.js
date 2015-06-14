@@ -81,6 +81,13 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                     console.log("#");
                 })
         }
+        
+        $scope.intervalFunction = function () {
+            $timeout(function () {
+                $scope.getEventStats();
+            }, 1800000)
+        };                                                  
+        $scope.intervalFunction();
 
         // GET : Warm up data for event
         $scope.getWarmupData = function () {
@@ -108,7 +115,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    console.log(response);
                     $rootScope.authoUserName = response.screenName;
                     $rootScope.authoUserID = response.id;
                     $rootScope.authoUserPicture = response.originalProfileImageURLHttps;
@@ -213,10 +219,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
         // Listen to new message
         $scope.startEventSource = function () {
+            
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
 
-            //            var source = new EventSource($scope.eventSourceUrl);
-            //            var source = CreateEventSource.getSourceObject($scope.eventSourceUrl);
             var source = CreateEventSource.createSource($scope.eventSourceUrl);
 
             source.addEventListener('approved-tweets', function (response) {
@@ -226,27 +231,27 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 $scope.totalTweetsCount++;
 
                 // Media
-                if ($scope.tweet.extended_entities != null && $scope.tweet.extended_entities.media != null) {
+                if ($scope.tweet.extended_media_entities != null) {
 
-                    var mediaArrayLength = $scope.tweet.extended_entities.media.length;
+                    var mediaArrayLength = $scope.tweet.extended_media_entities.length;
 
                     $scope.tweetText = $scope.tweet.text;
                     $scope.userScreenName = $scope.tweet.user.screen_name;
-                    $scope.userProfileImage = $scope.tweet.user.profile_image_url_https;
+                    $scope.userProfileImage = $scope.tweet.user.original_profile_image_urlhttps;
                     $scope.tweetCreatedAt = $scope.tweet.created_at;
 
                     for (var i = 0; i < mediaArrayLength; i++) {
 
-                        $scope.mediaType = $scope.tweet.extended_entities.media[i].type;
-                        $scope.mediaThumb = $scope.tweet.extended_entities.media[i].media_url_https;
+                        $scope.mediaType = $scope.tweet.extended_media_entities[i].type;
+                        $scope.mediaThumb = $scope.tweet.extended_media_entities[i].media_urlhttps;
 
                         // Push only MP4 videos
                         if ($scope.mediaType == 'video') {
-                            var videoVariantsArrayLength = $scope.tweet.extended_entities.media[i].video_info.variants.length;
+                            var videoVariantsArrayLength = $scope.tweet.extended_media_entities[i].video_variants.length;
                             for (var k = 0; k < videoVariantsArrayLength; k++) {
-                                var videoContentType = $scope.tweet.extended_entities.media[i].video_info.variants[k].content_type;
+                                var videoContentType = $scope.tweet.extended_media_entities[i].video_variants[k].content_type;
                                 if (videoContentType == "video/mp4") {
-                                    $scope.videoLink = $scope.tweet.extended_entities.media[i].video_info.variants[k].url;
+                                    $scope.videoLink = $scope.tweet.extended_media_entities[i].video_variants[k].url;
                                     var duplicatedMedia = false;
                                     for (var key in $scope.mediaQueue) {
                                         if ($scope.videoLink == $scope.mediaQueue[key].url) {
@@ -273,7 +278,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                             }
 
                         } else {
-                            $scope.tweetMedia = $scope.tweet.extended_entities.media[i].media_url_https;
+                            $scope.tweetMedia = $scope.tweet.extended_media_entities[i].media_urlhttps;
                             var duplicatedMedia = false;
                             for (var key in $scope.mediaQueue) {
                                 if ($scope.tweetMedia == $scope.mediaQueue[key].url) {
@@ -291,7 +296,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                                     "caption": $scope.tweetText,
                                     "userScreenName": $scope.userScreenName,
                                     "userProfileImage": $scope.userProfileImage,
-                                    "tweetCreatedAt": $scope.tweetCreatedAt
+                                    "tweetCreatedAt": $scope.tweetCreatedAt,
+                                    "index" : $scope.mediaQueue.length
                                 };
                                 $scope.mediaQueue.push($scope.mediaImageObject);
 
@@ -434,7 +440,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
         // Load more tweets handler
         $scope.loadMoreTweets = function () {
             if ($scope.lastNewTweets.length <= 25) {
-                $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.lastNewTweets);
+                $scope.tweetsQueue = $scope.lastNewTweets.concat($scope.tweetsQueue);
                 $scope.pagesShown = $scope.pagesShown + $scope.lastNewTweets.length % $scope.pageSize;
             } else {
                 $scope.tweetsHistory = $scope.tweetsHistory.concat($scope.tweetsQueue);
@@ -461,11 +467,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             $scope.loadTweetsFromHistoryArray = [];
             for (var i = 0; i < $scope.pageSize && $scope.tweetsHistory.length > i; i++) {
                 $scope.loadTweetsFromHistoryArray.push($scope.tweetsHistory[$scope.tweetsHistory.length - i - 1]);
-
             }
             $scope.tweetsQueue = $scope.tweetsQueue.concat($scope.loadTweetsFromHistoryArray);
             $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize, $scope.pageSize);
-            console.log($scope.tweetsHistory.length);
         }
 
         // Stop Event Handler

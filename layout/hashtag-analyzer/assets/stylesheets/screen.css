@@ -17900,17 +17900,6 @@ a:hover, a:focus {
   box-shadow: none;
 }
 
-/* line 24, ../sass/_/_configs/_utilities.scss */
-img {
-  opacity: 0.5;
-  filter: alpha(opacity=50);
-  -webkit-filter: blur(10px);
-  -moz-filter: blur(10px);
-  -o-filter: blur(10px);
-  -ms-filter: blur(10px);
-  filter: blur(10px);
-}
-
 /* line 1, ../sass/_/_atoms/_buttons.scss */
 .btn {
   border: none;
@@ -18380,15 +18369,14 @@ header .logo a:hover, header .logo a:focus {
   background: #015fb7;
   color: #ffffff;
 }
-/* line 69, ../sass/_/_modules/_header.scss */
-.header-dashboard .navbar-logo {
-  color: #ffffff;
-  font-size: 16px;
-  font-size: 2rem;
+/* line 70, ../sass/_/_modules/_header.scss */
+.header-dashboard .navbar-logo img {
   margin-right: 10px;
   line-height: 32px;
+  width: 30px;
+  height: 30px;
 }
-/* line 76, ../sass/_/_modules/_header.scss */
+/* line 77, ../sass/_/_modules/_header.scss */
 .header-dashboard .start-event .form-control {
   background: #ffffff;
   padding: 0 10px;
@@ -18396,7 +18384,7 @@ header .logo a:hover, header .logo a:focus {
   border-top-left-radius: 3px;
   height: 29px;
 }
-/* line 82, ../sass/_/_modules/_header.scss */
+/* line 83, ../sass/_/_modules/_header.scss */
 .header-dashboard .start-event .btn.btn-search {
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
@@ -18404,26 +18392,26 @@ header .logo a:hover, header .logo a:focus {
   padding: 5px 15px;
 }
 @media (max-width: 480px) {
-  /* line 88, ../sass/_/_modules/_header.scss */
+  /* line 89, ../sass/_/_modules/_header.scss */
   .header-dashboard .input-group {
     text-align: center;
     display: inline-block;
   }
 }
-/* line 94, ../sass/_/_modules/_header.scss */
+/* line 95, ../sass/_/_modules/_header.scss */
 .header-dashboard .header-title {
   color: #ffffff;
   margin-left: 200px;
   font-size: 11px;
   font-size: 1.375rem;
 }
-/* line 98, ../sass/_/_modules/_header.scss */
+/* line 99, ../sass/_/_modules/_header.scss */
 .header-dashboard .header-title strong {
   font-size: 21px;
   font-size: 2.625rem;
 }
 
-/* line 104, ../sass/_/_modules/_header.scss */
+/* line 105, ../sass/_/_modules/_header.scss */
 .header-homepage {
   background: #26CA9F;
   color: #ffffff;
@@ -18431,12 +18419,12 @@ header .logo a:hover, header .logo a:focus {
   text-align: center;
 }
 @media (max-width: 480px) {
-  /* line 104, ../sass/_/_modules/_header.scss */
+  /* line 105, ../sass/_/_modules/_header.scss */
   .header-homepage {
     padding: 30px 0;
   }
 }
-/* line 112, ../sass/_/_modules/_header.scss */
+/* line 113, ../sass/_/_modules/_header.scss */
 .header-homepage .start-event {
   margin-top: 30px;
   margin-left: auto;
@@ -18445,13 +18433,13 @@ header .logo a:hover, header .logo a:focus {
   height: auto;
 }
 @media (max-width: 480px) {
-  /* line 112, ../sass/_/_modules/_header.scss */
+  /* line 113, ../sass/_/_modules/_header.scss */
   .header-homepage .start-event {
     width: 80%;
     height: auto;
   }
 }
-/* line 120, ../sass/_/_modules/_header.scss */
+/* line 121, ../sass/_/_modules/_header.scss */
 .header-homepage .start-event input {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -18461,27 +18449,27 @@ header .logo a:hover, header .logo a:focus {
   width: 95%;
   background: #20a884;
 }
-/* line 126, ../sass/_/_modules/_header.scss */
+/* line 127, ../sass/_/_modules/_header.scss */
 .header-homepage .start-event input::-webkit-input-placeholder {
   color: #188166;
 }
-/* line 129, ../sass/_/_modules/_header.scss */
+/* line 130, ../sass/_/_modules/_header.scss */
 .header-homepage .start-event input:-moz-placeholder {
   color: #188166;
   opacity: 1;
   filter: alpha(opacity=100);
 }
-/* line 133, ../sass/_/_modules/_header.scss */
+/* line 134, ../sass/_/_modules/_header.scss */
 .header-homepage .start-event input::-moz-placeholder {
   color: #188166;
   opacity: 1;
   filter: alpha(opacity=100);
 }
-/* line 137, ../sass/_/_modules/_header.scss */
+/* line 138, ../sass/_/_modules/_header.scss */
 .header-homepage .start-event input:-ms-input-placeholder {
   color: #188166;
 }
-/* line 141, ../sass/_/_modules/_header.scss */
+/* line 142, ../sass/_/_modules/_header.scss */
 .header-homepage .start-event .btn.btn-search {
   background: #1a8a6c;
   border-bottom-right-radius: 5px;

@@ -67,10 +67,11 @@ header {
         }
     }
     .navbar-logo {
-        color: $white;
-        @include font-size($font-normal);
-        margin-right: $margin;
-        line-height: 32px;
+        img {
+            margin-right: $margin;
+            line-height: 32px;
+            @include size(30px);
+        }
     }
     .start-event {
         .form-control {

@@ -85,6 +85,11 @@ trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'views/index.html',
             controller: 'StartNewEventController'
         },
+        "homepage": {
+            url: '/homepage',
+            templateUrl: 'views/homepage.html',
+            controller: 'StartNewEventController'
+        },
         "dashboard": {
             url: '/dashboard?uuid',
             templateUrl: 'views/dashboard.html',
