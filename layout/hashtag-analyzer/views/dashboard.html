@@ -1,58 +1,12 @@
 <div class="wrapper" ng-init="initData()">
-    <!-- HEADER -->
-    <header class="header clearfix">
-
-        <div class="container">
-
-            <a class="navbar-logo pull-left" href="#">
-                <img src="assets/images/hashtag_logo.png" alt="">
-            </a>
-
-            <form class="navbar-form pull-left" role="search">
-                <div class="form-group">
-                    <div class="input-group start-event">
-                        <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="dashboardSearch()">
-                        <span class="input-group-btn">
-                        <button class="btn btn-search" type="button" ng-click="dashboardSearch()"><i class="fa fa-search"></i></button>
-                    </span>
-                    </div>
-                </div>
-            </form>
-
-            <div class="navs pull-right clearfix">
-
-                <ul class="list-inline dashboard-nav pull-left">
-                    <li>
-                        <a ui-sref=".liveStreaming">Tweets</a>
-                    </li>
-                    <li>
-                        <a ui-sref=".media">Media</a>
-                    </li>
-                </ul>
-
-                <ul class="nav-user pull-right">
-                    <li role="presentation" class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
-                            <img lazy-load ng-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a ng-href="https://twitter.com/intent/user?user_id={{authoUserID}}" target="_blank">Go to profile</a>
-                            </li>
-                            <li>
-                                <a ng-click="logOutUser()">Logout</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </header>
+   
+    <!-- Header -->
+    <div ng-include="'views/views-components/header.html'"></div>
+    <!-- END OF / Header -->
 
     <!-- Main Content [ Using UI-Router @ /views-components ] -->
     <main class="container dashboard">
         <div class="row" ui-view></div>
     </main>
+    
 </div>

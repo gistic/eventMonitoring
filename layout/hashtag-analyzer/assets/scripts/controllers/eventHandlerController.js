@@ -3,6 +3,10 @@ var EventHandlerController = angular.module('EventHandlerController', []);
 // Controller : Populate the recieved data and update Dashboard
 EventHandlerController.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
                                             function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
+        $scope.dashboardState = false;                    
+        if($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media") {
+            $scope.dashboardState = true;
+        }
 
         // Search from the dashboard
         $scope.dashboardSearch = function () {
@@ -81,12 +85,12 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                     console.log("#");
                 })
         }
-        
+
         $scope.intervalFunction = function () {
             $timeout(function () {
                 $scope.getEventStats();
             }, 1800000)
-        };                                                  
+        };
         $scope.intervalFunction();
 
         // GET : Warm up data for event
@@ -206,20 +210,19 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
         $scope.topPeople = [];
 
         $scope.tweet = {};
-                                                
-                                                
+
+
         // Close event source if he leave the media or tweet stream stats
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
-            if ( toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" ) {
-            } else {
-                CreateEventSource.closeEventSource();
-            }
-        })
+                if (toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media") {} else {
+                    CreateEventSource.closeEventSource();
+                }
+            })
 
         // Listen to new message
         $scope.startEventSource = function () {
-            
+
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
 
             var source = CreateEventSource.createSource($scope.eventSourceUrl);
@@ -228,6 +231,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
                 $scope.tweet = JSON.parse(response.data);
                 
+                console.log($scope.tweet);
+
                 $scope.totalTweetsCount++;
 
                 // Media
@@ -297,7 +302,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                                     "userScreenName": $scope.userScreenName,
                                     "userProfileImage": $scope.userProfileImage,
                                     "tweetCreatedAt": $scope.tweetCreatedAt,
-                                    "index" : $scope.mediaQueue.length
+                                    "index": $scope.mediaQueue.length
                                 };
                                 $scope.mediaQueue.push($scope.mediaImageObject);
 
@@ -330,22 +335,32 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             });
 
             source.addEventListener('country-update', function (response) {
+                console.log(locationChart.data);
+                console.log($scope.topCountries);
                 $scope.topCountrey = JSON.parse(response.data);
+                
                 $scope.countryName = ISO3166.getCountryName($scope.topCountrey.code);
+                $scope.countryCount = $scope.topCountrey.count;
+                var countryUpdated = false;
+                
                 $scope.$apply(function () {
-                    var countryUpdated = false;
-                    for (var i = 0; i < $scope.topCountries.length; i++) {
-                        if (locationChart.data[i][0] == $scope.countryName) {
-                            locationChart.data[i][1] = $scope.topCountrey.count;
-                            $scope.topCountries[i - 1].count = $scope.topCountrey.count;
-                            countryUpdated = true;
-                            break;
+                    if ($scope.topCountries.length != 0) {
+                        for (var i = 0; i < $scope.topCountries.length; i++) {
+                            if (locationChart.data[i][0] == $scope.countryName) {
+                                locationChart.data[i][1] = $scope.topCountrey.count;
+                                $scope.topCountries[i - 1].count = $scope.topCountrey.count;
+                                countryUpdated = true;
+                                break;
+                            }
                         }
                     }
 
                     if (!countryUpdated) {
                         locationChart.data.push([$scope.countryName, $scope.topCountrey.count]);
-                        $scope.topCountries.push($scope.topCountrey);
+                        $scope.topCountries.push({
+                            code: $scope.countryName,
+                            count: $scope.countryCount
+                        });
                     }
 
                     $scope.topCountriesLength = $scope.topCountries.length;
@@ -357,10 +372,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
         $scope.startEventSource();
 
-        var locationChart = {};
+        var locationChart = [];
         $scope.locationChart = locationChart;
 
-        $scope.drawLocationChart = function () {
+        $scope.drawLocationGeoChart = function () {
 
             locationChart.type = "GeoChart";
             locationChart.data = [['Locale', 'Count']];
@@ -380,6 +395,26 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             };
 
         }
+        
+        var locationPieChart = [];
+        $scope.locationPieChart = locationPieChart;
+                                                
+        $scope.drawLocationPieChart = function () {
+
+            locationPieChart.type = "PieChart";
+            locationPieChart.data = locationChart.data;
+
+            locationPieChart.options = {
+                displayExactValues: true,
+                is3D: true,
+                chartArea: {
+                    left:10,
+                    top:0,
+                    width:'100%',
+                    height:'100%'
+                }
+            };
+        }
 
         // GET : the last stats of top countries
         $rootScope.getLocationStats = function () {
@@ -394,20 +429,22 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.countryName = ISO3166.getCountryName(response.items[i].code);
                         $scope.countryCount = response.items[i].count;
-
                         locationChart.data.push([$scope.countryName, $scope.countryCount]);
                         $scope.topCountries.push({
                             code: $scope.countryName,
                             count: $scope.countryCount
                         });
                     }
+                console.log(locationChart.data);
+                console.log($scope.topCountries);
                 }).error(function () {
                     console.log("#");
                 })
         }
 
         $rootScope.getLocationStats();
-        $scope.drawLocationChart();
+        $scope.drawLocationGeoChart();
+        $scope.drawLocationPieChart();
 
         $scope.pagesShown = 1;
         $scope.pageSize = 10;

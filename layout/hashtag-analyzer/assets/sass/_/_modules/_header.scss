@@ -3,8 +3,7 @@
     margin-bottom: $margin;
     padding: 0;
     .navbar-form {
-        margin: 0;
-        line-height: 28px;
+        margin-top: $margin;
     }
     .dashboard-nav {
         line-height: 32px;
@@ -179,11 +178,6 @@
 
 .navbar.navbar-default .nav-collapse {
     background-color: #f8f8f8;
-}
-
-.navbar .nav-collapse .navbar-form {
-    border-width: 0;
-    box-shadow: none;
 }
 
 .nav-collapse>li {

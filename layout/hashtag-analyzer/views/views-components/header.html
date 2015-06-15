@@ -3,24 +3,62 @@
 
     <div class="container">
 
-        <a class="navbar-logo pull-left" ui-sref=".home">
+        <a class="navbar-logo pull-left" ui-sref="home">
             <img src="assets/images/hashtag_logo.png" alt="">
-            <span class="header-title">HASHTAG ANALYSER</span>
+            <span ng-hide="dashboardState" class="header-title">HASHTAG ANALYSER</span>
         </a>
 
-        <div class="navs">
+        <form ng-show="dashboardState" class="navbar-form pull-left" role="search">
+            <div class="form-group">
+                <div class="input-group start-event">
+                    <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="dashboardSearch()">
+                    <span class="input-group-btn">
+                        <button class="btn btn-search" type="button" ng-click="dashboardSearch()"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </div>
+        </form>
+
+        <div ng-hide="dashboardState" class="navs">
 
             <ul class="list-inline dashboard-nav pull-left">
                 <li>
-                    <a ui-sref=".home">Home</a>
+                    <a ui-sref="home">Home</a>
                 </li>
                 <li>
-                    <a ui-sref=".about">About</a>
+                    <a ui-sref="about">About</a>
                 </li>
                 <li>
-                    <a ui-sref=".contact">Contact</a>
+                    <a ui-sref="contact">Contact</a>
                 </li>
             </ul>
+        </div>
+
+        <div ng-show="dashboardState" class="navs pull-right clearfix">
+
+            <ul class="list-inline dashboard-nav pull-left">
+                <li>
+                    <a ui-sref=".liveStreaming">Tweets</a>
+                </li>
+                <li>
+                    <a ui-sref=".media">Media</a>
+                </li>
+                <li role="presentation" class="nav-user dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
+                        <img lazy-load ng-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a ng-href="https://twitter.com/intent/user?user_id={{authoUserID}}" target="_blank">Go to profile</a>
+                        </li>
+                        <li>
+                            <a ng-click="logOutUser()">Logout</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
         </div>
 
     </div>

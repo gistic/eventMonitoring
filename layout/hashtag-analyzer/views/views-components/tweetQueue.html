@@ -10,12 +10,19 @@
             </a>
 <!--           <a class="pull-right" ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}/status/{{tweet.id_str}}" target="_blank" title="{{tweet.created_at}}">-->
               <strong class="pull-right">
+                  <span ng-if="tweet.retweet" class="fa fa-retweet text-muted"></span>
                <small am-time-ago="tweet.created_at"></small>
                </strong>
 <!--           </a>-->
         </h6>
-        <p ng-bind-html="tweet.text | linky:'_blank'"></p>
-        <strong class="text-muted">{{tweet.user.location}}</strong>
+        <span ng-if="!tweet.retweet">
+            <p ng-bind-html="tweet.text | linky:'_blank'"></p>    
+        </span>
+        <span ng-if="tweet.retweet">
+            <p ng-bind-html="tweet.retweeted_status.text | linky:'_blank'"></p>    
+        </span>
+        
+        <strong ng-if="tweet.user.location" class="text-muted"><span class="fa fa-map-marker text-muted"></span> {{tweet.user.location}}</strong>
     </div>
 </article>
 
