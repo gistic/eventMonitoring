@@ -1,14 +1,14 @@
 // Check _vars.scss for font different sizes
-@mixin font-size($sizeValue: 12){
-  font-size: $sizeValue + px; //fallback for old browsers
-  font-size: (0.125 * $sizeValue) + rem;
+@mixin font-size($sizeValue: 12) {
+    font-size: $sizeValue + px; //fallback for old browsers
+    font-size: (0.125 * $sizeValue) + rem;
 }
 
-@mixin size($width, $height: $width) {
-      width: $width;
-      height: $height;
+@mixin size($width,
+$height: $width) {
+    width: $width;
+    height: $height;
 }
-
 
 // Media breakpoints
 $desktop-width: 1024px;
@@ -16,19 +16,36 @@ $tablet-width: 768px;
 $phone-width: 480px;
 
 @mixin tablet {
-  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width}) {
-    @content;
-  }
+    @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width}) {
+        @content;
+    }
 }
 
 @mixin desktop {
-  @media (min-width: #{$desktop-width}) {
-    @content;
-  }
+    @media (min-width: #{$desktop-width}) {
+        @content;
+    }
 }
 
 @mixin phone {
-  @media (max-width: #{$phone-width}) {
-    @content;
-  }
+    @media (max-width: #{$phone-width}) {
+        @content;
+    }
+}
+
+@mixin placeholderColor($color) {
+    &::-webkit-input-placeholder { /* WebKit browsers */
+        color: $color;
+    }
+    &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+        color: $color;
+        opacity: 1;
+    }
+    &::-moz-placeholder { /* Mozilla Firefox 19+ */
+        color: $color;
+        opacity: 1;
+    }
+    &:-ms-input-placeholder { /* Internet Explorer 10+ */
+        color: $color;
+    }
 }

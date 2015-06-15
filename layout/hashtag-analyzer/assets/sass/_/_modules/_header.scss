@@ -1,35 +1,28 @@
-header {
-    background: $white;
-    border-bottom: 1px solid $gray-light;
-    @include phone {
-        text-align: center;
-    }
-    .logo {
-        font-family: 'Lobster', cursive;
-        a {
-            color: $black;
-            &:hover, &:focus {
-                text-decoration: none;
-            }
-        }
-    }
-    .header-buttons {
-        @include phone {
-            float: none !important;
-        }
-    }
-}
-
-.header-dashboard {
+.header {
     @include background-image(linear-gradient(right, #0056bd, #015bbb, #015fb7, #0465b6, #066db2, #0872ae, #0872b0, #0877ac, #0b81a9, #0d89a5, #0e8ca2, #0d8ea1, #0f939f, #11969d, #12999c, #129d9a, #13a497, #15a895, #15a895, #15ae90));
     margin-bottom: $margin;
-    padding: $padding / 3 0;
+    padding: 0;
     .navbar-form {
         margin: 0;
         line-height: 28px;
     }
     .dashboard-nav {
         line-height: 32px;
+        li {
+            padding: 0;
+            border-bottom: 3px solid transparent;
+            a {
+                padding: 7px 5px;
+                display: inline-block;
+            }
+            &:hover {
+                border-bottom: 3px solid $white;
+                a {
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+            }
+        }
     }
     .navs {
         a {
@@ -56,8 +49,7 @@ header {
                     a {
                         color: $gray;
                         padding: $padding - 5 $padding + 5;
-                        &:hover,
-                        &:focus {
+                        &:hover, &:focus {
                             background: #015fb7;
                             color: $white;
                         }
@@ -67,12 +59,18 @@ header {
         }
     }
     .navbar-logo {
+        line-height: 47px;
+        margin-right: 40px;
         img {
             margin-right: $margin;
-            line-height: 32px;
             @include size(30px);
         }
+        &:hover,
+        &:focus {
+            text-decoration: none;
+        }
     }
+    // Search in Dashboard
     .start-event {
         .form-control {
             background: $white;
@@ -94,56 +92,139 @@ header {
     }
     .header-title {
         color: $white;
-        margin-left: $margin * 20;
+        margin-left: $margin;
         @include font-size($font-tiny);
-        strong {
-            @include font-size($font-large);
+    }
+}
+
+.search-homepage {
+    .start-event {
+        input {
+            @include border-radius(0);
+            font-size: 60px;
+            font-weight: 300;
+            height: 100%;
+            padding: 58px 30px;
+            color: $white;
+            background: rgb(35, 35, 36);
+            @include placeholderColor($gray-super-light);
+        }
+        .btn.btn-search {
+            z-index: 99;
+            background: rgb(12, 133, 167);
+            @include border-radius(50%);
+            @include size(75px);
+            position: absolute;
+            top: 31.5%;
+            right: 30px;
         }
     }
 }
 
 .header-homepage {
-    background: $dark-green;
-    color: $white;
-    padding: $padding * 5 0;
-    @include phone {
-        padding: $padding * 2 0;
+    @extend .header;
+    margin: 0;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+.navbar-brand {
+    padding: 10px;
+    img {
+        display: inline-block;
+        margin-right: $margin;
     }
-    text-align: center;
-    .start-event {
-        margin-top: $margin * 3;
-        margin-left: auto;
-        margin-right: auto;
-        @include size(40%, auto);
-        @include phone {
-            @include size(80%, auto);
-        }
-        input {
-            @include border-radius(5px);
-            color: $white;
-            font-weight: 300;
-            width: 95%;
-            background: darken($dark-green, 8%);
-            &::-webkit-input-placeholder {
-                color: darken($dark-green, 17%);
-            }
-            &:-moz-placeholder {
-                color: darken($dark-green, 17%);
-                @include opacity(1);
-            }
-            &::-moz-placeholder {
-                color: darken($dark-green, 17%);
-                @include opacity(1);
-            }
-            &:-ms-input-placeholder {
-                color: darken($dark-green, 17%);
-            }
-        }
-        .btn.btn-search {
-            background: darken($dark-green, 15%);
-            @include border-right-radius(5px);
-            line-height: 20px;
-            padding: $padding - 2 $padding + 5;
-        }
+    span {
+        @include font-size(15px);
+        color: $white;
+    }
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+    background: none;
+}
+
+.navbar-nav a {
+    color: $white;
+}
+
+.navbar-nav.navbar-right .btn {
+    position: relative;
+    z-index: 2;
+    padding: 4px 20px;
+    margin: 10px auto;
+    transition: transform 0.3s;
+}
+
+.navbar .navbar-collapse {
+    position: relative;
+    overflow: hidden !important;
+}
+
+.navbar .nav-collapse {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding-right: 120px;
+    padding-left: 80px;
+    width: 100%;
+}
+
+.navbar.navbar-default .nav-collapse {
+    background-color: #f8f8f8;
+}
+
+.navbar .nav-collapse .navbar-form {
+    border-width: 0;
+    box-shadow: none;
+}
+
+.nav-collapse>li {
+    float: right;
+}
+
+.navbar.navbar-default .nav-collapse {
+    height: auto !important;
+    transition: transform 0.3s;
+    transform: translate(0px, -50px);
+}
+
+.navbar.navbar-default .nav-collapse.in {
+    transform: translate(0px, 0px);
+}
+
+@media screen and (max-width: 767px) {
+    .navbar .navbar-collapse .navbar-right > li:last-child {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .navbar .nav-collapse {
+        margin: 7.5px auto;
+        padding: 0;
+    }
+    .navbar .nav-collapse .navbar-form {
+        margin: 0;
+    }
+    .nav-collapse>li {
+        float: none;
+    }
+    .navbar.navbar-default .nav-collapse {
+        transform: translate(-100%, 0px);
+    }
+    .navbar.navbar-default .nav-collapse.in {
+        transform: translate(0px, 0px);
+    }
+    .navbar.navbar-default .nav-collapse.slide-down {
+        transform: translate(0px, -100%);
+    }
+    .navbar.navbar-default .nav-collapse.in.slide-down {
+        transform: translate(0px, 0px);
     }
 }

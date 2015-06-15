@@ -2,6 +2,8 @@ var StartNewEvent = angular.module('StartNewEvent', []);
 
 /* Controller : Start new event */
 StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', '$cookies', '$cookieStore', '$location', '$window', function ($rootScope, $scope, $http, $state, RequestData, $cookies, $cookieStore, $location, $window) {
+    
+    document.getElementById("eventHashtag").focus();
 
     $scope.getUserData = function () {
         var apiUrl = '/api/twitterUsers' + '?authToken=' + $cookies.userAuthentication;

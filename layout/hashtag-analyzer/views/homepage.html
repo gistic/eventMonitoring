@@ -1,20 +1,132 @@
 <!-- Header -->
-<header class="header-homepage">
-    <h1 class="icon icon-massive icon-bird"></h1>
-    <h1>TweetBoard</h1>
-    <small>Show realtime tweets for your events</small>
-
-    <div class="input-group start-event">
-        <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startNewEvent()">
-        <span class="input-group-btn">
-            <button class="btn btn-search" type="button" ng-click="startNewEvent()">
-                <i class="fa fa-search"></i>
-            </button>
-        </span>
-        <div class="spinner">
-            <div class="double-bounce1"></div>
-            <div class="double-bounce2"></div>
+  <div ng-include="'views/views-components/header.html'"></div>
+<!-- END OF / Header -->
+  
+   <div class="flexbox tilesWall">
+    <div class="event-box shading">
+       <a href="http://www.google.com" class="full-box-link"></a>
+        <div class="mediaBox"><img src="assets/images/photo-5.jpeg" alt="" class="img-responsive">
         </div>
+        <header>
+            <h2><a href="#">#AyuntamientosARV</a></h2>
+            <p class="meta">since 3 hours ago</p>
+            <h3 class="created-by"><img src="assets/images/users/f-1.jpg" alt="" class="img-circle"><a href="#">@Masters</a></h3>
+        </header>
+    </div>
+    <div class="event-box shading">
+       <a href="http://www.google.com" class="full-box-link"></a>
+        <div class="mediaBox"><img src="assets/images/photo-4.jpeg" alt="" class="img-responsive">
+        </div>
+        <header>
+            <h2><a href="#">#NoControlMusicVideo</a></h2>
+            <p class="meta">since 3 hours ago</p>
+            <h3 class="created-by"><img src="assets/images/users/f-2.jpg" alt="" class="img-circle"><a href="#">@CNN</a></h3>
+        </header>
+    </div>
+    <div class="event-box shading">
+       <a href="http://www.google.com" class="full-box-link"></a>
+        <div class="mediaBox"><img src="assets/images/photo-3.jpg" alt="" class="img-responsive">
+        </div>
+        <header>
+            <h2><a href="#">#DJPMostWantedConcert</a></h2>
+            <p class="meta">since 3 hours ago</p>
+            <h3 class="created-by"><img src="assets/images/users/f-3.jpg" alt="" class="img-circle"><a href="#">@iMomenUI</a></h3>
+        </header>
+    </div>
+    <div class="event-box shading">
+       <a href="http://www.google.com" class="full-box-link"></a>
+        <div class="mediaBox"><img src="assets/images/photo-4.jpeg" alt="" class="img-responsive">
+        </div>
+        <header>
+            <h2><a href="#">#هل_لديك_الجراه_تكتب_طولك</a></h2>
+            <p class="meta">since 2 hours ago</p>
+            <h3 class="created-by"><img src="assets/images/users/f-4.jpg" alt="" class="img-circle"><a href="#">@livinginstyles</a></h3>
+        </header>
     </div>
 
-</header>
+
+    <div class="event-box shading">
+       <a href="http://www.google.com" class="full-box-link"></a>
+        <div class="mediaBox"><img src="assets/images/photo-5.jpeg" alt="" class="img-responsive">
+        </div>
+        <header>
+            <h2><a href="#">#L6Nnuevosalcaldes</a></h2>
+            <p class="meta">since 2 hours ago</p>
+            <h3 class="created-by"><img src="assets/images/users/f-6.jpg" alt="" class="img-circle"><a href="#">@1DsUniverse</a></h3>
+        </header>
+    </div>
+    <div class="event-box search-box tile">
+        <div class="search-homepage">
+            <div class="start-event">
+                <input type="search" id="eventHashtag"  focus-me="shouldBeOpen" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startNewEvent()">
+                <button class="btn btn-search fa-2x" type="button" ng-click="startNewEvent()">
+                    <i class="fa fa-search"></i>
+                </button>
+                <div class="spinner">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="event-box shading">
+       <a href="http://www.google.com" class="full-box-link"></a>
+        <div class="mediaBox"><img src="assets/images/photo-4.jpeg" alt="" class="img-responsive">
+        </div>
+        <header>
+            <h2><a href="#">#天叢雲の皇子</a></h2>
+            <p class="meta">since 3 hours ago</p>
+            <h3 class="created-by"><img src="assets/images/users/f-7.jpg" alt="" class="img-circle"><a href="#">@drugxxmichael</a></h3>
+        </header>
+
+    </div>
+
+    <div class="event-box shading">
+        <a href="http://www.google.com" class="full-box-link"></a>
+        <div class="mediaBox"><img src="assets/images/photo-3.jpg" alt="" class="img-responsive">
+        </div>
+        <header>
+            <h2><a href="#">#KathrynBernardoASAPBreakFree</a></h2>
+            <p class="meta">since 1 hours ago</p>
+            <h3 class="created-by"><img src="assets/images/users/f-8.jpg" alt="" class="img-circle"><a href="#">@moosejared</a></h3>
+        </header>
+
+    </div>
+    <div class="event-box shading">
+       <a href="http://www.google.com" class="full-box-link"></a>
+        <div class="mediaBox"><img src="assets/images/photo-4.jpeg" alt="" class="img-responsive">
+        </div>
+        <header>
+            <h2><a href="#">#SomosArgentina</a></h2>
+            <p class="meta">since 1 hours ago</p>
+            <h3 class="created-by"><img src="assets/images/users/f-9.jpg" alt="" class="img-circle"><a href="#">@invisibleziam</a></h3>
+        </header>
+
+    </div>
+    <div class="event-box shading">
+       <a href="http://www.google.com" class="full-box-link"></a>
+        <div class="mediaBox"><img src="assets/images/photo-5.jpeg" alt="" class="img-responsive">
+        </div>
+        <header>
+            <h2><a href="#">#GIBGER</a></h2>
+            <p class="meta">since 15 minutes ago</p>
+            <h3 class="created-by"><img src="assets/images/users/f-5.jpg" alt="" class="img-circle"><a href="#">@taylorswift13</a></h3>
+        </header>
+
+    </div>
+    <div class="event-box shading">
+       <a href="http://www.google.com" class="full-box-link"></a>
+        <div class="mediaBox"><img src="assets/images/photo-1431184052543-809fa8cc9bd6.jpeg" alt="" class="img-responsive">
+        </div>
+        <header>
+            <h2><a href="#">#SabadoDeGanarSeguidores</a></h2>
+            <p class="meta">since 10 minutes ago</p>
+            <h3 class="created-by"><img src="assets/images/users/f-1.jpg" alt="" class="img-circle"><a href="#">@blugraphic</a></h3>
+        </header>
+
+    </div>
+</div>
+
+<!-- Footer -->
+  <div ng-include="'views/views-components/footer.html'"></div>
+<!-- END OF / Footer -->

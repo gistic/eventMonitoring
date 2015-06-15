@@ -82,11 +82,6 @@ trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
     window.routes = {
         "home": {
             url: '',
-            templateUrl: 'views/index.html',
-            controller: 'StartNewEventController'
-        },
-        "homepage": {
-            url: '/homepage',
             templateUrl: 'views/homepage.html',
             controller: 'StartNewEventController'
         },
