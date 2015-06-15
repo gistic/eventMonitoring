@@ -30,4 +30,8 @@ public class Misc {
         TwitterFactory factory = new TwitterFactory(configuration);
         return factory.getInstance();
     }
+
+    public static String addScoreToStatusString(String statusString, long score) {
+        return statusString.substring(0, statusString.length()-1).concat(",\"score\":"+score+"}");
+    }
 }

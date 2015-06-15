@@ -16,6 +16,7 @@ import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcasterSingleton;
 import org.gistic.tweetboard.security.*;
 import org.gistic.tweetboard.security.User;
+import org.gistic.tweetboard.util.Misc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
@@ -231,9 +232,10 @@ public class TweetDataLogic {
         //int n = 5;
         Set<Tuple> topTweetsTuple = tweetDao.getTopNTweets(uuid, count);
         if (topTweetsTuple == null) return new GenericArray<String>(new String[]{});
-        Long[] topTweetIds = topTweetsTuple.stream()
-                .map(tweet -> Long.parseLong(tweet.getElement()) ).collect(Collectors.toList()).toArray(new Long[]{});
-
+//        Long[] topTweetIds = topTweetsTuple.stream()
+//                .map(tweet -> Long.parseLong(tweet.getElement()) ).collect(Collectors.toList()).toArray(new Long[]{});
+        Map<String, Double> topTweetsMap = topTweetsTuple.stream()
+                .collect(Collectors.toMap(Tuple::getElement, Tuple::getScore));
         TwitterConfiguration config = ConfigurationSingleton.getInstance().getTwitterConfiguration();
 
         AuthDao authDao = new AuthDaoImpl();
@@ -249,10 +251,17 @@ public class TweetDataLogic {
         TwitterFactory factory = new TwitterFactory(configuration);
         Twitter twitter = factory.getInstance();
         try {
-            ResponseList<Status> statuses = twitter.lookup(ArrayUtils.toPrimitive(topTweetIds));
+            String[] keySet = topTweetsMap.keySet().toArray(new String[topTweetsMap.size()]);
+            Long[] idsLongArray = Arrays.stream(keySet).map(Long::parseLong).toArray(Long[]::new);
+            long[] idsArray = ArrayUtils.toPrimitive(idsLongArray);
+            ResponseList<Status> statuses = twitter.lookup(idsArray);
             List<String> statusesList = new ArrayList<>();
+            Set<String> tweetTextSet = new HashSet<>();
             for (Status status:statuses) {
-                statusesList.add(TwitterObjectFactory.getRawJSON(status).replace("_normal",""));
+                if (!tweetTextSet.add(status.getText())) continue;
+                String statusString = TwitterObjectFactory.getRawJSON(status).replace("_normal","");
+                long rtCount = tweetDao.getTweetMeta(tweetDao.getTweetMetaKey(uuid, String.valueOf(status.getId()))).getRetweetsCount();
+                statusesList.add(Misc.addScoreToStatusString(statusString, rtCount));
             }
             return new GenericArray<String>(statusesList.toArray(new String[]{}));
         } catch (TwitterException e) {

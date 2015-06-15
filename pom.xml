@@ -130,6 +130,12 @@
             <artifactId>hbc-twitter4j</artifactId> <!-- or hbc-twitter4j -->
             <version>2.2.1-SNAPSHOT</version> <!-- or whatever the latest version is -->
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.4</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
