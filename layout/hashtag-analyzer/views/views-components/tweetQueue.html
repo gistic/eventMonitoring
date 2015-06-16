@@ -1,29 +1,44 @@
 <article class="media clearfix tweet fx-fade fx-speed-2000" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue track by $index" data-user-id="{{tweet.user.id_str}}">
 
-    <div class="media-left">
-        <img lazy-src="{{tweet.user.original_profile_image_urlhttps}}" on-error-src="{{defultImage}}" class="media-object user-img" />
-    </div>
-    <div class="media-body tweet-content">
-        <h6 class="media-heading tweet-user clearfix">
+    <div class="tweet-content">
+        <div class="media-left">
+            <img lazy-src="{{tweet.user.original_profile_image_urlhttps}}" on-error-src="{{defultImage}}" class="media-object user-img" />
+        </div>
+        <div class="media-body tweet-content">
+            <h6 class="media-heading tweet-user clearfix">
             <a ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank" class="pull-left tweet-userName">
                 {{tweet.user.screen_name}}
             </a>
-<!--           <a class="pull-right" ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}/status/{{tweet.id_str}}" target="_blank" title="{{tweet.created_at}}">-->
+           <a class="pull-right" ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}/status/{{tweet.id_str}}" target="_blank" title="{{tweet.created_at}}">
               <strong class="pull-right">
                   <span ng-if="tweet.retweet" class="fa fa-retweet text-muted"></span>
-               <small am-time-ago="tweet.created_at"></small>
+                  <small am-time-ago="tweet.created_at"></small>
                </strong>
-<!--           </a>-->
+           </a>
         </h6>
-        <span ng-if="!tweet.retweet">
-            <p ng-bind-html="tweet.text | linky:'_blank'"></p>    
+            <span ng-if="!tweet.retweet">
+           <p ng-bind-html="tweet.text | parseUrl:'_blank'"></p>
         </span>
-        <span ng-if="tweet.retweet">
-            <p ng-bind-html="tweet.retweeted_status.text | linky:'_blank'"></p>    
+            <span ng-if="tweet.retweet">
+            <p ng-bind-html="tweet.retweeted_status.text | parseUrl:'_blank'"></p>
         </span>
-        
-        <strong ng-if="tweet.user.location" class="text-muted"><span class="fa fa-map-marker text-muted"></span> {{tweet.user.location}}</strong>
+
+            <strong ng-if="tweet.user.location" class="text-muted"><span class="fa fa-map-marker text-muted"></span> {{tweet.user.location}}</strong>
+        </div>
     </div>
+
+    <aside class="tweet-actions btn-group-vertical">
+        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id}}">
+            <span class="fa fa-reply"></span>
+        </a>
+        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id}}">
+            <span class="fa fa-retweet"></span>
+        </a>
+        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id}}">
+            <span class="fa fa-star"></span>
+        </a>
+    </aside>
+
 </article>
 
 <div class="text-center">

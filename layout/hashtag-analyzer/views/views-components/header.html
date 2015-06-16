@@ -22,13 +22,13 @@
         <div ng-hide="dashboardState" class="navs">
 
             <ul class="list-inline dashboard-nav pull-left">
-                <li>
+                <li class="hvr-underline-from-center">
                     <a ui-sref="home">Home</a>
                 </li>
-                <li>
+                <li class="hvr-underline-from-center">
                     <a ui-sref="about">About</a>
                 </li>
-                <li>
+                <li class="hvr-underline-from-center">
                     <a ui-sref="contact">Contact</a>
                 </li>
             </ul>
@@ -37,10 +37,10 @@
         <div ng-show="dashboardState" class="navs pull-right clearfix">
 
             <ul class="list-inline dashboard-nav pull-left">
-                <li>
+                <li class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.liveStreaming')}">
                     <a ui-sref=".liveStreaming">Tweets</a>
                 </li>
-                <li>
+                <li class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.media')}">
                     <a ui-sref=".media">Media</a>
                 </li>
                 <li role="presentation" class="nav-user dropdown">

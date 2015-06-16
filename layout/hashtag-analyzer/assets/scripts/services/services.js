@@ -1,5 +1,19 @@
 var myAppServices = angular.module('myAppServices', []);
 
+myAppServices.factory('utils', function () {
+
+    return {
+        formatTweet: function (tweet) {
+            var tags = tweet.hashtag_entities;
+            for (var i = 0; i < tags.length; i++) {
+                tweet.text = tweet.text.replace("#" + tags[i].text, "<a href='https://twitter.com/search?q=%23" + tags[i].text + "' target='_blank'>#" + tags[i].text + "</a>");
+            }
+            return tweet;
+        }
+    }
+
+});
+
 // Factory : Create event source which is listen to new coming tweets and views layout cusomization changes
 myAppServices.factory('CreateEventSource', ['$rootScope', '$location', 'RequestData', function ($rootScope, $location, RequestData) {
 

@@ -1,12 +1,16 @@
 var EventHandlerController = angular.module('EventHandlerController', []);
 
 // Controller : Populate the recieved data and update Dashboard
-EventHandlerController.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore) {
-        $scope.dashboardState = false;                    
-        if($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media") {
+EventHandlerController.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore', 'utils',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, utils) {
+        $scope.dashboardState = false;
+        if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media") {
             $scope.dashboardState = true;
         }
+
+        $scope.isActive = function (currentState) {
+            return currentState === $state.current.name;
+        };
 
         // Search from the dashboard
         $scope.dashboardSearch = function () {
@@ -220,6 +224,13 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 }
             })
 
+
+        $scope.text = 'Example text http://example.com http://example.com http://google.com';
+        $scope.props = {
+            target: '_blank',
+            otherProp: 'otherProperty'
+        };
+
         // Listen to new message
         $scope.startEventSource = function () {
 
@@ -230,8 +241,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             source.addEventListener('approved-tweets', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
-                
-                console.log($scope.tweet);
 
                 $scope.totalTweetsCount++;
 
@@ -335,14 +344,12 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             });
 
             source.addEventListener('country-update', function (response) {
-                console.log(locationChart.data);
-                console.log($scope.topCountries);
                 $scope.topCountrey = JSON.parse(response.data);
-                
+
                 $scope.countryName = ISO3166.getCountryName($scope.topCountrey.code);
                 $scope.countryCount = $scope.topCountrey.count;
                 var countryUpdated = false;
-                
+
                 $scope.$apply(function () {
                     if ($scope.topCountries.length != 0) {
                         for (var i = 0; i < $scope.topCountries.length; i++) {
@@ -395,10 +402,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             };
 
         }
-        
+
         var locationPieChart = [];
         $scope.locationPieChart = locationPieChart;
-                                                
+
         $scope.drawLocationPieChart = function () {
 
             locationPieChart.type = "PieChart";
@@ -408,10 +415,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 displayExactValues: true,
                 is3D: true,
                 chartArea: {
-                    left:10,
-                    top:0,
-                    width:'100%',
-                    height:'100%'
+                    left: 10,
+                    top: 0,
+                    width: '100%',
+                    height: '100%'
                 }
             };
         }
@@ -435,8 +442,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                             count: $scope.countryCount
                         });
                     }
-                console.log(locationChart.data);
-                console.log($scope.topCountries);
                 }).error(function () {
                     console.log("#");
                 })

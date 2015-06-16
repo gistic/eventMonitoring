@@ -8,6 +8,7 @@ a {
 	&:hover, &:focus {
 		color:darken($blue, 20%);
 		outline: 0;
+        text-decoration: none;
 	}
 }
 
@@ -22,10 +23,6 @@ a {
 
 // TODO : Remove this for production
 img {
-    @include opacity(0.5);
-//    -webkit-filter: blur(10px);
-//    -moz-filter: blur(10px);
-//    -o-filter: blur(10px);
-//    -ms-filter: blur(10px);
-//    filter: blur(10px);
+    @include opacity(0.9);
+    -webkit-filter: brightness(9.9);
 }

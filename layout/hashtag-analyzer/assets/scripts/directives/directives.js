@@ -14,7 +14,6 @@ myAppDirectives.directive('ngEnter', function () {
     };
 });
 
-
 // Directive : Image lazy load
 myAppDirectives.directive('lazyLoad', function ($timeout) {
     return {
@@ -44,7 +43,7 @@ myAppDirectives.directive('onErrorSrc', function ($rootScope) {
     }
 });
 
-
+// Directive : Focus into input on page laod
 myAppDirectives.directive('focusMe', function($timeout, $parse) {
   return {
     link: function(scope, element, attrs) {

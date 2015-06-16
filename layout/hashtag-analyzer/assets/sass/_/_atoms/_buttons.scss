@@ -1,7 +1,6 @@
 .btn {
 	border: none;
 	padding: $button-padding;
-	background: $button-bg;
 	color: $white;
 	&:hover,
 	&:focus,
@@ -14,6 +13,9 @@
         &:hover {
             border: 1px solid #2098d1;
         }
+    }
+    &.btn-event {
+        background: $button-bg;
     }
 	&.btn-search {
 		background: $gray-light;
@@ -47,19 +49,4 @@
         padding: $padding 0;
         color: $gray;
     }
-}
-
-.tweet-options {
-	button, .btn {
-		background: $gray-super-light;
-		border: 1px solid $gray-light;
-		color: darken($gray, 40%);
-	}
-}
-
-// Extended from button hover
-.hvr-rectangle-out:active,
-.hvr-rectangle-out:focus,
-.hvr-rectangle-out:hover {
-    color: $white;
 }
