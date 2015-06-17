@@ -682,6 +682,15 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
+    public void incrWordCounter(String uuid, String word) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.zincrby(getWordRankSetKey(uuid), 1, word);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
     public Set<Tuple> getTopNCountries(String uuid, Integer count) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getCountryRankSetKey(uuid), "+inf", "-inf", 0, count);
@@ -714,6 +723,16 @@ public class TweetDaoImpl implements TweetDao {
         return null;
     }
 
+    @Override
+    public Set<Tuple> getTopNWords(String uuid, Integer count) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.zrevrangeByScoreWithScores(getWordRankSetKey(uuid), "+inf", "-inf", 0, count);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
     private String getTotalMediaKey(String uuid) {
         return uuid + ":totalMedia";
     }
@@ -775,4 +794,7 @@ public class TweetDaoImpl implements TweetDao {
         return uuid + ":hashtagRank";
     }
 
+    private String getWordRankSetKey(String uuid) {
+        return uuid + ":wordRank";
+    }
 }

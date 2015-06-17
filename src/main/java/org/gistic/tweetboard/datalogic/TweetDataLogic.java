@@ -214,6 +214,14 @@ public class TweetDataLogic {
         return new GenericArray<TopItem>(topNHashtagsArray);
     }
 
+    public GenericArray<TopItem> getTopNWords(Integer count) {
+        Set<Tuple> topWordsTuple = tweetDao.getTopNHashtags(uuid, count);
+        TopItem[] topNWordsArray = topWordsTuple.stream()
+                .map(word -> new TopItem(word.getElement(), new Double(word.getScore()).intValue()))
+                .collect(Collectors.toList()).toArray(new TopItem[]{});
+        return new GenericArray<TopItem>(topNWordsArray);
+    }
+
     public void incrMediaCounter(MediaEntity mediaEntity) {
         tweetDao.incrMedia(uuid);
     }
@@ -367,5 +375,9 @@ public class TweetDataLogic {
 
     public void incrHashtagCounter(String hashtag) {
         tweetDao.incrHashtagCounter(uuid, hashtag);
+    }
+
+    public void incrWordCounter(String word) {
+        tweetDao.incrWordCounter(uuid, word);
     }
 }

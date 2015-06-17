@@ -60,6 +60,8 @@ public interface TweetDao {
 
     Set<Tuple> getTopNHashtags(String uuid, Integer count);
 
+    Set<Tuple> getTopNWords(String uuid, Integer count);
+
     void blockAllExistingTweetsByUser(String uuid, String screenName);
 
     void destroyEvent(String uuid);
@@ -134,4 +136,6 @@ public interface TweetDao {
     void incrLanguageCounter(String uuid, String language);
 
     void incrHashtagCounter(String uuid, String hashtag);
+
+    void incrWordCounter(String uuid, String word);
 }

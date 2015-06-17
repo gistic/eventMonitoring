@@ -331,6 +331,16 @@ public class EventsResource {
         return tweetDataLogic.getTopNHashtags(count);
     }
 
+
+    @GET
+    @Path("/{uuid}/topWords/")
+    public GenericArray<TopItem> getTopWords(@PathParam("uuid") String uuid,
+                                                @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        return tweetDataLogic.getTopNHashtags(count);
+    }
+
     @GET
     @Path("/{uuid}/topTweets/")
     public GenericArray<String> getTopTweets(@PathParam("uuid") String uuid,

@@ -119,6 +119,7 @@ public class TweetProcessor {
         while (matcher.find()) {
             if (Misc.isBadWord(matcher.group())) return;
             String word = matcher.group();
+            tweetDataLogic.incrWordCounter(word);
 //            if ( word.startsWith("#") ) {
 //                LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ word);
 //                tweetDataLogic.incrHashtagCounter(language);
