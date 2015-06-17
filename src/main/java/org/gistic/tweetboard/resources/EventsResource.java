@@ -1,6 +1,5 @@
 package org.gistic.tweetboard.resources;
 
-import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.auth.Auth;
 import org.gistic.tweetboard.DelayedJobsManager;
 import org.gistic.tweetboard.dao.TweetDao;
@@ -19,7 +18,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
-import twitter4j.Status;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -37,7 +35,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -309,11 +306,20 @@ public class EventsResource {
 
     @GET
     @Path("/{uuid}/topCountries/")
-    public GenericArray<TopCountry> getTopCountries(@PathParam("uuid") String uuid,
+    public GenericArray<TopItem> getTopCountries(@PathParam("uuid") String uuid,
                                 @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         return tweetDataLogic.getTopNCountries(count);
+    }
+
+    @GET
+    @Path("/{uuid}/topLanguages/")
+    public GenericArray<TopItem> getTopLanguages(@PathParam("uuid") String uuid,
+                                                 @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        return tweetDataLogic.getTopNLanguages(count);
     }
 
     @GET

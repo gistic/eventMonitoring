@@ -664,9 +664,29 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
+    public void incrLanguageCounter(String uuid, String language) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.zincrby(getLanguageRankSetKey(uuid), 1, language);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
     public Set<Tuple> getTopNCountries(String uuid, Integer count) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getCountryRankSetKey(uuid), "+inf", "-inf", 0, count);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
+
+    @Override
+    public Set<Tuple> getTopNLanguages(String uuid, Integer count) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.zrevrangeByScoreWithScores(getLanguageRankSetKey(uuid), "+inf", "-inf", 0, count);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -726,4 +746,9 @@ public class TweetDaoImpl implements TweetDao {
     private String getCountryRankSetKey(String uuid) {
         return uuid + ":countryRank";
     }
+
+    private String getLanguageRankSetKey(String uuid) {
+        return uuid + ":languageRank";
+    }
+
 }

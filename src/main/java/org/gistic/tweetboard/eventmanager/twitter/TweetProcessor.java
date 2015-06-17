@@ -83,8 +83,10 @@ public class TweetProcessor {
             //System.out.println("media!! "+mediaEntity.getType() + ": " + mediaEntity.getMediaURL()+ ": " + mediaEntity.getDisplayURL()+ ": " + mediaEntity.getExpandedURL());
             tweetDataLogic.incrMediaCounter(mediaEntity);
         }
-
-
+        String language = tweet.getLang();
+        if (language!=null || !language.isEmpty()) {
+            tweetDataLogic.incrLaguageCounter(language);
+        }
         boolean isRetweet = tweet.isRetweet();
         if(isRetweet || tweet.getText().contains("RT")) {
             tweetDataLogic.incrTotalRetweets();
