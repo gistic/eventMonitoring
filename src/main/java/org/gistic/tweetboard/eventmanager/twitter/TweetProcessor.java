@@ -7,6 +7,7 @@ import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.util.Misc;
 import org.slf4j.LoggerFactory;
+import twitter4j.HashtagEntity;
 import twitter4j.Place;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
@@ -117,6 +118,21 @@ public class TweetProcessor {
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             if (Misc.isBadWord(matcher.group())) return;
+            String word = matcher.group();
+//            if ( word.startsWith("#") ) {
+//                LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ word);
+//                tweetDataLogic.incrHashtagCounter(language);
+//            }
+//            else {
+//                process it as word in word cloud
+//            }
+        }
+
+        HashtagEntity[] hashtagEntities = tweet.getHashtagEntities();
+        for ( HashtagEntity entity : hashtagEntities ) {
+            String hashtag = entity.getText();
+            LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ hashtag);
+            tweetDataLogic.incrHashtagCounter(hashtag);
         }
 
         if (retweetEnabled) {

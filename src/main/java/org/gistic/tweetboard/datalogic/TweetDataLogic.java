@@ -191,20 +191,27 @@ public class TweetDataLogic {
 
     public GenericArray<TopItem> getTopNCountries(Integer count) {
         Set<Tuple> topCountriesTuple = tweetDao.getTopNCountries(uuid, count);
-        TopItem[] topNLanguagesArray = topCountriesTuple.stream()
+        TopItem[] topNCountriesArray = topCountriesTuple.stream()
                 .map(language -> new TopItem(language.getElement(), new Double(language.getScore()).intValue()))
                 .collect(Collectors.toList()).toArray(new TopItem[]{});
 
-        return new GenericArray<TopItem>(topNLanguagesArray);
+        return new GenericArray<TopItem>(topNCountriesArray);
     }
 
     public GenericArray<TopItem> getTopNLanguages(Integer count) {
         Set<Tuple> topLanguagesTuple = tweetDao.getTopNLanguages(uuid, count);
-        TopItem[] topNcountriesArray = topLanguagesTuple.stream()
-                .map(country -> new TopItem(country.getElement(), new Double(country.getScore()).intValue()))
+        TopItem[] topNLanguagesArray = topLanguagesTuple.stream()
+                .map(language -> new TopItem(language.getElement(), new Double(language.getScore()).intValue()))
                 .collect(Collectors.toList()).toArray(new TopItem[]{});
+        return new GenericArray<TopItem>(topNLanguagesArray);
+    }
 
-        return new GenericArray<TopItem>(topNcountriesArray);
+    public GenericArray<TopItem> getTopNHashtags(Integer count) {
+        Set<Tuple> topHashtagsTuple = tweetDao.getTopNHashtags(uuid, count);
+        TopItem[] topNHashtagsArray = topHashtagsTuple.stream()
+                .map(hashtag -> new TopItem(hashtag.getElement(), new Double(hashtag.getScore()).intValue()))
+                .collect(Collectors.toList()).toArray(new TopItem[]{});
+        return new GenericArray<TopItem>(topNHashtagsArray);
     }
 
     public void incrMediaCounter(MediaEntity mediaEntity) {
@@ -356,5 +363,9 @@ public class TweetDataLogic {
 
     public void incrLaguageCounter(String language) {
         tweetDao.incrLanguageCounter(uuid, language);
+    }
+
+    public void incrHashtagCounter(String hashtag) {
+        tweetDao.incrHashtagCounter(uuid, hashtag);
     }
 }

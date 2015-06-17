@@ -673,6 +673,15 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
+    public void incrHashtagCounter(String uuid, String hashtag) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.zincrby(getHashtagRankSetKey(uuid), 1, hashtag);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
     public Set<Tuple> getTopNCountries(String uuid, Integer count) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getCountryRankSetKey(uuid), "+inf", "-inf", 0, count);
@@ -687,6 +696,17 @@ public class TweetDaoImpl implements TweetDao {
     public Set<Tuple> getTopNLanguages(String uuid, Integer count) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getLanguageRankSetKey(uuid), "+inf", "-inf", 0, count);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
+
+    @Override
+    public Set<Tuple> getTopNHashtags(String uuid, Integer count) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.zrevrangeByScoreWithScores(getHashtagRankSetKey(uuid), "+inf", "-inf", 0, count);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -749,6 +769,10 @@ public class TweetDaoImpl implements TweetDao {
 
     private String getLanguageRankSetKey(String uuid) {
         return uuid + ":languageRank";
+    }
+
+    private String getHashtagRankSetKey(String uuid) {
+        return uuid + ":hashtagRank";
     }
 
 }

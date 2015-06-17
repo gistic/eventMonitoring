@@ -58,6 +58,8 @@ public interface TweetDao {
 
     Set<Tuple> getTopNLanguages(String uuid, Integer count);
 
+    Set<Tuple> getTopNHashtags(String uuid, Integer count);
+
     void blockAllExistingTweetsByUser(String uuid, String screenName);
 
     void destroyEvent(String uuid);
@@ -130,4 +132,6 @@ public interface TweetDao {
     String getTweetMetaKey(String uuid, String key);
 
     void incrLanguageCounter(String uuid, String language);
+
+    void incrHashtagCounter(String uuid, String hashtag);
 }
