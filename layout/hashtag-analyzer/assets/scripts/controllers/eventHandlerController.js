@@ -1,8 +1,8 @@
 var EventHandlerController = angular.module('EventHandlerController', []);
 
 // Controller : Populate the recieved data and update Dashboard
-EventHandlerController.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore', 'utils',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, utils) {
+EventHandlerController.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore', 'utils', 'languageCode',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, utils, languageCode) {
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media") {
             $scope.dashboardState = true;
@@ -242,6 +242,23 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
 
                 $scope.tweet = JSON.parse(response.data);
 
+                // Update languages pie chart
+                $scope.languageName = languageCode.getLanguageName($scope.tweet.lang);
+                var languageUpdated = false;
+
+                if ($scope.languageName != undefined) {
+                    for (var i = 0; i < languagesPieChart.data.length; i++) {
+                        if (languagesPieChart.data[i][0] == $scope.languageName) {
+                            languagesPieChart.data[i][1]++;
+                            languageUpdated = true;
+                            break;
+                        }
+                    }
+                    if (!languageUpdated) {
+                        languagesPieChart.data.push([$scope.languageName, 1]);
+                    }
+                }
+
                 $scope.totalTweetsCount++;
 
                 // Media
@@ -423,6 +440,26 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             };
         }
 
+        var languagesPieChart = [];
+        $scope.languagesPieChart = languagesPieChart;
+
+        $scope.drawlanguagesPieChart = function () {
+
+            languagesPieChart.type = "PieChart";
+            languagesPieChart.data = [['Language', 'Count']];
+
+            languagesPieChart.options = {
+                displayExactValues: true,
+                is3D: true,
+                chartArea: {
+                    left: 10,
+                    top: 0,
+                    width: '100%',
+                    height: '100%'
+                }
+            };
+        }
+
         // GET : the last stats of top countries
         $rootScope.getLocationStats = function () {
 
@@ -450,6 +487,31 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
         $rootScope.getLocationStats();
         $scope.drawLocationGeoChart();
         $scope.drawLocationPieChart();
+
+        // GET : the last stats of top countries
+        $rootScope.getLanguagesStats = function () {
+
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topLanguages';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    for (var i = 0; i < response.items.length; i++) {
+                        $scope.languageName = languageCode.getLanguageName(response.items[i].code);
+                        $scope.languageCount = response.items[i].count;
+                        if (response.items[i].code != "und" && $scope.languageName != undefined) {
+                            languagesPieChart.data.push([$scope.languageName, $scope.languageCount]);
+                        }
+                    }
+
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+
+        $rootScope.getLanguagesStats();
+        $scope.drawlanguagesPieChart();
 
         $scope.pagesShown = 1;
         $scope.pageSize = 10;

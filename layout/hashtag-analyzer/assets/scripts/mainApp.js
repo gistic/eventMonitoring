@@ -19,6 +19,7 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'highcharts-ng',
     'oitozero.ngSweetAlert',
     'iso-3166-country-codes',
+    'iso-language-codes',
     'googlechart',
     'bootstrapLightbox',
     
