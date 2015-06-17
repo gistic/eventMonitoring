@@ -33,6 +33,8 @@ public class WarmupRunnable implements Runnable {
     private List<Status> tweets;
     private boolean reachedEnd = false;
     private Query query;
+    private QueryResult queryResult;
+    private final String queryString;
 
     public WarmupRunnable(Event event, TweetDataLogic tweetDataLogic, String[] hashTags, String authToken) {
         this.event = event;
@@ -53,7 +55,7 @@ public class WarmupRunnable implements Runnable {
         builder.setJSONStoreEnabled(true);
         Configuration configuration = builder.build();
 
-        String queryString = String.join(",", hashTags);//"#" + (hashTags[0].replace("#", ""));
+        queryString = String.join(",", hashTags);
 //         LoggerFactory.getLogger(this.getClass()).info("searching for : " + queryString);
         query = new Query(queryString);
         query.setCount(25);
@@ -62,12 +64,12 @@ public class WarmupRunnable implements Runnable {
         TwitterFactory factory = new TwitterFactory(configuration);
         this.twitter = factory.getInstance();
         boolean firstTime = true;
-        QueryResult queryResult = null;
+        queryResult = null;
         try {
             queryResult = twitter.search(query);
             int resultCount = queryResult.getCount();
             System.out.println("result count is: "+resultCount);
-            sinceId = queryResult.getSinceId();
+//            sinceId = queryResult.getSinceId();
             //sinceId =  newId > sinceId ? newId : sinceId;
             if (resultCount < 25) reachedEnd = true;
             List<Status> tweets = queryResult.getTweets();
@@ -86,7 +88,7 @@ public class WarmupRunnable implements Runnable {
 //                    e.printStackTrace();
 //                }
             }
-            query.setMaxId(sinceId);
+//            query.setMaxId(sinceId);
         } catch (TwitterException e) {
             e.printStackTrace();
             reachedEnd = true;
@@ -104,7 +106,7 @@ public class WarmupRunnable implements Runnable {
             e.printStackTrace();
         }
 //        boolean firstTime = true;
-        QueryResult queryResult = null;
+//        QueryResult queryResult = null;
 //        try {
 //            queryResult = twitter.search(query);
 //            int resultCount = queryResult.getCount();
@@ -127,20 +129,24 @@ public class WarmupRunnable implements Runnable {
 //        }
 //
 //
-
+        //query.count(100);
         int index = 0;
-        query.count(100);
         while (!reachedEnd && index< 10 * MAX_NUMBER_OF_TWEETS_TO_GET_IN_THOUSANDS) {
-            query.setMaxId(sinceId);
+//            query.setMaxId(sinceId);
+            query = queryResult.nextQuery();
+            long maxId = query.getMaxId();
+            query = new Query(queryString);
+            query.setMaxId(maxId);
+            query.setCount(100);
             try {
                 queryResult = twitter.search(query);
             } catch (TwitterException e) {
                 LoggerFactory.getLogger(this.getClass()).info("Reached warmup api calls limit!");
                 break;
             }
-            sinceId = queryResult.getSinceId();
+//            sinceId = queryResult.getSinceId();
             int resultCount = queryResult.getCount();
-            if (resultCount<100) reachedEnd = true;
+            if (resultCount<25) reachedEnd = true;
             System.out.println("result count is: "+resultCount);
             tweets = queryResult.getTweets();
             tweetDataLogic.warmupStats(tweets, event);

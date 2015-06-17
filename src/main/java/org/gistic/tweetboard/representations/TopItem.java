@@ -3,11 +3,11 @@ package org.gistic.tweetboard.representations;
 /**
  * Created by osama-hussain on 5/18/15.
  */
-public class TopCountry {
+public class TopItem {
     private String code;
     private int count;
 
-    public TopCountry(String code, int count) {
+    public TopItem(String code, int count) {
         this.code = code;
         this.count = count;
     }

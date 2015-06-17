@@ -5,6 +5,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
+import org.gistic.tweetboard.util.Misc;
 import org.slf4j.LoggerFactory;
 import twitter4j.Place;
 import twitter4j.MediaEntity;
@@ -13,6 +14,8 @@ import twitter4j.Status;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -80,8 +83,10 @@ public class TweetProcessor {
             //System.out.println("media!! "+mediaEntity.getType() + ": " + mediaEntity.getMediaURL()+ ": " + mediaEntity.getDisplayURL()+ ": " + mediaEntity.getExpandedURL());
             tweetDataLogic.incrMediaCounter(mediaEntity);
         }
-
-
+        String language = tweet.getLang();
+        if (language!=null || !language.isEmpty()) {
+            tweetDataLogic.incrLaguageCounter(language);
+        }
         boolean isRetweet = tweet.isRetweet();
         if(isRetweet || tweet.getText().contains("RT")) {
             tweetDataLogic.incrTotalRetweets();
@@ -103,6 +108,17 @@ public class TweetProcessor {
         }
         activePeopleAnalyzer.TweetArrived(tweet);
         tweetsOverTimeAnalyzer.TweetArrived(status);
+
+        if (tweet.isPossiblySensitive()) return;
+
+        String text = tweet.getText();
+
+        Pattern pattern = Pattern.compile("\\w+");
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            if (Misc.isBadWord(matcher.group())) return;
+        }
+
         if (retweetEnabled) {
             checkModeratedAndThen(status, tweet);
         } else {
