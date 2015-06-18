@@ -119,7 +119,7 @@ public class TweetProcessor {
 //         pattern.toString();
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
-            String word = matcher.group();
+            String word = matcher.group().toLowerCase();
             if (Misc.isBadWord(word)) return;
             if (Misc.isCommon(word)) return;
             tweetDataLogic.incrWordCounter(word);
