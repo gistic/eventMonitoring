@@ -28,6 +28,7 @@ public class TweetDaoImpl implements TweetDao {
     private static final int DEFAULT_TOP_TWEETS_CACHE_DURATION = 60;
     public static final String TWEET_META_DATE_KEY = "CreationDate";
     public static final String TWEET_META_RETWEETS_COUNT_KEY = "RetweetsCount";
+    private static final String PLACEHOLDER_MEDIA_URL_KEY = "PlaceholderMedia";
     //private Jedis jedis;
     final String All_EVENTS_KEY = "event";
     final String BG_COLOR_KEY = "banckGroundColor";
@@ -334,7 +335,10 @@ public class TweetDaoImpl implements TweetDao {
             List<String> list = jedis.lrange(All_EVENTS_KEY, 0, -1);
             List<EventMeta> metaList = list.stream()
                     .map(event -> new EventMeta(event,
-                            jedis.hget(event, START_TIME_KEY), jedis.hget(event, HASHTAGS_KEY)))
+                            jedis.hget(event, START_TIME_KEY),
+                            jedis.hget(event, HASHTAGS_KEY),
+                            jedis.hget(event, PLACEHOLDER_MEDIA_URL_KEY))
+                    )
                     .collect(Collectors.toList());
             EventMeta[] metaArray = metaList.stream().toArray(EventMeta[]::new);
             return new EventMetaList(metaArray);
@@ -673,6 +677,34 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
+    public void incrHashtagCounter(String uuid, String hashtag) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.zincrby(getHashtagRankSetKey(uuid), 1, hashtag);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public void incrWordCounter(String uuid, String word) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.zincrby(getWordRankSetKey(uuid), 1, word);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setMediaUrl(String uuid, String mediaURLHttps) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.hset(uuid, PLACEHOLDER_MEDIA_URL_KEY, mediaURLHttps);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+
+    }
+
+    @Override
     public Set<Tuple> getTopNCountries(String uuid, Integer count) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getCountryRankSetKey(uuid), "+inf", "-inf", 0, count);
@@ -694,6 +726,27 @@ public class TweetDaoImpl implements TweetDao {
         return null;
     }
 
+    @Override
+    public Set<Tuple> getTopNHashtags(String uuid, Integer count) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.zrevrangeByScoreWithScores(getHashtagRankSetKey(uuid), "+inf", "-inf", 0, count);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
+
+    @Override
+    public Set<Tuple> getTopNWords(String uuid, Integer count) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.zrevrangeByScoreWithScores(getWordRankSetKey(uuid), "+inf", "-inf", 0, count);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
     private String getTotalMediaKey(String uuid) {
         return uuid + ":totalMedia";
     }
@@ -751,4 +804,11 @@ public class TweetDaoImpl implements TweetDao {
         return uuid + ":languageRank";
     }
 
+    private String getHashtagRankSetKey(String uuid) {
+        return uuid + ":hashtagRank";
+    }
+
+    private String getWordRankSetKey(String uuid) {
+        return uuid + ":wordRank";
+    }
 }
