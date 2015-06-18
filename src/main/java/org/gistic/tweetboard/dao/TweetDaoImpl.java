@@ -28,6 +28,7 @@ public class TweetDaoImpl implements TweetDao {
     private static final int DEFAULT_TOP_TWEETS_CACHE_DURATION = 60;
     public static final String TWEET_META_DATE_KEY = "CreationDate";
     public static final String TWEET_META_RETWEETS_COUNT_KEY = "RetweetsCount";
+    private static final String PLACEHOLDER_MEDIA_URL_KEY = "PlaceholderMedia";
     //private Jedis jedis;
     final String All_EVENTS_KEY = "event";
     final String BG_COLOR_KEY = "banckGroundColor";
@@ -334,7 +335,10 @@ public class TweetDaoImpl implements TweetDao {
             List<String> list = jedis.lrange(All_EVENTS_KEY, 0, -1);
             List<EventMeta> metaList = list.stream()
                     .map(event -> new EventMeta(event,
-                            jedis.hget(event, START_TIME_KEY), jedis.hget(event, HASHTAGS_KEY)))
+                            jedis.hget(event, START_TIME_KEY),
+                            jedis.hget(event, HASHTAGS_KEY),
+                            jedis.hget(event, PLACEHOLDER_MEDIA_URL_KEY))
+                    )
                     .collect(Collectors.toList());
             EventMeta[] metaArray = metaList.stream().toArray(EventMeta[]::new);
             return new EventMetaList(metaArray);
@@ -688,6 +692,16 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
+    }
+
+    @Override
+    public void setMediaUrl(String uuid, String mediaURLHttps) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.hset(uuid, PLACEHOLDER_MEDIA_URL_KEY, mediaURLHttps);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+
     }
 
     @Override

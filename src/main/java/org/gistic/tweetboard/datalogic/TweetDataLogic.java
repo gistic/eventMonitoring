@@ -318,6 +318,7 @@ public class TweetDataLogic {
             for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
                 //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
                 incrMediaCounter(mediaEntity);
+                this.setMediaUrl(mediaEntity.getMediaURLHttps());
             }
             String language = tweet.getLang();
             if (language!=null || !language.isEmpty()) {
@@ -379,5 +380,9 @@ public class TweetDataLogic {
 
     public void incrWordCounter(String word) {
         tweetDao.incrWordCounter(uuid, word);
+    }
+
+    public void setMediaUrl(String mediaURLHttps) {
+        tweetDao.setMediaUrl(uuid, mediaURLHttps);
     }
 }

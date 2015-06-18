@@ -7,6 +7,7 @@ public class EventMeta {
     private String uuid;
     private String startTime;
     private String hashTags;
+    private String mediaUrl;
 
     public String getHashTags() {
         return hashTags;
@@ -16,10 +17,11 @@ public class EventMeta {
         this.hashTags = hashTags;
     }
 
-    public EventMeta(String uuid, String startTime, String hashTags) {
+    public EventMeta(String uuid, String startTime, String hashTags, String mediaUrl) {
         this.uuid = uuid;
         this.startTime = startTime;
         this.hashTags = hashTags;
+        this.mediaUrl = mediaUrl;
     }
 
     public String getUuid() {
@@ -36,5 +38,13 @@ public class EventMeta {
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
     }
 }

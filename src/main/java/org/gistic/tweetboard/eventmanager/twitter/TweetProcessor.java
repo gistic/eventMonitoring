@@ -83,6 +83,7 @@ public class TweetProcessor {
         for (MediaEntity mediaEntity : tweet.getExtendedMediaEntities()) {
             //System.out.println("media!! "+mediaEntity.getType() + ": " + mediaEntity.getMediaURL()+ ": " + mediaEntity.getDisplayURL()+ ": " + mediaEntity.getExpandedURL());
             tweetDataLogic.incrMediaCounter(mediaEntity);
+            tweetDataLogic.setMediaUrl(mediaEntity.getMediaURLHttps());
         }
         String language = tweet.getLang();
         if (language!=null || !language.isEmpty()) {
