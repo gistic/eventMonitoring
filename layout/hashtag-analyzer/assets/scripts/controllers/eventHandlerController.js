@@ -1,10 +1,36 @@
 var EventHandlerController = angular.module('EventHandlerController', []);
 
 // Controller : Populate the recieved data and update Dashboard
-EventHandlerController.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore', 'utils', 'languageCode',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, utils, languageCode) {
+EventHandlerController.controller('EventMainController', 
+                                  ['$rootScope',
+                                   '$scope',
+                                   '$http',
+                                   '$location',
+                                   '$window',
+                                   '$anchorScroll',
+                                   '$state',
+                                   'RequestData',
+                                   'CreateEventSource',
+                                   '$timeout',
+                                   'SweetAlert',
+                                   'ISO3166',
+                                   'Lightbox',
+                                   '$modal',
+                                   '$sce',
+                                   '$cookies',
+                                   '$cookieStore',
+                                   'utils',
+                                   'languageCode',
+                                   function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, utils, languageCode) {
+        
+                                       
+        // 1. Set the initializing values
+        // 2. Event streaming
+        // 3. Draw charts and panels 
+        // 4. Stop and kill event
+        
         $scope.dashboardState = false;
-        if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media") {
+        if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
         }
 
@@ -224,13 +250,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 }
             })
 
-
-        $scope.text = 'Example text http://example.com http://example.com http://google.com';
-        $scope.props = {
-            target: '_blank',
-            otherProp: 'otherProperty'
-        };
-
         // Listen to new message
         $scope.startEventSource = function () {
 
@@ -241,7 +260,20 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
             source.addEventListener('approved-tweets', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
-
+                //                console.log($scope.tweet);
+                //                                console.log($scope.tweet.geo_location);
+                //                                console.log($scope.tweet.place);
+                //                {id: 0,coords: {latitude: 37.7749295,longitude: -122.4194155}},
+                if ($scope.tweet.geo_location != null) {
+                    $scope.tweetGeoLocation = $scope.tweet.geo_location;
+//                    $scope.tweetGeoLocationMarkerID = $scope.markers.length;
+//                    $scope.markers.push({
+//                        id: 0,
+//                        coords: $scope.tweetGeoLocation
+//                    });
+                    console.log($scope.tweet.geo_location);
+//                    console.log($scope.markers);
+                }
                 // Update languages pie chart
                 $scope.languageName = languageCode.getLanguageName($scope.tweet.lang);
                 var languageUpdated = false;
@@ -249,7 +281,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope', '$scope'
                 if ($scope.languageName != undefined) {
                     for (var i = 0; i < languagesPieChart.data.length; i++) {
                         if (languagesPieChart.data[i][0] == $scope.languageName) {
-                            languagesPieChart.data[i][1]++;
+                            languagesPieChart.data[i][1] ++;
                             languageUpdated = true;
                             break;
                         }

@@ -21,6 +21,7 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'iso-3166-country-codes',
     'iso-language-codes',
     'googlechart',
+    'ngMap',
     'bootstrapLightbox',
     
     'wu.masonry',
@@ -98,6 +99,10 @@ trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
         "dashboard.media": {
             url: '/media',
             templateUrl: 'views/views-components/media.html'
+        },
+        "dashboard.map": {
+            url: '/map',
+            templateUrl: 'views/views-components/map.html'
         },
 
         "superAdmin": {

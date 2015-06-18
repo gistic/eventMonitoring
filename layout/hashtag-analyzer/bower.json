@@ -25,7 +25,7 @@
     "sweetalert": "~0.5.0",
     "angular-sweetalert": "~1.1.0",
     "iso-3166-country-codes-angular": "~1.1.1",
-    "angular-google-maps": "~2.1.1",
+    "angular-google-maps": "~2.1.4",
     "lodash": "~3.9.0",
     "angular-google-chart": "~0.0.11",
     "angular-bootstrap-lightbox": "~0.6.1",
@@ -40,7 +40,8 @@
     "ngFx": "~1.1.0",
     "nsPopover": "~0.6.7",
     "Hover": "~2.0.2",
-    "css-spinners": "~2.0.2"
+    "css-spinners": "~2.0.2",
+    "ngmap": "~1.7.11"
   },
   "devDependencies": {
     "modularized-normalize-scss": "~3.0.3"
