@@ -338,7 +338,7 @@ public class EventsResource {
                                                 @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
-        return tweetDataLogic.getTopNHashtags(count);
+        return tweetDataLogic.getTopNWords(count);
     }
 
     @GET

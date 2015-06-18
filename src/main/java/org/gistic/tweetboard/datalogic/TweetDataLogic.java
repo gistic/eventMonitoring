@@ -215,7 +215,7 @@ public class TweetDataLogic {
     }
 
     public GenericArray<TopItem> getTopNWords(Integer count) {
-        Set<Tuple> topWordsTuple = tweetDao.getTopNHashtags(uuid, count);
+        Set<Tuple> topWordsTuple = tweetDao.getTopNWords(uuid, count);
         TopItem[] topNWordsArray = topWordsTuple.stream()
                 .map(word -> new TopItem(word.getElement(), new Double(word.getScore()).intValue()))
                 .collect(Collectors.toList()).toArray(new TopItem[]{});
