@@ -28,6 +28,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -313,6 +315,31 @@ public class TweetDataLogic {
 
     public void warmupStats(List<Status> tweets, Event event) {
         for (Status tweet : tweets) {
+
+            String text = tweet.getText();
+            text = text.replaceAll("((https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|])", "");
+            Pattern pattern = Pattern.compile("(\\b(?<!#|http)\\w+)");
+//         pattern.toString();
+            Matcher matcher = pattern.matcher(text);
+            while (matcher.find()) {
+                String word = matcher.group();
+                if (Misc.isBadWord(word)) return;
+                if (Misc.isCommon(word)) return;
+                this.incrWordCounter(word);
+//            if ( word.startsWith("#") ) {
+//                LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ word);
+//                tweetDataLogic.incrHashtagCounter(language);
+//            }
+//            else {
+//                process it as word in word cloud
+//            }
+            }
+
+            HashtagEntity[] hashtagEntities = tweet.getHashtagEntities();
+            for ( HashtagEntity entity : hashtagEntities ) {
+                String hashtag = entity.getText();
+                this.incrHashtagCounter(hashtag);
+            }
 
             tweetDao.setTweetMetaDate(uuid, tweet.getId(), tweet.getCreatedAt().getTime());
             for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
