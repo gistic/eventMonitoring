@@ -1,8 +1,7 @@
 var EventHandlerController = angular.module('EventHandlerController', []);
 
 // Controller : Populate the recieved data and update Dashboard
-EventHandlerController.controller('EventMainController', 
-                                  ['$rootScope',
+EventHandlerController.controller('EventMainController', ['$rootScope',
                                    '$scope',
                                    '$http',
                                    '$location',
@@ -22,13 +21,13 @@ EventHandlerController.controller('EventMainController',
                                    'utils',
                                    'languageCode',
                                    function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, utils, languageCode) {
-        
-                                       
+
+
         // 1. Set the initializing values
         // 2. Event streaming
         // 3. Draw charts and panels 
         // 4. Stop and kill event
-        
+
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
@@ -266,13 +265,13 @@ EventHandlerController.controller('EventMainController',
                 //                {id: 0,coords: {latitude: 37.7749295,longitude: -122.4194155}},
                 if ($scope.tweet.geo_location != null) {
                     $scope.tweetGeoLocation = $scope.tweet.geo_location;
-//                    $scope.tweetGeoLocationMarkerID = $scope.markers.length;
-//                    $scope.markers.push({
-//                        id: 0,
-//                        coords: $scope.tweetGeoLocation
-//                    });
+                    //                    $scope.tweetGeoLocationMarkerID = $scope.markers.length;
+                    //                    $scope.markers.push({
+                    //                        id: 0,
+                    //                        coords: $scope.tweetGeoLocation
+                    //                    });
                     console.log($scope.tweet.geo_location);
-//                    console.log($scope.markers);
+                    //                    console.log($scope.markers);
                 }
                 // Update languages pie chart
                 $scope.languageName = languageCode.getLanguageName($scope.tweet.lang);
@@ -544,6 +543,56 @@ EventHandlerController.controller('EventMainController',
 
         $rootScope.getLanguagesStats();
         $scope.drawlanguagesPieChart();
+
+
+        // GET : 
+        $scope.getTopWords = function () {
+
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topWords';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {}).error(function () {
+                    console.log("#");
+                })
+        }
+        $scope.getTopWords();
+
+        // GET : 
+        $scope.topHashtags = [];
+        $scope.tagCloudColors = ["#0056bd", "#015bbb", "#015fb7", "#0465b6", "#066db2", "#0872ae", "#0872b0", "#0877ac", "#0b81a9"];
+        $scope.searchForHashtag = function (hashtagText) {
+            console.log(hashtagText);
+        }
+        $scope.getTopHashtags = function () {
+
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topHashtags';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    for (var i = 0; i < response.items.length; i++) {
+                        $scope.hashtagWeight = response.items[i].count;
+                        $scope.hashtagText = response.items[i].code;
+                        $scope.topHashtags.push({
+                            "text": $scope.hashtagText,
+                            "weight": $scope.hashtagWeight,
+                            "handlers": {
+                                click: function () {
+                                    console.log($scope.hashtagText);
+                                }
+                            }
+                        });
+                    }
+                console.log($scope.topHashtags);
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+        $scope.getTopHashtags();
+
 
         $scope.pagesShown = 1;
         $scope.pageSize = 10;

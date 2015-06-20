@@ -27,6 +27,8 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'wu.masonry',
     'angular-images-loaded',
     
+    'angular-jqcloud',
+//    'd3',
     'angularMoment',
     'infinite-scroll',
     'ngFx',

@@ -3,16 +3,35 @@
 <!-- END OF / Header -->
   
    <div class="flexbox tilesWall">
-    <div class="event-box shading">
+    
+    <div class="event-box shading" ng-repeat="event in serverEvents">
        <a href="http://www.google.com" class="full-box-link"></a>
-        <div class="mediaBox"><img src="assets/images/photo-5.jpeg" alt="" class="img-responsive">
+        <div class="mediaBox"><img ng-src="{{event.mediaUrl}}" alt="" class="img-responsive">
         </div>
         <header>
-            <h2><a href="#">#AyuntamientosARV</a></h2>
-            <p class="meta">since 3 hours ago</p>
+            <h2><a href="#">#{{event.hashTags}}</a></h2>
+            <p am-time-ago="event.startTime" class="meta"></p>
             <h3 class="created-by"><img src="assets/images/users/f-1.jpg" alt="" class="img-circle"><a href="#">@Masters</a></h3>
         </header>
     </div>
+    
+    <div class="event-box search-box tile">
+        <div class="search-homepage">
+            <div class="start-event">
+                <input type="search" id="eventHashtag"  focus-me="shouldBeOpen" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startNewEvent()">
+                <button class="btn btn-search" type="button" ng-click="startNewEvent()">
+                    <i class="fa fa-search fa-2x"></i>
+                </button>
+                <div class="spinner">
+                    <div class="double-bounce1"></div>
+                    <div class="double-bounce2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+<!--
     <div class="event-box shading">
        <a href="http://www.google.com" class="full-box-link"></a>
         <div class="mediaBox"><img src="assets/images/photo-4.jpeg" alt="" class="img-responsive">
@@ -55,7 +74,10 @@
             <h3 class="created-by"><img src="assets/images/users/f-6.jpg" alt="" class="img-circle"><a href="#">@1DsUniverse</a></h3>
         </header>
     </div>
-    <div class="event-box search-box tile">
+-->
+    
+<!--
+    <div class="event-box search-box tile" ng-if="$index==2">
         <div class="search-homepage">
             <div class="start-event">
                 <input type="search" id="eventHashtag"  focus-me="shouldBeOpen" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startNewEvent()">
@@ -69,6 +91,9 @@
             </div>
         </div>
     </div>
+-->
+    
+<!--
     <div class="event-box shading">
        <a href="http://www.google.com" class="full-box-link"></a>
         <div class="mediaBox"><img src="assets/images/photo-4.jpeg" alt="" class="img-responsive">
@@ -125,6 +150,7 @@
         </header>
 
     </div>
+-->
 </div>
 
 <!-- Footer -->
