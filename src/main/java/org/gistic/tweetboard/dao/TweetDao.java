@@ -140,4 +140,8 @@ public interface TweetDao {
     void incrWordCounter(String uuid, String word);
 
     void setMediaUrl(String uuid, String mediaURLHttps);
+
+    String[] getTrendingHashtags();
+
+    void setTrendindHashtags(String[] hashtags);
 }

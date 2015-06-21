@@ -29,6 +29,8 @@ public class TweetDaoImpl implements TweetDao {
     public static final String TWEET_META_DATE_KEY = "CreationDate";
     public static final String TWEET_META_RETWEETS_COUNT_KEY = "RetweetsCount";
     private static final String PLACEHOLDER_MEDIA_URL_KEY = "PlaceholderMedia";
+    private static final String TRENDS_KEY = "TrendsKey";
+    private static final int DEFAULT_TRENDS_CACHE_DURATION = 60 * 5;
     //private Jedis jedis;
     final String All_EVENTS_KEY = "event";
     final String BG_COLOR_KEY = "banckGroundColor";
@@ -702,6 +704,27 @@ public class TweetDaoImpl implements TweetDao {
             jE.printStackTrace();
         }
 
+    }
+
+    @Override
+    public String[] getTrendingHashtags() {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            List<String> hashtags = jedis.lrange(TRENDS_KEY, 0, -1);
+            return (hashtags == null || hashtags.isEmpty()) ? null : hashtags.toArray(new String[]{});
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void setTrendindHashtags(String[] hashtags) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.rpush(TRENDS_KEY, hashtags);
+            jedis.expire(TRENDS_KEY, DEFAULT_TRENDS_CACHE_DURATION);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
     }
 
     @Override
