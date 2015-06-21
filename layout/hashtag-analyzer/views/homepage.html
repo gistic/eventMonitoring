@@ -5,13 +5,17 @@
    <div class="flexbox tilesWall">
     
     <div class="event-box shading" ng-repeat="event in serverEvents">
-       <a href="http://www.google.com" class="full-box-link"></a>
-        <div class="mediaBox"><img ng-src="{{event.mediaUrl}}" alt="" class="img-responsive">
+       <a ng-click="createEventFromTrending(event.hashTags)" class="full-box-link"></a>
+        <div class="mediaBox">
+            <img ng-src="{{event.mediaUrl}}" alt="" class="img-responsive">
         </div>
         <header>
             <h2><a href="#">#{{event.hashTags}}</a></h2>
             <p am-time-ago="event.startTime" class="meta"></p>
-            <h3 class="created-by"><img src="assets/images/users/f-1.jpg" alt="" class="img-circle"><a href="#">@Masters</a></h3>
+            <h3 class="created-by">
+                <img src="assets/images/users/f-1.jpg" alt="{{event.hashTags}}" class="img-circle">
+                <a href="#">@Masters</a>
+            </h3>
         </header>
     </div>
     
