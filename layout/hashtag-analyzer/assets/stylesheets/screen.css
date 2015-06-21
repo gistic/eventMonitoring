@@ -18784,13 +18784,6 @@ a:hover, a:focus {
   box-shadow: none;
 }
 
-/* line 25, ../sass/_/_configs/_utilities.scss */
-img {
-  opacity: 0.9;
-  filter: alpha(opacity=90);
-  -webkit-filter: brightness(9.9);
-}
-
 /* line 1, ../sass/_/_atoms/_buttons.scss */
 .btn {
   border: none;

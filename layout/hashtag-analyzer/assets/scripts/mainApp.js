@@ -21,14 +21,14 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'iso-3166-country-codes',
     'iso-language-codes',
     'googlechart',
-    'ngMap',
+    'uiGmapgoogle-maps',
+//    'ngMap',
     'bootstrapLightbox',
     
     'wu.masonry',
     'angular-images-loaded',
     
     'angular-jqcloud',
-//    'd3',
     'angularMoment',
     'infinite-scroll',
     'ngFx',

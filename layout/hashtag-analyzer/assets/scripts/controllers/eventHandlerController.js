@@ -23,10 +23,28 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                    function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, utils, languageCode) {
 
 
+
         // 1. Set the initializing values
         // 2. Event streaming
         // 3. Draw charts and panels 
         // 4. Stop and kill event
+
+
+        // DRAW MAP
+        $scope.drawGoogleMap = function () {
+            $scope.map = {
+                center: {
+                    latitude: 40.1451,
+                    longitude: -99.6680
+                },
+                zoom: 3,
+                bounds: {}
+            };
+            $scope.options = {
+                scrollwheel: false
+            };
+        }
+        $scope.drawGoogleMap();
 
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
@@ -250,6 +268,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             })
 
         // Listen to new message
+        $scope.tweetsLocation = [];
+                                       
         $scope.startEventSource = function () {
 
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
@@ -260,19 +280,23 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                 $scope.tweet = JSON.parse(response.data);
                 //                console.log($scope.tweet);
-                //                                console.log($scope.tweet.geo_location);
-                //                                console.log($scope.tweet.place);
+                //                                                console.log($scope.tweet.geo_location);
+                //                                                console.log($scope.tweet.place);
                 //                {id: 0,coords: {latitude: 37.7749295,longitude: -122.4194155}},
+                
                 if ($scope.tweet.geo_location != null) {
                     $scope.tweetGeoLocation = $scope.tweet.geo_location;
-                    //                    $scope.tweetGeoLocationMarkerID = $scope.markers.length;
-                    //                    $scope.markers.push({
-                    //                        id: 0,
-                    //                        coords: $scope.tweetGeoLocation
-                    //                    });
-                    console.log($scope.tweet.geo_location);
-                    //                    console.log($scope.markers);
+                    $scope.tweetGeoLocationMarkerID = $scope.tweetsLocation.length;
+                    
+                    $scope.tweetsLocation.push({
+                        id: $scope.tweetGeoLocationMarkerID,
+                        coords: $scope.tweetGeoLocation
+                    });
+//                    console.log($scope.tweetsLocation.length);
+//                    console.log($scope.tweet.geo_location);
+                    console.log($scope.tweetsLocation);
                 }
+
                 // Update languages pie chart
                 $scope.languageName = languageCode.getLanguageName($scope.tweet.lang);
                 var languageUpdated = false;
@@ -561,10 +585,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
         // GET : 
         $scope.topHashtags = [];
-        $scope.tagCloudColors = ["#0056bd", "#015bbb", "#015fb7", "#0465b6", "#066db2", "#0872ae", "#0872b0", "#0877ac", "#0b81a9"];
-        $scope.searchForHashtag = function (hashtagText) {
-            console.log(hashtagText);
-        }
+        $scope.tagCloudColors = ['rgb(222,235,247)', 'rgb(158,202,225)', 'rgb(49,130,189)'];
+
         $scope.getTopHashtags = function () {
 
             var requestAction = "GET";
@@ -579,14 +601,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                         $scope.topHashtags.push({
                             "text": $scope.hashtagText,
                             "weight": $scope.hashtagWeight,
-                            "handlers": {
-                                click: function () {
-                                    console.log($scope.hashtagText);
-                                }
-                            }
+                            "link": $rootScope.twitterBaseUrl + "search?q=" + $scope.hashtagText
                         });
                     }
-                console.log($scope.topHashtags);
                 }).error(function () {
                     console.log("#");
                 })
