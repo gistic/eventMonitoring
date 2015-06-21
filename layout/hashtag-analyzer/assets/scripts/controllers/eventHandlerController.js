@@ -279,23 +279,26 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             source.addEventListener('approved-tweets', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
+                $scope.tweetID = $scope.tweet.id_str;
+                console.log($scope.tweetID);
+                
                 //                console.log($scope.tweet);
                 //                                                console.log($scope.tweet.geo_location);
                 //                                                console.log($scope.tweet.place);
                 //                {id: 0,coords: {latitude: 37.7749295,longitude: -122.4194155}},
                 
-                if ($scope.tweet.geo_location != null) {
-                    $scope.tweetGeoLocation = $scope.tweet.geo_location;
-                    $scope.tweetGeoLocationMarkerID = $scope.tweetsLocation.length;
-                    
-                    $scope.tweetsLocation.push({
-                        id: $scope.tweetGeoLocationMarkerID,
-                        coords: $scope.tweetGeoLocation
-                    });
-//                    console.log($scope.tweetsLocation.length);
-//                    console.log($scope.tweet.geo_location);
-                    console.log($scope.tweetsLocation);
-                }
+//                if ($scope.tweet.geo_location != null) {
+//                    $scope.tweetGeoLocation = $scope.tweet.geo_location;
+//                    $scope.tweetGeoLocationMarkerID = $scope.tweetsLocation.length;
+//                    
+//                    $scope.tweetsLocation.push({
+//                        id: $scope.tweetGeoLocationMarkerID,
+//                        coords: $scope.tweetGeoLocation
+//                    });
+////                    console.log($scope.tweetsLocation.length);
+////                    console.log($scope.tweet.geo_location);
+//                    console.log($scope.tweetsLocation);
+//                }
 
                 // Update languages pie chart
                 $scope.languageName = languageCode.getLanguageName($scope.tweet.lang);

@@ -1,5 +1,6 @@
 <article class="media clearfix tweet fx-fade fx-speed-2000" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue track by $index" data-user-id="{{tweet.user.id_str}}">
-
+{{tweet.tweetID}}
+{{tweetID}}
     <div class="tweet-content">
         <div class="media-left">
             <img lazy-src="{{tweet.user.original_profile_image_urlhttps}}" on-error-src="{{defultImage}}" class="media-object user-img" />
@@ -28,13 +29,13 @@
     </div>
 
     <aside class="tweet-actions btn-group-vertical">
-        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id}}">
+        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id_str}}">
             <span class="fa fa-reply"></span>
         </a>
-        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id}}">
+        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id_str}}">
             <span class="fa fa-retweet"></span>
         </a>
-        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id}}">
+        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id_str}}">
             <span class="fa fa-star"></span>
         </a>
     </aside>

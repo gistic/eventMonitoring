@@ -11,10 +11,14 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$h
         RequestData.fetchData(requestAction, apiUrl, requestData)
             .then(function (response) {
                 $scope.serverEvents = response.data.data;
-                console.log($scope.serverEvents);
+                $scope.trendingHashtags = response.data.trendingHashtags;
+            
+                $scope.homepageEvents = $scope.serverEvents.concat($scope.trendingHashtags);
             })
     }
     $scope.getTrendingEvents();
+    
+//    $scope.createEventFromTrending = function () {}
 
 //    document.getElementById("eventHashtag").focus();
 
@@ -22,7 +26,6 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$h
         var apiUrl = '/api/twitterUsers' + '?authToken=' + $cookies.userAuthentication;
         var requestAction = "GET";
         var requestData = "";
-
         RequestData.fetchData(requestAction, apiUrl, requestData)
             .success(function (response) {
                 $scope.startServerEvent();

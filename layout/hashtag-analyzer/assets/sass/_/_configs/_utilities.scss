@@ -4,25 +4,28 @@ body {
 }
 
 a {
-	color: $blue;
-	&:hover, &:focus {
-		color:darken($blue, 20%);
-		outline: 0;
+    color: $blue;
+    &:hover, &:focus {
+        color: darken($blue, 20%);
+        outline: 0;
         text-decoration: none;
-	}
+    }
+}
+
+a[ng-click] {
+    cursor: pointer;
 }
 
 .form-control {
-	&:hover,
-	&:focus {
-		outline: 0;
-		border-color: transparent;
-		box-shadow: none;
-	}
+    &:hover, &:focus {
+        outline: 0;
+        border-color: transparent;
+        box-shadow: none;
+    }
 }
 
 // TODO : Remove this for production
 img {
-//    @include opacity(0.9);
-//    -webkit-filter: brightness(9.9);
+    //    @include opacity(0.9);
+    //    -webkit-filter: brightness(9.9);
 }
