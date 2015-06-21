@@ -4,20 +4,22 @@ package org.gistic.tweetboard.representations;
  * Created by osama-hussain on 4/29/15.
  */
 public class EventMetaList {
+    private BasicStats[] basicStats;
     private EventMeta[] data;
     private String[] trendingHashtags;
 
-    public EventMetaList(EventMeta[] data) {
-        this.data = data;
+    public EventMetaList(BasicStats[] data, EventMeta[] metaArray) {
+        this.basicStats = data;
+        this.data = metaArray;
     }
 
-    public EventMeta[] getData() {
+    public BasicStats[] getBasicStats() {
 
-        return data;
+        return basicStats;
     }
 
-    public void setData(EventMeta[] data) {
-        this.data = data;
+    public void setBasicStats(BasicStats[] data) {
+        this.basicStats = data;
     }
 
     public void setTrendingHashtags(String[] trendingHashtags) {
@@ -26,5 +28,13 @@ public class EventMetaList {
 
     public String[] getTrendingHashtags() {
         return trendingHashtags;
+    }
+
+    public EventMeta[] getData() {
+        return data;
+    }
+
+    public void setData(EventMeta[] metaArray) {
+        this.data = metaArray;
     }
 }

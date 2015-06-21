@@ -15,10 +15,13 @@ import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcasterSingleton;
 import org.gistic.tweetboard.util.Misc;
+import org.json.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
 import twitter4j.*;
+import twitter4j.JSONException;
+import twitter4j.JSONObject;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -386,6 +389,11 @@ public class TweetDataLogic {
         List<String> cachedStatuses = new ArrayList<>();
         for (String tweetId : tweetIds) {
             String tweetString = tweetDao.getTweetStringsCache(uuid, tweetId);
+            org.json.JSONObject json = new org.json.JSONObject(tweetString);
+            long id = json.getLong("id");
+            String idAsString = String.valueOf(id);
+            json.put("id_str", idAsString);
+            tweetString = json.toString();
 //            try {
                 //Status status = TwitterObjectFactory.createStatus(tweetString);
                 cachedStatuses.add(tweetString);
