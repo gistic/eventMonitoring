@@ -4,6 +4,7 @@ import io.dropwizard.auth.Auth;
 import org.gistic.tweetboard.DelayedJobsManager;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
+import org.gistic.tweetboard.datalogic.MetaDataLogic;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.*;
 import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
@@ -378,7 +379,7 @@ public class EventsResource {
     @Path("/superAdmin/")
     public EventMetaList getSuperAdmin() {
         TweetDao dao = new TweetDaoImpl();
-        return dao.getEventMetaList();
+        return new MetaDataLogic(dao).getAllEventsInfo();
     }
 
     @GET
