@@ -343,7 +343,11 @@ public class TweetDaoImpl implements TweetDao {
                     )
                     .collect(Collectors.toList());
             EventMeta[] metaArray = metaList.stream().toArray(EventMeta[]::new);
-            return new EventMetaList(metaArray);
+            BasicStats[] eventStatsArray = new BasicStats[metaArray.length];
+            for (int i = 0 ; i < metaArray.length ; i++) {
+                eventStatsArray[i] = getBasicStats(metaArray[i].getUuid());
+            }
+            return new EventMetaList(eventStatsArray, metaArray);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
