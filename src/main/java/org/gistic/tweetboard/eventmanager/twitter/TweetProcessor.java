@@ -114,12 +114,14 @@ public class TweetProcessor {
         if (tweet.isPossiblySensitive()) return;
 
         String text = tweet.getText();
-
-        Pattern pattern = Pattern.compile("\\w+");
+        text = text.replaceAll("((https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|])", "");
+        Pattern pattern = Pattern.compile("(\\b(?<!#|http)\\w+)");
+//         pattern.toString();
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
-            if (Misc.isBadWord(matcher.group())) return;
-            String word = matcher.group();
+            String word = matcher.group().toLowerCase();
+            if (Misc.isBadWord(word)) return;
+            if (Misc.isCommon(word)) return;
             tweetDataLogic.incrWordCounter(word);
 //            if ( word.startsWith("#") ) {
 //                LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ word);
@@ -133,7 +135,6 @@ public class TweetProcessor {
         HashtagEntity[] hashtagEntities = tweet.getHashtagEntities();
         for ( HashtagEntity entity : hashtagEntities ) {
             String hashtag = entity.getText();
-            LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ hashtag);
             tweetDataLogic.incrHashtagCounter(hashtag);
         }
 
