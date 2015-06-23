@@ -1,3 +1,24 @@
+//.angular-google-map-container {
+//    height: 600px;
+//}
+
+#map_canvas {
+    @include size(100%);
+    margin: 0px;
+    position: relative;
+}
+
 .angular-google-map-container {
-    height: 600px;
+    position: absolute;
+    top: 47px;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.tweet-marker {
+    width: 200px;
+    img {
+        @include size(48px);
+    }
 }

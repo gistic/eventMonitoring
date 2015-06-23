@@ -19443,13 +19443,6 @@ a[ng-click] {
   box-shadow: none;
 }
 
-/* line 28, ../sass/_/_configs/_utilities.scss */
-img {
-  opacity: 0.9;
-  filter: alpha(opacity=90);
-  -webkit-filter: brightness(9.9);
-}
-
 /* line 1, ../sass/_/_atoms/_buttons.scss */
 .btn {
   border: none;
@@ -20462,9 +20455,31 @@ footer .social-links a:hover, footer .social-links a:focus {
   z-index: 999;
 }
 
-/* line 1, ../sass/_/_modules/_maps.scss */
+/* line 5, ../sass/_/_modules/_maps.scss */
+#map_canvas {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  position: relative;
+}
+
+/* line 11, ../sass/_/_modules/_maps.scss */
 .angular-google-map-container {
-  height: 600px;
+  position: absolute;
+  top: 47px;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+/* line 19, ../sass/_/_modules/_maps.scss */
+.tweet-marker {
+  width: 200px;
+}
+/* line 21, ../sass/_/_modules/_maps.scss */
+.tweet-marker img {
+  width: 48px;
+  height: 48px;
 }
 
 /* line 2, ../sass/_/_modules/_popover.scss */

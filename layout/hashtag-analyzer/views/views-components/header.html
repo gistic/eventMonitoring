@@ -43,11 +43,10 @@
                 <li ng-show="dashboardState" class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.media')}">
                     <a ui-sref=".media">Media</a>
                 </li>
-                <!--
-                <li class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.map')}">
-                    <a ui-sref=".map">Map <small>(exp.)</small></a>
+                <li ng-show="dashboardState" class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.map')}">
+                    <a ui-sref=".map">Map</a>
                 </li>
--->
+
                 <li role="presentation" class="nav-user dropdown" ng-show="logedInUser">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
                         <img lazy-load ng-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}

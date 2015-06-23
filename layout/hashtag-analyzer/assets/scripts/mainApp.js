@@ -21,10 +21,11 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'iso-3166-country-codes',
     'iso-language-codes',
     'googlechart',
-    'uiGmapgoogle-maps',
-//    'ngMap',
     'bootstrapLightbox',
-
+    
+    // map
+    'uiGmapgoogle-maps',
+    
     'wu.masonry',
     'angular-images-loaded',
 
@@ -36,7 +37,7 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'me-lazyload'
 ]);
 
-// Run : Intliaize the event admin app with this values
+// Run : Intliaize the app with this values
 trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state) {
     $rootScope.appName = "Hashtag Analyser";
     $rootScope.appVersion = "V.1.0.0";
@@ -65,7 +66,6 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state) 
     if ($state.current.name == "") {
         $state.transitionTo('home');
     }
-    
     
     if ($cookies.userAuthentication == undefined) {
         $rootScope.logedInUser = false;

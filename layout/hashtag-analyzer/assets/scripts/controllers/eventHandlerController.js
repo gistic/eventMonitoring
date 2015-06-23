@@ -30,22 +30,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         // 4. Stop and kill event
 
 
-        // DRAW MAP
-        $scope.drawGoogleMap = function () {
-            $scope.map = {
-                center: {
-                    latitude: 40.1451,
-                    longitude: -99.6680
-                },
-                zoom: 3,
-                bounds: {}
-            };
-            $scope.options = {
-                scrollwheel: false
-            };
-        }
-        $scope.drawGoogleMap();
-
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
@@ -274,8 +258,32 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 }
             })
 
-        // Listen to new message
+        // DRAW MAP
         $scope.tweetsLocation = [];
+        $scope.map = {
+            center: {
+                latitude: 45,
+                longitude: -73
+            },
+            zoom: 2
+        };
+        $scope.mapOptions = {
+            scrollwheel: false
+        };
+
+        $scope.windowOptions = {
+            visible: false
+        };
+
+        $scope.onClick = function () {
+            $scope.windowOptions.visible = !$scope.windowOptions.visible;
+        };
+
+        $scope.closeClick = function () {
+            $scope.windowOptions.visible = false;
+        };
+
+        // Listen to new message
 
         $scope.startEventSource = function () {
 
@@ -288,23 +296,24 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 $scope.tweet = JSON.parse(response.data);
                 $scope.tweetID = $scope.tweet.id_str;
 
-                //                console.log($scope.tweet);
-                //                                                console.log($scope.tweet.geo_location);
-                //                                                console.log($scope.tweet.place);
-                //                {id: 0,coords: {latitude: 37.7749295,longitude: -122.4194155}},
+                if ($scope.tweet.geo_location != null) {
 
-                //                if ($scope.tweet.geo_location != null) {
-                //                    $scope.tweetGeoLocation = $scope.tweet.geo_location;
-                //                    $scope.tweetGeoLocationMarkerID = $scope.tweetsLocation.length;
-                //                    
-                //                    $scope.tweetsLocation.push({
-                //                        id: $scope.tweetGeoLocationMarkerID,
-                //                        coords: $scope.tweetGeoLocation
-                //                    });
-                ////                    console.log($scope.tweetsLocation.length);
-                ////                    console.log($scope.tweet.geo_location);
-                //                    console.log($scope.tweetsLocation);
-                //                }
+                    $scope.tweetGeoLocation = $scope.tweet.geo_location;
+                    $scope.tweetGeoLocationLatitude = $scope.tweet.geo_location.latitude;
+                    $scope.tweetGeoLocationLongitude = $scope.tweet.geo_location.longitude;
+                    $scope.tweetMarkerID = $scope.tweetsLocation.length;
+            
+                    $scope.tweetsLocation.push({
+                        id: $scope.tweetMarkerID,
+                        latitude: $scope.tweetGeoLocationLatitude,
+                        longitude: $scope.tweetGeoLocationLongitude,
+                        show: false,
+                        tweetText : $scope.tweet.text,
+                        tweetUser : $scope.tweet.user.screen_name,
+                        tweetUserPicture : $scope.tweet.user.original_profile_image_urlhttps
+                    });
+            
+                }
 
                 // Update languages pie chart
                 $scope.languageName = languageCode.getLanguageName($scope.tweet.lang);
