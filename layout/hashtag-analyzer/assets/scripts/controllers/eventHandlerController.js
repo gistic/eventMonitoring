@@ -90,7 +90,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                         $state.transitionTo('dashboard.liveStreaming', {
                                             uuid: $scope.eventID
                                         });
-                                        $scope.initData();
+                                        $scope.initDashboardData();
                                     })
                             }
                         };
@@ -158,6 +158,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 })
         };
 
+
         // GET : User data
         $scope.getUserData = function () {
             var apiUrl = '/api/twitterUsers' + '?authToken=' + $cookies.userAuthentication;
@@ -175,8 +176,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         };
 
         // Intialize
-        $scope.initData = function () {
+
+        $scope.initDashboardData = function () {
             $(".loading").show();
+            if ($cookies.userAuthentication == undefined) {
+                $scope.logedInUser = false;
+            } else {
+                $scope.logedInUser = true;
+            }
             $scope.getWarmupData();
             $scope.getViewOptions();
             $scope.getEventStats();
@@ -269,7 +276,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
         // Listen to new message
         $scope.tweetsLocation = [];
-                                       
+
         $scope.startEventSource = function () {
 
             $scope.eventSourceUrl = $rootScope.baseUrl + "/api/liveTweets?uuid=" + $rootScope.eventID;
@@ -280,25 +287,24 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                 $scope.tweet = JSON.parse(response.data);
                 $scope.tweetID = $scope.tweet.id_str;
-                console.log($scope.tweetID);
-                
+
                 //                console.log($scope.tweet);
                 //                                                console.log($scope.tweet.geo_location);
                 //                                                console.log($scope.tweet.place);
                 //                {id: 0,coords: {latitude: 37.7749295,longitude: -122.4194155}},
-                
-//                if ($scope.tweet.geo_location != null) {
-//                    $scope.tweetGeoLocation = $scope.tweet.geo_location;
-//                    $scope.tweetGeoLocationMarkerID = $scope.tweetsLocation.length;
-//                    
-//                    $scope.tweetsLocation.push({
-//                        id: $scope.tweetGeoLocationMarkerID,
-//                        coords: $scope.tweetGeoLocation
-//                    });
-////                    console.log($scope.tweetsLocation.length);
-////                    console.log($scope.tweet.geo_location);
-//                    console.log($scope.tweetsLocation);
-//                }
+
+                //                if ($scope.tweet.geo_location != null) {
+                //                    $scope.tweetGeoLocation = $scope.tweet.geo_location;
+                //                    $scope.tweetGeoLocationMarkerID = $scope.tweetsLocation.length;
+                //                    
+                //                    $scope.tweetsLocation.push({
+                //                        id: $scope.tweetGeoLocationMarkerID,
+                //                        coords: $scope.tweetGeoLocation
+                //                    });
+                ////                    console.log($scope.tweetsLocation.length);
+                ////                    console.log($scope.tweet.geo_location);
+                //                    console.log($scope.tweetsLocation);
+                //                }
 
                 // Update languages pie chart
                 $scope.languageName = languageCode.getLanguageName($scope.tweet.lang);
@@ -829,7 +835,11 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                             text: ''
                         },
                         labels: {
-                            enabled: false
+                            enabled: true,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '10px Trebuchet MS, Verdana, sans-serif'
+                            }
                         },
                         tickWidth: 0,
                         gridLineWidth: 1,

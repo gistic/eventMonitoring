@@ -87,7 +87,6 @@ angular.module('iso-language-codes', [])
             'ja': 'Japanese',
             'ji': 'Yiddish',
             'ko': 'Korean',
-            'ko': 'Korean (Johab)',
             'ku': 'Kurdish',
             'lt': 'Lithuanian',
             'lv': 'Latvian',

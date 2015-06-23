@@ -34,21 +34,21 @@
             </ul>
         </div>
 
-        <div ng-show="dashboardState" class="navs pull-right clearfix">
+        <div class="navs pull-right clearfix">
 
             <ul class="list-inline dashboard-nav pull-left">
-                <li class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.liveStreaming')}">
+                <li ng-show="dashboardState" class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.liveStreaming')}">
                     <a ui-sref=".liveStreaming">Tweets</a>
                 </li>
-                <li class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.media')}">
+                <li ng-show="dashboardState" class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.media')}">
                     <a ui-sref=".media">Media</a>
                 </li>
-<!--
+                <!--
                 <li class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.map')}">
                     <a ui-sref=".map">Map <small>(exp.)</small></a>
                 </li>
 -->
-                <li role="presentation" class="nav-user dropdown">
+                <li role="presentation" class="nav-user dropdown" ng-show="logedInUser">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
                         <img lazy-load ng-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}
                         <span class="caret"></span>
@@ -61,6 +61,12 @@
                             <a ng-click="logOutUser()">Logout</a>
                         </li>
                     </ul>
+                </li>
+
+                <li>
+                    <a ng-click="getTwitterAuth()" ng-hide="logedInUser" class="btn btn-block btn-social btn-twitter">
+                        <i class="fa fa-twitter"></i> Sign in with Twitter
+                    </a>
                 </li>
             </ul>
 

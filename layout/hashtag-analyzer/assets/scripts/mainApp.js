@@ -4,18 +4,18 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'ngSanitize', // AngularjS main dependencies
     'ngCookies',
     'ngAnimate',
-    
+
     'ui.bootstrap',
     'ui.router',
 
     'myAppDirectives', // Custome application dependencies [Directives - Filters - Services]
     'myAppFilters',
     'myAppServices',
-    
-    'superAdminController',  // Custome application dependencies [Controllers]
+
+    'superAdminController', // Custome application dependencies [Controllers]
     'StartNewEvent',
     'EventHandlerController',
-    
+
     'highcharts-ng',
     'oitozero.ngSweetAlert',
     'iso-3166-country-codes',
@@ -24,10 +24,10 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'uiGmapgoogle-maps',
 //    'ngMap',
     'bootstrapLightbox',
-    
+
     'wu.masonry',
     'angular-images-loaded',
-    
+
     'angular-jqcloud',
     'angularMoment',
     'infinite-scroll',
@@ -37,7 +37,7 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
 ]);
 
 // Run : Intliaize the event admin app with this values
-trackHashtagApp.run(function ($window, $location, $rootScope, $cookies) {
+trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state) {
     $rootScope.appName = "Hashtag Analyser";
     $rootScope.appVersion = "V.1.0.0";
     $rootScope.socialLink = [{
@@ -61,6 +61,17 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies) {
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
     $rootScope.eventID = $location.search().uuid;
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
+    
+    if ($state.current.name == "") {
+        $state.transitionTo('home');
+    }
+    
+    
+    if ($cookies.userAuthentication == undefined) {
+        $rootScope.logedInUser = false;
+    } else {
+        $rootScope.logedInUser = true;
+    }
 })
 
 // Config : Media lightbox configurations
@@ -86,7 +97,7 @@ trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
     window.routes = {
         "home": {
             url: '',
-            templateUrl: 'views/homepage.html',
+            templateUrl: 'views/index.html',
             controller: 'StartNewEventController'
         },
         "dashboard": {
@@ -118,6 +129,6 @@ trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider.state(path, window.routes[path]);
     }
 
-    $urlRouterProvider.otherwise('');
+    $urlRouterProvider.otherwise('/');
 
 });
