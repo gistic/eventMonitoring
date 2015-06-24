@@ -25,7 +25,7 @@ public interface TweetDao {
     //void insetIn
     void addNewEventToList(String uuid);
 
-    void setDefaultEventProperties(String uuid, String[] hashTags);
+    void setDefaultEventProperties(String uuid, String[] hashTags, String accessToken);
 
     void addToArrived(String uuid, Status tweet, String statusString);
 
@@ -151,7 +151,7 @@ public interface TweetDao {
 
     EventMeta getEventMeta(String uuid);
 
-    void storeEventInUserHistory(String hashtags, String startTime, String screenName, String profileImgUrl, long noOfTweets, long noOfRetweets, String uuid, String authToken);
+    void storeEventInUserHistory(String hashtags, String startTime, String screenName, String profileImgUrl, long noOfTweets, long noOfRetweets, String uuid, String authToken, String mediaUrl);
 
     List<String> getHistoricUserEventIds(String authToken);
 

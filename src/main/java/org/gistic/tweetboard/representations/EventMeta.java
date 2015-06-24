@@ -8,6 +8,17 @@ public class EventMeta {
     private String startTime;
     private String hashTags;
     private String mediaUrl;
+    private String accessToken;
+    private String screenName;
+    private String prfoileImageUrl;
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
     public String getHashTags() {
         return hashTags;
@@ -17,11 +28,12 @@ public class EventMeta {
         this.hashTags = hashTags;
     }
 
-    public EventMeta(String uuid, String startTime, String hashTags, String mediaUrl) {
+    public EventMeta(String uuid, String startTime, String hashTags, String mediaUrl, String accessToken) {
         this.uuid = uuid;
         this.startTime = startTime;
         this.hashTags = hashTags;
         this.mediaUrl = mediaUrl;
+        this.accessToken = accessToken;
     }
 
     public String getUuid() {
@@ -46,5 +58,21 @@ public class EventMeta {
 
     public void setMediaUrl(String mediaUrl) {
         this.mediaUrl = mediaUrl;
+    }
+
+    public void setScreenName(String screenName) {
+        this.screenName = screenName;
+    }
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public void setPrfoileImageUrl(String prfoileImageUrl) {
+        this.prfoileImageUrl = prfoileImageUrl;
+    }
+
+    public String getPrfoileImageUrl() {
+        return prfoileImageUrl;
     }
 }

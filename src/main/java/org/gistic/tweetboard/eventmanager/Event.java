@@ -74,7 +74,7 @@ public class Event {
 
 
 
-        tweetDataLogic.createNewEvent(hashTags);
+        tweetDataLogic.createNewEvent(hashTags, accessToken);
         if (v2) tweetDataLogic.addToUserEvents(uuid, authCode);
     }
 
