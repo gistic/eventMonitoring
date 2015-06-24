@@ -43,7 +43,7 @@ public class Event {
     private volatile boolean running = true;
     //private TwitterService twitterService;
 
-    public Event(String uuid, String[] hashTags, TweetDataLogic tweetDataLogic, boolean v2, String accessToken, TwitterServiceManagerV2 twitterServiceManagerV2) {
+    public Event(String uuid, String[] hashTags, TweetDataLogic tweetDataLogic, boolean v2, String accessToken, TwitterServiceManagerV2 twitterServiceManagerV2, String authCode) {
         this.v2 = v2;
         this.uuid = uuid;
         this.hashTags = hashTags;
@@ -75,13 +75,14 @@ public class Event {
 
 
         tweetDataLogic.createNewEvent(hashTags);
+        if (v2) tweetDataLogic.addToUserEvents(uuid, authCode);
     }
 
     public Event(String uuid, String[] hashTags, TweetDataLogic tweetDataLogic) {
-        this(uuid, hashTags, tweetDataLogic, false, null, null); //v2 flag set to false by default for eventmonitoring v1
+        this(uuid, hashTags, tweetDataLogic, false, null, null, null); //v2 flag set to false by default for eventmonitoring v1
     }
 
-    public void delete() {
+    public void delete(String authToken) {
         try {
             running = false;
             if (v2) {
@@ -95,7 +96,7 @@ public class Event {
             e.printStackTrace();
             //TODO: throw
         }
-        tweetDataLogic.deleteEvent();
+        tweetDataLogic.deleteEvent(authToken);
     }
 
     public InternalStatus getOldestTweetNotSentForApproval() {

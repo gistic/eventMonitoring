@@ -1,13 +1,19 @@
 package org.gistic.tweetboard.datalogic;
 
 import org.gistic.tweetboard.ConfigurationSingleton;
-import org.gistic.tweetboard.TweetBoardConfiguration;
 import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.dao.TweetDao;
+import org.gistic.tweetboard.representations.EventMeta;
 import org.gistic.tweetboard.representations.EventMetaList;
+import org.gistic.tweetboard.representations.EventsList;
+import org.gistic.tweetboard.representations.HistoricUserEvent;
+import org.gistic.tweetboard.security.*;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by osama-hussain on 6/21/15.
@@ -21,6 +27,12 @@ public class MetaDataLogic {
 
     public EventMetaList getAllEventsInfo() {
         EventMetaList eventMetaList = dao.getEventMetaList();
+        String[] hashtags = updateAndSetTrendingHashtags();
+        eventMetaList.setTrendingHashtags(hashtags);
+        return eventMetaList;
+    }
+
+    private String[] updateAndSetTrendingHashtags() {
         String[] hashtags = dao.getTrendingHashtags();
         if (hashtags == null) {
             TwitterConfiguration config = ConfigurationSingleton.getInstance().getTwitterConfiguration();
@@ -45,7 +57,54 @@ public class MetaDataLogic {
                 e.printStackTrace();
             }
         }
-        eventMetaList.setTrendingHashtags(hashtags);
-        return eventMetaList;
+        return hashtags;
+    }
+
+    public EventsList getRunningEventsList(String authToken) {
+        EventMetaList allEvents = getAllEventsInfo();
+        String[] trendingHashtags = updateAndSetTrendingHashtags();
+        EventMeta[] eventMetaList = allEvents.getData();
+        List<String> userEventIds = new ArrayList<>();
+        List<EventMeta> runningServerEvents = new ArrayList<>();
+        List<EventMeta> runningUserEvents = new ArrayList<>();
+        List<String> historicUserEventIds = new ArrayList<>();
+        List<HistoricUserEvent> historicUserEvents = new ArrayList<>();
+        if (authToken != null) {
+            userEventIds = dao.getUserEventsList(authToken);
+            historicUserEventIds = dao.getHistoricUserEventIds(authToken);
+        }
+        for (EventMeta event : eventMetaList) {
+            String uuid = event.getUuid();
+            EventMeta eventMeta = dao.getEventMeta(uuid);
+            if (userEventIds.contains(uuid)) {
+                runningUserEvents.add(eventMeta);
+            } else {
+                runningServerEvents.add(eventMeta);
+            }
+        }
+        for (String historicUserEventId : historicUserEventIds) {
+            historicUserEvents.add( dao.getHistoricUserEvent(historicUserEventId) );
+        }
+        EventsList eventsList = new EventsList();
+        eventsList.setRunningServerEvents(runningServerEvents);
+        eventsList.setRunningUserEvents(runningUserEvents);
+        eventsList.setTrendingHashtags(trendingHashtags);
+        eventsList.setHistoricUserEvents(historicUserEvents);
+        return eventsList;
+    }
+
+    public void storeEventDetailsInHistory(String uuid, org.gistic.tweetboard.security.User user) {
+        // TODO finish implementation
+        EventMeta eventMeta = dao.getEventMeta(uuid);
+        if (user != null && !user.isNoUser() && user.getAccessToken() != null) {
+            List<String> userEventIds = dao.getUserEventsList(user.getAccessToken());
+            if (userEventIds.contains(uuid)) {
+                //store in user historic events
+            }
+        } else {
+            //store in server historic events
+            //dao.addToServerHistoricEvents(eventMeta);
+        }
+
     }
 }

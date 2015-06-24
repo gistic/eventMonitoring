@@ -1,15 +1,12 @@
 package org.gistic.tweetboard.eventmanager;
 
-import com.bendb.dropwizard.redis.JedisFactory;
 import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.twitter.LiveStreamMetadataThread;
 import org.gistic.tweetboard.eventmanager.twitter.TwitterServiceManagerV2;
-import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by sohussain on 4/7/15.
@@ -34,11 +31,10 @@ public class EventMap {
         if (twitterServiceManagerV2 == null) twitterServiceManagerV2 = new TwitterServiceManagerV2(twitterConfiguration);
         Event event = userEvents.get(accessToken);
         if (event != null) {
-            //todo implement user event delete logic
-            event.delete();
+            event.delete(accessToken);
             allEvents.remove(event.getUuid());
         }
-        event =  new Event(uuid, hashTags, tweetDataLogic, true, accessToken, twitterServiceManagerV2);
+        event =  new Event(uuid, hashTags, tweetDataLogic, true, accessToken, twitterServiceManagerV2, accessToken);
         allEvents.put(uuid, event);
         userEvents.put(accessToken, event);
         ExecutorSingleton.getInstance().submit(new LiveStreamMetadataThread(event));
@@ -48,12 +44,16 @@ public class EventMap {
         return allEvents.get(uuid);
     }
 
-    public static void delete(String uuid) {
+    public static void delete(String uuid, String authToken) {
         Event e = allEvents.get(uuid);
         allEvents.remove(uuid);
-         if (userEvents.containsValue(e)) {
-             userEvents.remove(e.getUuid());
-         }
-        e.delete();
+        if (userEvents.containsValue(e)) {
+            userEvents.remove(authToken);
+        }
+        e.delete(authToken);
+    }
+
+    public static void delete(String uuid) {
+        delete(uuid, null);
     }
 }
