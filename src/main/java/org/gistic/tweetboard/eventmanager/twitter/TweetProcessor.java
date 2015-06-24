@@ -114,6 +114,7 @@ public class TweetProcessor {
         if (tweet.isPossiblySensitive()) return;
 
         String text = tweet.getText();
+
         text = text.replaceAll("((https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|])", "");
         Pattern pattern = Pattern.compile("(\\b(?<!#|http)\\w+)");
 //         pattern.toString();
