@@ -11,13 +11,13 @@
             <img ng-src="{{event.mediaUrl || mediaUrl}}" class="img-responsive">
         </div>
         <header>
-            <h2><a href="#">#{{event.hashTags || event.hashtags}}</a></h2>
+            <h2><a href="#">#{{event.hashtags || event.hashtags}}</a></h2>
             <p class="meta">{{event.noOfTweets}} Tweets</p>
             <p am-time-ago="event.startTime" class="meta"></p>
 
             
             <h3 class="created-by">
-                <img ng-src="{{event.profileImgUrl || event.prfoileImageUrl}}" alt="{{event.hashTags}}" class="img-circle">
+                <img ng-src="{{event.profileImageUrl || event.prfoileImageUrl}}" alt="{{event.hashTags}}" class="img-circle">
                 <a href="#">@{{event.screenName}}</a>
             </h3>
 

@@ -37,30 +37,28 @@ StartNewEvent.controller('StartNewEventController', [
                     // Running User Events
                     $scope.runningUserEvents = response.data.runningUserEvents;
 
-//                    for (var i = 0; i < $scope.runningUserEvents.length; i++) {
-//                        var eventHashtag = $scope.runningUserEvents[i].hashTags;
-//                        $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
-//                        $scope.runningUserEvents[i].hashTags = $scope.serverEventHashtag;
-//                    }
+                    for (var i = 0; i < $scope.runningUserEvents.length; i++) {
+                        var eventHashtag = $scope.runningUserEvents[i].hashtags;
+                        $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
+                        $scope.runningUserEvents[i].hashtags = $scope.serverEventHashtag;
+                    }
 
                     // Historic User Events
                     $scope.historicUserEvents = response.data.historicUserEvents;
-//                    for (var i = 0; i < $scope.historicUserEvents.length; i++) {
-//                        var eventHashtag = $scope.historicUserEvents[i].hashtags;
-//                        if (eventHashtag != undefined) {
-//                            $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
-//                        }
-//                        $scope.historicUserEvents[i].hashTags = $scope.serverEventHashtag;
-//                    }
+                    for (var i = 0; i < $scope.historicUserEvents.length; i++) {
+                        var eventHashtag = $scope.historicUserEvents[i].hashtags;
+                        $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
+                        $scope.historicUserEvents[i].hashtags = $scope.serverEventHashtag;
+                    }
 
                     // Trending Events On Twitter
                     $scope.trendingHashtags = response.data.trendingHashtags;
-//                    for (var i = 0; i < $scope.trendingHashtags.length; i++) {
-//                        var eventHashtag = $scope.trendingHashtags[i];
-//                        $scope.trendingEventHashtag = eventHashtag.replace(/\#/g, '');
-//                        $scope.mediaUrl = $rootScope.defultImage;
-//                        $scope.trendingHashtags[i] = $scope.trendingEventHashtag;
-//                    }
+                    for (var i = 0; i < $scope.trendingHashtags.length; i++) {
+                        var eventHashtag = $scope.trendingHashtags[i];
+                        $scope.trendingEventHashtag = eventHashtag.replace(/\#/g, '');
+                        $scope.mediaUrl = $rootScope.defultImage;
+                        $scope.trendingHashtags[i] = $scope.trendingEventHashtag;
+                    }
 
                     $scope.homepageEvents = $scope.runningUserEvents.concat($scope.historicUserEvents, $scope.runningServerEvents);
 
