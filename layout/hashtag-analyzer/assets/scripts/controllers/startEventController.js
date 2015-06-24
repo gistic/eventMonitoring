@@ -23,18 +23,37 @@ StartNewEvent.controller('StartNewEventController', [
             User.getUserData();
         }
 
-        $scope.getTrendingEvents = function () {
+        $scope.getEvents = function () {
             var requestAction = "GET";
-            var apiUrl = '/api/events/superAdmin/';
-            var requestData = "";
+            var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
+            var requestData = ""
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
-                    $scope.serverEvents = response.data.data;
-                    for (var i = 0; i < $scope.serverEvents.length; i++) {
-                        var eventHashtag = $scope.serverEvents[i].hashTags;
+                    console.log(response.data);
+
+                    // Running Server Events
+                    $scope.runningServerEvents = response.data.runningServerEvents;
+
+                    // Running User Events
+                    $scope.runningUserEvents = response.data.runningUserEvents;
+
+                    for (var i = 0; i < $scope.runningUserEvents.length; i++) {
+                        var eventHashtag = $scope.runningUserEvents[i].hashTags;
                         $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
-                        $scope.serverEvents[i].hashTags = $scope.serverEventHashtag;
+                        $scope.runningUserEvents[i].hashTags = $scope.serverEventHashtag;
                     }
+
+                    // Historic User Events
+                    $scope.historicUserEvents = response.data.historicUserEvents;
+//                    for (var i = 0; i < $scope.historicUserEvents.length; i++) {
+//                        var eventHashtag = $scope.historicUserEvents[i].hashTags;
+//                        if (eventHashtag != undefined) {
+//                            $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
+//                        }
+//                        $scope.historicUserEvents[i].hashTags = $scope.serverEventHashtag;
+//                    }
+
+                    // Trending Events On Twitter
                     $scope.trendingHashtags = response.data.trendingHashtags;
                     for (var i = 0; i < $scope.trendingHashtags.length; i++) {
                         var eventHashtag = $scope.trendingHashtags[i];
@@ -42,10 +61,14 @@ StartNewEvent.controller('StartNewEventController', [
                         $scope.mediaUrl = $rootScope.defultImage;
                         $scope.trendingHashtags[i] = $scope.trendingEventHashtag;
                     }
-                    $scope.homepageEvents = $scope.serverEvents.concat($scope.trendingHashtags);
-                })
+
+                    $scope.homepageEvents = $scope.runningUserEvents.concat($scope.historicUserEvents, $scope.runningServerEvents);
+
+                    console.log($scope.homepageEvents);
+                });
         }
-        $scope.getTrendingEvents();
+
+        $scope.getEvents();
 
         // Get Twitter Auth
         $scope.getTwitterAuth = function () {

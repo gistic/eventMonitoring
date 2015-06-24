@@ -14,12 +14,11 @@
             <h2><a href="#">#{{event.hashTags || event}}</a></h2>
             <p am-time-ago="event.startTime" class="meta"></p>
 
-            <!--
+            
             <h3 class="created-by">
-                <img src="assets/images/users/f-1.jpg" alt="{{event.hashTags}}" class="img-circle">
-                <a href="#">@Masters</a>
+                <img ng-src="{{event.profileImgUrl}}" alt="{{event.hashTags}}" class="img-circle">
+                <a href="#">@{{event.screenName}}</a>
             </h3>
--->
 
         </header>
     </div>

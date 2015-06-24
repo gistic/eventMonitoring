@@ -205,7 +205,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $scope.topTweets = [];
         $scope.getTopTweets = function () {
             $(".loading").show();
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets?authToken=' + $cookies.userAuthentication;;
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets?authToken=' + $cookies.userAuthentication;
             var requestAction = "GET";
             var requestData = "";
 
