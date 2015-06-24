@@ -160,7 +160,7 @@ public class TweetDataLogic {
         String userJsonString = new TwitterUserResource().getLoggedInUser(user);
         org.json.JSONObject userJson = new org.json.JSONObject(userJsonString);
         String screenName = userJson.getString("screenName");
-        String profileImgUrl = userJson.getString("profileImageUrl");
+        String profileImgUrl = userJson.getString("profileImageURL");
         String hashtags = eventMeta.getHashTags();
         String startTime = eventMeta.getStartTime();
         long noOfTweets = basicStats.getTotalTweets();
