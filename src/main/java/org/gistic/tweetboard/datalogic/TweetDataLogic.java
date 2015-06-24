@@ -16,16 +16,13 @@ import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcasterSingleton;
 import org.gistic.tweetboard.resources.TwitterUserResource;
-import org.gistic.tweetboard.security.*;
 import org.gistic.tweetboard.util.Misc;
-import org.json.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
 import twitter4j.*;
 import twitter4j.JSONException;
 import twitter4j.JSONObject;
-import twitter4j.User;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -161,7 +158,7 @@ public class TweetDataLogic {
         org.json.JSONObject userJson = new org.json.JSONObject(userJsonString);
         String screenName = userJson.getString("screenName");
         String profileImgUrl = userJson.getString("profileImageURL");
-        String hashtags = eventMeta.getHashTags();
+        String hashtags = eventMeta.getHashtags();
         String startTime = eventMeta.getStartTime();
         String mediaUrl = eventMeta.getMediaUrl();
         long noOfTweets = basicStats.getTotalTweets();

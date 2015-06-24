@@ -6,11 +6,11 @@ package org.gistic.tweetboard.representations;
 public class EventMeta {
     private String uuid;
     private String startTime;
-    private String hashTags;
+    private String hashtags;
     private String mediaUrl;
     private String accessToken;
     private String screenName;
-    private String prfoileImageUrl;
+    private String profileImageUrl;
 
     public String getAccessToken() {
         return accessToken;
@@ -20,18 +20,18 @@ public class EventMeta {
         this.accessToken = accessToken;
     }
 
-    public String getHashTags() {
-        return hashTags;
+    public String getHashtags() {
+        return hashtags;
     }
 
-    public void setHashTags(String hashTags) {
-        this.hashTags = hashTags;
+    public void setHashtags(String hashtags) {
+        this.hashtags = hashtags;
     }
 
-    public EventMeta(String uuid, String startTime, String hashTags, String mediaUrl, String accessToken) {
+    public EventMeta(String uuid, String startTime, String hashtags, String mediaUrl, String accessToken) {
         this.uuid = uuid;
         this.startTime = startTime;
-        this.hashTags = hashTags;
+        this.hashtags = hashtags;
         this.mediaUrl = mediaUrl;
         this.accessToken = accessToken;
     }
@@ -68,11 +68,11 @@ public class EventMeta {
         return screenName;
     }
 
-    public void setPrfoileImageUrl(String prfoileImageUrl) {
-        this.prfoileImageUrl = prfoileImageUrl;
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
-    public String getPrfoileImageUrl() {
-        return prfoileImageUrl;
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 }
