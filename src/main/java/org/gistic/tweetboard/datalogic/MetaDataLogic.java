@@ -80,7 +80,7 @@ public class MetaDataLogic {
             EventMeta eventMeta = dao.getEventMeta(uuid);
             String accessToken = eventMeta.getAccessToken();
             AuthDao authDao = new AuthDaoImpl();
-            org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(authToken, authDao.getAccessTokenSecret(authToken));
+            org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(accessToken, authDao.getAccessTokenSecret(accessToken));
             String userJsonString = new TwitterUserResource().getLoggedInUser(user);
             org.json.JSONObject userJson = new org.json.JSONObject(userJsonString);
             String screenName = userJson.getString("screenName");
