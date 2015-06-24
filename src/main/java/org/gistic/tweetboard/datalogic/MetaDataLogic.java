@@ -5,13 +5,11 @@ import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.dao.TweetDao;
-import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.representations.EventMeta;
 import org.gistic.tweetboard.representations.EventMetaList;
 import org.gistic.tweetboard.representations.EventsList;
 import org.gistic.tweetboard.representations.HistoricUserEvent;
 import org.gistic.tweetboard.resources.TwitterUserResource;
-import org.gistic.tweetboard.security.*;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
@@ -88,7 +86,7 @@ public class MetaDataLogic {
             String screenName = userJson.getString("screenName");
             String profileImgUrl = userJson.getString("profileImageURL");
             eventMeta.setScreenName(screenName);
-            eventMeta.setPrfoileImageUrl(profileImgUrl);
+            eventMeta.setProfileImageUrl(profileImgUrl);
             if (userEventIds.contains(uuid)) {
                 runningUserEvents.add(eventMeta);
             } else {
