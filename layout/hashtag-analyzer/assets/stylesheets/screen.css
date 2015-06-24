@@ -19443,6 +19443,13 @@ a[ng-click] {
   box-shadow: none;
 }
 
+/* line 28, ../sass/_/_configs/_utilities.scss */
+img {
+  opacity: 0.9;
+  filter: alpha(opacity=90);
+  -webkit-filter: brightness(9.9);
+}
+
 /* line 1, ../sass/_/_atoms/_buttons.scss */
 .btn {
   border: none;
@@ -19498,7 +19505,7 @@ a[ng-click] {
 /* line 38, ../sass/_/_atoms/_buttons.scss */
 .btn.btn-load-more strong i {
   font-size: 11px;
-  font-size: 1.375rem;
+  font-size: 1.1rem;
 }
 /* line 43, ../sass/_/_atoms/_buttons.scss */
 .btn.btn-load-history {
@@ -19577,37 +19584,37 @@ ol {
 /* line 1, ../sass/_/_atoms/_icons.scss */
 .icon-massive {
   font-size: 60px;
-  font-size: 7.5rem;
+  font-size: 6rem;
 }
 
 /* line 4, ../sass/_/_atoms/_icons.scss */
 .icon-huge {
   font-size: 32px;
-  font-size: 4rem;
+  font-size: 3.2rem;
 }
 
 /* line 7, ../sass/_/_atoms/_icons.scss */
 .icon-large {
   font-size: 21px;
-  font-size: 2.625rem;
+  font-size: 2.1rem;
 }
 
 /* line 10, ../sass/_/_atoms/_icons.scss */
 .icon-normal {
   font-size: 16px;
-  font-size: 2rem;
+  font-size: 1.6rem;
 }
 
 /* line 13, ../sass/_/_atoms/_icons.scss */
 .icon-small {
   font-size: 14px;
-  font-size: 1.75rem;
+  font-size: 1.4rem;
 }
 
 /* line 16, ../sass/_/_atoms/_icons.scss */
 .icon-tiny {
   font-size: 11px;
-  font-size: 1.375rem;
+  font-size: 1.1rem;
 }
 
 /* line 1, ../sass/_/_atoms/_modal.scss */
@@ -19965,7 +19972,7 @@ ol {
   color: #ffffff;
   margin-left: 10px;
   font-size: 11px;
-  font-size: 1.375rem;
+  font-size: 1.1rem;
 }
 
 /* line 107, ../sass/_/_modules/_header.scss */
@@ -20020,6 +20027,13 @@ ol {
 .header-homepage {
   margin: 0;
 }
+/* line 132, ../sass/_/_modules/_header.scss */
+.header-homepage .search-error {
+  color: #ffffff;
+  font-size: 11px;
+  font-size: 1.1rem;
+  line-height: 46px;
+}
 
 /* line 1, ../sass/_/_modules/_tweet.scss */
 .dashboard {
@@ -20050,7 +20064,7 @@ ol {
 /* line 18, ../sass/_/_modules/_tweet.scss */
 .tweet .tweet-user {
   font-size: 14px;
-  font-size: 1.75rem;
+  font-size: 1.4rem;
   font-weight: bold;
 }
 /* line 22, ../sass/_/_modules/_tweet.scss */
@@ -20067,11 +20081,15 @@ ol {
   font-style: italic;
   color: #949494;
 }
-/* line 33, ../sass/_/_modules/_tweet.scss */
+/* line 34, ../sass/_/_modules/_tweet.scss */
+.tweet .tweet-time:hover {
+  text-decoration: underline;
+}
+/* line 38, ../sass/_/_modules/_tweet.scss */
 .tweet.tweet:first-child {
   opacity: 1;
 }
-/* line 36, ../sass/_/_modules/_tweet.scss */
+/* line 41, ../sass/_/_modules/_tweet.scss */
 .tweet .tweet-content {
   -webkit-transition-property: all;
   transition-property: all;
@@ -20080,14 +20098,14 @@ ol {
   -webkit-perspective: 1000;
   -webkit-backface-visibility: hidden;
 }
-/* line 41, ../sass/_/_modules/_tweet.scss */
+/* line 46, ../sass/_/_modules/_tweet.scss */
 .tweet .tweet-content .media-left {
   -webkit-transition-property: all;
   transition-property: all;
   -webkit-transition-duration: 0.4s;
   transition-duration: 0.4s;
 }
-/* line 46, ../sass/_/_modules/_tweet.scss */
+/* line 51, ../sass/_/_modules/_tweet.scss */
 .tweet .tweet-actions {
   -webkit-transition-property: all;
   transition-property: all;
@@ -20100,54 +20118,54 @@ ol {
   top: 0;
   right: 0;
 }
-/* line 54, ../sass/_/_modules/_tweet.scss */
+/* line 59, ../sass/_/_modules/_tweet.scss */
 .tweet .tweet-actions a {
   display: block;
 }
-/* line 59, ../sass/_/_modules/_tweet.scss */
+/* line 64, ../sass/_/_modules/_tweet.scss */
 .tweet:hover .tweet-content {
   -webkit-transform: translateX(-5%);
   -ms-transform: translateX(-5%);
   transform: translateX(-5%);
 }
-/* line 63, ../sass/_/_modules/_tweet.scss */
+/* line 68, ../sass/_/_modules/_tweet.scss */
 .tweet:hover .tweet-content .media-left {
   -webkit-transform: translateX(-40%);
   -ms-transform: translateX(-40%);
   transform: translateX(-40%);
 }
-/* line 69, ../sass/_/_modules/_tweet.scss */
+/* line 74, ../sass/_/_modules/_tweet.scss */
 .tweet:hover .tweet-actions {
   opacity: 1;
   display: inline-block;
 }
 
-/* line 76, ../sass/_/_modules/_tweet.scss */
+/* line 81, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar {
   direction: rtl;
   text-align: right;
 }
-/* line 80, ../sass/_/_modules/_tweet.scss */
+/* line 85, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar .user-img {
   float: right;
   padding-right: 0;
   padding-left: 15px;
 }
-/* line 85, ../sass/_/_modules/_tweet.scss */
+/* line 90, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar .media-body {
   margin-left: 0;
   margin-right: 10px;
 }
 
 @media (max-width: 480px) {
-  /* line 94, ../sass/_/_modules/_tweet.scss */
+  /* line 99, ../sass/_/_modules/_tweet.scss */
   .tweets-queue .tweet img {
     width: 48px;
     height: 48px;
   }
 }
 
-/* line 101, ../sass/_/_modules/_tweet.scss */
+/* line 106, ../sass/_/_modules/_tweet.scss */
 .tweets-queue-options {
   margin-bottom: 10px;
 }
@@ -20257,7 +20275,7 @@ footer .social-links a:hover, footer .social-links a:focus {
 .event-box header .meta {
   color: #ffffff;
   font-size: 11px;
-  font-size: 1.375rem;
+  font-size: 1.1rem;
   font-style: italic;
 }
 /* line 67, ../sass/_/_modules/_homepage.scss */
@@ -20309,7 +20327,7 @@ footer .social-links a:hover, footer .social-links a:focus {
 }
 /* line 108, ../sass/_/_modules/_homepage.scss */
 .event-box.trending-box {
-  background: #555555;
+  background: #232324;
   padding: 15px;
 }
 /* line 112, ../sass/_/_modules/_homepage.scss */
@@ -20320,7 +20338,7 @@ footer .social-links a:hover, footer .social-links a:focus {
 .event-box.trending-box ul li.list-header {
   color: #ffffff;
   font-size: 16px;
-  font-size: 2rem;
+  font-size: 1.6rem;
 }
 /* line 118, ../sass/_/_modules/_homepage.scss */
 .event-box.trending-box ul li:last-child {
@@ -20342,9 +20360,9 @@ footer .social-links a:hover, footer .social-links a:focus {
 }
 /* line 137, ../sass/_/_modules/_homepage.scss */
 .event-box:hover header {
-  -webkit-transform: translateY(-60%) !important;
-  -ms-transform: translateY(-60%) !important;
-  transform: translateY(-60%) !important;
+  -webkit-transform: translateY(-70%) !important;
+  -ms-transform: translateY(-70%) !important;
+  transform: translateY(-70%) !important;
 }
 
 /* line 146, ../sass/_/_modules/_homepage.scss */
@@ -20444,7 +20462,7 @@ footer .social-links a:hover, footer .social-links a:focus {
   line-height: 100px;
   color: #ffffff;
   font-size: 11px;
-  font-size: 1.375rem;
+  font-size: 1.1rem;
 }
 /* line 32, ../sass/_/_modules/_media.scss */
 .masonry-brick:hover {
@@ -20455,7 +20473,7 @@ footer .social-links a:hover, footer .social-links a:focus {
   z-index: 999;
 }
 
-/* line 5, ../sass/_/_modules/_maps.scss */
+/* line 1, ../sass/_/_modules/_maps.scss */
 #map_canvas {
   width: 100%;
   height: 100%;
@@ -20463,7 +20481,7 @@ footer .social-links a:hover, footer .social-links a:focus {
   position: relative;
 }
 
-/* line 11, ../sass/_/_modules/_maps.scss */
+/* line 7, ../sass/_/_modules/_maps.scss */
 .angular-google-map-container {
   position: absolute;
   top: 47px;
@@ -20472,11 +20490,11 @@ footer .social-links a:hover, footer .social-links a:focus {
   left: 0;
 }
 
-/* line 19, ../sass/_/_modules/_maps.scss */
+/* line 15, ../sass/_/_modules/_maps.scss */
 .tweet-marker {
   width: 200px;
 }
-/* line 21, ../sass/_/_modules/_maps.scss */
+/* line 17, ../sass/_/_modules/_maps.scss */
 .tweet-marker img {
   width: 48px;
   height: 48px;
@@ -20507,12 +20525,12 @@ footer .social-links a:hover, footer .social-links a:focus {
 /* line 16, ../sass/_/_modules/_popover.scss */
 .ns-popover-custom-theme .profile-user-count {
   font-size: 11px;
-  font-size: 1.375rem;
+  font-size: 1.1rem;
 }
 /* line 19, ../sass/_/_modules/_popover.scss */
 .ns-popover-custom-theme .profile-usertitle-name {
   font-size: 14px;
-  font-size: 1.75rem;
+  font-size: 1.4rem;
 }
 
 /* line 1, ../sass/_/_modules/_lightbox.scss */

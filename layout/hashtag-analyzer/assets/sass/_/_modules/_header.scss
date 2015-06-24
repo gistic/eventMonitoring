@@ -129,74 +129,9 @@
 .header-homepage {
     @extend .header;
     margin: 0;
+    .search-error {
+        color: $white;
+        @include font-size($font-tiny);
+        line-height: 46px;
+    }
 }
-
-//
-//.navbar {
-//    margin-bottom: 0;
-//}
-//
-//.navbar-brand {
-//    padding: 10px;
-//    img {
-//        display: inline-block;
-//        margin-right: $margin;
-//    }
-//    span {
-//        @include font-size(15px);
-//        color: $white;
-//    }
-//}
-//
-//.nav > li > a:hover,
-//.nav > li > a:focus {
-//    background: none;
-//}
-//
-//.navbar-nav a {
-//    color: $white;
-//}
-//
-//.navbar-nav.navbar-right .btn {
-//    position: relative;
-//    z-index: 2;
-//    padding: 4px 20px;
-//    margin: 10px auto;
-//    transition: transform 0.3s;
-//}
-//
-//.navbar .navbar-collapse {
-//    position: relative;
-//    overflow: hidden !important;
-//}
-//
-//.navbar .nav-collapse {
-//    position: absolute;
-//    z-index: 1;
-//    top: 0;
-//    left: 0;
-//    right: 0;
-//    bottom: 0;
-//    margin: 0;
-//    padding-right: 120px;
-//    padding-left: 80px;
-//    width: 100%;
-//}
-//
-//.navbar.navbar-default .nav-collapse {
-//    background-color: #f8f8f8;
-//}
-//
-//.nav-collapse>li {
-//    float: right;
-//}
-//
-//.navbar.navbar-default .nav-collapse {
-//    height: auto !important;
-//    transition: transform 0.3s;
-//    transform: translate(0px, -50px);
-//}
-//
-//.navbar.navbar-default .nav-collapse.in {
-//    transform: translate(0px, 0px);
-//}

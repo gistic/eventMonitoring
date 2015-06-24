@@ -18,9 +18,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                    '$sce',
                                    '$cookies',
                                    '$cookieStore',
-                                   'utils',
                                    'languageCode',
-                                   function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, utils, languageCode) {
+                                   'User',
+                                   'filterHashtags',
+                                   function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, languageCode, User, filterHashtags) {
 
 
 
@@ -41,48 +42,70 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
         // Search from the dashboard
         $scope.dashboardSearch = function () {
-            SweetAlert.swal({
-                    title: "Are you sure?",
-                    text: "If you start a new event you will not be able to recover this hashtag tracking!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, stop it!",
-                    closeOnConfirm: false
-                },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        $scope.stopEventHandler();
-                        SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
-                        $scope.startNewEvent = function (action) {
-                            // Check if there is an authentication key in the browser cookies
-                            if ($cookies.userAuthentication == undefined) {
-                                var requestAction = "GET";
-                                var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
-                                var requestData = ""
-                                RequestData.fetchData(requestAction, apiUrl, requestData)
-                                    .then(function (response) {
-                                        var openUrl = response.data.url;
-                                        $window.location.href = openUrl;
-                                    });
-                            } else { // if "yes"  --> redirect to dashboard page
-                                $scope.$broadcast();
-                                RequestData.startEvent()
-                                    .success(function (response) {
-                                        $rootScope.eventID = response.uuid;
-                                        // Redirect the front website page to the admin page
-                                        $state.transitionTo('dashboard.liveStreaming', {
-                                            uuid: $scope.eventID
+
+            var validSearch = true;
+            if ($('#eventHashtag').val() === undefined) {
+                validSearch = false;
+                $(".search-error").css("display", "inline-block");
+                $(".search-error").text("Please type at least three letters to start your event");
+            }
+            var checkHashtag = filterHashtags.preventBadHashtags($('#eventHashtag').val());
+            if (checkHashtag) {
+                validSearch = false;
+                $(".search-error").css("display", "inline-block");
+                $(".search-error").text("We prevent searching for sexual hashtags .. choose other hashtag");
+            }
+            if (validSearch) {
+
+                SweetAlert.swal({
+                        title: "Are you sure?",
+                        text: "If you start a new event you will not be able to recover this hashtag tracking!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, stop it!",
+                        closeOnConfirm: false
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            $scope.stopEventHandler();
+                            SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+
+                            $scope.startNewEvent = function (action) {
+
+                                // Check if there is an authentication key in the browser cookies
+                                if (User.getUserAuth()) {
+                                    $scope.$broadcast();
+                                    RequestData.startEvent()
+                                        .success(function (response) {
+                                            $rootScope.eventID = response.uuid;
+                                            // Redirect the front website page to the admin page
+                                            $state.transitionTo('dashboard.liveStreaming', {
+                                                uuid: $scope.eventID
+                                            });
+
+                                            $scope.initDashboardData();
+                                        })
+                                } else {
+                                    var requestAction = "GET";
+                                    var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
+                                    var requestData = ""
+                                    RequestData.fetchData(requestAction, apiUrl, requestData)
+                                        .then(function (response) {
+                                            var openUrl = response.data.url;
+                                            $window.location.href = openUrl;
                                         });
-                                        $scope.initDashboardData();
-                                    })
-                            }
-                        };
-                        $scope.startNewEvent();
-                    } else {
-                        SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
-                    }
-                });
+                                }
+                            };
+
+                            $scope.startNewEvent();
+
+                        } else {
+                            SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
+                        }
+                    });
+            }
+
         }
 
         // GET : View options
@@ -136,6 +159,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.tweetsQueue.push($scope.tweet);
+                        $(".loading").hide();
                     }
                 }).error(function () {
                     console.log("#");
@@ -143,35 +167,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         };
 
 
-        // GET : User data
-        $scope.getUserData = function () {
-            var apiUrl = '/api/twitterUsers' + '?authToken=' + $cookies.userAuthentication;
-            var requestAction = "GET";
-            var requestData = "";
-
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {
-                    $rootScope.authoUserName = response.screenName;
-                    $rootScope.authoUserID = response.id;
-                    $rootScope.authoUserPicture = response.originalProfileImageURLHttps;
-                }).error(function () {
-                    console.log("#");
-                })
-        };
-
+        console.log(User.getUserAuth());
         // Intialize
-
         $scope.initDashboardData = function () {
-            $(".loading").show();
-            if ($cookies.userAuthentication == undefined) {
-                $scope.logedInUser = false;
-            } else {
-                $scope.logedInUser = true;
-            }
+            User.setUserAuth();
             $scope.getWarmupData();
             $scope.getViewOptions();
             $scope.getEventStats();
-            $scope.getUserData();
+            User.getUserData();
         }
 
 
@@ -183,7 +186,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $rootScope.eventID = $location.search().uuid;
         $rootScope.authoUserName = $location.search().screenName;
 
-        if ($cookies.userAuthentication == undefined) {
+        if ($cookies.userAuthentication === undefined || $cookies.userAuthentication === "undefined") {
             $rootScope.authToken = $location.search().authToken;
             $cookies.userAuthentication = $rootScope.authToken;
         } else {
@@ -211,6 +214,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.topTweets.push($scope.tweet);
+                        $scope.topTweets.sort(function (a, b) {
+                            return (b.score) - (a.score);
+                        });
                     }
                     $(".loading").hide();
                 }).error(function () {
@@ -296,23 +302,24 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 $scope.tweet = JSON.parse(response.data);
                 $scope.tweetID = $scope.tweet.id_str;
 
+                // Update Geo location map
                 if ($scope.tweet.geo_location != null) {
 
                     $scope.tweetGeoLocation = $scope.tweet.geo_location;
                     $scope.tweetGeoLocationLatitude = $scope.tweet.geo_location.latitude;
                     $scope.tweetGeoLocationLongitude = $scope.tweet.geo_location.longitude;
                     $scope.tweetMarkerID = $scope.tweetsLocation.length;
-            
+
                     $scope.tweetsLocation.push({
                         id: $scope.tweetMarkerID,
                         latitude: $scope.tweetGeoLocationLatitude,
                         longitude: $scope.tweetGeoLocationLongitude,
                         show: false,
-                        tweetText : $scope.tweet.text,
-                        tweetUser : $scope.tweet.user.screen_name,
-                        tweetUserPicture : $scope.tweet.user.original_profile_image_urlhttps
+                        tweetText: $scope.tweet.text,
+                        tweetUser: $scope.tweet.user.screen_name,
+                        tweetUserPicture: $scope.tweet.user.original_profile_image_urlhttps
                     });
-            
+
                 }
 
                 // Update languages pie chart
@@ -331,8 +338,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                         languagesPieChart.data.push([$scope.languageName, 1]);
                     }
                 }
-
-                $scope.totalTweetsCount++;
 
                 // Media
                 if ($scope.tweet.extended_media_entities != null) {
@@ -413,12 +418,20 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 }
 
                 $scope.$apply(function () {
-                    $scope.lastNewTweets.push($scope.tweet);
+                    if ($scope.tweetsQueue.length >= 25) {
+                        $scope.lastNewTweets.push($scope.tweet);
+                    } else {
+                        $scope.tweetsQueue.unshift($scope.tweet);
+                    }
+
                     $(".loading").hide();
                 }, false);
 
+                $scope.totalTweetsCount++;
+
             });
 
+            // Tweets overtime
             source.addEventListener('tweets-over-time', function (response) {
                 $scope.data = JSON.parse(response.data);
                 $scope.$apply(function () {
@@ -426,6 +439,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 }, false);
             });
 
+            // Top active people
             source.addEventListener('top-people', function (response) {
                 $scope.data = JSON.parse(response.data);
                 $scope.$apply(function () {
@@ -433,6 +447,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 }, false);
             });
 
+            // Top country
             source.addEventListener('country-update', function (response) {
                 $scope.topCountrey = JSON.parse(response.data);
 

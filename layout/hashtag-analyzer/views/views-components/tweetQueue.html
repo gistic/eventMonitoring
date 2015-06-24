@@ -9,7 +9,7 @@
             <a ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank" class="pull-left tweet-userName">
                 {{tweet.user.screen_name}}
             </a>
-           <a class="pull-right" ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}/status/{{tweet.id_str}}" target="_blank" title="{{tweet.created_at}}">
+           <a class="pull-right tweet-time" ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}/status/{{tweet.id_str}}" target="_blank" title="Open in Twitter">
               <strong class="pull-right">
                   <span ng-if="tweet.retweet" class="fa fa-retweet text-muted"></span>
                   <small am-time-ago="tweet.created_at"></small>
@@ -26,15 +26,14 @@
             <strong ng-if="tweet.user.location" class="text-muted"><span class="fa fa-map-marker text-muted"></span> {{tweet.user.location}}</strong>
         </div>
     </div>
-
     <aside class="tweet-actions btn-group-vertical">
-        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id_str}}">
+        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id_str}}" tooltip-placement="left" tooltip="Reply">
             <span class="fa fa-reply"></span>
         </a>
-        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id_str}}">
+        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id_str}}" tooltip-placement="left" tooltip="Retweet">
             <span class="fa fa-retweet"></span>
         </a>
-        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id_str}}">
+        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id_str}}" tooltip-placement="left" tooltip="Favorite">
             <span class="fa fa-star"></span>
         </a>
     </aside>

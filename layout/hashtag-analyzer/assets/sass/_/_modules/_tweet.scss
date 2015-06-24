@@ -30,6 +30,11 @@
         font-style: italic;
         color: darken($gray-super-light, 40%);
     }
+    .tweet-time {
+        &:hover {
+            text-decoration: underline;
+        }
+    }
     &.tweet:first-child {
         opacity: 1;
     }

@@ -22,10 +22,10 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'iso-language-codes',
     'googlechart',
     'bootstrapLightbox',
-    
+
     // map
     'uiGmapgoogle-maps',
-    
+
     'wu.masonry',
     'angular-images-loaded',
 
@@ -62,16 +62,26 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state) 
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
     $rootScope.eventID = $location.search().uuid;
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
-    
+
     if ($state.current.name == "") {
         $state.transitionTo('home');
     }
-    
-    if ($cookies.userAuthentication == undefined) {
-        $rootScope.logedInUser = false;
-    } else {
-        $rootScope.logedInUser = true;
-    }
+
+//    if ($cookies.userAuthentication === "undefined" || $cookies.userAuthentication === undefined) {
+//        $rootScope.logedInUser = false;
+//    } else {
+//        $rootScope.logedInUser = true;
+//    }
+
+//    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+//
+//        var requireLogin = toState.data.requireLogin;
+//
+//        if (requireLogin && $cookies.userAuthentication == "undefined") {
+//            $state.transitionTo('home');
+//            
+//        }
+//    });
 })
 
 // Config : Media lightbox configurations

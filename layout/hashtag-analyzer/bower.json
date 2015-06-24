@@ -44,7 +44,8 @@
     "d3": "~3.5.5",
     "jqcloud2": "~2.0.1",
     "bootstrap-social": "~4.9.1",
-    "angular-google-maps": "~2.1.5"
+    "angular-google-maps": "~2.1.5",
+    "gsap": "~1.17.0"
   },
   "devDependencies": {
     "modularized-normalize-scss": "~3.0.3"
