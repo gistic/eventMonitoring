@@ -97,8 +97,7 @@ public class TweetDataLogic {
     }
 
     public void createNewEvent(String[] hashTags) {
-        tweetDao.addNewEventToList(uuid);
-        tweetDao.setDefaultEventProperties(uuid, hashTags);
+        createNewEvent(hashTags, null);
     }
 
     public InternalStatus getOldestTweetNotSentForApproval() {
@@ -137,6 +136,7 @@ public class TweetDataLogic {
             topHashtags = ow.writeValueAsString(getTopNHashtags(10));
             topLanguages = ow.writeValueAsString(getTopNLanguages(10));
             topTweets = ow.writeValueAsString(getTopNTweets(10, authToken));
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -163,9 +163,10 @@ public class TweetDataLogic {
         String profileImgUrl = userJson.getString("profileImageURL");
         String hashtags = eventMeta.getHashTags();
         String startTime = eventMeta.getStartTime();
+        String mediaUrl = eventMeta.getMediaUrl();
         long noOfTweets = basicStats.getTotalTweets();
         long noOfRetweets = basicStats.getTotalRetweets();
-        tweetDao.storeEventInUserHistory(hashtags, startTime, screenName, profileImgUrl, noOfTweets, noOfRetweets, eventMeta.getUuid(), authToken);
+        tweetDao.storeEventInUserHistory(hashtags, startTime, screenName, profileImgUrl, noOfTweets, noOfRetweets, eventMeta.getUuid(), authToken, mediaUrl);
     }
 
     public void updateEventConfig(EventConfig eventConfig) {
@@ -472,5 +473,10 @@ public class TweetDataLogic {
 
     public void deleteEventFromUserEvents(String authToken) {
         tweetDao.removeFromUserEventsList(uuid, authToken);
+    }
+
+    public void createNewEvent(String[] hashTags, String accessToken) {
+        tweetDao.addNewEventToList(uuid);
+        tweetDao.setDefaultEventProperties(uuid, hashTags, accessToken);
     }
 }

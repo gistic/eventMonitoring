@@ -36,6 +36,8 @@ public class TweetDaoImpl implements TweetDao {
     public static final String HISTORIC_META_NO_OF_TWEETS = "noOfTweets";
     public static final String HISTORIC_META_NO_OF_RETWEETS = "noOfRetweets";
     public static final String HISTORIC_META_AUTHTOKEN = "authtoken";
+    public static final String EVENT_ACCESS_TOKEN = "eventAccessToken";
+    public static final String HISTORIC_META_MEDIA_URL = "mediaURL";
     //private Jedis jedis;
     final String All_EVENTS_KEY = "event";
     final String BG_COLOR_KEY = "banckGroundColor";
@@ -65,11 +67,12 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public void setDefaultEventProperties(String uuid, String[] hashTags) {
+    public void setDefaultEventProperties(String uuid, String[] hashTags, String accessToken) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hset(uuid, BG_COLOR_KEY, BG_COLOR_DEFAULT);
             jedis.hset(uuid, SIZE_KEY, SIZE_DEAFULT);
             jedis.hset(uuid, SCREENS_KEY, SCREENS_DEFAULT);
+            jedis.hset(uuid, EVENT_ACCESS_TOKEN, accessToken);
             Date d =new Date();
             String time = d.toGMTString();
             jedis.hset(uuid, START_TIME_KEY, time);
@@ -343,9 +346,10 @@ public class TweetDaoImpl implements TweetDao {
             List<String> list = jedis.lrange(All_EVENTS_KEY, 0, -1);
             List<EventMeta> metaList = list.stream()
                     .map(event -> new EventMeta(event,
-                            jedis.hget(event, START_TIME_KEY),
-                            jedis.hget(event, HASHTAGS_KEY),
-                            jedis.hget(event, PLACEHOLDER_MEDIA_URL_KEY))
+                                    jedis.hget(event, START_TIME_KEY),
+                                    jedis.hget(event, HASHTAGS_KEY),
+                                    jedis.hget(event, PLACEHOLDER_MEDIA_URL_KEY),
+                                    jedis.hget(event, EVENT_ACCESS_TOKEN))
                     )
                     .collect(Collectors.toList());
             EventMeta[] metaArray = metaList.stream().toArray(EventMeta[]::new);
@@ -771,6 +775,7 @@ public class TweetDaoImpl implements TweetDao {
             String startTime = jedis.hget(uuid, START_TIME_KEY);
             String hashtags = jedis.hget(uuid, HASHTAGS_KEY);
             String mediaUrl = jedis.hget(uuid, PLACEHOLDER_MEDIA_URL_KEY);
+            String accessToken = jedis.hget(uuid, EVENT_ACCESS_TOKEN);
             Long numberOfUsers = jedis.zcard(getUsersRankSetKey(uuid));
             Long totalTweets = 0l;
             Long totalRetweets = 0l;
@@ -784,7 +789,7 @@ public class TweetDaoImpl implements TweetDao {
             try {
                 totalMedia =  Long.parseLong(jedis.get(getTotalMediaKey(uuid)));
             } catch (NumberFormatException e) {}//nothing to log the value is just one
-            return new EventMeta(uuid, startTime, hashtags, mediaUrl);
+            return new EventMeta(uuid, startTime, hashtags, mediaUrl, accessToken);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -792,7 +797,7 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public void storeEventInUserHistory(String hashtags, String startTime, String screenName, String profileImgUrl, long noOfTweets, long noOfRetweets, String uuid, String authToken) {
+    public void storeEventInUserHistory(String hashtags, String startTime, String screenName, String profileImgUrl, long noOfTweets, long noOfRetweets, String uuid, String authToken, String mediaUrl) {
         try (Jedis jedis = JedisPoolContainer.getInstance()){
             jedis.lpush(HISTORIC_USER_EVENTS_LIST, uuid);
             jedis.lpush(getHistoricUserEventIdsListKey(authToken), uuid);
@@ -803,6 +808,7 @@ public class TweetDaoImpl implements TweetDao {
             jedis.hset(uuid, HISTORIC_META_PROFILE_IMG_URL, profileImgUrl);
             jedis.hset(uuid, HISTORIC_META_NO_OF_TWEETS, String.valueOf(noOfTweets));
             jedis.hset(uuid, HISTORIC_META_NO_OF_RETWEETS, String.valueOf(noOfRetweets));
+            jedis.hset(uuid, HISTORIC_META_MEDIA_URL, mediaUrl);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -828,7 +834,8 @@ public class TweetDaoImpl implements TweetDao {
             String profileImgUrl =jedis.hget(uuid, HISTORIC_META_PROFILE_IMG_URL);
             String noOfTweets = jedis.hget(uuid, HISTORIC_META_NO_OF_TWEETS);
             String noOfRetweets = jedis.hget(uuid, HISTORIC_META_NO_OF_RETWEETS);
-            return new HistoricUserEvent(hashtags, startTime, screenName, profileImgUrl, noOfTweets, noOfRetweets);
+            String mediaUrl = jedis.hget(uuid, HISTORIC_META_MEDIA_URL);
+            return new HistoricUserEvent(hashtags, startTime, screenName, profileImgUrl, noOfTweets, noOfRetweets, mediaUrl);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }

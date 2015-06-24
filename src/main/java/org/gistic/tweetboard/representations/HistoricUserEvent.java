@@ -35,13 +35,23 @@ public class HistoricUserEvent {
     private final String profileImgUrl;
     private final String noOfTweets;
     private final String noOfRetweets;
+    private String mediaUrl;
 
-    public HistoricUserEvent(String hashtags, String startTime, String screenName, String profileImgUrl, String noOfTweets, String noOfRetweets) {
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
+    }
+
+    public HistoricUserEvent(String hashtags, String startTime, String screenName, String profileImgUrl, String noOfTweets, String noOfRetweets, String mediaUrl) {
         this.hashtags = hashtags;
         this.startTime = startTime;
         this.screenName = screenName;
         this.profileImgUrl = profileImgUrl;
         this.noOfTweets = noOfTweets;
         this.noOfRetweets = noOfRetweets;
+        this.mediaUrl = mediaUrl;
     }
 }

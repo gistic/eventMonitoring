@@ -2,11 +2,15 @@ package org.gistic.tweetboard.datalogic;
 
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
+import org.gistic.tweetboard.dao.AuthDao;
+import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.dao.TweetDao;
+import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.representations.EventMeta;
 import org.gistic.tweetboard.representations.EventMetaList;
 import org.gistic.tweetboard.representations.EventsList;
 import org.gistic.tweetboard.representations.HistoricUserEvent;
+import org.gistic.tweetboard.resources.TwitterUserResource;
 import org.gistic.tweetboard.security.*;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
@@ -76,6 +80,15 @@ public class MetaDataLogic {
         for (EventMeta event : eventMetaList) {
             String uuid = event.getUuid();
             EventMeta eventMeta = dao.getEventMeta(uuid);
+            String accessToken = eventMeta.getAccessToken();
+            AuthDao authDao = new AuthDaoImpl();
+            org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(authToken, authDao.getAccessTokenSecret(authToken));
+            String userJsonString = new TwitterUserResource().getLoggedInUser(user);
+            org.json.JSONObject userJson = new org.json.JSONObject(userJsonString);
+            String screenName = userJson.getString("screenName");
+            String profileImgUrl = userJson.getString("profileImageURL");
+            eventMeta.setScreenName(screenName);
+            eventMeta.setPrfoileImageUrl(profileImgUrl);
             if (userEventIds.contains(uuid)) {
                 runningUserEvents.add(eventMeta);
             } else {
