@@ -40,7 +40,8 @@ public class LoginResource {
 
     @GET
     @Path("/login/twitter")
-    public String getEventConfig(@QueryParam("hashtags") String hashtags) {
+    public String getTwitterLogicUrl(@QueryParam("hashtags") String hashtags,
+                                 @DefaultValue("false") @QueryParam("redirectToHome") String redirectToHome) {
         TwitterConfiguration config = ConfigurationSingleton.getInstance().getTwitterConfiguration();
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(true);
@@ -60,6 +61,7 @@ public class LoginResource {
         AuthDao authDao = new AuthDaoImpl();
         authDao.setRequestToken(requestToken.getToken(), requestToken.getTokenSecret());
         authDao.setTempHashtags(requestToken.getToken(), hashtags);
+        authDao.setRedirectToHomeFlag(requestToken.getToken(), redirectToHome);
         String authorizationUrl = requestToken.getAuthorizationURL();
         System.out.println(authorizationUrl);
         return "{\"url\":\""+authorizationUrl+"\"}";
@@ -120,32 +122,46 @@ public class LoginResource {
         String hashtags = authDao.getTempHashtags(oauthToken);
         authDao.deleteTempHashTags(oauthToken);
 
-        authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
+        String redirectToHome = authDao.getRedirectToHomeFlag(oauthToken);
+        authDao.deleteRedirectToHomeFlag(oauthToken);
 
-        //make event on user's behalf
-        logger.info("making event");
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://127.0.0.1:8080/api/events?authToken="+accessToken);
-        //target.queryParam("authToken", accessToken);
-        Event event = new Event(hashtags.split(","));
-        //set default profile image
-        //String profileImageUrl = "http://s.twimg.com/a/1292022067/images/default_profile_2_reasonably_small.png";
-        EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
-        logger.info("made event with uuid: "+ eventUuid.getUuid());
+        boolean redirectToHomeFlag = Boolean.getBoolean(redirectToHome);
+
+        authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
+        URI uri  = null;
+        if (!redirectToHomeFlag) {
+            //make event on user's behalf
+            logger.info("making event");
+            Client client = ClientBuilder.newClient();
+            WebTarget target = client.target("http://127.0.0.1:8080/api/events?authToken=" + accessToken);
+            //target.queryParam("authToken", accessToken);
+            Event event = new Event(hashtags.split(","));
+            //set default profile image
+            //String profileImageUrl = "http://s.twimg.com/a/1292022067/images/default_profile_2_reasonably_small.png";
+            EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
+            logger.info("made event with uuid: " + eventUuid.getUuid());
+            uri = UriBuilder.fromUri(
+                    "http://"+baseDomain+"/hashtag-analyzer/#/dashboard/liveStreaming?hashtags=" +hashtags
+                            +"&authToken="+accessToken
+                            +"&userId="+userId
+                            +"&screenName="+screenName
+                            +"&uuid="+eventUuid.getUuid()
+                    //+"&profileImageUrl="+profileImageUrl
+            ).build();
+        } else {
+            uri = UriBuilder.fromUri(
+                    "http://" + baseDomain + "/hashtag-analyzer/"
+                            + "?authToken=" + accessToken
+                            + "&userId=" + userId
+                            + "&screenName=" + screenName
+            ).build();
+        }
 //        try {
 //            profileImageUrl = twitter.showUser(Long.parseLong(userIdFromTwitter)).getBiggerProfileImageURLHttps();
 //        } catch (TwitterException e) {
 //            e.printStackTrace();
 //        }
-        URI uri = UriBuilder.fromUri(
-                    "http://"+baseDomain+"/hashtag-analyzer/#/dashboard/liveStreaming?hashtags=" +hashtags
-                    +"&authToken="+accessToken
-                    +"&userId="+userId
-                    +"&screenName="+screenName
-                    +"&uuid="+eventUuid.getUuid()
-                    //+"&profileImageUrl="+profileImageUrl
-                )
-                .build();
+
 //                .queryParam("token", accessToken)
 //                .queryParam("hashtags", hashtags)
 //                .queryParam("firstTime", String.valueOf(firstTime)).build();

@@ -817,7 +817,7 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public List<String> getHistoricUserEventIds(String authToken) {
         try (Jedis jedis = JedisPoolContainer.getInstance()){
-            return jedis.lrange(getHistoricUserEventIdsListKey(authToken), 0, -1);
+            return jedis.lrange(HISTORIC_USER_EVENTS_LIST, 0, -1);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
