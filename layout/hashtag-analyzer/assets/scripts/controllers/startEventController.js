@@ -36,6 +36,11 @@ StartNewEvent.controller('StartNewEventController', [
 
                     // Running Server Events
                     $scope.runningServerEvents = response.data.runningServerEvents;
+                    for (var i = 0; i < $scope.runningServerEvents.length; i++) {
+                        var eventHashtag = $scope.runningServerEvents[i].hashtags;
+                        $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
+                        $scope.runningServerEvents[i].hashtags = $scope.serverEventHashtag;
+                    }
 
                     // Running User Events
                     $scope.runningUserEvents = response.data.runningUserEvents;
@@ -50,10 +55,10 @@ StartNewEvent.controller('StartNewEventController', [
                     $scope.historicUserEvents = response.data.historicUserEvents;
                     for (var i = 0; i < $scope.historicUserEvents.length; i++) {
                         var eventHashtag = $scope.historicUserEvents[i].hashtags;
-                        if (eventHashtag != null) {
+//                        if (eventHashtag != null) {
                             $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
                             $scope.historicUserEvents[i].hashtags = $scope.serverEventHashtag;
-                        }
+//                        }
                     }
 
                     // Trending Events On Twitter
@@ -65,7 +70,7 @@ StartNewEvent.controller('StartNewEventController', [
                         $scope.trendingHashtags[i] = $scope.trendingEventHashtag;
                     }
 
-                    $scope.homepageEvents = $scope.runningUserEvents.concat($scope.historicUserEvents, $scope.runningServerEvents, $scope.trendingHashtags);
+                    $scope.homepageEvents = $scope.runningUserEvents.concat($scope.runningServerEvents, $scope.historicUserEvents, $scope.trendingHashtags);
                     console.log($scope.homepageEvents);
 
                 });

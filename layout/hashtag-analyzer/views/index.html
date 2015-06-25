@@ -5,7 +5,7 @@
 
 <div class="flexbox tilesWall">
 
-    <div class="event-box shading" ng-repeat-start="event in trendingHashtags | limitTo : 9">
+    <div class="event-box shading" ng-repeat-start="event in homepageEvents | limitTo : 9">
         
         <a ng-click="createEventFromTrending(event.hashtags)" class="full-box-link"></a>
         
