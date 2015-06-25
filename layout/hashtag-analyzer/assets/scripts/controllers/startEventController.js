@@ -23,7 +23,9 @@ StartNewEvent.controller('StartNewEventController', [
         if (User.getUserAuth()) {
             User.getUserData();
         }
-
+     
+     
+        // Get homepage events 
         $scope.getEvents = function () {
             var requestAction = "GET";
             var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
@@ -69,17 +71,29 @@ StartNewEvent.controller('StartNewEventController', [
                 });
         }
         $scope.getEvents();
-
+     
+     
+        // Start event from thumb
         $scope.createEventFromTrending = function (hashtag) {
             $scope.eventHashtag = hashtag;
             $scope.startNewEvent();
         }
 
+        
         // Get Twitter Auth
-        $scope.getTwitterAuth = function () {
+        $scope.getTwitterAuth = function (redirectTo) {
+            
             var requestAction = "GET";
-            var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
             var requestData = ""
+            var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
+            
+            if (redirectTo != undefined) {
+                var apiUrl = '/api/events/login/twitter';
+                requestData = {
+                    redirectToHome : true
+                }
+            }
+            
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
                     var openUrl = response.data.url;
@@ -151,4 +165,5 @@ StartNewEvent.controller('StartNewEventController', [
             });
         };
  }
+    
 ]);

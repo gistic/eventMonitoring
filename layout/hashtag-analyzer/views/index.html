@@ -14,8 +14,8 @@
         </div>
         
         <header>
-            <h2><a href="#">#{{event.hashtags}}</a></h2>
-            <h3 class="created-by">
+            <h2><a href="#">#{{event.hashtags || event}}</a></h2>
+            <h3 ng-if="event.profileImageUrl" class="created-by">
                 <img ng-src="{{event.profileImageUrl}}" alt="{{event.hashtags}}" class="img-circle">
                 <a href="#">@{{event.screenName}}</a>
             </h3>
@@ -23,8 +23,10 @@
             <span class="meta">
                 <span ng-if="event.noOfTweets">{{event.noOfTweets}} Tweets</span>
                 <span ng-if="!event.noOfTweets">Running Now</span>
-                - 
-                <span am-time-ago="event.startTime"></span>
+                <span ng-if="event.startTime">
+                    - 
+                    <span am-time-ago="event.startTime"></span>    
+                </span>
             </span>
 
         </header>
