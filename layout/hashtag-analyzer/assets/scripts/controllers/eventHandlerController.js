@@ -361,6 +361,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                 var videoContentType = $scope.tweet.extended_media_entities[i].video_variants[k].content_type;
                                 if (videoContentType == "video/mp4") {
                                     $scope.videoLink = $scope.tweet.extended_media_entities[i].video_variants[k].url;
+                                    console.log($scope.videoLink);
                                     var duplicatedMedia = false;
                                     for (var key in $scope.mediaQueue) {
                                         if ($scope.videoLink == $scope.mediaQueue[key].url) {
@@ -388,6 +389,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                         } else {
                             $scope.tweetMedia = $scope.tweet.extended_media_entities[i].media_urlhttps;
+                            console.log($scope.tweetMedia);
                             var duplicatedMedia = false;
                             for (var key in $scope.mediaQueue) {
                                 if ($scope.tweetMedia == $scope.mediaQueue[key].url) {
@@ -757,16 +759,19 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         };
 
         $scope.stopEventHandler = function () {
-            var eventID = $rootScope.eventID;
-            var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID + "?authToken=" + $cookies.userAuthentication;
-            var requestData = "";
-
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    $scope.eventStarted = false;
-                    CreateEventSource.closeEventSource();
-                })
+            $scope.eventStarted = false;
+            CreateEventSource.closeEventSource();
+            
+//            var eventID = $rootScope.eventID;
+//            var requestAction = "DELETE";
+//            var apiUrl = '/api/events/' + eventID + "?authToken=" + $cookies.userAuthentication;
+//            var requestData = "";
+//
+//            RequestData.fetchData(requestAction, apiUrl, requestData)
+//                .then(function (response) {
+//                    $scope.eventStarted = false;
+//                    CreateEventSource.closeEventSource();
+//                })
         }
 
 
