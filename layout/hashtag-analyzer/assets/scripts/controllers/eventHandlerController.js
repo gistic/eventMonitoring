@@ -349,6 +349,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     $scope.userProfileImage = $scope.tweet.user.original_profile_image_urlhttps;
                     $scope.tweetCreatedAt = $scope.tweet.created_at;
 
+                    
                     for (var i = 0; i < mediaArrayLength; i++) {
 
                         $scope.mediaType = $scope.tweet.extended_media_entities[i].type;
@@ -363,9 +364,11 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                     $scope.videoLink = $scope.tweet.extended_media_entities[i].video_variants[k].url;
                                     console.log($scope.videoLink);
                                     var duplicatedMedia = false;
+                                    
                                     for (var key in $scope.mediaQueue) {
                                         if ($scope.videoLink == $scope.mediaQueue[key].url) {
                                             duplicatedMedia = true;
+                                            
                                             break;
                                         } else {
                                             duplicatedMedia = false;
@@ -382,6 +385,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                             "tweetCreatedAt": $scope.tweetCreatedAt
                                         };
                                         $scope.mediaQueue.push($scope.mediaVideoObject);
+                                        $scope.totalMediaCount++;
 
                                     }
                                 }
@@ -391,9 +395,11 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                             $scope.tweetMedia = $scope.tweet.extended_media_entities[i].media_urlhttps;
                             console.log($scope.tweetMedia);
                             var duplicatedMedia = false;
+                            
                             for (var key in $scope.mediaQueue) {
                                 if ($scope.tweetMedia == $scope.mediaQueue[key].url) {
                                     duplicatedMedia = true;
+                                    
                                     break;
                                 } else {
                                     duplicatedMedia = false;
@@ -411,12 +417,12 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                     "index": $scope.mediaQueue.length
                                 };
                                 $scope.mediaQueue.push($scope.mediaImageObject);
+                                $scope.totalMediaCount++;
 
                             }
                         }
                     }
 
-                    $scope.totalMediaCount++;
                 }
 
                 $scope.$apply(function () {
@@ -761,17 +767,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $scope.stopEventHandler = function () {
             $scope.eventStarted = false;
             CreateEventSource.closeEventSource();
-            
-//            var eventID = $rootScope.eventID;
-//            var requestAction = "DELETE";
-//            var apiUrl = '/api/events/' + eventID + "?authToken=" + $cookies.userAuthentication;
-//            var requestData = "";
-//
-//            RequestData.fetchData(requestAction, apiUrl, requestData)
-//                .then(function (response) {
-//                    $scope.eventStarted = false;
-//                    CreateEventSource.closeEventSource();
-//                })
         }
 
 

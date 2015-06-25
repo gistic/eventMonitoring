@@ -30,7 +30,8 @@ StartNewEvent.controller('StartNewEventController', [
             var requestData = ""
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
-                console.log(response.data);
+                    console.log(response.data);
+                
                     // Running Server Events
                     $scope.runningServerEvents = response.data.runningServerEvents;
 
@@ -62,8 +63,9 @@ StartNewEvent.controller('StartNewEventController', [
                         $scope.trendingHashtags[i] = $scope.trendingEventHashtag;
                     }
 
-                    $scope.homepageEvents = $scope.runningUserEvents.concat($scope.historicUserEvents, $scope.runningServerEvents);
-console.log($scope.homepageEvents);
+                    $scope.homepageEvents = $scope.runningUserEvents.concat($scope.historicUserEvents, $scope.runningServerEvents, $scope.trendingHashtags);
+                    console.log($scope.homepageEvents);
+                
                 });
         }
         $scope.getEvents();

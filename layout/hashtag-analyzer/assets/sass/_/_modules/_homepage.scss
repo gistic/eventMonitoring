@@ -86,6 +86,7 @@
         bottom: 0;
         z-index: 6;
     }
+    // Search Box 
     &.search-box {
         display: none;
         width: 50%;
@@ -104,7 +105,19 @@
         &.showed {
             display: inline-block;
         }
+        
+        @include tablet {
+            width: 100%;
+            order: -1;
+        }
+        @include phone {
+            width: 100%;
+            order: -1;
+        }
+        
     }
+    
+    // Trending Hashtags
     &.trending-box {
         background: rgb(35, 35, 36);
         padding: $padding;
@@ -127,6 +140,7 @@
             }
         }
     }
+    
     // Eventbox : hover
     &:hover {
         img {
@@ -139,6 +153,14 @@
             -ms-transform: translateY(-70%) !important;
             transform: translateY(-70%) !important;
         }
+    }
+    
+    
+    @include tablet {
+        width: 50%;
+    }
+    @include phone {
+        width: 100%;
     }
 }
 
