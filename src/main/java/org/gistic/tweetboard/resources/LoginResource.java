@@ -128,7 +128,7 @@ public class LoginResource {
         boolean redirectToHomeFlag = Boolean.getBoolean(redirectToHome);
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
-
+        URI uri  = null;
         if (!redirectToHomeFlag) {
             //make event on user's behalf
             logger.info("making event");
@@ -140,7 +140,7 @@ public class LoginResource {
             //String profileImageUrl = "http://s.twimg.com/a/1292022067/images/default_profile_2_reasonably_small.png";
             EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
             logger.info("made event with uuid: " + eventUuid.getUuid());
-            URI uri = UriBuilder.fromUri(
+            uri = UriBuilder.fromUri(
                     "http://"+baseDomain+"/hashtag-analyzer/#/dashboard/liveStreaming?hashtags=" +hashtags
                             +"&authToken="+accessToken
                             +"&userId="+userId
@@ -148,13 +148,14 @@ public class LoginResource {
                             +"&uuid="+eventUuid.getUuid()
                     //+"&profileImageUrl="+profileImageUrl
             ).build();
+        } else {
+            uri = UriBuilder.fromUri(
+                    "http://" + baseDomain + "/hashtag-analyzer/"
+                            + "?authToken=" + accessToken
+                            + "&userId=" + userId
+                            + "&screenName=" + screenName
+            ).build();
         }
-        URI uri = UriBuilder.fromUri(
-                "http://"+baseDomain+"/hashtag-analyzer/"
-                +"?authToken="+accessToken
-                +"&userId="+userId
-                +"&screenName="+screenName
-        ).build();
 //        try {
 //            profileImageUrl = twitter.showUser(Long.parseLong(userIdFromTwitter)).getBiggerProfileImageURLHttps();
 //        } catch (TwitterException e) {
