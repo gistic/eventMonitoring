@@ -4,15 +4,6 @@
         <span class="text-muted pull-right">{{topCountriesLength}} Countries</span>
     </div>
     <div class="panel-body">
-        <ul>
-            <li ng-repeat="country in topCountries | orderBy : 'count':true | limitTo : 10" class="clearfix fx-fade-down fx-speed-2000">
-                <strong class="pull-left">
-                    {{country.code | isoCountry}} 
-                </strong>
-                <span class="pull-right">
-                    {{country.count}}    
-                </span>
-            </li>
-        </ul>
+        <div google-chart chart="locationPieChart"> </div>
     </div>
 </div>

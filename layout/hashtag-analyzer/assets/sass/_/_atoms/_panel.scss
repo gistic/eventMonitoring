@@ -23,6 +23,7 @@
     img {
         @include size(64px);
         @include border-radius(3px);
+        cursor: pointer;
     }
 }
 
@@ -46,6 +47,7 @@
         height: 0;
         padding: 25% 0 5% 0;
         overflow: hidden;
+        cursor: pointer;
         img {
             @include border-radius(3px);
             position: absolute;

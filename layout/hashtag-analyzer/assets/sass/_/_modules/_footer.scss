@@ -1,25 +1,17 @@
 footer {
-    padding: $padding - 5 0 0;
-    border-top: 1px solid $gray-light;
-    margin: $margin*3 0 $margin;
+    padding: $padding - 2 0;
+    @include background-image(linear-gradient(right, #0056bd, #015bbb, #015fb7, #0465b6, #066db2, #0872ae, #0872b0, #0877ac, #0b81a9, #0d89a5, #0e8ca2, #0d8ea1, #0f939f, #11969d, #12999c, #129d9a, #13a497, #15a895, #15a895, #15ae90));
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: $white;
     .social-links {
         a {
-            color: $gray;
+            color: $white;
             &:hover,
             &:focus {
                 text-decoration: none;
             }
-        }
-    }
-    &.views--footer {
-        bottom: -10px;
-        position: absolute;
-        border: none;
-        background: rgba(13, 13, 13, 0.60);
-        @include size(100%, 45px);
-        p {
-            color: $white;
-            @include font-size($font-small);
         }
     }
 }

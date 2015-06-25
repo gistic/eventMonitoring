@@ -19,6 +19,15 @@
     <section>
         <div ng-include="'views/views-panels/top-people-panel.html'"></div>
     </section>
+       
+    <section>
+        <div ng-include="'views/views-panels/languages-panel.html'"></div>
+    </section>
+    
+    <section>
+        <div ng-include="'views/views-panels/hashtags-cloud-panel.html'"></div>
+    </section>
+    
 
 </aside>
 
@@ -35,17 +44,16 @@
                 <a href ng-click="tab = 2">Most popular</a>
             </li>
         </ul>
+        
+        <strong class="text-center">
+            <div class="loading wobblebar-loader">Loading…</div>
+        </strong>
 
         <strong class="pull-right">{{totalTweetsCount}} tweets</strong>
     </aside>
 
-    <div class="row text-center">
-        <div class="loading throbber-loader">Loading…</div>
-    </div>
-
     <button type="button" class="btn btn-load-more" ng-show="loadMoreButton()" ng-click="loadMoreTweets()"><strong><i class="fa fa-arrow-up"></i></strong> {{remainingTweetsCount}} New Tweets</button>
 
-    <!--    <div ng-show="tab === 1" ng-include="'views/views-components/tweetQueue.html'"  infinite-scroll='loadMoreTweetsFromHistory()' infinite-scroll-distance='0'></div>-->
     <div ng-show="tab === 1" ng-include="'views/views-components/tweetQueue.html'"></div>
     <div ng-show="tab === 2" ng-include="'views/views-components/topTweetsQueue.html'"></div>
 
