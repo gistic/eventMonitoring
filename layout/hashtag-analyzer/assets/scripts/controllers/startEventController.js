@@ -23,8 +23,8 @@ StartNewEvent.controller('StartNewEventController', [
         if (User.getUserAuth()) {
             User.getUserData();
         }
-     
-     
+
+
         // Get homepage events 
         $scope.getEvents = function () {
             var requestAction = "GET";
@@ -33,7 +33,7 @@ StartNewEvent.controller('StartNewEventController', [
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
                     console.log(response.data);
-                
+
                     // Running Server Events
                     $scope.runningServerEvents = response.data.runningServerEvents;
 
@@ -67,33 +67,27 @@ StartNewEvent.controller('StartNewEventController', [
 
                     $scope.homepageEvents = $scope.runningUserEvents.concat($scope.historicUserEvents, $scope.runningServerEvents, $scope.trendingHashtags);
                     console.log($scope.homepageEvents);
-                
+
                 });
         }
         $scope.getEvents();
-     
-     
+
+
         // Start event from thumb
         $scope.createEventFromTrending = function (hashtag) {
             $scope.eventHashtag = hashtag;
             $scope.startNewEvent();
         }
 
-        
+
         // Get Twitter Auth
         $scope.getTwitterAuth = function (redirectTo) {
-            
+
             var requestAction = "GET";
             var requestData = ""
-            var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
             
-            if (redirectTo != undefined) {
-                var apiUrl = '/api/events/login/twitter';
-                requestData = {
-                    redirectToHome : true
-                }
-            }
-            
+            var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag + '&redirectToHome=' + redirectTo;
+
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
                     var openUrl = response.data.url;
@@ -165,5 +159,5 @@ StartNewEvent.controller('StartNewEventController', [
             });
         };
  }
-    
+
 ]);
