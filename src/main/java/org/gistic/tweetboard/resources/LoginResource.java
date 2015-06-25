@@ -125,7 +125,7 @@ public class LoginResource {
         String redirectToHome = authDao.getRedirectToHomeFlag(oauthToken);
         authDao.deleteRedirectToHomeFlag(oauthToken);
 
-        boolean redirectToHomeFlag = Boolean.getBoolean(redirectToHome);
+        boolean redirectToHomeFlag = Boolean.valueOf(redirectToHome);
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
         URI uri  = null;
