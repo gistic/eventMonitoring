@@ -206,6 +206,14 @@ public class TweetDataLogic {
         return new GenericArray<TopItem>(topNLanguagesArray);
     }
 
+    public GenericArray<TopItem> getTopNSources(Integer count) {
+        Set<Tuple> topSourcesTuple = tweetDao.getTopNSources(uuid, count);
+        TopItem[] topNSourcesArray = topSourcesTuple.stream()
+                .map(source -> new TopItem(source.getElement(), new Double(source.getScore()).intValue()))
+                .collect(Collectors.toList()).toArray(new TopItem[]{});
+        return new GenericArray<TopItem>(topNSourcesArray);
+    }
+
     public GenericArray<TopItem> getTopNHashtags(Integer count) {
         Set<Tuple> topHashtagsTuple = tweetDao.getTopNHashtags(uuid, count);
         TopItem[] topNHashtagsArray = topHashtagsTuple.stream()
@@ -379,5 +387,9 @@ public class TweetDataLogic {
 
     public void incrWordCounter(String word) {
         tweetDao.incrWordCounter(uuid, word);
+    }
+
+    public void incrSourceCounter(String source){
+        tweetDao.incrSourceCounter(uuid, source);
     }
 }

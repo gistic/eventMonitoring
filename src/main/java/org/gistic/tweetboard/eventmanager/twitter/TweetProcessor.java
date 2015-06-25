@@ -114,6 +114,14 @@ public class TweetProcessor {
 
         String text = tweet.getText();
 
+
+        String originalSource = tweet.getSource();
+        String source = originalSource.substring(originalSource.indexOf(">"), originalSource.lastIndexOf("<"));
+
+        if (source != null || !source.isEmpty()) {
+            tweetDataLogic.incrSourceCounter(source);
+        }
+
         Pattern pattern = Pattern.compile("\\w+");
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
