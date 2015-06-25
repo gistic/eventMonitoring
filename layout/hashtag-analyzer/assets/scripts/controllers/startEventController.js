@@ -32,7 +32,6 @@ StartNewEvent.controller('StartNewEventController', [
             var requestData = ""
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
-                    console.log(response.data);
 
                     // Running Server Events
                     $scope.runningServerEvents = response.data.runningServerEvents;
@@ -55,10 +54,8 @@ StartNewEvent.controller('StartNewEventController', [
                     $scope.historicUserEvents = response.data.historicUserEvents;
                     for (var i = 0; i < $scope.historicUserEvents.length; i++) {
                         var eventHashtag = $scope.historicUserEvents[i].hashtags;
-//                        if (eventHashtag != null) {
-                            $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
-                            $scope.historicUserEvents[i].hashtags = $scope.serverEventHashtag;
-//                        }
+                        $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
+                        $scope.historicUserEvents[i].hashtags = $scope.serverEventHashtag;
                     }
 
                     // Trending Events On Twitter
@@ -71,7 +68,7 @@ StartNewEvent.controller('StartNewEventController', [
                     }
 
                     $scope.homepageEvents = $scope.runningUserEvents.concat($scope.runningServerEvents, $scope.historicUserEvents, $scope.trendingHashtags);
-                    console.log($scope.homepageEvents);
+
 
                 });
         }
@@ -90,7 +87,7 @@ StartNewEvent.controller('StartNewEventController', [
 
             var requestAction = "GET";
             var requestData = ""
-            
+
             var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag + '&redirectToHome=' + redirectTo;
 
             RequestData.fetchData(requestAction, apiUrl, requestData)

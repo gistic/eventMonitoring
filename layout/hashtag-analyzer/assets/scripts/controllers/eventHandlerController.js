@@ -59,11 +59,11 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                 SweetAlert.swal({
                         title: "Are you sure?",
-                        text: "If you start a new event you will not be able to recover this hashtag tracking!",
+                        text: "if you start new event, you can come back to current one from the homepage",
                         type: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes, stop it!",
+                        confirmButtonText: "Yes, Start it!",
                         closeOnConfirm: false
                     },
                     function (isConfirm) {
@@ -166,8 +166,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 })
         };
 
-
-        console.log(User.getUserAuth());
         // Intialize
         $scope.initDashboardData = function () {
             User.setUserAuth();
@@ -362,7 +360,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                 var videoContentType = $scope.tweet.extended_media_entities[i].video_variants[k].content_type;
                                 if (videoContentType == "video/mp4") {
                                     $scope.videoLink = $scope.tweet.extended_media_entities[i].video_variants[k].url;
-                                    console.log($scope.videoLink);
+                                    
                                     var duplicatedMedia = false;
                                     
                                     for (var key in $scope.mediaQueue) {
@@ -393,7 +391,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                         } else {
                             $scope.tweetMedia = $scope.tweet.extended_media_entities[i].media_urlhttps;
-                            console.log($scope.tweetMedia);
+                            
                             var duplicatedMedia = false;
                             
                             for (var key in $scope.mediaQueue) {
