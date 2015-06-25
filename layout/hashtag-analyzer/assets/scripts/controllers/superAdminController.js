@@ -10,6 +10,7 @@ superAdminController.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$htt
     RequestData.fetchData(requestAction, apiUrl, requestData)
         .then(function (response) {
             $scope.serverEvents = response.data.data;
+        console.log($scope.serverEvents);
         })
 
     $scope.killEvent = function (e) {
@@ -21,7 +22,8 @@ superAdminController.controller('SuperAdminCtrl', ['$rootScope', '$scope', '$htt
         var requestData = "";
 
         RequestData.fetchData(requestAction, apiUrl, requestData)
-            .then(function (response) {})
+            .then(function (response) {
+        })
 
     }
 

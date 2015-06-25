@@ -1,0 +1,12 @@
+// Extended from button hover
+// bower_components/Hover
+
+.hvr-rectangle-out:active,
+.hvr-rectangle-out:focus,
+.hvr-rectangle-out:hover {
+    color: $white;
+}
+
+.hvr-underline-from-center:before {
+    background: $white;
+}

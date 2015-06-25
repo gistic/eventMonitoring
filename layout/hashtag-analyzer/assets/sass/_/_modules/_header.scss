@@ -1,35 +1,33 @@
-header {
-    background: $white;
-    border-bottom: 1px solid $gray-light;
-    @include phone {
-        text-align: center;
-    }
-    .logo {
-        font-family: 'Lobster', cursive;
-        a {
-            color: $black;
-            &:hover, &:focus {
-                text-decoration: none;
-            }
-        }
-    }
-    .header-buttons {
-        @include phone {
-            float: none !important;
-        }
-    }
-}
-
-.header-dashboard {
+.header {
     @include background-image(linear-gradient(right, #0056bd, #015bbb, #015fb7, #0465b6, #066db2, #0872ae, #0872b0, #0877ac, #0b81a9, #0d89a5, #0e8ca2, #0d8ea1, #0f939f, #11969d, #12999c, #129d9a, #13a497, #15a895, #15a895, #15ae90));
     margin-bottom: $margin;
-    padding: $padding / 3 0;
+    padding: 0;
     .navbar-form {
-        margin: 0;
-        line-height: 28px;
+        margin-top: $margin;
     }
     .dashboard-nav {
         line-height: 32px;
+        margin-left: 40px;
+        li {
+            padding: 0;
+            a {
+                padding: 7px 5px;
+                display: inline-block;
+            }
+            &:hover {
+                a {
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+            }
+            &.active.hvr-underline-from-center {
+                &:before {
+                    background: rgb(255, 255, 255);
+                    left: 0;
+                    right: 0;
+                }
+            }
+        }
     }
     .navs {
         a {
@@ -50,16 +48,16 @@ header {
                 background: rgba(253, 253, 253, 0.9);
                 @include box-shadow(none);
                 border: none;
-                top: 115%;
+                top: 103%;
                 padding: 0;
                 li {
                     a {
                         color: $gray;
                         padding: $padding - 5 $padding + 5;
-                        &:hover,
-                        &:focus {
+                        &:hover, &:focus {
                             background: #015fb7;
                             color: $white;
+                            display: block;
                         }
                     }
                 }
@@ -67,12 +65,17 @@ header {
         }
     }
     .navbar-logo {
+        line-height: 47px;
         img {
             margin-right: $margin;
-            line-height: 32px;
             @include size(30px);
         }
+        &:hover,
+        &:focus {
+            text-decoration: none;
+        }
     }
+    // Search in Dashboard
     .start-event {
         .form-control {
             background: $white;
@@ -94,56 +97,41 @@ header {
     }
     .header-title {
         color: $white;
-        margin-left: $margin * 20;
+        margin-left: $margin;
         @include font-size($font-tiny);
-        strong {
-            @include font-size($font-large);
+    }
+}
+
+.search-homepage {
+    .start-event {
+        input {
+            @include border-radius(0);
+            font-size: 60px;
+            font-weight: 300;
+            height: 100%;
+            padding: 58px 30px;
+            color: $white;
+            background: rgb(35, 35, 36);
+            @include placeholderColor($gray-super-light);
+        }
+        .btn.btn-search {
+            z-index: 99;
+            background: rgb(12, 133, 167);
+            @include border-radius(50%);
+            @include size(75px);
+            position: absolute;
+            top: 31.5%;
+            right: 30px;
         }
     }
 }
 
 .header-homepage {
-    background: $dark-green;
-    color: $white;
-    padding: $padding * 5 0;
-    @include phone {
-        padding: $padding * 2 0;
-    }
-    text-align: center;
-    .start-event {
-        margin-top: $margin * 3;
-        margin-left: auto;
-        margin-right: auto;
-        @include size(40%, auto);
-        @include phone {
-            @include size(80%, auto);
-        }
-        input {
-            @include border-radius(5px);
-            color: $white;
-            font-weight: 300;
-            width: 95%;
-            background: darken($dark-green, 8%);
-            &::-webkit-input-placeholder {
-                color: darken($dark-green, 17%);
-            }
-            &:-moz-placeholder {
-                color: darken($dark-green, 17%);
-                @include opacity(1);
-            }
-            &::-moz-placeholder {
-                color: darken($dark-green, 17%);
-                @include opacity(1);
-            }
-            &:-ms-input-placeholder {
-                color: darken($dark-green, 17%);
-            }
-        }
-        .btn.btn-search {
-            background: darken($dark-green, 15%);
-            @include border-right-radius(5px);
-            line-height: 20px;
-            padding: $padding - 2 $padding + 5;
-        }
+    @extend .header;
+    margin: 0;
+    .search-error {
+        color: $white;
+        @include font-size($font-tiny);
+        line-height: 46px;
     }
 }

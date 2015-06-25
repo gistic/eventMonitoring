@@ -2,6 +2,7 @@ package org.gistic.tweetboard.datalogic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
@@ -14,11 +15,14 @@ import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcasterSingleton;
+import org.gistic.tweetboard.resources.TwitterUserResource;
 import org.gistic.tweetboard.util.Misc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
 import twitter4j.*;
+import twitter4j.JSONException;
+import twitter4j.JSONObject;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -28,6 +32,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -88,8 +94,7 @@ public class TweetDataLogic {
     }
 
     public void createNewEvent(String[] hashTags) {
-        tweetDao.addNewEventToList(uuid);
-        tweetDao.setDefaultEventProperties(uuid, hashTags);
+        createNewEvent(hashTags, null);
     }
 
     public InternalStatus getOldestTweetNotSentForApproval() {
@@ -113,9 +118,52 @@ public class TweetDataLogic {
         }
     }
 
-    public void deleteEvent() {
+    public void deleteEvent(String authToken) {
         //TODO : test
+        //get event details
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String topUsers = null;
+        String topCountries = null;
+        String topHashtags = null;
+        String topLanguages = null;
+        String topTweets = null;
+        try {
+            topUsers = ow.writeValueAsString(getTopTenNUsers(10));
+            topCountries = ow.writeValueAsString(getTopNCountries(10));
+            topHashtags = ow.writeValueAsString(getTopNHashtags(10));
+            topLanguages = ow.writeValueAsString(getTopNLanguages(10));
+            topTweets = ow.writeValueAsString(getTopNTweets(10, authToken));
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        BasicStats basicStats = tweetDao.getBasicStats(uuid);
+        EventMeta eventMeta = tweetDao.getEventMeta(uuid);
+        //delete running event details
         tweetDao.destroyEvent(uuid);
+        //store event details in history
+        saveEventDetailsInHistory(authToken, basicStats, eventMeta, topUsers, topCountries, topHashtags, topLanguages, topTweets);
+    }
+
+    public void saveEventDetailsInHistory(String authToken, BasicStats basicStats, EventMeta eventMeta, String topUsers, String topCountries, String topHashtags, String topLanguages, String topTweets) {
+        if (authToken != null && !authToken.isEmpty() && !authToken.equalsIgnoreCase("undefined")) {
+            saveEventDetailsInUserHistory(authToken, basicStats, eventMeta, topUsers, topCountries, topHashtags, topLanguages, topTweets);
+        }
+    }
+
+    private void saveEventDetailsInUserHistory(String authToken, BasicStats basicStats, EventMeta eventMeta, String topUsers, String topCountries, String topHashtags, String topLanguages, String topTweets) {
+        AuthDao authDao = new AuthDaoImpl();
+        org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(authToken, authDao.getAccessTokenSecret(authToken));
+        String userJsonString = new TwitterUserResource().getLoggedInUser(user);
+        org.json.JSONObject userJson = new org.json.JSONObject(userJsonString);
+        String screenName = userJson.getString("screenName");
+        String profileImgUrl = userJson.getString("profileImageURL");
+        String hashtags = eventMeta.getHashtags();
+        String startTime = eventMeta.getStartTime();
+        String mediaUrl = eventMeta.getMediaUrl();
+        long noOfTweets = basicStats.getTotalTweets();
+        long noOfRetweets = basicStats.getTotalRetweets();
+        tweetDao.storeEventInUserHistory(hashtags, startTime, screenName, profileImgUrl, noOfTweets, noOfRetweets, eventMeta.getUuid(), authToken, mediaUrl);
     }
 
     public void updateEventConfig(EventConfig eventConfig) {
@@ -223,7 +271,7 @@ public class TweetDataLogic {
     }
 
     public GenericArray<TopItem> getTopNWords(Integer count) {
-        Set<Tuple> topWordsTuple = tweetDao.getTopNHashtags(uuid, count);
+        Set<Tuple> topWordsTuple = tweetDao.getTopNWords(uuid, count);
         TopItem[] topNWordsArray = topWordsTuple.stream()
                 .map(word -> new TopItem(word.getElement(), new Double(word.getScore()).intValue()))
                 .collect(Collectors.toList()).toArray(new TopItem[]{});
@@ -322,10 +370,36 @@ public class TweetDataLogic {
     public void warmupStats(List<Status> tweets, Event event) {
         for (Status tweet : tweets) {
 
+            String text = tweet.getText();
+            text = text.replaceAll("((https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|])", "");
+            Pattern pattern = Pattern.compile("(\\b(?<!#|http)\\w+)");
+//         pattern.toString();
+            Matcher matcher = pattern.matcher(text);
+            while (matcher.find()) {
+                String word = matcher.group().toLowerCase();
+                if (Misc.isBadWord(word)) return;
+                if (Misc.isCommon(word)) return;
+                this.incrWordCounter(word);
+//            if ( word.startsWith("#") ) {
+//                LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ word);
+//                tweetDataLogic.incrHashtagCounter(language);
+//            }
+//            else {
+//                process it as word in word cloud
+//            }
+            }
+
+            HashtagEntity[] hashtagEntities = tweet.getHashtagEntities();
+            for ( HashtagEntity entity : hashtagEntities ) {
+                String hashtag = entity.getText();
+                this.incrHashtagCounter(hashtag);
+            }
+
             tweetDao.setTweetMetaDate(uuid, tweet.getId(), tweet.getCreatedAt().getTime());
             for (MediaEntity mediaEntity : tweet.getMediaEntities()) {
                 //System.out.println(mediaEntity.getType() + ": " + mediaEntity.getMediaURL());
                 incrMediaCounter(mediaEntity);
+                this.setMediaUrl(mediaEntity.getMediaURLHttps());
             }
             String language = tweet.getLang();
             if (language!=null || !language.isEmpty()) {
@@ -366,6 +440,11 @@ public class TweetDataLogic {
         List<String> cachedStatuses = new ArrayList<>();
         for (String tweetId : tweetIds) {
             String tweetString = tweetDao.getTweetStringsCache(uuid, tweetId);
+            org.json.JSONObject json = new org.json.JSONObject(tweetString);
+            long id = json.getLong("id");
+            String idAsString = String.valueOf(id);
+            json.put("id_str", idAsString);
+            tweetString = json.toString();
 //            try {
                 //Status status = TwitterObjectFactory.createStatus(tweetString);
                 cachedStatuses.add(tweetString);
@@ -389,7 +468,24 @@ public class TweetDataLogic {
         tweetDao.incrWordCounter(uuid, word);
     }
 
-    public void incrSourceCounter(String source){
+    public void incrSourceCounter(String source) {
         tweetDao.incrSourceCounter(uuid, source);
+    }
+
+    public void setMediaUrl(String mediaURLHttps) {
+        tweetDao.setMediaUrl(uuid, mediaURLHttps);
+    }
+
+    public void addToUserEvents(String uuid, String authCode) {
+        tweetDao.addToUserEventsList(uuid, authCode);
+    }
+
+    public void deleteEventFromUserEvents(String authToken) {
+        tweetDao.removeFromUserEventsList(uuid, authToken);
+    }
+
+    public void createNewEvent(String[] hashTags, String accessToken) {
+        tweetDao.addNewEventToList(uuid);
+        tweetDao.setDefaultEventProperties(uuid, hashTags, accessToken);
     }
 }

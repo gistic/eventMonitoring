@@ -83,6 +83,7 @@ public class TweetProcessor {
         for (MediaEntity mediaEntity : tweet.getExtendedMediaEntities()) {
             //System.out.println("media!! "+mediaEntity.getType() + ": " + mediaEntity.getMediaURL()+ ": " + mediaEntity.getDisplayURL()+ ": " + mediaEntity.getExpandedURL());
             tweetDataLogic.incrMediaCounter(mediaEntity);
+            tweetDataLogic.setMediaUrl(mediaEntity.getMediaURLHttps());
         }
         String language = tweet.getLang();
         if (language!=null || !language.isEmpty()) {
@@ -114,7 +115,6 @@ public class TweetProcessor {
 
         String text = tweet.getText();
 
-
         String originalSource = tweet.getSource();
         String source = originalSource.substring(originalSource.indexOf(">"), originalSource.lastIndexOf("<"));
 
@@ -122,11 +122,15 @@ public class TweetProcessor {
             tweetDataLogic.incrSourceCounter(source);
         }
 
-        Pattern pattern = Pattern.compile("\\w+");
-        Matcher matcher = pattern.matcher(text);
+        Pattern patternForWords = Pattern.compile("\\w+");
+        text = text.replaceAll("((https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|])", "");
+        Pattern pattern = Pattern.compile("(\\b(?<!#|http)\\w+)");
+//         pattern.toString();
+        Matcher matcher = patternForWords   .matcher(text);
         while (matcher.find()) {
-            if (Misc.isBadWord(matcher.group())) return;
-            String word = matcher.group();
+            String word = matcher.group().toLowerCase();
+            if (Misc.isBadWord(word)) return;
+            if (Misc.isCommon(word)) return;
             tweetDataLogic.incrWordCounter(word);
 //            if ( word.startsWith("#") ) {
 //                LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ word);
@@ -140,7 +144,6 @@ public class TweetProcessor {
         HashtagEntity[] hashtagEntities = tweet.getHashtagEntities();
         for ( HashtagEntity entity : hashtagEntities ) {
             String hashtag = entity.getText();
-            LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ hashtag);
             tweetDataLogic.incrHashtagCounter(hashtag);
         }
 

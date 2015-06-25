@@ -72,7 +72,7 @@ public class AdminEventSource {
                                 eventBuilder.data(String.class, status.getStatusString().replace("_normal", ""));
                                 final OutboundEvent event = eventBuilder.build();
                                 finalEventOutput.write(event);
-                                DelayedJobsManager.refreshEventDestroyJob(uuid);
+                                DelayedJobsManager.refreshEventDestroyJob(uuid, null);
                             }
                         } else {
                             Thread.sleep(500);

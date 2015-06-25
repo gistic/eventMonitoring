@@ -1,0 +1,23 @@
+<ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="false" options="mapOptions">
+    <ui-gmap-markers models="tweetsLocation" coords="'self'" icon="'icon'" click="onClick">
+        <ui-gmap-windows show="show">
+            <article class="media fx-fade fx-speed-2000 tweet-marker" ng-non-bindable>
+                <div class="tweet-content">
+                    <div class="media-left">
+                        <img src="{{tweetUserPicture}}" alt="">
+                    </div>
+                    <div class="media-body">
+                        <h6 class="media-heading tweet-user clearfix">
+                            <a href="http://www.twitter.com/{{tweetUser}}" target="_blank" class="pull-left tweet-userName">
+                                {{tweetUser}}
+                            </a>
+                        </h6>
+                        <p>
+                            {{tweetText}}
+                        </p>
+                    </div>
+                </div>
+            </article>
+        </ui-gmap-windows>
+    </ui-gmap-markers>
+</ui-gmap-google-map>

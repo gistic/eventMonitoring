@@ -10,18 +10,21 @@
 //bower_components
 @import "../../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
 @import "../../bower_components/modularized-normalize-scss/normalize";
+@import "../../bower_components/sweetalert/lib/sweet-alert";
+@import "../../bower_components/Hover/scss/hover";
+@import "../../bower_components/bootstrap-social/bootstrap-social.scss";
 
 //vendors
 @import "_/_vendor/_fa/_font-awesome.scss";
-@import "../../bower_components/Hover/scss/hover";
 
 // [_configs]
 @import "_/_configs/mixins";
 @import "_/_configs/utilities";
-//node added [_configs] EOF
+// [_configs] EOF
 
 // [_atoms]
 @import "_/_atoms/buttons";
+@import "_/_atoms/hover";
 @import "_/_atoms/forms";
 @import "_/_atoms/typography";
 @import "_/_atoms/icons";
@@ -39,4 +42,5 @@
 @import "_/_modules/media";
 @import "_/_modules/maps";
 @import "_/_modules/popover";
+@import "_/_modules/lightbox";
 // [_modules] EOF

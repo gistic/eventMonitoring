@@ -4,10 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.datalogic.TweetMeta;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
-import org.gistic.tweetboard.representations.BasicStats;
-import org.gistic.tweetboard.representations.EventConfig;
-import org.gistic.tweetboard.representations.EventMeta;
-import org.gistic.tweetboard.representations.EventMetaList;
+import org.gistic.tweetboard.representations.*;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
@@ -28,6 +25,19 @@ public class TweetDaoImpl implements TweetDao {
     private static final int DEFAULT_TOP_TWEETS_CACHE_DURATION = 60;
     public static final String TWEET_META_DATE_KEY = "CreationDate";
     public static final String TWEET_META_RETWEETS_COUNT_KEY = "RetweetsCount";
+    private static final String PLACEHOLDER_MEDIA_URL_KEY = "PlaceholderMedia";
+    private static final String TRENDS_KEY = "TrendsKey";
+    private static final int DEFAULT_TRENDS_CACHE_DURATION = 60 * 5;
+    public static final String HISTORIC_USER_EVENTS_LIST = "HistoricUserEventsList";
+    public static final String HISTORIC_META_HASHTAGS = "hashtags";
+    public static final String HISTORIC_META_START_TIME = "startTime";
+    public static final String HISTORIC_META_SCREEN_NAME = "screenName";
+    public static final String HISTORIC_META_PROFILE_IMG_URL = "profileImgUrl";
+    public static final String HISTORIC_META_NO_OF_TWEETS = "noOfTweets";
+    public static final String HISTORIC_META_NO_OF_RETWEETS = "noOfRetweets";
+    public static final String HISTORIC_META_AUTHTOKEN = "authtoken";
+    public static final String EVENT_ACCESS_TOKEN = "eventAccessToken";
+    public static final String HISTORIC_META_MEDIA_URL = "mediaURL";
     //private Jedis jedis;
     final String All_EVENTS_KEY = "event";
     final String BG_COLOR_KEY = "banckGroundColor";
@@ -57,11 +67,12 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public void setDefaultEventProperties(String uuid, String[] hashTags) {
+    public void setDefaultEventProperties(String uuid, String[] hashTags, String accessToken) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hset(uuid, BG_COLOR_KEY, BG_COLOR_DEFAULT);
             jedis.hset(uuid, SIZE_KEY, SIZE_DEAFULT);
             jedis.hset(uuid, SCREENS_KEY, SCREENS_DEFAULT);
+            jedis.hset(uuid, EVENT_ACCESS_TOKEN, accessToken);
             Date d =new Date();
             String time = d.toGMTString();
             jedis.hset(uuid, START_TIME_KEY, time);
@@ -232,10 +243,11 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public void addToApprovedSentToClient(String uuid, String... tweetIds) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            if (tweetIds.length == 0) {
-                return;
-            }
-            jedis.lpush(getApprovedSentToClientListKey(uuid), tweetIds);
+            // No longer maintaining sent to client tweets
+//            if (tweetIds.length == 0) {
+//                return;
+//            }
+//            jedis.lpush(getApprovedSentToClientListKey(uuid), tweetIds);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -334,10 +346,18 @@ public class TweetDaoImpl implements TweetDao {
             List<String> list = jedis.lrange(All_EVENTS_KEY, 0, -1);
             List<EventMeta> metaList = list.stream()
                     .map(event -> new EventMeta(event,
-                            jedis.hget(event, START_TIME_KEY), jedis.hget(event, HASHTAGS_KEY)))
+                                    jedis.hget(event, START_TIME_KEY),
+                                    jedis.hget(event, HASHTAGS_KEY),
+                                    jedis.hget(event, PLACEHOLDER_MEDIA_URL_KEY),
+                                    jedis.hget(event, EVENT_ACCESS_TOKEN))
+                    )
                     .collect(Collectors.toList());
             EventMeta[] metaArray = metaList.stream().toArray(EventMeta[]::new);
-            return new EventMetaList(metaArray);
+            BasicStats[] eventStatsArray = new BasicStats[metaArray.length];
+            for (int i = 0 ; i < metaArray.length ; i++) {
+                eventStatsArray[i] = getBasicStats(metaArray[i].getUuid());
+            }
+            return new EventMetaList(eventStatsArray, metaArray);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
@@ -697,6 +717,146 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
+    }
+
+    @Override
+    public void setMediaUrl(String uuid, String mediaURLHttps) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.hset(uuid, PLACEHOLDER_MEDIA_URL_KEY, mediaURLHttps);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public String[] getTrendingHashtags() {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            List<String> hashtags = jedis.lrange(TRENDS_KEY, 0, -1);
+            return (hashtags == null || hashtags.isEmpty()) ? null : hashtags.toArray(new String[]{});
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void setTrendindHashtags(String[] hashtags) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.rpush(TRENDS_KEY, hashtags);
+            jedis.expire(TRENDS_KEY, DEFAULT_TRENDS_CACHE_DURATION);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addToUserEventsList(String uuid, String authCode) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            jedis.lpush(getUserEventsListKey(authCode), uuid);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<String> getUserEventsList(String authCode) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            return jedis.lrange(getUserEventsListKey(authCode), 0, -1);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return new ArrayList<String>();
+    }
+
+    @Override
+    public void removeFromUserEventsList(String uuid, String authToken) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            jedis.lrem(getUserEventsListKey(authToken), 0, uuid);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public EventMeta getEventMeta(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            String startTime = jedis.hget(uuid, START_TIME_KEY);
+            String hashtags = jedis.hget(uuid, HASHTAGS_KEY);
+            String mediaUrl = jedis.hget(uuid, PLACEHOLDER_MEDIA_URL_KEY);
+            String accessToken = jedis.hget(uuid, EVENT_ACCESS_TOKEN);
+            Long numberOfUsers = jedis.zcard(getUsersRankSetKey(uuid));
+            Long totalTweets = 0l;
+            Long totalRetweets = 0l;
+            Long totalMedia = 0l;
+            try {
+                totalTweets = Long.parseLong(jedis.get(getTotalTweetsKey(uuid)));
+            } catch (NumberFormatException e) {}//nothing to log the value is just one
+            try {
+                totalRetweets =  Long.parseLong(jedis.get(getTotalRetweetsKey(uuid)));
+            } catch (NumberFormatException e) {}//nothing to log the value is just one
+            try {
+                totalMedia =  Long.parseLong(jedis.get(getTotalMediaKey(uuid)));
+            } catch (NumberFormatException e) {}//nothing to log the value is just one
+            return new EventMeta(uuid, startTime, hashtags, mediaUrl, accessToken);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void storeEventInUserHistory(String hashtags, String startTime, String screenName, String profileImgUrl, long noOfTweets, long noOfRetweets, String uuid, String authToken, String mediaUrl) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            jedis.lpush(HISTORIC_USER_EVENTS_LIST, uuid);
+            jedis.lpush(getHistoricUserEventIdsListKey(authToken), uuid);
+            jedis.hset(uuid, HISTORIC_META_AUTHTOKEN, authToken);
+            jedis.hset(uuid, HISTORIC_META_HASHTAGS, hashtags);
+            jedis.hset(uuid, HISTORIC_META_START_TIME, startTime);
+            jedis.hset(uuid, HISTORIC_META_SCREEN_NAME, screenName);
+            jedis.hset(uuid, HISTORIC_META_PROFILE_IMG_URL, profileImgUrl);
+            jedis.hset(uuid, HISTORIC_META_NO_OF_TWEETS, String.valueOf(noOfTweets));
+            jedis.hset(uuid, HISTORIC_META_NO_OF_RETWEETS, String.valueOf(noOfRetweets));
+            jedis.hset(uuid, HISTORIC_META_MEDIA_URL, mediaUrl);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<String> getHistoricUserEventIds(String authToken) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            return jedis.lrange(HISTORIC_USER_EVENTS_LIST, 0, -1);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return new ArrayList<String>();
+    }
+
+    @Override
+    public HistoricUserEvent getHistoricUserEvent(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            String authToken = jedis.hget(uuid, HISTORIC_META_AUTHTOKEN);
+            String hashtags = jedis.hget(uuid, HISTORIC_META_HASHTAGS);
+            String startTime = jedis.hget(uuid, HISTORIC_META_START_TIME);
+            String screenName = jedis.hget(uuid, HISTORIC_META_SCREEN_NAME);
+            String profileImgUrl =jedis.hget(uuid, HISTORIC_META_PROFILE_IMG_URL);
+            String noOfTweets = jedis.hget(uuid, HISTORIC_META_NO_OF_TWEETS);
+            String noOfRetweets = jedis.hget(uuid, HISTORIC_META_NO_OF_RETWEETS);
+            String mediaUrl = jedis.hget(uuid, HISTORIC_META_MEDIA_URL);
+            return new HistoricUserEvent(hashtags, startTime, screenName, profileImgUrl, noOfTweets, noOfRetweets, mediaUrl);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
+    }
+
+    private String getHistoricUserEventIdsListKey(String authToken) {
+        return HISTORIC_USER_EVENTS_LIST + ":" + authToken;
+    }
+
+    private String getUserEventsListKey(String authCode) {
+        return "userEventsListKey:" + authCode + ":";
     }
 
     @Override

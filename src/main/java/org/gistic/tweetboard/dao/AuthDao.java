@@ -28,4 +28,10 @@ public interface AuthDao {
     void deleteTempHashTags(String oauthToken);
 
     String getOrUpdateUserDetailsInCache(User user) throws TwitterException;
+
+    void setRedirectToHomeFlag(String token, String redirectToHome);
+
+    String getRedirectToHomeFlag(String oauthToken);
+
+    void deleteRedirectToHomeFlag(String oauthToken);
 }

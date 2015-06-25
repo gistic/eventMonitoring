@@ -2,9 +2,7 @@ package org.gistic.tweetboard.dao;
 
 import org.gistic.tweetboard.datalogic.TweetMeta;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
-import org.gistic.tweetboard.representations.BasicStats;
-import org.gistic.tweetboard.representations.EventConfig;
-import org.gistic.tweetboard.representations.EventMetaList;
+import org.gistic.tweetboard.representations.*;
 import org.joda.time.DateTime;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
@@ -27,7 +25,7 @@ public interface TweetDao {
     //void insetIn
     void addNewEventToList(String uuid);
 
-    void setDefaultEventProperties(String uuid, String[] hashTags);
+    void setDefaultEventProperties(String uuid, String[] hashTags, String accessToken);
 
     void addToArrived(String uuid, Status tweet, String statusString);
 
@@ -143,4 +141,23 @@ public interface TweetDao {
 
     void incrSourceCounter(String uuid, String word);
 
+    void setMediaUrl(String uuid, String mediaURLHttps);
+
+    String[] getTrendingHashtags();
+
+    void setTrendindHashtags(String[] hashtags);
+
+    void addToUserEventsList(String uuid, String authCode);
+
+    List<String> getUserEventsList(String authCode);
+
+    void removeFromUserEventsList(String uuid, String authToken);
+
+    EventMeta getEventMeta(String uuid);
+
+    void storeEventInUserHistory(String hashtags, String startTime, String screenName, String profileImgUrl, long noOfTweets, long noOfRetweets, String uuid, String authToken, String mediaUrl);
+
+    List<String> getHistoricUserEventIds(String authToken);
+
+    HistoricUserEvent getHistoricUserEvent(String historicUserEventId);
 }
