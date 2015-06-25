@@ -454,7 +454,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     $scope.topPeople = $scope.data.topUsers;
                 }, false);
             });
-
+            
             // Top country
             source.addEventListener('country-update', function (response) {
                 $scope.topCountrey = JSON.parse(response.data);
