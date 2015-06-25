@@ -4,18 +4,19 @@ var StartNewEvent = angular.module('StartNewEvent', []);
 StartNewEvent.controller('StartNewEventController', [
     '$rootScope',
     '$scope',
- '$http',
+    '$http',
     '$state',
     '$cookies',
     '$cookieStore',
     '$location',
- '$window',
+    '$window',
+    '$timeout',
 
     'RequestData',
     'User',
     'SweetAlert',
     'filterHashtags',
- function ($rootScope, $scope, $http, $state, $cookies, $cookieStore, $location, $window, RequestData, User, SweetAlert, filterHashtags) {
+ function ($rootScope, $scope, $http, $state, $cookies, $cookieStore, $location, $window, $timeout, RequestData, User, SweetAlert, filterHashtags) {
 
         User.setUserAuth();
 
@@ -29,8 +30,7 @@ StartNewEvent.controller('StartNewEventController', [
             var requestData = ""
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
-                    console.log(response.data);
-
+                console.log(response.data);
                     // Running Server Events
                     $scope.runningServerEvents = response.data.runningServerEvents;
 
@@ -47,8 +47,10 @@ StartNewEvent.controller('StartNewEventController', [
                     $scope.historicUserEvents = response.data.historicUserEvents;
                     for (var i = 0; i < $scope.historicUserEvents.length; i++) {
                         var eventHashtag = $scope.historicUserEvents[i].hashtags;
-                        $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
-                        $scope.historicUserEvents[i].hashtags = $scope.serverEventHashtag;
+                        if (eventHashtag != null) {
+                            $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
+                            $scope.historicUserEvents[i].hashtags = $scope.serverEventHashtag;
+                        }
                     }
 
                     // Trending Events On Twitter
@@ -61,12 +63,15 @@ StartNewEvent.controller('StartNewEventController', [
                     }
 
                     $scope.homepageEvents = $scope.runningUserEvents.concat($scope.historicUserEvents, $scope.runningServerEvents);
-
-                    console.log($scope.homepageEvents);
+console.log($scope.homepageEvents);
                 });
         }
-
         $scope.getEvents();
+
+        $scope.createEventFromTrending = function (hashtag) {
+            $scope.eventHashtag = hashtag;
+            $scope.startNewEvent();
+        }
 
         // Get Twitter Auth
         $scope.getTwitterAuth = function () {
@@ -91,8 +96,7 @@ StartNewEvent.controller('StartNewEventController', [
                         uuid: $scope.eventID
                     });
                 })
-                .error(function (response) { // {'error':'incorrect token'}
-                    //                $scope.startNewEvent();
+                .error(function (response) {
                     console.log("#");
                 })
         }

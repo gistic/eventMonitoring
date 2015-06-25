@@ -6,24 +6,32 @@
 <div class="flexbox tilesWall">
 
     <div class="event-box shading" ng-repeat-start="event in homepageEvents | limitTo : 9">
-        <a ng-click="createEventFromTrending(event.hashTags)" class="full-box-link"></a>
+        
+        <a ng-click="createEventFromTrending(event.hashtags)" class="full-box-link"></a>
+        
         <div class="mediaBox">
-            <img ng-src="{{event.mediaUrl || mediaUrl}}" class="img-responsive">
+            <img ng-src="{{event.mediaUrl}}" class="img-responsive">
         </div>
+        
         <header>
-            <h2><a href="#">#{{event.hashtags || event.hashtags}}</a></h2>
-            <p class="meta">{{event.noOfTweets}} Tweets</p>
-            <p am-time-ago="event.startTime" class="meta"></p>
-
-            
+            <h2><a href="#">#{{event.hashtags}}</a></h2>
             <h3 class="created-by">
-                <img ng-src="{{event.profileImageUrl || event.prfoileImageUrl}}" alt="{{event.hashTags}}" class="img-circle">
+                <img ng-src="{{event.profileImageUrl}}" alt="{{event.hashtags}}" class="img-circle">
                 <a href="#">@{{event.screenName}}</a>
             </h3>
+            
+            <span class="meta">
+                <span ng-if="event.noOfTweets">{{event.noOfTweets}} Tweets</span>
+                <span ng-if="!event.noOfTweets">Running Now</span>
+                - 
+                <span am-time-ago="event.startTime"></span>
+            </span>
 
         </header>
+        
     </div>
-
+    
+    <!-- Search Box -->
     <div class="event-box search-box tile" ng-class="{'showed':$index == 4}">
 
         <div class="search-homepage">
@@ -40,7 +48,9 @@
             </div>
         </div>
     </div>
-
+    
+    
+    <!-- Trending Twitter -->
     <div class="event-box trending-box" ng-if="$index == 8" ng-repeat-end>
         <ul>
             <li class="list-header">Trending in Twitter</li>
