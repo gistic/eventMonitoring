@@ -18,6 +18,7 @@ public class AuthDaoImpl implements AuthDao {
     private static final String TWITTER_REQUEST_TOKEN_KEY_STUB = "twitterRequestTokenKey:";
     private static final String TWITTER_ACCESS_TOKEN_KEY_STUB = "twitterAccessTokenKey:";
     private static final String TWITTER_USER_ID_KEY_STUB = "twitterUserIdKey:";
+    public static final String REDIRECT_TO_HOME = "redirectToHome";
 
     @Override
     public void setRequestToken(String requestToken, String requestTokenSecret) {
@@ -142,6 +143,34 @@ public class AuthDaoImpl implements AuthDao {
             jE.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void setRedirectToHomeFlag(String token, String redirectToHome) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            jedis.set(REDIRECT_TO_HOME +":"+token, redirectToHome);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public String getRedirectToHomeFlag(String oauthToken) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            return jedis.get(REDIRECT_TO_HOME+":"+oauthToken);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return "false";
+    }
+
+    @Override
+    public void deleteRedirectToHomeFlag(String oauthToken) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
+            jedis.del(REDIRECT_TO_HOME+":"+oauthToken);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
     }
 
     private String getTwitteruserIdKey(String accessToken) {
