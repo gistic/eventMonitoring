@@ -9,6 +9,9 @@
             <a ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank" class="pull-left tweet-userName">
                 {{tweet.user.screen_name}}
             </a>
+            <a class="btn-link follow-user" ng-href="{{twitterBaseUrl}}intent/follow?screen_name={{tweet.user.screen_name}}" tooltip-placement="left" tooltip="Follow">
+            <span class="fa fa-user-plus"></span>
+        </a>
            <a class="pull-right tweet-time" ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}/status/{{tweet.id_str}}" target="_blank" title="Open in Twitter">
               <strong class="pull-right">
                   <span ng-if="tweet.retweet" class="fa fa-retweet text-muted"></span>
@@ -16,6 +19,7 @@
                </strong>
            </a>
         </h6>
+
             <span ng-if="!tweet.retweet">
            <p ng-bind-html="tweet.text | parseUrl:'_blank'"></p>
         </span>

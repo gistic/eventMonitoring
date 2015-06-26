@@ -19,7 +19,7 @@ StartNewEvent.controller('StartNewEventController', [
  function ($rootScope, $scope, $http, $state, $cookies, $cookieStore, $location, $window, $timeout, RequestData, User, SweetAlert, filterHashtags) {
 
         User.setUserAuth();
-
+     
         if (User.getUserAuth()) {
             User.getUserData();
         }
@@ -54,8 +54,10 @@ StartNewEvent.controller('StartNewEventController', [
                     $scope.historicUserEvents = response.data.historicUserEvents;
                     for (var i = 0; i < $scope.historicUserEvents.length; i++) {
                         var eventHashtag = $scope.historicUserEvents[i].hashtags;
-                        $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
-                        $scope.historicUserEvents[i].hashtags = $scope.serverEventHashtag;
+                        if (eventHashtag != null) {
+                            $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
+                            $scope.historicUserEvents[i].hashtags = $scope.serverEventHashtag;
+                        }
                     }
 
                     // Trending Events On Twitter
@@ -74,14 +76,6 @@ StartNewEvent.controller('StartNewEventController', [
         }
         $scope.getEvents();
 
-
-        // Start event from thumb
-        $scope.createEventFromTrending = function (hashtag) {
-            $scope.eventHashtag = hashtag;
-            $scope.startNewEvent();
-        }
-
-
         // Get Twitter Auth
         $scope.getTwitterAuth = function (redirectTo) {
 
@@ -99,35 +93,41 @@ StartNewEvent.controller('StartNewEventController', [
 
         // Start event at server
         $scope.startServerEvent = function () {
+            eventHashtag = $scope.eventHashtag;
+            
             $scope.$broadcast();
-            RequestData.startEvent()
-                .success(function (response) {
-                    $rootScope.eventID = response.uuid;
-                    // Redirect the front website page to the admin page
-                    $state.transitionTo('dashboard.liveStreaming', {
-                        uuid: $scope.eventID
-                    });
-                })
-                .error(function (response) {
-                    console.log("#");
-                })
+            RequestData.startEvent('POST', eventHashtag).success(function (response) {
+                $rootScope.eventID = response.uuid;
+                
+                // Redirect the front website page to the admin page
+                $state.transitionTo('dashboard.liveStreaming', {
+                    uuid: $scope.eventID
+                });
+            }).error(function (response) {
+                console.log("#");
+            })
         }
 
 
         // Action on button
         $scope.startNewEvent = function (action) {
+
+            // Check hashtag
             var validSearch = true;
             if ($scope.eventHashtag === undefined) {
                 validSearch = false;
                 $(".search-error").css("display", "inline-block");
                 $(".search-error").text("Please type at least three letters to start your event");
             }
+
             var checkHashtag = filterHashtags.preventBadHashtags($scope.eventHashtag);
             if (checkHashtag) {
                 validSearch = false;
                 $(".search-error").css("display", "inline-block");
                 $(".search-error").text("We prevent searching for sexual hashtags .. choose other hashtag");
             }
+
+
             if (validSearch) {
                 $(".spinner").css("opacity", 1);
                 if (User.getUserAuth()) {
@@ -137,6 +137,12 @@ StartNewEvent.controller('StartNewEventController', [
                 }
             }
         };
+
+        // Start event from thumb
+        $scope.createEventFromTrending = function (hashtag) {
+            $scope.eventHashtag = hashtag;
+            $scope.startNewEvent();
+        }
 
 
         // Logout

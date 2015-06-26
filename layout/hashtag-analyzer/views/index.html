@@ -54,9 +54,15 @@
     
     <!-- Trending Twitter -->
     <div class="event-box trending-box" ng-if="$index == 8" ng-repeat-end>
-        <ul>
-            <li class="list-header">Trending in Twitter</li>
-            <li ng-repeat="event in trendingHashtags | limitTo : 5"><a ng-href="{{twitterBaseUrl}}search?q={{event}}" target="_blank">#{{event}}</a>
+       <h4 class="list-header">Trending in Twitter</h4>
+        <ul class="col-md-12">
+            <li ng-repeat="event in trendingHashtags | limitTo : 4">
+                <a ng-click="createEventFromTrending(event)" >#{{event}}</a>
+            </li>
+        </ul>
+        <ul class="col-md-12">
+            <li ng-repeat="event in trendingHashtags | orderBy: index : reverse | limitTo : 4">
+                <a ng-click="createEventFromTrending(event)" >#{{event}}</a>
             </li>
         </ul>
     </div>

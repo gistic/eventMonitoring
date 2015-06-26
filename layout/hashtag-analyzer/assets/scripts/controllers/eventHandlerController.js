@@ -42,14 +42,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
         // Search from the dashboard
         $scope.dashboardSearch = function () {
-
+            var eventHashtag = $('#eventHashtag').val();
             var validSearch = true;
-            if ($('#eventHashtag').val() === undefined) {
+            if (eventHashtag === undefined) {
                 validSearch = false;
                 $(".search-error").css("display", "inline-block");
                 $(".search-error").text("Please type at least three letters to start your event");
             }
-            var checkHashtag = filterHashtags.preventBadHashtags($('#eventHashtag').val());
+            var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
             if (checkHashtag) {
                 validSearch = false;
                 $(".search-error").css("display", "inline-block");
@@ -76,7 +76,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                 // Check if there is an authentication key in the browser cookies
                                 if (User.getUserAuth()) {
                                     $scope.$broadcast();
-                                    RequestData.startEvent()
+                                    RequestData.startEvent('POST', eventHashtag)
                                         .success(function (response) {
                                             $rootScope.eventID = response.uuid;
                                             // Redirect the front website page to the admin page
@@ -355,6 +355,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                         // Push only MP4 videos
                         if ($scope.mediaType == 'video') {
+                            console.log($scope.mediaType);
                             var videoVariantsArrayLength = $scope.tweet.extended_media_entities[i].video_variants.length;
                             for (var k = 0; k < videoVariantsArrayLength; k++) {
                                 var videoContentType = $scope.tweet.extended_media_entities[i].video_variants[k].content_type;

@@ -105,7 +105,6 @@
         &.showed {
             display: inline-block;
         }
-        
         @include tablet {
             width: 100%;
             order: -1;
@@ -114,25 +113,26 @@
             width: 100%;
             order: -1;
         }
-        
     }
-    
     // Trending Hashtags
     &.trending-box {
         background: rgb(35, 35, 36);
         padding: $padding;
+        .list-header {
+            color: $white;
+            @include font-size($font-large);
+            margin-bottom: 5px;
+        }
         ul {
             li {
                 margin-bottom: $margin - 3;
-                &.list-header {
-                    color: $white;
-                    @include font-size($font-large);
-                }
                 &:last-child {
                     margin-bottom: 0;
                 }
                 a {
                     color: rgb(17, 192, 207);
+                    white-space: pre;
+                    word-wrap: break-word;
                     &:hover {
                         text-decoration: underline;
                     }
@@ -140,7 +140,6 @@
             }
         }
     }
-    
     // Eventbox : hover
     &:hover {
         img {
@@ -154,8 +153,6 @@
             transform: translateY(-70%) !important;
         }
     }
-    
-    
     @include tablet {
         width: 50%;
     }
