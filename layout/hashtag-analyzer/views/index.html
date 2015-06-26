@@ -7,7 +7,9 @@
 
     <div class="event-box shading" ng-repeat-start="event in homepageEvents | limitTo : 9">
         
-        <a ng-click="createEventFromTrending(event.hashtags)" class="full-box-link"></a>
+        <!-- Check if event is trending or server one -->
+        <a ng-if="event.hashtags" ng-click="createEventFromTrending(event.hashtags, event.uuid)" class="full-box-link"></a>
+        <a ng-if="!event.hashtags" ng-click="createEventFromTrending(event)" class="full-box-link"></a>
         
         <div class="mediaBox">
             <img ng-src="{{event.mediaUrl}}" class="img-responsive">
@@ -23,10 +25,12 @@
             <span class="meta">
                 <span ng-if="event.noOfTweets">{{event.noOfTweets}} Tweets</span>
                 <span ng-if="!event.noOfTweets">Running Now</span>
+                
                 <span ng-if="event.startTime">
                     - 
                     <span am-time-ago="event.startTime"></span>    
                 </span>
+                
             </span>
 
         </header>

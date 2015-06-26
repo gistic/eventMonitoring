@@ -19,7 +19,7 @@ StartNewEvent.controller('StartNewEventController', [
  function ($rootScope, $scope, $http, $state, $cookies, $cookieStore, $location, $window, $timeout, RequestData, User, SweetAlert, filterHashtags) {
 
         User.setUserAuth();
-     
+
         if (User.getUserAuth()) {
             User.getUserData();
         }
@@ -94,11 +94,11 @@ StartNewEvent.controller('StartNewEventController', [
         // Start event at server
         $scope.startServerEvent = function () {
             eventHashtag = $scope.eventHashtag;
-            
+
             $scope.$broadcast();
             RequestData.startEvent('POST', eventHashtag).success(function (response) {
                 $rootScope.eventID = response.uuid;
-                
+
                 // Redirect the front website page to the admin page
                 $state.transitionTo('dashboard.liveStreaming', {
                     uuid: $scope.eventID
@@ -139,9 +139,20 @@ StartNewEvent.controller('StartNewEventController', [
         };
 
         // Start event from thumb
-        $scope.createEventFromTrending = function (hashtag) {
+        $scope.createEventFromTrending = function (hashtag, uuid) {
+
             $scope.eventHashtag = hashtag;
-            $scope.startNewEvent();
+            
+            if (uuid != null) {
+                $rootScope.eventID = uuid;
+                // Redirect the front website page to the admin page
+                $state.transitionTo('dashboard.liveStreaming', {
+                    uuid: $rootScope.eventID
+                });
+
+            } else {
+                $scope.startNewEvent();
+            }
         }
 
 
