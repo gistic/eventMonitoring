@@ -25,7 +25,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
 
 
-        
+
         // 2. Event streaming
         // 3. Draw charts and panels 
         // 4. Stop and kill event
@@ -35,7 +35,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
         }
-                                       
+
         // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
         $rootScope.eventID = $location.search().uuid;
         $rootScope.authoUserName = $location.search().screenName;
@@ -43,7 +43,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $scope.isActive = function (currentState) {
             return currentState === $state.current.name;
         };
-                                       
+
         // Truse Source : fix ng-src videos issue
         $scope.trustSrc = function (src) {
             return $sce.trustAsResourceUrl(src);
@@ -179,7 +179,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $scope.initDashboardData = function () {
             User.setUserAuth();
             console.log(User.getUserAuth());
-            
+
             if (User.getUserAuth()) {
                 console.log("AUTH. User");
                 $scope.getWarmupData();
@@ -247,7 +247,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $scope.mediaQueue = [];
         $scope.lastNewMedia = [];
 
-//        $scope.topCountries = [];
+        //        $scope.topCountries = [];
         $scope.topPeople = [];
 
         $scope.tweet = {};
@@ -263,13 +263,40 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
         // DRAW Google MAP
         $scope.tweetsLocation = [];
-        $scope.map = {
+        $scope.defaultMapOnError = {
             center: {
-                latitude: 45,
-                longitude: -73
+                latitude: 36.03133178,
+                longitude: 16.5234375
             },
             zoom: 2
-        };
+
+        }
+
+        if (!!navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                $scope.map = {
+                    center: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    },
+                    zoom: 6
+                }
+
+                $scope.userPositionMarker = {
+                    id: 0,
+                    coords: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    }
+                }
+            }, function () {
+                $scope.map = $scope.defaultMapOnError;
+            });
+
+        } else {
+            $(".angular-google-map-container").innerHTML = 'No Geolocation Support.';
+            $scope.map = $scope.defaultMapOnError;
+        }
         $scope.mapOptions = {
             scrollwheel: false
         };
@@ -342,7 +369,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     $scope.userProfileImage = $scope.tweet.user.original_profile_image_urlhttps;
                     $scope.tweetCreatedAt = $scope.tweet.created_at;
 
-                    
+
                     for (var i = 0; i < mediaArrayLength; i++) {
 
                         $scope.mediaType = $scope.tweet.extended_media_entities[i].type;
@@ -356,13 +383,13 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                 var videoContentType = $scope.tweet.extended_media_entities[i].video_variants[k].content_type;
                                 if (videoContentType == "video/mp4") {
                                     $scope.videoLink = $scope.tweet.extended_media_entities[i].video_variants[k].url;
-                                    
+
                                     var duplicatedMedia = false;
-                                    
+
                                     for (var key in $scope.mediaQueue) {
                                         if ($scope.videoLink == $scope.mediaQueue[key].url) {
                                             duplicatedMedia = true;
-                                            
+
                                             break;
                                         } else {
                                             duplicatedMedia = false;
@@ -387,13 +414,13 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                         } else {
                             $scope.tweetMedia = $scope.tweet.extended_media_entities[i].media_urlhttps;
-                            
+
                             var duplicatedMedia = false;
-                            
+
                             for (var key in $scope.mediaQueue) {
                                 if ($scope.tweetMedia == $scope.mediaQueue[key].url) {
                                     duplicatedMedia = true;
-                                    
+
                                     break;
                                 } else {
                                     duplicatedMedia = false;
@@ -448,7 +475,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     $scope.topPeople = $scope.data.topUsers;
                 }, false);
             });
-            
+
             // Top country
             source.addEventListener('country-update', function (response) {
                 $scope.topCountrey = JSON.parse(response.data);
@@ -477,7 +504,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             });
         }
         $scope.startEventSource();
-                                       
+
         // Languages Pie Chart
         var languagesPieChart = [];
         $scope.languagesPieChart = languagesPieChart;
@@ -497,15 +524,15 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 }
             };
         }
-        
-        
+
+
         // Location GEO Chart [ Location's Map ]
         var locationChart = [];
         $scope.locationChart = locationChart;
         $scope.drawLocationGeoChart = function () {
 
             locationChart.type = "GeoChart";
-            locationChart.data = [['Country','Tweet Count: ']];
+            locationChart.data = [['Country', 'Tweet Count: ']];
 
             locationChart.options = {
                 tooltip: {
@@ -550,14 +577,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {                
+                .success(function (response) {
                     // Update Geo map & Pie chart
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.countryName = ISO3166.getCountryName(response.items[i].code);
                         $scope.countryCount = response.items[i].count;
                         locationChart.data.push([$scope.countryName, $scope.countryCount]);
                     }
-                $scope.topCountriesLength = locationChart.data.length - 1
+                    $scope.topCountriesLength = locationChart.data.length - 1
                 }).error(function () {
                     console.log("#");
                 })
@@ -591,7 +618,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $rootScope.getLanguagesStats();
         $scope.drawlanguagesPieChart();
 
-                                       
+
         // GET : Top Hashtags
         $scope.topHashtags = [];
         $scope.tagCloudColors = ['rgb(222,235,247)', 'rgb(158,202,225)', 'rgb(49,130,189)'];
@@ -737,7 +764,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             CreateEventSource.closeEventSource();
         }
 
-        
+
         // Draw Tweets overtime Chart
         $scope.chartConfig = {
             options: {
