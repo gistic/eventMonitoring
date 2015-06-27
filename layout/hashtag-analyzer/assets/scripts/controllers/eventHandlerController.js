@@ -169,12 +169,22 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         // Intialize
         $scope.initDashboardData = function () {
             User.setUserAuth();
-            $scope.getWarmupData();
-            $scope.getViewOptions();
-            $scope.getEventStats();
-            User.getUserData();
-        }
+            console.log(User.getUserAuth());
+            
+            if (User.getUserAuth()) {
+                console.log("AUTH. User");
+//                            User.setUserAuth();
+                $scope.getWarmupData();
+                $scope.getViewOptions();
+                $scope.getEventStats();
+                User.getUserData();
+            } else {
+                console.log("NO AUTH");
+                $state.transitionTo('home');
+            }
 
+
+        }
 
         $scope.dynamicPopover = {
             templateUrl: 'myPopoverTemplate.html'
@@ -184,12 +194,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $rootScope.eventID = $location.search().uuid;
         $rootScope.authoUserName = $location.search().screenName;
 
-        if ($cookies.userAuthentication === undefined || $cookies.userAuthentication === "undefined") {
-            $rootScope.authToken = $location.search().authToken;
-            $cookies.userAuthentication = $rootScope.authToken;
-        } else {
-            $rootScope.authToken = $cookies.userAuthentication;
-        }
+        
 
         // Truse Source : fix ng-src videos issue
         $scope.trustSrc = function (src) {
