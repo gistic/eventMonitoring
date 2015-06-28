@@ -2,7 +2,7 @@
 
     <!-- image -->
     <div class="lightbox-image-container">
-{{Lightbox.image.type}}
+
         <img ng-if="Lightbox.image.type == 'photo'" class="img-responsive" ng-class="{{Lightbox.image.type}}" lazy-load ll-src="{{Lightbox.imageUrl}}" on-error-src="{{defultImage}}" />
 
         <video ng-if="Lightbox.image.type == 'video'" width="500" controls preload="none" ng-src="{{Lightbox.image.url | trusted}}"></video>
@@ -20,9 +20,9 @@
                 </a>
                 
                 <a class="pull-right tweet-time" ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}/status/{{tweet.id_str}}" target="_blank" title="Open in Twitter">
-              <strong class="pull-right">
+                  <strong class="pull-right">
                   <small am-time-ago="Lightbox.image.tweetCreatedAt"></small>
-               </strong>
+                   </strong>
            </a>
             </h6>
 

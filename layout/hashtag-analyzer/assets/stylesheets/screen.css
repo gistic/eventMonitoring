@@ -19443,6 +19443,13 @@ a[ng-click] {
   box-shadow: none;
 }
 
+/* line 28, ../sass/_/_configs/_utilities.scss */
+img {
+  opacity: 0.9;
+  filter: alpha(opacity=90);
+  -webkit-filter: brightness(9.9);
+}
+
 /* line 1, ../sass/_/_atoms/_buttons.scss */
 .btn {
   border: none;

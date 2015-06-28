@@ -11,6 +11,7 @@ myAppFilters.filter('parseUrl', function () {
     return function (tweetText, target) {
         
         var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
+        
         var hashtagPattern = /#(\S*)/g;
         var mentionPattern = /@(\S*)/g;
 

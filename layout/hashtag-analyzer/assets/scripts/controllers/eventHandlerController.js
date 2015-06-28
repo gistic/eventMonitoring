@@ -29,12 +29,19 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         // 2. Event streaming
         // 3. Draw charts and panels 
         // 4. Stop and kill event
-
+                                       
+        
         // 1. Set the initializing values
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
         }
+                                       
+        // Lightbox for media
+        $scope.Lightbox = Lightbox;
+        $scope.openLightboxModal = function (index) {
+            Lightbox.openModal($scope.mediaQueue, index);
+        };
 
         // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
         $rootScope.eventID = $location.search().uuid;
@@ -43,11 +50,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $scope.isActive = function (currentState) {
             return currentState === $state.current.name;
         };
-
-        // Truse Source : fix ng-src videos issue
-        $scope.trustSrc = function (src) {
-            return $sce.trustAsResourceUrl(src);
-        }
 
         // Search from the dashboard
         $scope.dashboardSearch = function () {
@@ -195,9 +197,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         }
 
 
-        // Lightbox for media
-        $scope.Lightbox = Lightbox;
-
         // TOP TWEETS
         $scope.topTweets = [];
         $scope.getTopTweets = function () {
@@ -247,7 +246,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $scope.mediaQueue = [];
         $scope.lastNewMedia = [];
 
-        //        $scope.topCountries = [];
         $scope.topPeople = [];
 
         $scope.tweet = {};
@@ -377,7 +375,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                         // Push only MP4 videos
                         if ($scope.mediaType == 'video') {
-                            console.log($scope.mediaType);
+                            
                             var videoVariantsArrayLength = $scope.tweet.extended_media_entities[i].video_variants.length;
                             for (var k = 0; k < videoVariantsArrayLength; k++) {
                                 var videoContentType = $scope.tweet.extended_media_entities[i].video_variants[k].content_type;
@@ -525,7 +523,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             };
         }
 
-
         // Location GEO Chart [ Location's Map ]
         var locationChart = [];
         $scope.locationChart = locationChart;
@@ -670,7 +667,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $scope.loadMoreMediaButton = function () {
                 return $scope.pagesShown < ($scope.mediaQueue.length / $scope.pageSize);
             }
-            // Load more tweets handler
+        
+        // Load more tweets handler
         $scope.loadMoreMedia = function () {
             $scope.pagesShown++;
         };
@@ -732,10 +730,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 });
         };
 
-        $scope.openLightboxModal = function (index) {
-            Lightbox.openModal($scope.mediaQueue, index);
-        };
-
         // Logout
         $scope.logOutUser = function () {
             SweetAlert.swal({
@@ -763,7 +757,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             $scope.eventStarted = false;
             CreateEventSource.closeEventSource();
         }
-
 
         // Draw Tweets overtime Chart
         $scope.chartConfig = {
