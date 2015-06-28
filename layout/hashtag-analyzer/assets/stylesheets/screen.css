@@ -19795,96 +19795,21 @@ ol {
   opacity: 1;
 }
 
-@-webkit-keyframes webkit-spin {
-  from {
-    -webkit-transform: scale(1) rorate(0deg);
-  }
-  to {
-    -webkit-transform: scale(1) rotate(359deg);
-  }
-}
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-/* line 38, ../sass/_/_atoms/_spinner.scss */
-.loading-icon {
-  -ms-animation: spin .7s infinite linear;
-  -moz-animation: spin .7s infinite linear;
-  -webkit-animation: webkit-spin .7s infinite linear;
-  top: 2px;
-  margin-left: 7px;
-}
-
-/* line 48, ../sass/_/_atoms/_spinner.scss */
-.pace {
-  -webkit-pointer-events: none;
-  pointer-events: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  z-index: 2000;
-  position: fixed;
-  margin: auto;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 5px;
-  width: 200px;
-  background: #fff;
-  border: 1px solid #ddba4e;
-  overflow: hidden;
-}
-
-/* line 71, ../sass/_/_atoms/_spinner.scss */
-.pace .pace-progress {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  -o-box-sizing: border-box;
-  box-sizing: border-box;
-  -webkit-transform: translate3d(0, 0, 0);
-  -moz-transform: translate3d(0, 0, 0);
-  -ms-transform: translate3d(0, 0, 0);
-  -o-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-  max-width: 200px;
-  position: fixed;
-  z-index: 2000;
-  display: block;
-  position: absolute;
-  top: 0;
-  right: 100%;
-  height: 100%;
-  width: 100%;
-  background: #ddba4e;
-}
-
-/* line 96, ../sass/_/_atoms/_spinner.scss */
-.pace.pace-inactive {
-  display: none;
-}
-
-/* line 102, ../sass/_/_atoms/_spinner.scss */
+/* line 25, ../sass/_/_atoms/_spinner.scss */
 .loader {
   z-index: 99;
 }
 
-/* line 106, ../sass/_/_atoms/_spinner.scss */
+/* line 29, ../sass/_/_atoms/_spinner.scss */
 .overlay {
-  z-index: 9;
+  z-index: 999;
   position: fixed;
   width: 100%;
   height: 100%;
   background: black center center no-repeat;
   opacity: .9;
 }
-/* line 113, ../sass/_/_atoms/_spinner.scss */
+/* line 35, ../sass/_/_atoms/_spinner.scss */
 .overlay .loader {
   margin: auto;
   top: 0;
@@ -19895,7 +19820,53 @@ ol {
   position: absolute;
 }
 
-/* line 124, ../sass/_/_atoms/_spinner.scss */
+/* line 47, ../sass/_/_atoms/_spinner.scss */
+.loadEvents {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  margin: 100px auto;
+}
+
+/* line 55, ../sass/_/_atoms/_spinner.scss */
+.bounce1, .bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #ffffff;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-animation: bounce 2.0s infinite ease-in-out;
+  animation: bounce 2.0s infinite ease-in-out;
+}
+
+/* line 69, ../sass/_/_atoms/_spinner.scss */
+.bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes bounce {
+  0%, 100% {
+    -webkit-transform: scale(0);
+  }
+  50% {
+    -webkit-transform: scale(1);
+  }
+}
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+}
+/* line 91, ../sass/_/_atoms/_spinner.scss */
 .spinner {
   width: 94px;
   height: 94px;
@@ -19907,7 +19878,7 @@ ol {
   top: 22%;
 }
 
-/* line 134, ../sass/_/_atoms/_spinner.scss */
+/* line 101, ../sass/_/_atoms/_spinner.scss */
 .double-bounce1,
 .double-bounce2 {
   width: 100%;
@@ -19922,7 +19893,7 @@ ol {
   animation: bounce 2.0s infinite ease-in-out;
 }
 
-/* line 149, ../sass/_/_atoms/_spinner.scss */
+/* line 116, ../sass/_/_atoms/_spinner.scss */
 .double-bounce2 {
   -webkit-animation-delay: -1.0s;
   animation-delay: -1.0s;
@@ -20295,6 +20266,7 @@ ol {
 /* line 1, ../sass/_/_modules/_footer.scss */
 footer {
   padding: 13px 0;
+  z-index: 9;
   background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjEuMCIgeTE9IjAuNSIgeDI9IjAuMCIgeTI9IjAuNSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwNTZiZCIvPjxzdG9wIG9mZnNldD0iNS4yNjMxNiUiIHN0b3AtY29sb3I9IiMwMTViYmIiLz48c3RvcCBvZmZzZXQ9IjEwLjUyNjMyJSIgc3RvcC1jb2xvcj0iIzAxNWZiNyIvPjxzdG9wIG9mZnNldD0iMTUuNzg5NDclIiBzdG9wLWNvbG9yPSIjMDQ2NWI2Ii8+PHN0b3Agb2Zmc2V0PSIyMS4wNTI2MyUiIHN0b3AtY29sb3I9IiMwNjZkYjIiLz48c3RvcCBvZmZzZXQ9IjI2LjMxNTc5JSIgc3RvcC1jb2xvcj0iIzA4NzJhZSIvPjxzdG9wIG9mZnNldD0iMzEuNTc4OTUlIiBzdG9wLWNvbG9yPSIjMDg3MmIwIi8+PHN0b3Agb2Zmc2V0PSIzNi44NDIxMSUiIHN0b3AtY29sb3I9IiMwODc3YWMiLz48c3RvcCBvZmZzZXQ9IjQyLjEwNTI2JSIgc3RvcC1jb2xvcj0iIzBiODFhOSIvPjxzdG9wIG9mZnNldD0iNDcuMzY4NDIlIiBzdG9wLWNvbG9yPSIjMGQ4OWE1Ii8+PHN0b3Agb2Zmc2V0PSI1Mi42MzE1OCUiIHN0b3AtY29sb3I9IiMwZThjYTIiLz48c3RvcCBvZmZzZXQ9IjU3Ljg5NDc0JSIgc3RvcC1jb2xvcj0iIzBkOGVhMSIvPjxzdG9wIG9mZnNldD0iNjMuMTU3ODklIiBzdG9wLWNvbG9yPSIjMGY5MzlmIi8+PHN0b3Agb2Zmc2V0PSI2OC40MjEwNSUiIHN0b3AtY29sb3I9IiMxMTk2OWQiLz48c3RvcCBvZmZzZXQ9IjczLjY4NDIxJSIgc3RvcC1jb2xvcj0iIzEyOTk5YyIvPjxzdG9wIG9mZnNldD0iNzguOTQ3MzclIiBzdG9wLWNvbG9yPSIjMTI5ZDlhIi8+PHN0b3Agb2Zmc2V0PSI4NC4yMTA1MyUiIHN0b3AtY29sb3I9IiMxM2E0OTciLz48c3RvcCBvZmZzZXQ9Ijg5LjQ3MzY4JSIgc3RvcC1jb2xvcj0iIzE1YTg5NSIvPjxzdG9wIG9mZnNldD0iOTQuNzM2ODQlIiBzdG9wLWNvbG9yPSIjMTVhODk1Ii8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjMTVhZTkwIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g');
   background-size: 100%;
   background-image: -webkit-gradient(linear, 100% 50%, 0% 50%, color-stop(0%, #0056bd), color-stop(5.26316%, #015bbb), color-stop(10.52632%, #015fb7), color-stop(15.78947%, #0465b6), color-stop(21.05263%, #066db2), color-stop(26.31579%, #0872ae), color-stop(31.57895%, #0872b0), color-stop(36.84211%, #0877ac), color-stop(42.10526%, #0b81a9), color-stop(47.36842%, #0d89a5), color-stop(52.63158%, #0e8ca2), color-stop(57.89474%, #0d8ea1), color-stop(63.15789%, #0f939f), color-stop(68.42105%, #11969d), color-stop(73.68421%, #12999c), color-stop(78.94737%, #129d9a), color-stop(84.21053%, #13a497), color-stop(89.47368%, #15a895), color-stop(94.73684%, #15a895), color-stop(100%, #15ae90));
@@ -20306,11 +20278,11 @@ footer {
   width: 100%;
   color: #ffffff;
 }
-/* line 9, ../sass/_/_modules/_footer.scss */
+/* line 10, ../sass/_/_modules/_footer.scss */
 footer .social-links a {
   color: #ffffff;
 }
-/* line 11, ../sass/_/_modules/_footer.scss */
+/* line 12, ../sass/_/_modules/_footer.scss */
 footer .social-links a:hover, footer .social-links a:focus {
   text-decoration: none;
 }

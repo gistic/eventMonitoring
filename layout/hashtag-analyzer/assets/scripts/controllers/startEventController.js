@@ -24,15 +24,15 @@ StartNewEvent.controller('StartNewEventController', [
             User.getUserData();
         }
 
-
-        // Get homepage events 
+        // Get homepage events
+        
         $scope.getEvents = function () {
             var requestAction = "GET";
             var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
             var requestData = ""
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
-
+                
                     // Running Server Events
                     $scope.runningServerEvents = response.data.runningServerEvents;
                     for (var i = 0; i < $scope.runningServerEvents.length; i++) {
@@ -70,7 +70,7 @@ StartNewEvent.controller('StartNewEventController', [
                     }
 
                     $scope.homepageEvents = $scope.runningUserEvents.concat($scope.runningServerEvents, $scope.historicUserEvents, $scope.trendingHashtags);
-
+                    $scope.loadData = false;
 
                 });
         }
@@ -107,7 +107,6 @@ StartNewEvent.controller('StartNewEventController', [
                 console.log("#");
             })
         }
-
 
         // Action on button
         $scope.startNewEvent = function (action) {
@@ -154,7 +153,6 @@ StartNewEvent.controller('StartNewEventController', [
                 $scope.startNewEvent();
             }
         }
-
 
         // Logout
         $scope.logOutUser = function () {

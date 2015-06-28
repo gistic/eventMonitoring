@@ -19,83 +19,6 @@
 .inline-fadein.ng-hide-remove.ng-hide-remove-active {
   opacity: 1;
 }
-@-webkit-keyframes webkit-spin {
-  from {
-    -webkit-transform: scale(1) rorate(0deg);
-  }
-  to {
-    -webkit-transform: scale(1) rotate(359deg);
-  }
-}
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-.loading-icon {
-  -ms-animation: spin .7s infinite linear;
-  -moz-animation: spin .7s infinite linear;
-  -webkit-animation: webkit-spin .7s infinite linear;
-  top: 2px;
-  margin-left: 7px;
-}
-
-
-// Pace
-.pace {
-  -webkit-pointer-events: none;
-  pointer-events: none;
-
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-
-  z-index: 2000;
-  position: fixed;
-  margin: auto;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 5px;
-  width: 200px;
-  background: #fff;
-  border: 1px solid #ddba4e;
-
-  overflow: hidden;
-}
-
-.pace .pace-progress {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  -o-box-sizing: border-box;
-  box-sizing: border-box;
-
-  -webkit-transform: translate3d(0, 0, 0);
-  -moz-transform: translate3d(0, 0, 0);
-  -ms-transform: translate3d(0, 0, 0);
-  -o-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-
-  max-width: 200px;
-  position: fixed;
-  z-index: 2000;
-  display: block;
-  position: absolute;
-  top: 0;
-  right: 100%;
-  height: 100%;
-  width: 100%;
-  background: #ddba4e;
-}
-
-.pace.pace-inactive {
-  display: none;
-}
 
 
 // Loader
@@ -104,10 +27,9 @@
 }
 
 .overlay {
-    z-index: 9;
+    z-index: 999;
     position: fixed;
-    width: 100%;
-    height: 100%;
+    @include size(100%);
     background: black center center no-repeat;
     opacity: .9;
     .loader {
@@ -120,6 +42,51 @@
         position: absolute;
     }
 }
+
+// HOMEPAGE LOADING
+.loadEvents {
+  width: 40px;
+  height: 40px;
+
+  position: relative;
+  margin: 100px auto;
+}
+
+.bounce1, .bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: $white;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  -webkit-animation: bounce 2.0s infinite ease-in-out;
+  animation: bounce 2.0s infinite ease-in-out;
+}
+
+.bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+
 
 .spinner {
     @include size(94px);
@@ -165,3 +132,4 @@
     -webkit-transform: scale(1.0);
   }
 }
+

@@ -67,6 +67,8 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state, 
         $state.transitionTo('home');
     }
     
+    $rootScope.loadData = true;
+    
 })
 
 // Config : Media lightbox configurations
