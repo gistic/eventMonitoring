@@ -70,7 +70,7 @@ public class AdminEventSource {
                             } else {
                                 //Status tweet = status.getInternalStatus();
                                 JSONObject json = status.getStatus();
-                                json.put("id_str", json.getLong("id"));
+                                json.put( "id_str", String.valueOf(json.getLong("id")) );
                                 String statusString = json.toString();
                                 final OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
                                 eventBuilder.name("tweet");
