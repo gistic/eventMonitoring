@@ -9,6 +9,7 @@ import org.glassfish.jersey.media.sse.EventOutput;
 import org.glassfish.jersey.media.sse.OutboundEvent;
 import org.glassfish.jersey.media.sse.SseBroadcaster;
 import org.glassfish.jersey.media.sse.SseFeature;
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import twitter4j.Status;
 
@@ -68,9 +69,12 @@ public class AdminEventSource {
                                 Thread.sleep(1000);
                             } else {
                                 //Status tweet = status.getInternalStatus();
+                                JSONObject json = status.getStatus();
+                                json.put("id_str", json.getLong("id"));
+                                String statusString = json.toString();
                                 final OutboundEvent.Builder eventBuilder = new OutboundEvent.Builder();
                                 eventBuilder.name("tweet");
-                                eventBuilder.data(String.class, status.getStatusString().replace("_normal", ""));
+                                eventBuilder.data(String.class, statusString.replace("_normal", ""));
                                 final OutboundEvent event = eventBuilder.build();
                                 finalEventOutput.write(event);
                                 DelayedJobsManager.refreshEventDestroyJob(uuid, null);
