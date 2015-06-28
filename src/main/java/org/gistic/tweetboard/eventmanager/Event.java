@@ -7,6 +7,7 @@ import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
+import org.gistic.tweetboard.datalogic.InternalStatusJson;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.twitter.*;
 import org.slf4j.LoggerFactory;
@@ -99,7 +100,7 @@ public class Event {
         tweetDataLogic.deleteEvent(authToken);
     }
 
-    public InternalStatus getOldestTweetNotSentForApproval() {
+    public InternalStatusJson getOldestTweetNotSentForApproval() {
         return tweetDataLogic.getOldestTweetNotSentForApproval();
     }
 

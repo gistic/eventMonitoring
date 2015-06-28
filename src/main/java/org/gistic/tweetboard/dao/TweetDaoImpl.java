@@ -5,6 +5,7 @@ import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.datalogic.TweetMeta;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.representations.*;
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
@@ -72,6 +73,7 @@ public class TweetDaoImpl implements TweetDao {
             jedis.hset(uuid, BG_COLOR_KEY, BG_COLOR_DEFAULT);
             jedis.hset(uuid, SIZE_KEY, SIZE_DEAFULT);
             jedis.hset(uuid, SCREENS_KEY, SCREENS_DEFAULT);
+            if (accessToken == null) accessToken = "";
             jedis.hset(uuid, EVENT_ACCESS_TOKEN, accessToken);
             Date d =new Date();
             String time = d.toGMTString();
@@ -147,11 +149,11 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
-    public Status getOldestTweetNotSentForApproval(String uuid) throws TwitterException {
+    public JSONObject getOldestTweetNotSentForApproval(String uuid) throws TwitterException {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             String statusId = jedis.lpop(getArrivedNotSentListKey(uuid));
             if (statusId == null) return null;
-            return getStatus(uuid, statusId);
+            return getStatusJson(uuid, statusId);
         } catch (JedisConnectionException e) { LoggerFactory.getLogger(this.getClass()).warn("DB access: error in front end hanging request"); }
         return null;
     }
@@ -258,6 +260,13 @@ public class TweetDaoImpl implements TweetDao {
         String statusString = getStatusString(uuid, tweetId);
         if (statusString == null || statusString.isEmpty()) {LoggerFactory.getLogger(this.getClass()).error("status string not found in redis!");}
         return TwitterObjectFactory.createStatus(statusString);
+    }
+
+    @Override
+    public JSONObject getStatusJson(String uuid, String tweetId) throws TwitterException {
+        String statusString = getStatusString(uuid, tweetId);
+        if (statusString == null || statusString.isEmpty()) {LoggerFactory.getLogger(this.getClass()).error("status string not found in redis!");}
+        return new JSONObject(statusString);//TwitterObjectFactory.createStatus(statusString);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.resources;
 
 import org.gistic.tweetboard.DelayedJobsManager;
+import org.gistic.tweetboard.datalogic.InternalStatusJson;
 import org.gistic.tweetboard.eventmanager.Event;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
@@ -62,7 +63,7 @@ public class AdminEventSource {
                     Event e = EventMap.get(uuid);
                     try {
                         if (e != null) {
-                            InternalStatus status = e.getOldestTweetNotSentForApproval();//EventMonitor.getCurrentEventMonitor().tweetsApproving.getTweetToAdmin();
+                            InternalStatusJson status = e.getOldestTweetNotSentForApproval();//EventMonitor.getCurrentEventMonitor().tweetsApproving.getTweetToAdmin();
                             if (status == null) {
                                 Thread.sleep(1000);
                             } else {

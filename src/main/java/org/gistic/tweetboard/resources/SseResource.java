@@ -2,6 +2,7 @@ package org.gistic.tweetboard.resources;
 
 import org.eclipse.jetty.servlets.EventSource;
 import org.eclipse.jetty.servlets.EventSourceServlet;
+import org.gistic.tweetboard.datalogic.InternalStatusJson;
 import org.gistic.tweetboard.eventmanager.Event;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
@@ -40,11 +41,11 @@ public class SseResource extends EventSourceServlet {
                     Event e = EventMap.get(uuid);
                     try {
                         if (e != null) {
-                            InternalStatus status = e.getOldestTweetNotSentForApproval();//EventMonitor.getCurrentEventMonitor().tweetsApproving.getTweetToAdmin();
+                            InternalStatusJson status = e.getOldestTweetNotSentForApproval();//EventMonitor.getCurrentEventMonitor().tweetsApproving.getTweetToAdmin();
                             if (status == null) {
                                 Thread.sleep(1000);
                             } else {
-                                Status tweet = status.getInternalStatus();
+                                //Status tweet = status.getInternalStatus();
                                 try { emitter.data(status.getStatusString().replace("_normal", "")); }
                                 catch (Exception ex) { break; }
                                 //Thread.sleep(100);
