@@ -1,12 +1,17 @@
 <div class="wrapper" ng-init="initDashboardData()">
-   
+
     <!-- Header -->
     <div ng-include="'views/views-components/header.html'"></div>
     <!-- END OF / Header -->
-
+    <div ng-show="loadData" class="overlay overlay-homepage">
+        <div class="loadEvents loader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+        </div>
+    </div>
     <!-- Main Content [ Using UI-Router @ /views-components ] -->
     <main class="container dashboard">
         <div class="row ui-view fadein"></div>
     </main>
-    
+
 </div>

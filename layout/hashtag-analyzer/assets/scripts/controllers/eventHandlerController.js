@@ -160,7 +160,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
         // GET : Warm up data for event
         $scope.getWarmupData = function () {
-            $(".loading").show();
+            
             var apiUrl = '/api/events/' + $rootScope.eventID + '/cachedTweets';
             var requestAction = "GET";
             var requestData = "";
@@ -170,7 +170,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.tweetsQueue.push($scope.tweet);
-                        $(".loading").hide();
+                        
                     }
                 }).error(function () {
                     console.log("#");
@@ -188,6 +188,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 $scope.getViewOptions();
                 $scope.getEventStats();
                 User.getUserData();
+                
             } else {
                 console.log("NO AUTH");
                 $state.transitionTo('home');
@@ -200,7 +201,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         // TOP TWEETS
         $scope.topTweets = [];
         $scope.getTopTweets = function () {
-            $(".loading").show();
+            
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets?authToken=' + $cookies.userAuthentication;
             var requestAction = "GET";
             var requestData = "";
@@ -214,7 +215,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                             return (b.score) - (a.score);
                         });
                     }
-                    $(".loading").hide();
+                    
                 }).error(function () {
                     console.log("#");
                 })
@@ -254,7 +255,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         // Close event source if he leave the media or tweet stream stats
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
-                if (toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media") {} else {
+                if (toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" || toState.name == "dashboard.map") {} else {
                     CreateEventSource.closeEventSource();
                 }
             })
@@ -451,7 +452,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                         $scope.tweetsQueue.unshift($scope.tweet);
                     }
 
-                    $(".loading").hide();
+                    
                 }, false);
 
                 $scope.totalTweetsCount++;
