@@ -67,17 +67,6 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state, 
         $state.transitionTo('home');
     }
     
-    
-
-//    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-//
-//        var requireLogin = toState.data.requireLogin;
-//
-//        if (requireLogin && $cookies.userAuthentication == "undefined") {
-//            $state.transitionTo('home');
-//            
-//        }
-//    });
 })
 
 // Config : Media lightbox configurations
