@@ -97,13 +97,13 @@ public class TweetDataLogic {
         createNewEvent(hashTags, null);
     }
 
-    public InternalStatus getOldestTweetNotSentForApproval() {
+    public InternalStatusJson getOldestTweetNotSentForApproval() {
         try {
-            Status status = tweetDao.getOldestTweetNotSentForApproval(uuid);
+            org.json.JSONObject status = tweetDao.getOldestTweetNotSentForApproval(uuid);
             if (status == null) return null;
-            String statusId = String.valueOf(status.getId());
+            String statusId = String.valueOf(status.getLong("id"));
             tweetDao.addToSentForApproval(uuid, statusId);
-            return new InternalStatus(status, tweetDao.getStatusString(uuid, statusId));
+            return new InternalStatusJson(status, tweetDao.getStatusString(uuid, statusId));
         } catch (TwitterException e) {
             LoggerFactory.getLogger(this.getClass()).error("error in parsing tweet string to status object");
             return null;
