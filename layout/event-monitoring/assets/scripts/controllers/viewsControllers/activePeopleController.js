@@ -22,12 +22,4 @@ activePeopleController.controller('ActivePeopleController', ['$scope', '$rootSco
     }
     $scope.fetchData();
 
-    //    $scope.intervalFunction = function () {
-    //        $timeout(function () {
-    //            $scope.fetchData();
-    //            $scope.intervalFunction();
-    //        }, 600000)
-    //    };
-    //    $scope.intervalFunction();
-
 }]);

@@ -2,7 +2,7 @@
 <header class="container clearfix header-admin">
 
     <h2 class="logo pull-left ">
-            <a ui-sref="/">TweetBoard</a>
+            <a ui-sref="home">TweetBoard</a>
         </h2>
 
     <nav class="pull-right header-buttons">
@@ -259,7 +259,7 @@
 
             <article class="media clearfix tweet" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit()" data-user-id="{{tweet.user.id_str}}">
                 <div class="pull-left">
-                    <img lazy-load ll-src="{{tweet.user.profile_image_url_https}}" on-error-src="{{defultImage}}" class="media-object" />
+                    <img lazy-load ll-src="{{tweet.user.original_profile_image_urlhttps}}" on-error-src="{{defultImage}}" class="media-object" />
                 </div>
                 <div class="tweet-content pull-left">
                     <h6 class="tweet-user">
@@ -291,9 +291,9 @@
                     </div>
 
                     <div class="btn-group" role="group">
-                        <button type="button" tooltip-placement="top" tooltip="Add user to trusted list" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="updateTrustedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https, tweet.user.id_str)"><i class="icon-add-user"></i>
+                        <button type="button" tooltip-placement="top" tooltip="Add user to trusted list" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="updateTrustedUsers($event, tweet.user.screen_name, tweet.user.original_profile_image_urlhttps, tweet.user.id_str)"><i class="icon-add-user"></i>
                         </button>
-                        <button type="button" tooltip-placement="top" tooltip="Add user to blocked list" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="updateBlockedUsers($event, tweet.user.screen_name, tweet.user.profile_image_url_https, tweet.user.id_str)"><i class="icon-remove-user"></i>
+                        <button type="button" tooltip-placement="top" tooltip="Add user to blocked list" class="btn btn-default hvr-rectangle-out" data-id="{{$index}}" ng-click="updateBlockedUsers($event, tweet.user.screen_name, tweet.user.original_profile_image_urlhttps, tweet.user.id_str)"><i class="icon-remove-user"></i>
                         </button>
                     </div>
 
