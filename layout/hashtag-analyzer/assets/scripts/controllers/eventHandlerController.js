@@ -29,14 +29,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         // 2. Event streaming
         // 3. Draw charts and panels 
         // 4. Stop and kill event
-                                       
-        
+
+
         // 1. Set the initializing values
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
         }
-                                       
+
         // Lightbox for media
         $scope.Lightbox = Lightbox;
         $scope.openLightboxModal = function (index) {
@@ -162,7 +162,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
         // GET : Warm up data for event
         $scope.getWarmupData = function () {
-            
+
             var apiUrl = '/api/events/' + $rootScope.eventID + '/cachedTweets';
             var requestAction = "GET";
             var requestData = "";
@@ -173,15 +173,15 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.tweetsQueue.push($scope.tweet);
                     }
-                console.log(response);
-                $scope.loadData = false;
+
+                    $scope.loadData = false;
                 }).error(function () {
                     console.log("#");
                 })
         };
 
         // Intialize
-        
+
         $scope.initDashboardData = function () {
             User.setUserAuth();
             console.log(User.getUserAuth());
@@ -208,13 +208,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         // TOP TWEETS
         $scope.topTweets = [];
         $scope.getTopTweets = function () {
-            
+
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets?authToken=' + $cookies.userAuthentication;
             var requestAction = "GET";
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
+                    $scope.topTweets = [];
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.topTweets.push($scope.tweet);
@@ -380,7 +381,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                         // Push only MP4 videos
                         if ($scope.mediaType == 'video') {
-                            
+
                             var videoVariantsArrayLength = $scope.tweet.extended_media_entities[i].video_variants.length;
                             for (var k = 0; k < videoVariantsArrayLength; k++) {
                                 var videoContentType = $scope.tweet.extended_media_entities[i].video_variants[k].content_type;
@@ -459,7 +460,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                         $scope.tweetsQueue.unshift($scope.tweet);
                     }
 
-                    
+
                 }, false);
 
                 $scope.totalTweetsCount++;
@@ -471,7 +472,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 $scope.data = JSON.parse(response.data);
                 $scope.$apply(function () {
                     $scope.drawChart($scope.data);
-                    console.log($scope.data);
                 }, false);
             });
 
@@ -617,7 +617,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     console.log("#");
                 })
         }
-        
+
         // GET : Top Hashtags
         $scope.topHashtags = [];
         $scope.tagCloudColors = ['rgb(49,130,189)', 'rgb(20,100,255)', 'rgb(158,202,225)'];
@@ -643,16 +643,18 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     console.log("#");
                 })
         }
-        
+
         $scope.topSource = [];
-        $scope.getTopSources = function() {
+        $scope.getTopSources = function () {
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topSources';
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    console.log(response);
+                    console.log(response.items);
+                    $scope.data = response.items;
+                    $scope.drawTweetsSourcesChart($scope.data);
                 }).error(function () {
                     console.log("#");
                 })
@@ -677,9 +679,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         }
 
         $scope.loadMoreMediaButton = function () {
-                return $scope.pagesShown < ($scope.mediaQueue.length / $scope.pageSize);
-            }
-        
+            return $scope.pagesShown < ($scope.mediaQueue.length / $scope.pageSize);
+        }
+
         // Load more tweets handler
         $scope.loadMoreMedia = function () {
             $scope.pagesShown++;
@@ -767,6 +769,109 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
         $scope.stopEventHandler = function () {
             CreateEventSource.closeEventSource();
+        }
+
+
+        // Draw tweets sources chart
+        $scope.tweetsSourcesChartConfig = {
+            options: {
+                chart: {
+                    type: 'column',
+                    height: 250,
+                    backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                },
+                title: {
+                    text: ''
+                }
+
+            },
+        };
+
+
+        $scope.drawTweetsSourcesChart = function () {
+
+            $scope.tweetsSources = [];
+
+            function drawTweetsSourcesChart(data) {
+                var arrayLength = $scope.data.length;
+                for (i = 0; i < arrayLength; i++) {
+                    $scope.tweetsSourceName = $scope.data[i].code;
+                    $scope.tweetsSourceCount = $scope.data[i].count;
+                    $scope.tweetsSources.push({
+                        name: $scope.tweetsSourceName,
+                        y: $scope.tweetsSourceCount
+                    });
+                }
+                $scope.chartSeries = [{
+                    "name": "Tweets count",
+                    data: $scope.tweetsSources,
+                    colorByPoint: true,
+                    showInLegend: false,
+                    "id": "tweetsChart",
+                    color: "rgb(22, 123, 230)"
+    }];
+                $scope.tweetsSourcesChartConfig = {
+                    options: {
+                        chart: {
+                            type: 'column',
+                            animation: {
+                                duration: 1500
+                            },
+                            height: 300,
+                            backgroundColor: 'rgba(255, 255, 255, 0.01)'
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)",
+
+
+                        labels: {
+                            enabled: true,
+                            rotation: -45,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '11px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        plotLines: [{
+                            value: 0,
+                            width: 0,
+                            color: '#ffffff'
+                }],
+                        title: {
+                            text: ''
+                        },
+                        labels: {
+                            enabled: true,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '10px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        },
+                        tickWidth: 0,
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)"
+                    },
+                    series: $scope.chartSeries,
+                    credits: {
+                        enabled: false
+                    },
+                    loading: false,
+                    title: {
+                        text: ''
+                    }
+                };
+                $scope.reflow = function () {
+                    $scope.$broadcast('highchartsng.reflow');
+                };
+            }
+
+            drawTweetsSourcesChart();
+
         }
 
         // Draw Tweets overtime Chart
