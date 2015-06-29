@@ -1,6 +1,4 @@
-@import "compass/css3";
-
-$control-count: 6;
+$control-count: 2;
 $transition-timing-function: cubic-bezier(0.445, 0.050, 0.550, 0.950);
 $transition-duration: .7s;
 $color-active: white;
@@ -14,7 +12,7 @@ $color-active: white;
   text-decoration: none;
   overflow: hidden;
 
-  @include border-radius(2px);
+  @include border-radius(3px);
   @include box-sizing(border-box);
   @include user-select(none);
   @include transition-duration($transition-duration);
@@ -61,13 +59,16 @@ $color-active: white;
 
   > label {
     display: inline-block;
-    padding: 0 .71em;
+    padding: $padding / 3 $padding + 5 ;
+    font-size: 12px;
+    word-break: normal;
+    white-space: nowrap;
     cursor: pointer;
     float: left;
-    line-height: 3em;
     font-style: inherit;
     font-weight: inherit;
     text-decoration: inherit;
+    margin: 0;
 
     @include transition-property(none);
     @include transition-duration(inherit);
@@ -100,7 +101,6 @@ $color-active: white;
 
     &:after, & {
       text-align: center;
-      text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
 

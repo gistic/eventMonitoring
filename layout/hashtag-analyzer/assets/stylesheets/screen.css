@@ -19414,7 +19414,7 @@ body.stop-scrolling {
   content: "";
 }
 
-/* line 8, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 6, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control {
   position: relative;
   display: inline-block;
@@ -19423,9 +19423,9 @@ body.stop-scrolling {
   font-weight: normal;
   text-decoration: none;
   overflow: hidden;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -19439,169 +19439,64 @@ body.stop-scrolling {
   transition-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
   -webkit-tap-highlight-color: transparent;
 }
-/* line 25, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 23, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > input {
   position: absolute;
   left: -10000px;
   opacity: 0;
 }
-/* line 30, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 28, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > input[type='checkbox'] ~ label {
   -webkit-transition-duration: 0;
   transition-duration: 0;
 }
-/* line 33, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 31, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > input[type='checkbox'] ~ label:before {
   opacity: 0;
 }
-/* line 39, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 37, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > input:disabled:nth-child(1) ~ label:nth-of-type(1) {
   opacity: 0.3;
   cursor: not-allowed;
 }
-/* line 46, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 44, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > input:nth-child(1):checked ~ label:nth-of-type(1):after, .segmented-control > input:nth-child(1):checked ~ label:nth-of-type(1):before {
   opacity: 1;
 }
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 51, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(1):after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(1):before, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(1) ~ label:after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(1) ~ label:before {
   left: 0%;
 }
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 51, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(2):after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(2):before, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(2) ~ label:after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(2) ~ label:before {
   left: 0%;
 }
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(3):after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(3):before, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(3) ~ label:after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(3) ~ label:before {
-  left: 0%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(4):after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(4):before, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(4) ~ label:after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(4) ~ label:before {
-  left: 0%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(5):after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(5):before, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(5) ~ label:after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(5) ~ label:before {
-  left: 0%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(6):after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(6):before, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:after, .segmented-control > input:nth-child(1):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:before {
-  left: 0%;
-}
-/* line 39, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 37, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > input:disabled:nth-child(2) ~ label:nth-of-type(2) {
   opacity: 0.3;
   cursor: not-allowed;
 }
-/* line 46, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 44, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > input:nth-child(2):checked ~ label:nth-of-type(2):after, .segmented-control > input:nth-child(2):checked ~ label:nth-of-type(2):before {
   opacity: 1;
 }
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 51, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(2):after, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(2):before, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(2) ~ label:after, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(2) ~ label:before {
   left: 50%;
 }
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(3):after, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(3):before, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(3) ~ label:after, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(3) ~ label:before {
-  left: 33.33333%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(4):after, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(4):before, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(4) ~ label:after, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(4) ~ label:before {
-  left: 25%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(5):after, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(5):before, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(5) ~ label:after, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(5) ~ label:before {
-  left: 20%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(6):after, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(6):before, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:after, .segmented-control > input:nth-child(2):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:before {
-  left: 16.66667%;
-}
-/* line 39, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:disabled:nth-child(3) ~ label:nth-of-type(3) {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-/* line 46, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(3):checked ~ label:nth-of-type(3):after, .segmented-control > input:nth-child(3):checked ~ label:nth-of-type(3):before {
-  opacity: 1;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(3):after, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(3):before, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(3) ~ label:after, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(3) ~ label:before {
-  left: 66.66667%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(4):after, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(4):before, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(4) ~ label:after, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(4) ~ label:before {
-  left: 50%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(5):after, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(5):before, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(5) ~ label:after, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(5) ~ label:before {
-  left: 40%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(6):after, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(6):before, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:after, .segmented-control > input:nth-child(3):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:before {
-  left: 33.33333%;
-}
-/* line 39, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:disabled:nth-child(4) ~ label:nth-of-type(4) {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-/* line 46, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(4):checked ~ label:nth-of-type(4):after, .segmented-control > input:nth-child(4):checked ~ label:nth-of-type(4):before {
-  opacity: 1;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(4):after, .segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(4):before, .segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(4) ~ label:after, .segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(4) ~ label:before {
-  left: 75.0%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(5):after, .segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(5):before, .segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(5) ~ label:after, .segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(5) ~ label:before {
-  left: 60%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(6):after, .segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(6):before, .segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:after, .segmented-control > input:nth-child(4):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:before {
-  left: 50%;
-}
-/* line 39, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:disabled:nth-child(5) ~ label:nth-of-type(5) {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-/* line 46, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(5):checked ~ label:nth-of-type(5):after, .segmented-control > input:nth-child(5):checked ~ label:nth-of-type(5):before {
-  opacity: 1;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(5):checked ~ label:first-of-type:nth-last-of-type(5):after, .segmented-control > input:nth-child(5):checked ~ label:first-of-type:nth-last-of-type(5):before, .segmented-control > input:nth-child(5):checked ~ label:first-of-type:nth-last-of-type(5) ~ label:after, .segmented-control > input:nth-child(5):checked ~ label:first-of-type:nth-last-of-type(5) ~ label:before {
-  left: 80%;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(5):checked ~ label:first-of-type:nth-last-of-type(6):after, .segmented-control > input:nth-child(5):checked ~ label:first-of-type:nth-last-of-type(6):before, .segmented-control > input:nth-child(5):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:after, .segmented-control > input:nth-child(5):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:before {
-  left: 66.66667%;
-}
-/* line 39, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:disabled:nth-child(6) ~ label:nth-of-type(6) {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-/* line 46, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(6):checked ~ label:nth-of-type(6):after, .segmented-control > input:nth-child(6):checked ~ label:nth-of-type(6):before {
-  opacity: 1;
-}
-/* line 53, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > input:nth-child(6):checked ~ label:first-of-type:nth-last-of-type(6):after, .segmented-control > input:nth-child(6):checked ~ label:first-of-type:nth-last-of-type(6):before, .segmented-control > input:nth-child(6):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:after, .segmented-control > input:nth-child(6):checked ~ label:first-of-type:nth-last-of-type(6) ~ label:before {
-  left: 83.33333%;
-}
-/* line 62, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 60, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > label {
   display: inline-block;
-  padding: 0 .71em;
+  padding: 5px 20px;
+  font-size: 12px;
+  word-break: normal;
+  white-space: nowrap;
   cursor: pointer;
   float: left;
-  line-height: 3em;
   font-style: inherit;
   font-weight: inherit;
   text-decoration: inherit;
+  margin: 0;
   -webkit-transition-property: none;
   transition-property: none;
   -webkit-transition-duration: inherit;
@@ -19609,7 +19504,7 @@ body.stop-scrolling {
   -webkit-transition-timing-function: inherit;
   transition-timing-function: inherit;
 }
-/* line 76, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 77, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > label:before, .segmented-control > label:after {
   position: absolute;
   left: 0;
@@ -19618,7 +19513,7 @@ body.stop-scrolling {
   height: 100%;
   pointer-events: none;
 }
-/* line 85, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 86, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > label:after {
   color: white;
   content: attr(data-value);
@@ -19636,10 +19531,9 @@ body.stop-scrolling {
   -webkit-transition-timing-function: inherit;
   transition-timing-function: inherit;
 }
-/* line 101, ../sass/_/_vendor/_segmented-controls.scss */
+/* line 102, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > label:after, .segmented-control > label {
   text-align: center;
-  text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
   -webkit-box-sizing: border-box;
@@ -19665,22 +19559,6 @@ body.stop-scrolling {
 /* line 123, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control > label:first-of-type:nth-last-of-type(2), .segmented-control > label:first-of-type:nth-last-of-type(2):after, .segmented-control > label:first-of-type:nth-last-of-type(2):before, .segmented-control > label:first-of-type:nth-last-of-type(2) ~ label, .segmented-control > label:first-of-type:nth-last-of-type(2) ~ label:after, .segmented-control > label:first-of-type:nth-last-of-type(2) ~ label:before {
   width: 50%;
-}
-/* line 123, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > label:first-of-type:nth-last-of-type(3), .segmented-control > label:first-of-type:nth-last-of-type(3):after, .segmented-control > label:first-of-type:nth-last-of-type(3):before, .segmented-control > label:first-of-type:nth-last-of-type(3) ~ label, .segmented-control > label:first-of-type:nth-last-of-type(3) ~ label:after, .segmented-control > label:first-of-type:nth-last-of-type(3) ~ label:before {
-  width: 33.33333%;
-}
-/* line 123, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > label:first-of-type:nth-last-of-type(4), .segmented-control > label:first-of-type:nth-last-of-type(4):after, .segmented-control > label:first-of-type:nth-last-of-type(4):before, .segmented-control > label:first-of-type:nth-last-of-type(4) ~ label, .segmented-control > label:first-of-type:nth-last-of-type(4) ~ label:after, .segmented-control > label:first-of-type:nth-last-of-type(4) ~ label:before {
-  width: 25%;
-}
-/* line 123, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > label:first-of-type:nth-last-of-type(5), .segmented-control > label:first-of-type:nth-last-of-type(5):after, .segmented-control > label:first-of-type:nth-last-of-type(5):before, .segmented-control > label:first-of-type:nth-last-of-type(5) ~ label, .segmented-control > label:first-of-type:nth-last-of-type(5) ~ label:after, .segmented-control > label:first-of-type:nth-last-of-type(5) ~ label:before {
-  width: 20%;
-}
-/* line 123, ../sass/_/_vendor/_segmented-controls.scss */
-.segmented-control > label:first-of-type:nth-last-of-type(6), .segmented-control > label:first-of-type:nth-last-of-type(6):after, .segmented-control > label:first-of-type:nth-last-of-type(6):before, .segmented-control > label:first-of-type:nth-last-of-type(6) ~ label, .segmented-control > label:first-of-type:nth-last-of-type(6) ~ label:after, .segmented-control > label:first-of-type:nth-last-of-type(6) ~ label:before {
-  width: 16.66667%;
 }
 /* line 131, ../sass/_/_vendor/_segmented-controls.scss */
 .segmented-control.italic, .segmented-control .italic {
@@ -19728,12 +19606,6 @@ a[ng-click] {
   box-shadow: none;
 }
 
-/* line 28, ../sass/_/_configs/_utilities.scss */
-img {
-  opacity: 0.9;
-  filter: alpha(opacity=90);
-  -webkit-filter: brightness(9.9);
-}
 /* line 31, ../sass/_/_configs/_utilities.scss */
 img.hover-zoom {
   -webkit-transition: all .6s;
@@ -20231,6 +20103,57 @@ ol {
     -webkit-transform: translateX(100px);
     transform: translateX(100px);
     opacity: 0;
+  }
+}
+/* line 154, ../sass/_/_atoms/_spinner.scss */
+.spinner {
+  width: 94px;
+  height: 94px;
+  position: absolute;
+  z-index: 9;
+  margin: 9px 22px;
+  opacity: 0;
+  left: 81%;
+  top: 22%;
+}
+
+/* line 164, ../sass/_/_atoms/_spinner.scss */
+.double-bounce1,
+.double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(12, 133, 167, 0.4);
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-animation: bounce 2.0s infinite ease-in-out;
+  animation: bounce 2.0s infinite ease-in-out;
+}
+
+/* line 179, ../sass/_/_atoms/_spinner.scss */
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes bounce {
+  0%, 100% {
+    -webkit-transform: scale(0);
+  }
+  50% {
+    -webkit-transform: scale(1);
+  }
+}
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
   }
 }
 /* line 1, ../sass/_/_modules/_header.scss */

@@ -300,6 +300,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             $(".angular-google-map-container").innerHTML = 'No Geolocation Support.';
             $scope.map = $scope.defaultMapOnError;
         }
+
         $scope.mapOptions = {
             scrollwheel: false
         };
@@ -344,12 +345,38 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     });
 
                 }
-                
+
                 // Update tweets sources
+                var sourceUpdated = false;
                 if ($scope.tweet.source != null) {
                     var tweetSource = $scope.tweet.source;
-                    var source = tweetSource.substring(tweetSource.indexOf(">" + 1), tweetSource.lastIndexOf("<"));
-                    console.log(source);
+                    $scope.sourceName = tweetSource.substring(tweetSource.indexOf(">") + 1, tweetSource.lastIndexOf("<"));
+                    $scope.sourceName = $scope.sourceName.substring($scope.sourceName.indexOf(">"));
+
+                    for (var i = 0; i < $scope.topSource.length; i++) {
+                        if ($scope.topSource[i].code == $scope.sourceName) {
+                            $scope.topSource[i].count++;
+                            sourceUpdated = true;
+                            $scope.topSource.sort(function (a, b) {
+                                return (b.count) - (a.count);
+                            });
+                            $scope.drawTweetsSourcesChart($scope.topSource);
+                            break;
+                        }
+                    }
+                    if (!sourceUpdated) {
+                        $scope.topSource.push({
+                            code: $scope.sourceName,
+                            count: 1
+                        });
+                        $scope.topSource.sort(function (a, b) {
+                            return (b.count) - (a.count);
+                        });
+                        console.log($scope.topSource);
+
+                        $scope.drawTweetsSourcesChart($scope.topSource);
+                    }
+
                 }
 
                 // Update languages pie chart
@@ -659,8 +686,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    $scope.data = response.items;
-                    $scope.drawTweetsSourcesChart($scope.data);
+                    $scope.topSource = response.items;
+                    $scope.drawTweetsSourcesChart($scope.topSource);
                 }).error(function () {
                     console.log("#");
                 })
@@ -799,10 +826,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             $scope.tweetsSources = [];
 
             function drawTweetsSourcesChart(data) {
-                var arrayLength = $scope.data.length;
-                for (i = 0; i < arrayLength; i++) {
-                    $scope.tweetsSourceName = $scope.data[i].code;
-                    $scope.tweetsSourceCount = $scope.data[i].count;
+
+                for (i = 0; i < 7; i++) {
+                    $scope.tweetsSourceName = $scope.topSource[i].code;
+                    $scope.tweetsSourceCount = $scope.topSource[i].count;
                     $scope.tweetsSources.push({
                         name: $scope.tweetsSourceName,
                         y: $scope.tweetsSourceCount
