@@ -4,6 +4,7 @@ import org.gistic.tweetboard.datalogic.TweetMeta;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.representations.*;
 import org.joda.time.DateTime;
+import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Tuple;
 import twitter4j.Status;
@@ -36,7 +37,7 @@ public interface TweetDao {
 
     void addToSentForApproval(String uuid, String id);
 
-    Status getOldestTweetNotSentForApproval(String uuid) throws TwitterException;
+    JSONObject getOldestTweetNotSentForApproval(String uuid) throws TwitterException;
 
     void addToApproved(String uuid, String tweetId, boolean starred);
 
@@ -65,6 +66,8 @@ public interface TweetDao {
     void blockAllExistingTweetsByUser(String uuid, String screenName);
 
     void destroyEvent(String uuid);
+
+    JSONObject getStatusJson(String uuid, String tweetId) throws TwitterException;
 
     String getStatusString(String uuid, String tweetId);
 

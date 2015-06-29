@@ -31,17 +31,17 @@ eventViewsApp.config(function ($stateProvider, $urlRouterProvider) {
     window.routes = {
         "live": {
             url: '/live?uuid',
-            templateUrl: 'views/presentation/live-stream.html',
+            templateUrl: 'live-stream.html',
             controller: 'LiveStreamController'
         },
         "top": {
             url: '/top?uuid',
-            templateUrl: 'views/presentation/active-people.html',
+            templateUrl: 'active-people.html',
             controller: 'ActivePeopleController'
         },
         "overtime": {
             url: '/overtime?uuid',
-            templateUrl: 'views/presentation/tweets-overtime.html',
+            templateUrl: 'tweets-overtime.html',
             controller: 'TweetsOverTimeController'
         }
     };
@@ -53,4 +53,11 @@ eventViewsApp.config(function ($stateProvider, $urlRouterProvider) {
 
     $urlRouterProvider.otherwise('/');
 
+});
+
+// Run : Intliaize the event admin app with this values
+eventViewsApp.run(function ($window, $location, $rootScope, $state) {
+    if ($state.current.name == "") {
+        $state.transitionTo('home');
+    }
 });

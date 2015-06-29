@@ -38,7 +38,7 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
 ]);
 
 // Run : Intliaize the app with this values
-trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state) {
+trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state, User) {
     $rootScope.appName = "Hashtag Analyser";
     $rootScope.appVersion = "V.1.0.0";
     $rootScope.socialLink = [{
@@ -66,22 +66,9 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state) 
     if ($state.current.name == "") {
         $state.transitionTo('home');
     }
-
-//    if ($cookies.userAuthentication === "undefined" || $cookies.userAuthentication === undefined) {
-//        $rootScope.logedInUser = false;
-//    } else {
-//        $rootScope.logedInUser = true;
-//    }
-
-//    $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
-//
-//        var requireLogin = toState.data.requireLogin;
-//
-//        if (requireLogin && $cookies.userAuthentication == "undefined") {
-//            $state.transitionTo('home');
-//            
-//        }
-//    });
+    
+    $rootScope.loadData = true;
+    
 })
 
 // Config : Media lightbox configurations

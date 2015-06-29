@@ -23,6 +23,9 @@
     position: relative;
     text-align: center;
     /* center the image */
+    img {
+        display: inline-block;
+    }
 }
 /* the caption overlays the top left corner of the image */
 

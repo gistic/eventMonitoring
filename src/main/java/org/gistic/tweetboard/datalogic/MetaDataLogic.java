@@ -79,14 +79,16 @@ public class MetaDataLogic {
             String uuid = event.getUuid();
             EventMeta eventMeta = dao.getEventMeta(uuid);
             String accessToken = eventMeta.getAccessToken();
-            AuthDao authDao = new AuthDaoImpl();
-            org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(accessToken, authDao.getAccessTokenSecret(accessToken));
-            String userJsonString = new TwitterUserResource().getLoggedInUser(user);
-            org.json.JSONObject userJson = new org.json.JSONObject(userJsonString);
-            String screenName = userJson.getString("screenName");
-            String profileImgUrl = userJson.getString("profileImageURL");
-            eventMeta.setScreenName(screenName);
-            eventMeta.setProfileImageUrl(profileImgUrl);
+            if (!accessToken.isEmpty()) {
+                AuthDao authDao = new AuthDaoImpl();
+                org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(accessToken, authDao.getAccessTokenSecret(accessToken));
+                String userJsonString = new TwitterUserResource().getLoggedInUser(user);
+                org.json.JSONObject userJson = new org.json.JSONObject(userJsonString);
+                String screenName = userJson.getString("screenName");
+                String profileImgUrl = userJson.getString("profileImageURL");
+                eventMeta.setScreenName(screenName);
+                eventMeta.setProfileImageUrl(profileImgUrl);
+            }
             if (userEventIds.contains(uuid)) {
                 runningUserEvents.add(eventMeta);
             } else {

@@ -19,10 +19,14 @@ var eventAdminApp = angular.module('eventAdminApp', [
 
 
 // Run : Intliaize the event admin app with this values
-eventAdminApp.run(function ($window, $location, $rootScope) {
+eventAdminApp.run(function ($window, $location, $rootScope, $state) {
     $rootScope.baseUrl = $window.location.origin;
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
     $rootScope.eventID = $location.search().uuid;
+    
+    if ($state.current.name == "") {
+        $state.transitionTo('home');
+    }
 })
 
 eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {

@@ -140,6 +140,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             source.addEventListener('tweet', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
+                
 
                 $scope.$apply(function () {
                     $scope.tweetsQueue.push($scope.tweet);

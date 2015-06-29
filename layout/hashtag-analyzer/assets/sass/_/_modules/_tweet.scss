@@ -31,9 +31,17 @@
         color: darken($gray-super-light, 40%);
     }
     .tweet-time {
+        margin-right: $margin * 4;
         &:hover {
             text-decoration: underline;
         }
+    }
+    .follow-user {
+        margin-left: $margin;
+        @include transition-property(all);
+        @include transition-duration(0.5s);
+        @include transition-delay(0.05s);
+        opacity: 0;
     }
     &.tweet:first-child {
         opacity: 1;
@@ -62,13 +70,36 @@
     }
     &:hover {
         .tweet-content {
-            -webkit-transform: translateX(-5%);
-            -ms-transform: translateX(-5%);
-            transform: translateX(-5%);
+//            -webkit-transform: translateX(-5%);
+//            -ms-transform: translateX(-5%);
+//            transform: translateX(-5%);
             .media-left {
-                -webkit-transform: translateX(-40%);
-                -ms-transform: translateX(-40%);
-                transform: translateX(-40%);
+//                -webkit-transform: translateX(-40%);
+//                -ms-transform: translateX(-40%);
+//                transform: translateX(-40%);
+            }
+        }
+        .tweet-actions,
+        .follow-user {
+            opacity: 1;
+            display: inline-block;
+        }
+    }
+}
+
+// Tweet in media lightbox
+.tweet-media {
+    @extend .tweet;
+    border: none !important;
+    &:hover {
+        .tweet-content {
+            -webkit-transform: translateX(0);
+            -ms-transform: translateX(0);
+            transform: translateX(0);
+            .media-left {
+                -webkit-transform: translateX(0);
+                -ms-transform: translateX(0);
+                transform: translateX(0);
             }
         }
         .tweet-actions {

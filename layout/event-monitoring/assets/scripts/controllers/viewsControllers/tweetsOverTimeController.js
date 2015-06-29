@@ -158,13 +158,4 @@ tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$roo
 
     $scope.fetchData();
 
-
-    //    $scope.intervalFunction = function () {
-    //        $timeout(function () {
-    //            $scope.fetchData();
-    //            $scope.intervalFunction();
-    //        }, 60000)
-    //    };
-    //    $scope.intervalFunction();
-
 }]);

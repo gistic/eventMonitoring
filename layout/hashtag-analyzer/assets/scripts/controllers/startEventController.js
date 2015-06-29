@@ -24,15 +24,22 @@ StartNewEvent.controller('StartNewEventController', [
             User.getUserData();
         }
 
+        // Get homepage events
+        
         $scope.getEvents = function () {
             var requestAction = "GET";
             var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
             var requestData = ""
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
-                console.log(response.data);
+                
                     // Running Server Events
                     $scope.runningServerEvents = response.data.runningServerEvents;
+                    for (var i = 0; i < $scope.runningServerEvents.length; i++) {
+                        var eventHashtag = $scope.runningServerEvents[i].hashtags;
+                        $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
+                        $scope.runningServerEvents[i].hashtags = $scope.serverEventHashtag;
+                    }
 
                     // Running User Events
                     $scope.runningUserEvents = response.data.runningUserEvents;
@@ -62,22 +69,21 @@ StartNewEvent.controller('StartNewEventController', [
                         $scope.trendingHashtags[i] = $scope.trendingEventHashtag;
                     }
 
-                    $scope.homepageEvents = $scope.runningUserEvents.concat($scope.historicUserEvents, $scope.runningServerEvents);
-console.log($scope.homepageEvents);
+                    $scope.homepageEvents = $scope.runningUserEvents.concat($scope.runningServerEvents, $scope.historicUserEvents, $scope.trendingHashtags);
+                    $scope.loadData = false;
+
                 });
         }
         $scope.getEvents();
 
-        $scope.createEventFromTrending = function (hashtag) {
-            $scope.eventHashtag = hashtag;
-            $scope.startNewEvent();
-        }
-
         // Get Twitter Auth
-        $scope.getTwitterAuth = function () {
+        $scope.getTwitterAuth = function (redirectTo) {
+
             var requestAction = "GET";
-            var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
             var requestData = ""
+
+            var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag + '&redirectToHome=' + redirectTo;
+
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
                     var openUrl = response.data.url;
@@ -87,35 +93,40 @@ console.log($scope.homepageEvents);
 
         // Start event at server
         $scope.startServerEvent = function () {
-            $scope.$broadcast();
-            RequestData.startEvent()
-                .success(function (response) {
-                    $rootScope.eventID = response.uuid;
-                    // Redirect the front website page to the admin page
-                    $state.transitionTo('dashboard.liveStreaming', {
-                        uuid: $scope.eventID
-                    });
-                })
-                .error(function (response) {
-                    console.log("#");
-                })
-        }
+            eventHashtag = $scope.eventHashtag;
 
+            $scope.$broadcast();
+            RequestData.startEvent('POST', eventHashtag).success(function (response) {
+                $rootScope.eventID = response.uuid;
+
+                // Redirect the front website page to the admin page
+                $state.transitionTo('dashboard.liveStreaming', {
+                    uuid: $scope.eventID
+                });
+            }).error(function (response) {
+                console.log("#");
+            })
+        }
 
         // Action on button
         $scope.startNewEvent = function (action) {
+
+            // Check hashtag
             var validSearch = true;
             if ($scope.eventHashtag === undefined) {
                 validSearch = false;
                 $(".search-error").css("display", "inline-block");
                 $(".search-error").text("Please type at least three letters to start your event");
             }
+
             var checkHashtag = filterHashtags.preventBadHashtags($scope.eventHashtag);
             if (checkHashtag) {
                 validSearch = false;
                 $(".search-error").css("display", "inline-block");
                 $(".search-error").text("We prevent searching for sexual hashtags .. choose other hashtag");
             }
+
+
             if (validSearch) {
                 $(".spinner").css("opacity", 1);
                 if (User.getUserAuth()) {
@@ -126,6 +137,22 @@ console.log($scope.homepageEvents);
             }
         };
 
+        // Start event from thumb
+        $scope.createEventFromTrending = function (hashtag, uuid) {
+
+            $scope.eventHashtag = hashtag;
+            
+            if (uuid != null) {
+                $rootScope.eventID = uuid;
+                // Redirect the front website page to the admin page
+                $state.transitionTo('dashboard.liveStreaming', {
+                    uuid: $rootScope.eventID
+                });
+
+            } else {
+                $scope.startNewEvent();
+            }
+        }
 
         // Logout
         $scope.logOutUser = function () {
@@ -149,4 +176,5 @@ console.log($scope.homepageEvents);
             });
         };
  }
+
 ]);

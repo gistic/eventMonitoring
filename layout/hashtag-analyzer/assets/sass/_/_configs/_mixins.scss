@@ -4,8 +4,7 @@
     font-size: (0.1 * $sizeValue) + rem;
 }
 
-@mixin size($width,
-$height: $width) {
+@mixin size($width, $height: $width) {
     width: $width;
     height: $height;
 }

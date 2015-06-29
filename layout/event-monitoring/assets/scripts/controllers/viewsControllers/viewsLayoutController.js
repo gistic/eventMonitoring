@@ -28,6 +28,7 @@ viewsLayoutController.controller('layoutCtrl', function ($rootScope, $scope, $ti
                 $rootScope.userSize = response.size;
                 $rootScope.pagesTimeout = response.screenTimes;
                 $rootScope.pages = response.screens;
+                $rootScope.hashtag = response.hashtags[0];
 
                 // Get the current page path index
                 $rootScope.eventHashtags = response.hashtags;
@@ -38,19 +39,13 @@ viewsLayoutController.controller('layoutCtrl', function ($rootScope, $scope, $ti
             })
     }
 
-    $scope.test = function () {
+    $scope.initViewsOptions = function () {
         $rootScope.getViewOptions();
     }
 
 
     $scope.intervalFunction = function () {
         $timeout(function () {
-
-            // Close event source when leaving the live tweets screen
-            //                if (!CreateEventSource.closed) {
-            //                    CreateEventSource.closeEventSource();
-            //                }
-
             // Redirect the page
             $location.path($scope.pages[$scope.pageIndex]);
             $scope.intervalFunction();

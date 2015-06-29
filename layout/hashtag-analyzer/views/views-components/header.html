@@ -17,8 +17,9 @@
                     </span>
                 </div>
             </div>
+            <span class="search-error pull-left" style="display: none;"></span>
         </form>
-        <span class="search-error pull-left" style="display: none;"></span>
+        
 
         <div ng-hide="dashboardState" class="navs">
 
@@ -63,11 +64,14 @@
                     </ul>
                 </li>
 
+<!--
                 <li>
-                    <a ng-click="getTwitterAuth()" ng-hide="logedInUser" class="btn btn-block btn-social btn-twitter">
+                    <a ng-click="getTwitterAuth(true)" ng-hide="logedInUser" class="btn btn-block btn-social btn-twitter">
                         <i class="fa fa-twitter"></i> Sign in with Twitter
                     </a>
                 </li>
+-->
+           
             </ul>
 
         </div>
