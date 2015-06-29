@@ -428,6 +428,13 @@ public class TweetDataLogic {
             } else {
                 //count tweets without country specified?
             }
+            String originalSource = tweet.getSource();
+            if(originalSource.indexOf(">") != -1 && originalSource.lastIndexOf("<") != -1) {
+                String source = originalSource.substring(originalSource.indexOf(">") + 1, originalSource.lastIndexOf("<"));
+                if (source != null || !source.isEmpty()) {
+                    incrSourceCounter(source);
+                }
+            }
             //tweetsOverTimeAnalyzer.TweetArrived(status);
             //event.updateStats(tweet);
 
