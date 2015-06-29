@@ -344,6 +344,15 @@ public class EventsResource {
     }
 
     @GET
+    @Path("/{uuid}/topSources/")
+    public GenericArray<TopItem> getTopSources(@PathParam("uuid") String uuid,
+                                                 @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        return tweetDataLogic.getTopNSources(count);
+    }
+
+    @GET
     @Path("/{uuid}/topHashtags/")
     public GenericArray<TopItem> getTopHashtags(@PathParam("uuid") String uuid,
                                                  @DefaultValue("10") @QueryParam("count") Integer count) {

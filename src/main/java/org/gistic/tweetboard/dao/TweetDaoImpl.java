@@ -720,6 +720,15 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
+    public void incrSourceCounter(String uuid, String source) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.zincrby(getSourceRankSetKey(uuid), 1, source);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
     public void setMediaUrl(String uuid, String mediaURLHttps) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hset(uuid, PLACEHOLDER_MEDIA_URL_KEY, mediaURLHttps);
@@ -882,6 +891,17 @@ public class TweetDaoImpl implements TweetDao {
     }
 
     @Override
+    public Set<Tuple> getTopNSources(String uuid, Integer count) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.zrevrangeByScoreWithScores(getSourceRankSetKey(uuid), "+inf", "-inf", 0, count);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        //TODO: error module
+        return null;
+    }
+
+    @Override
     public Set<Tuple> getTopNHashtags(String uuid, Integer count) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getHashtagRankSetKey(uuid), "+inf", "-inf", 0, count);
@@ -965,5 +985,9 @@ public class TweetDaoImpl implements TweetDao {
 
     private String getWordRankSetKey(String uuid) {
         return uuid + ":wordRank";
+    }
+
+    private String getSourceRankSetKey(String uuid) {
+        return uuid + ":sourceRank";
     }
 }
