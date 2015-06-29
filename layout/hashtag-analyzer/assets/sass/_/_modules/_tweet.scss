@@ -89,6 +89,11 @@
             margin-right: $margin - 3;
         }
     }
+    &:hover {
+        .tweet-actions {
+            position: relative;
+        }
+    }
 }
 
 .tweet.lang-ar {

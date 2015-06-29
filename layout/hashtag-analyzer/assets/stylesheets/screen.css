@@ -20255,33 +20255,37 @@ ol {
   display: inline-block;
   margin-right: 7px;
 }
+/* line 93, ../sass/_/_modules/_tweet.scss */
+.tweet-media:hover .tweet-actions {
+  position: relative;
+}
 
-/* line 94, ../sass/_/_modules/_tweet.scss */
+/* line 99, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar, .lang-ar.tweet-media {
   direction: rtl;
   text-align: right;
 }
-/* line 98, ../sass/_/_modules/_tweet.scss */
+/* line 103, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar .user-img, .lang-ar.tweet-media .user-img {
   float: right;
   padding-right: 0;
   padding-left: 15px;
 }
-/* line 103, ../sass/_/_modules/_tweet.scss */
+/* line 108, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar .media-body, .lang-ar.tweet-media .media-body {
   margin-left: 0;
   margin-right: 10px;
 }
 
 @media (max-width: 480px) {
-  /* line 112, ../sass/_/_modules/_tweet.scss */
+  /* line 117, ../sass/_/_modules/_tweet.scss */
   .tweets-queue .tweet img, .tweets-queue .tweet-media img {
     width: 48px;
     height: 48px;
   }
 }
 
-/* line 119, ../sass/_/_modules/_tweet.scss */
+/* line 124, ../sass/_/_modules/_tweet.scss */
 .tweets-queue-options {
   margin-bottom: 10px;
 }
