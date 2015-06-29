@@ -51,73 +51,140 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             return currentState === $state.current.name;
         };
 
+                                       
         // Search from the dashboard
         $scope.dashboardSearch = function () {
-            var eventHashtag = $('#eventHashtag').val();
-            var validSearch = true;
-            if (eventHashtag === undefined) {
-                validSearch = false;
-                $(".search-error").css("display", "inline-block");
-                $(".search-error").text("Please type at least three letters to start your event");
-            }
-            var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
-            if (checkHashtag) {
-                validSearch = false;
-                $(".search-error").css("display", "inline-block");
-                $(".search-error").text("We prevent searching for sexual hashtags .. choose other hashtag");
-            }
-            if (validSearch) {
 
-                SweetAlert.swal({
-                        title: "Are you sure?",
-                        text: "if you start new event, you can come back to current one from the homepage",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes, Start it!",
-                        closeOnConfirm: false
-                    },
-                    function (isConfirm) {
-                        if (isConfirm) {
-                            $scope.stopEventHandler();
-                            SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+            $scope.maxEventsNumberReached = false;
 
-                            $scope.startNewEvent = function (action) {
+            $scope.getEvents = function () {
+                var requestAction = "GET";
+                var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
+                var requestData = ""
+                RequestData.fetchData(requestAction, apiUrl, requestData)
+                    .then(function (response) {
+                        // Running User Events
+                        $scope.runningUserEvents = response.data.runningUserEvents;
+                        if ($scope.runningUserEvents.length >= 3) {
+                            $scope.maxEventsNumberReached = true;
+                            var eventHashtag = $('#eventHashtag').val();
+                            var validSearch = true;
+                            if (!$scope.maxEventsNumberReached) {
+                                
+                                if (eventHashtag === undefined) {
+                                    validSearch = false;
+                                    $(".search-error").css("display", "inline-block");
+                                    $(".search-error").text("Please type at least three letters to start your event");
+                                }
+                                var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
+                                if (checkHashtag) {
+                                    validSearch = false;
+                                    $(".search-error").css("display", "inline-block");
+                                    $(".search-error").text("We prevent searching for sexual hashtags .. choose other hashtag");
+                                }
+                                if (validSearch) {
+                                    SweetAlert.swal({
+                                            title: "Are you sure?",
+                                            text: "if you start new event, you can come back to current one from the homepage",
+                                            type: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonColor: "#DD6B55",
+                                            confirmButtonText: "Yes, Start it!",
+                                            closeOnConfirm: true
+                                        },
+                                        function (isConfirm) {
+                                            if (isConfirm) {
+                                                $scope.stopEventHandler();
+                                                SweetAlert.swal("Done");
 
-                                // Check if there is an authentication key in the browser cookies
-                                if (User.getUserAuth()) {
-                                    $scope.$broadcast();
-                                    $scope.loadData = true;
-                                    RequestData.startEvent('POST', eventHashtag)
-                                        .success(function (response) {
-                                            $rootScope.eventID = response.uuid;
-                                            // Redirect the front website page to the admin page
-                                            $state.transitionTo('dashboard.liveStreaming', {
-                                                uuid: $scope.eventID
-                                            });
+                                                $scope.startNewEvent = function (action) {
 
-                                            $scope.initDashboardData();
-                                            $scope.loadData = false;
-                                        })
-                                } else {
-                                    var requestAction = "GET";
-                                    var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
-                                    var requestData = ""
-                                    RequestData.fetchData(requestAction, apiUrl, requestData)
-                                        .then(function (response) {
-                                            var openUrl = response.data.url;
-                                            $window.location.href = openUrl;
+                                                    // Check if there is an authentication key in the browser cookies
+                                                    if (User.getUserAuth()) {
+                                                        $scope.$broadcast();
+                                                        $scope.loadData = true;
+                                                        RequestData.startEvent('POST', eventHashtag)
+                                                            .success(function (response) {
+                                                                $rootScope.eventID = response.uuid;
+                                                                // Redirect the front website page to the admin page
+                                                                $state.transitionTo('dashboard.liveStreaming', {
+                                                                    uuid: $scope.eventID
+                                                                });
+
+                                                                $scope.initDashboardData();
+                                                                $scope.loadData = false;
+                                                            })
+                                                    } else {
+                                                        var requestAction = "GET";
+                                                        var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
+                                                        var requestData = ""
+                                                        RequestData.fetchData(requestAction, apiUrl, requestData)
+                                                            .then(function (response) {
+                                                                var openUrl = response.data.url;
+                                                                $window.location.href = openUrl;
+                                                            });
+                                                    }
+                                                };
+
+                                                $scope.startNewEvent();
+
+                                            } else {
+                                                SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
+                                            }
                                         });
                                 }
-                            };
+                            } else {
+                                SweetAlert.swal({
+                                    title: "Are you sure?",
+                                    text: "You have reached the max. number of active events .. by starting a new one we will close your first event",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Yes, stop it!",
+                                    closeOnConfirm: true
+                                }, function (isConfirm) {
+                                    if (isConfirm) {
+                                        $scope.startNewEvent = function (action) {
 
-                            $scope.startNewEvent();
+                                            // Check if there is an authentication key in the browser cookies
+                                            if (User.getUserAuth()) {
+                                                $scope.$broadcast();
+                                                $scope.loadData = true;
+                                                RequestData.startEvent('POST', eventHashtag)
+                                                    .success(function (response) {
+                                                        $rootScope.eventID = response.uuid;
+                                                        // Redirect the front website page to the admin page
+                                                        $state.transitionTo('dashboard.liveStreaming', {
+                                                            uuid: $scope.eventID
+                                                        });
 
-                        } else {
-                            SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
+                                                        $scope.initDashboardData();
+                                                        $scope.loadData = false;
+                                                    })
+                                            } else {
+                                                var requestAction = "GET";
+                                                var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
+                                                var requestData = ""
+                                                RequestData.fetchData(requestAction, apiUrl, requestData)
+                                                    .then(function (response) {
+                                                        var openUrl = response.data.url;
+                                                        $window.location.href = openUrl;
+                                                    });
+                                            }
+                                        };
+
+                                        $scope.startNewEvent();
+                                        SweetAlert.swal("Done");
+                                    } else {
+                                        SweetAlert.swal("Cancelled", "Your imaginary file is safe :)",
+                                            "error");
+                                    }
+                                });
+                            }
                         }
                     });
             }
+            $scope.getEvents();
 
         }
 
@@ -372,7 +439,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                         $scope.topSource.sort(function (a, b) {
                             return (b.count) - (a.count);
                         });
-                        console.log($scope.topSource);
 
                         $scope.drawTweetsSourcesChart($scope.topSource);
                     }
@@ -764,13 +830,13 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Yes, stop it!",
-                    closeOnConfirm: false
+                    closeOnConfirm: true
                 },
                 function (isConfirm) {
                     if (isConfirm) {
                         $scope.stopEventHandler();
                         $state.transitionTo('home');
-                        SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+                        SweetAlert.swal("Done");
                     } else {
                         SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
                     }
@@ -786,14 +852,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Yes, stop it!",
-                    closeOnConfirm: false
+                    closeOnConfirm: true
                 },
                 function (isConfirm) {
                     if (isConfirm) {
                         $cookieStore.remove("userAuthentication");
                         $scope.stopEventHandler();
                         $state.transitionTo('home');
-                        SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+                        SweetAlert.swal("Done");
                     } else {
                         SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
                     }

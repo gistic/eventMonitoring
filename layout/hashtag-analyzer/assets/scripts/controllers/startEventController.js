@@ -24,15 +24,16 @@ StartNewEvent.controller('StartNewEventController', [
             User.getUserData();
         }
 
+
         // Get homepage events
-        
+
         $scope.getEvents = function () {
             var requestAction = "GET";
             var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
             var requestData = ""
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function (response) {
-                
+
                     // Running Server Events
                     $scope.runningServerEvents = response.data.runningServerEvents;
                     for (var i = 0; i < $scope.runningServerEvents.length; i++) {
@@ -130,7 +131,27 @@ StartNewEvent.controller('StartNewEventController', [
             if (validSearch) {
                 $(".spinner").css("opacity", 1);
                 if (User.getUserAuth()) {
-                    $scope.startServerEvent();
+                    if ($scope.runningUserEvents.length >= 3) {
+                        SweetAlert.swal({
+                            title: "Are you sure?",
+                            text: "You have reached the max. number of active events .. by starting a new one we will close your first event",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes, stop it!",
+                            closeOnConfirm: false
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                $scope.startServerEvent();
+                                SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+                            } else {
+                                SweetAlert.swal("Cancelled", "Your imaginary file is safe :)",
+                                    "error");
+                            }
+                        });
+                    } else {
+                        $scope.startServerEvent();
+                    }
                 } else {
                     $scope.getTwitterAuth();
                 }
@@ -141,7 +162,7 @@ StartNewEvent.controller('StartNewEventController', [
         $scope.createEventFromTrending = function (hashtag, uuid) {
 
             $scope.eventHashtag = hashtag;
-            
+
             if (uuid != null) {
                 $rootScope.eventID = uuid;
                 // Redirect the front website page to the admin page

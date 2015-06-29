@@ -12,7 +12,7 @@
 
 <div class="flexbox tilesWall">
 
-    <div class="event-box shading" ng-repeat-start="event in homepageEvents | limitTo : 21">
+    <div class="event-box shading" ng-repeat-start="event in homepageEvents track by $index | limitTo : 21">
 
         <!-- Check if event is trending or server one -->
         <a ng-if="event.hashtags" ng-click="createEventFromTrending(event.hashtags, event.uuid)" class="full-box-link"></a>
