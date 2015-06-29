@@ -88,11 +88,11 @@ public class MetaDataLogic {
                 String profileImgUrl = userJson.getString("profileImageURL");
                 eventMeta.setScreenName(screenName);
                 eventMeta.setProfileImageUrl(profileImgUrl);
-            }
-            if (userEventIds.contains(uuid)) {
-                runningUserEvents.add(eventMeta);
-            } else {
-                runningServerEvents.add(eventMeta);
+                if (userEventIds.contains(uuid)) {
+                    runningUserEvents.add(eventMeta);
+                } else {
+                    runningServerEvents.add(eventMeta);
+                }
             }
         }
         for (String historicUserEventId : historicUserEventIds) {
