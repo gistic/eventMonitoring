@@ -26,6 +26,15 @@ a[ng-click] {
 
 // TODO : Remove this for production
 img {
-//        @include opacity(0.9);
-//        -webkit-filter: brightness(9.9);
+    @include opacity(0.9);
+    -webkit-filter: brightness(9.9);
+    &.hover-zoom {
+        -webkit-transition: all .6s;
+        transition: all .6s;
+        &:hover {
+            -webkit-transform: scale(1.15);
+            -ms-transform: scale(1.15);
+            transform: scale(1.15);
+        }
+    }
 }

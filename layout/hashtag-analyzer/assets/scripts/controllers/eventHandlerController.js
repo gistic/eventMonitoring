@@ -87,6 +87,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                 // Check if there is an authentication key in the browser cookies
                                 if (User.getUserAuth()) {
                                     $scope.$broadcast();
+                                    $scope.loadData = true;
                                     RequestData.startEvent('POST', eventHashtag)
                                         .success(function (response) {
                                             $rootScope.eventID = response.uuid;
@@ -96,6 +97,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                             });
 
                                             $scope.initDashboardData();
+                                            $scope.loadData = false;
                                         })
                                 } else {
                                     var requestAction = "GET";
@@ -170,14 +172,16 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.tweetsQueue.push($scope.tweet);
-                        
                     }
+                console.log(response);
+                $scope.loadData = false;
                 }).error(function () {
                     console.log("#");
                 })
         };
 
         // Intialize
+        
         $scope.initDashboardData = function () {
             User.setUserAuth();
             console.log(User.getUserAuth());
@@ -188,15 +192,17 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 $scope.getViewOptions();
                 $scope.getEventStats();
                 User.getUserData();
-                
+                $scope.getLanguagesStats();
+                $scope.drawlanguagesPieChart();
+                $scope.getLocationStats();
+                $scope.drawLocationGeoChart();
+                $scope.drawLocationPieChart();
+                $scope.getTopHashtags();
             } else {
                 console.log("NO AUTH");
                 $state.transitionTo('home');
             }
-
-
         }
-
 
         // TOP TWEETS
         $scope.topTweets = [];
@@ -233,22 +239,15 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         }
 
         // Start New Event Handler
-        $scope.eventStarted = false;
-        $rootScope.timerRunning = false;
-
         $scope.tweetsQueue = []; // display
         $scope.lastNewTweets = []; // for button
         $scope.tweetsHistory = []; // history
         $scope.loadTweetsFromHistoryArray = [];
-
         $scope.tweetsQueueLength = 0;
         $scope.lastNewTweetsLength = 0;
-
         $scope.mediaQueue = [];
         $scope.lastNewMedia = [];
-
         $scope.topPeople = [];
-
         $scope.tweet = {};
 
 
@@ -464,6 +463,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 $scope.data = JSON.parse(response.data);
                 $scope.$apply(function () {
                     $scope.drawChart($scope.data);
+                    console.log($scope.data);
                 }, false);
             });
 
@@ -568,7 +568,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         }
 
         // GET : the last stats of top countries
-        $rootScope.getLocationStats = function () {
+        $scope.getLocationStats = function () {
 
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topCountries';
@@ -588,12 +588,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 })
         }
 
-        $rootScope.getLocationStats();
-        $scope.drawLocationGeoChart();
-        $scope.drawLocationPieChart();
-
         // GET : the last stats of top languages
-        $rootScope.getLanguagesStats = function () {
+        $scope.getLanguagesStats = function () {
 
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topLanguages';
@@ -613,13 +609,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     console.log("#");
                 })
         }
-        $rootScope.getLanguagesStats();
-        $scope.drawlanguagesPieChart();
-
-
+        
         // GET : Top Hashtags
         $scope.topHashtags = [];
-        $scope.tagCloudColors = ['rgb(222,235,247)', 'rgb(158,202,225)', 'rgb(49,130,189)'];
+        $scope.tagCloudColors = ['rgb(49,130,189)', 'rgb(20,100,255)', 'rgb(158,202,225)'];
 
         $scope.getTopHashtags = function () {
 
@@ -642,12 +635,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     console.log("#");
                 })
         }
-        $scope.getTopHashtags();
-
-
+        
         $scope.pagesShown = 1;
         $scope.pageSize = 10;
-
         $scope.tweetsShowned = 0;
 
         // Tweet queue limit
@@ -755,7 +745,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         };
 
         $scope.stopEventHandler = function () {
-            $scope.eventStarted = false;
             CreateEventSource.closeEventSource();
         }
 
