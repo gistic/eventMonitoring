@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.resources;
 
 import org.gistic.tweetboard.eventmanager.Message;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -15,9 +16,11 @@ public class LiveTweetsBroadcasterSingleton {
     public static void broadcast(Message msg) {
         String jsonString = msg.getMsg();
         JSONObject json = new JSONObject(jsonString);
-        long id = json.getLong("id");
-        String idAsString = String.valueOf(id);
-        json.put("id_str", idAsString);
+        if(msg.getType().equals(Message.Type.LiveTweet)) {
+            long id = json.getLong("id");
+            String idAsString = String.valueOf(id);
+            json.put("id_str", idAsString);
+        }
         msg.setMsg( json.toString() );
         broadcaster.broadcastMessage(msg);
 
