@@ -57,6 +57,8 @@ public interface TweetDao {
 
     Set<Tuple> getTopNLanguages(String uuid, Integer count);
 
+    Set<Tuple> getTopNSources(String uuid, Integer count);
+
     Set<Tuple> getTopNHashtags(String uuid, Integer count);
 
     Set<Tuple> getTopNWords(String uuid, Integer count);
@@ -139,6 +141,8 @@ public interface TweetDao {
     void incrHashtagCounter(String uuid, String hashtag);
 
     void incrWordCounter(String uuid, String word);
+
+    void incrSourceCounter(String uuid, String word);
 
     void setMediaUrl(String uuid, String mediaURLHttps);
 
