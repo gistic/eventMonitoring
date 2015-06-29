@@ -344,6 +344,13 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     });
 
                 }
+                
+                // Update tweets sources
+                if ($scope.tweet.source != null) {
+                    var tweetSource = $scope.tweet.source;
+                    var source = tweetSource.substring(tweetSource.indexOf(">" + 1), tweetSource.lastIndexOf("<"));
+                    console.log(source);
+                }
 
                 // Update languages pie chart
                 $scope.languageName = languageCode.getLanguageName($scope.tweet.lang);
@@ -652,7 +659,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
-                    console.log(response.items);
                     $scope.data = response.items;
                     $scope.drawTweetsSourcesChart($scope.data);
                 }).error(function () {
