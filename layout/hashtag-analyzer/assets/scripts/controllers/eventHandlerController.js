@@ -221,7 +221,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                             return (b.score) - (a.score);
                         });
                     }
-                    
+                    $scope.loading = false;
                 }).error(function () {
                     console.log("#");
                 })
@@ -231,10 +231,13 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $scope.showLoadMoreButton = function () {
             $scope.showLoadMore = true;
             $scope.loadMoreButton();
+            $scope.showTotalTweetsNumber = true;
         }
 
         $scope.loadMostPopular = function () {
             $scope.showLoadMore = false;
+            $scope.showTotalTweetsNumber = false;
+            $scope.loading = true;
             $scope.getTopTweets();
         }
 
@@ -366,6 +369,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     $scope.userScreenName = $scope.tweet.user.screen_name;
                     $scope.userProfileImage = $scope.tweet.user.original_profile_image_urlhttps;
                     $scope.tweetCreatedAt = $scope.tweet.created_at;
+                    $scope.tweetIdStr = $scope.tweet.id_str;
 
 
                     for (var i = 0; i < mediaArrayLength; i++) {
@@ -401,7 +405,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                             "caption": $scope.tweetText,
                                             "userScreenName": $scope.userScreenName,
                                             "userProfileImage": $scope.userProfileImage,
-                                            "tweetCreatedAt": $scope.tweetCreatedAt
+                                            "tweetIdStr": $scope.tweetIdStr,
+                                            "tweetCreatedAt": $scope.tweetCreatedAt,
+                                            "index": $scope.mediaQueue.length
                                         };
                                         $scope.mediaQueue.push($scope.mediaVideoObject);
                                         $scope.totalMediaCount++;
@@ -432,6 +438,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                     "caption": $scope.tweetText,
                                     "userScreenName": $scope.userScreenName,
                                     "userProfileImage": $scope.userProfileImage,
+                                    "tweetIdStr": $scope.tweetIdStr,
                                     "tweetCreatedAt": $scope.tweetCreatedAt,
                                     "index": $scope.mediaQueue.length
                                 };
@@ -636,6 +643,19 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 })
         }
         
+        $scope.topSource = [];
+        $scope.getTopSource = function() {
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topSource';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    console.log(response);
+                }).error(function () {
+                    console.log("#");
+                })
+        }
         $scope.pagesShown = 1;
         $scope.pageSize = 10;
         $scope.tweetsShowned = 0;

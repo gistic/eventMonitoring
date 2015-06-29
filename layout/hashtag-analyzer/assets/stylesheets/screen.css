@@ -19793,12 +19793,12 @@ ol {
   opacity: 0;
 }
 
-/* line 7, ../sass/_/_atoms/_spinner.scss */
+/* line 8, ../sass/_/_atoms/_spinner.scss */
 .fadein.ng-enter.ng-enter-active {
   opacity: 1;
 }
 
-/* line 11, ../sass/_/_atoms/_spinner.scss */
+/* line 12, ../sass/_/_atoms/_spinner.scss */
 .inline-fadein.ng-hide-remove {
   -webkit-transition: 500ms ease all;
   -moz-transition: 500ms ease all;
@@ -19808,17 +19808,17 @@ ol {
   opacity: 0;
 }
 
-/* line 19, ../sass/_/_atoms/_spinner.scss */
+/* line 21, ../sass/_/_atoms/_spinner.scss */
 .inline-fadein.ng-hide-remove.ng-hide-remove-active {
   opacity: 1;
 }
 
-/* line 25, ../sass/_/_atoms/_spinner.scss */
+/* line 26, ../sass/_/_atoms/_spinner.scss */
 .loader {
   z-index: 99;
 }
 
-/* line 29, ../sass/_/_atoms/_spinner.scss */
+/* line 30, ../sass/_/_atoms/_spinner.scss */
 .overlay {
   z-index: 999;
   position: fixed;
@@ -19827,7 +19827,7 @@ ol {
   background: black center center no-repeat;
   opacity: .9;
 }
-/* line 35, ../sass/_/_atoms/_spinner.scss */
+/* line 36, ../sass/_/_atoms/_spinner.scss */
 .overlay .loader {
   margin: auto;
   top: 0;
@@ -19838,7 +19838,7 @@ ol {
   position: absolute;
 }
 
-/* line 47, ../sass/_/_atoms/_spinner.scss */
+/* line 48, ../sass/_/_atoms/_spinner.scss */
 .loadEvents {
   width: 40px;
   height: 40px;
@@ -19847,7 +19847,8 @@ ol {
 }
 
 /* line 55, ../sass/_/_atoms/_spinner.scss */
-.bounce1, .bounce2 {
+.bounce1,
+.bounce2 {
   width: 100%;
   height: 100%;
   border-radius: 50%;
@@ -19884,55 +19885,67 @@ ol {
     -webkit-transform: scale(1);
   }
 }
-/* line 91, ../sass/_/_atoms/_spinner.scss */
-.spinner {
-  width: 94px;
-  height: 94px;
-  position: absolute;
-  z-index: 9;
-  margin: 9px 22px;
-  opacity: 0;
-  left: 81%;
-  top: 22%;
+/* line 94, ../sass/_/_atoms/_spinner.scss */
+.loading {
+  margin: 8px 0 0 10px;
 }
 
-/* line 101, ../sass/_/_atoms/_spinner.scss */
-.double-bounce1,
-.double-bounce2 {
-  width: 100%;
-  height: 100%;
+/* line 98, ../sass/_/_atoms/_spinner.scss */
+.loading .bullet {
+  position: absolute;
+  padding: 2px;
   border-radius: 50%;
-  background-color: rgba(12, 133, 167, 0.4);
-  opacity: 0.6;
-  position: absolute;
-  top: 0;
-  left: 0;
-  -webkit-animation: bounce 2.0s infinite ease-in-out;
-  animation: bounce 2.0s infinite ease-in-out;
+  background: #65a3ff;
+  -webkit-animation: animIn .5s ease-in-out 0s infinite;
+  animation: animIn .5s ease-in-out 0s infinite;
 }
 
-/* line 116, ../sass/_/_atoms/_spinner.scss */
-.double-bounce2 {
-  -webkit-animation-delay: -1.0s;
-  animation-delay: -1.0s;
+/* line 107, ../sass/_/_atoms/_spinner.scss */
+.loading .bullet:nth-child(1) {
+  -webkit-animation-delay: 0.1s;
+  animation-delay: 0.1s;
 }
 
-@-webkit-keyframes bounce {
-  0%, 100% {
-    -webkit-transform: scale(0);
+/* line 112, ../sass/_/_atoms/_spinner.scss */
+.loading .bullet:nth-child(2) {
+  -webkit-animation-delay: 0.3s;
+  animation-delay: 0.3s;
+}
+
+/* line 117, ../sass/_/_atoms/_spinner.scss */
+.loading .bullet:nth-child(3) {
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+}
+
+@-webkit-keyframes animIn {
+  0% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+    opacity: 0;
   }
   50% {
-    -webkit-transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateX(100px);
+    transform: translateX(100px);
+    opacity: 0;
   }
 }
-@keyframes bounce {
-  0%, 100% {
-    transform: scale(0);
-    -webkit-transform: scale(0);
+@keyframes animIn {
+  0% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+    opacity: 0;
   }
   50% {
-    transform: scale(1);
-    -webkit-transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    -webkit-transform: translateX(100px);
+    transform: translateX(100px);
+    opacity: 0;
   }
 }
 /* line 1, ../sass/_/_modules/_header.scss */
@@ -20221,62 +20234,54 @@ ol {
 .tweet .tweet-actions a, .tweet-media .tweet-actions a {
   display: block;
 }
-/* line 82, ../sass/_/_modules/_tweet.scss */
-.tweet:hover .tweet-actions, .tweet-media:hover .tweet-actions,
-.tweet:hover .follow-user,
-.tweet-media:hover .follow-user {
+/* line 72, ../sass/_/_modules/_tweet.scss */
+.tweet:hover .tweet-actions, .tweet-media:hover .tweet-actions, .tweet:hover .follow-user, .tweet-media:hover .follow-user {
   opacity: 1;
   display: inline-block;
 }
 
-/* line 91, ../sass/_/_modules/_tweet.scss */
+/* line 80, ../sass/_/_modules/_tweet.scss */
 .tweet-media {
   border: none !important;
 }
-/* line 95, ../sass/_/_modules/_tweet.scss */
-.tweet-media:hover .tweet-content {
-  -webkit-transform: translateX(0);
-  -ms-transform: translateX(0);
-  transform: translateX(0);
-}
-/* line 99, ../sass/_/_modules/_tweet.scss */
-.tweet-media:hover .tweet-content .media-left {
-  -webkit-transform: translateX(0);
-  -ms-transform: translateX(0);
-  transform: translateX(0);
-}
-/* line 105, ../sass/_/_modules/_tweet.scss */
-.tweet-media:hover .tweet-actions {
+/* line 83, ../sass/_/_modules/_tweet.scss */
+.tweet-media .tweet-actions {
   opacity: 1;
+  margin-top: 7px;
+  position: relative;
+}
+/* line 87, ../sass/_/_modules/_tweet.scss */
+.tweet-media .tweet-actions a {
   display: inline-block;
+  margin-right: 7px;
 }
 
-/* line 112, ../sass/_/_modules/_tweet.scss */
+/* line 94, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar, .lang-ar.tweet-media {
   direction: rtl;
   text-align: right;
 }
-/* line 116, ../sass/_/_modules/_tweet.scss */
+/* line 98, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar .user-img, .lang-ar.tweet-media .user-img {
   float: right;
   padding-right: 0;
   padding-left: 15px;
 }
-/* line 121, ../sass/_/_modules/_tweet.scss */
+/* line 103, ../sass/_/_modules/_tweet.scss */
 .tweet.lang-ar .media-body, .lang-ar.tweet-media .media-body {
   margin-left: 0;
   margin-right: 10px;
 }
 
 @media (max-width: 480px) {
-  /* line 130, ../sass/_/_modules/_tweet.scss */
+  /* line 112, ../sass/_/_modules/_tweet.scss */
   .tweets-queue .tweet img, .tweets-queue .tweet-media img {
     width: 48px;
     height: 48px;
   }
 }
 
-/* line 137, ../sass/_/_modules/_tweet.scss */
+/* line 119, ../sass/_/_modules/_tweet.scss */
 .tweets-queue-options {
   margin-bottom: 10px;
 }
@@ -20572,14 +20577,28 @@ footer .social-links a:hover, footer .social-links a:focus {
 .masonry-brick {
   width: 18%;
   margin-bottom: 10px;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
 }
-/* line 13, ../sass/_/_modules/_media.scss */
+/* line 17, ../sass/_/_modules/_media.scss */
 .masonry-brick img {
   position: relative;
   -webkit-transition: all .6s;
   transition: all .6s;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  min-width: 100%;
+  min-height: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
 }
-/* line 18, ../sass/_/_modules/_media.scss */
+/* line 30, ../sass/_/_modules/_media.scss */
 .masonry-brick .media-type-icon {
   position: absolute;
   z-index: 9;
@@ -20588,7 +20607,7 @@ footer .social-links a:hover, footer .social-links a:focus {
   right: 0;
   bottom: 0;
 }
-/* line 25, ../sass/_/_modules/_media.scss */
+/* line 37, ../sass/_/_modules/_media.scss */
 .masonry-brick .media-type-icon i {
   margin: auto;
   line-height: 100px;
@@ -20596,11 +20615,11 @@ footer .social-links a:hover, footer .social-links a:focus {
   font-size: 11px;
   font-size: 1.1rem;
 }
-/* line 32, ../sass/_/_modules/_media.scss */
+/* line 44, ../sass/_/_modules/_media.scss */
 .masonry-brick:hover {
   cursor: pointer;
 }
-/* line 36, ../sass/_/_modules/_media.scss */
+/* line 48, ../sass/_/_modules/_media.scss */
 .masonry-brick:hover img {
   z-index: 999;
 }
@@ -20695,27 +20714,4 @@ footer .social-links a:hover, footer .social-links a:focus {
 /* line 26, ../sass/_/_modules/_lightbox.scss */
 .lightbox-image-container img {
   display: inline-block;
-}
-
-/* the caption overlays the top left corner of the image */
-/* line 32, ../sass/_/_modules/_lightbox.scss */
-.lightbox-image-caption {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0.5em 0.9em;
-  /* the left and right margins are offset by 0.4em for the span box-shadow */
-  color: #000;
-  font-size: 1.5em;
-  font-weight: bold;
-  text-align: left;
-  text-shadow: 0.1em 0.1em 0.2em rgba(255, 255, 255, 0.5);
-}
-/* line 44, ../sass/_/_modules/_lightbox.scss */
-.lightbox-image-caption span {
-  padding-top: 0.1em;
-  padding-bottom: 0.1em;
-  background-color: rgba(255, 255, 255, 0.75);
-  /* pad the left and right of each line of text */
-  box-shadow: 0.4em 0 0 rgba(255, 255, 255, 0.75), -0.4em 0 0 rgba(255, 255, 255, 0.75);
 }

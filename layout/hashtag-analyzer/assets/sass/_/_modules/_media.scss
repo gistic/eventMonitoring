@@ -10,10 +10,22 @@
 .masonry-brick {
     width: 18%;
     margin-bottom: $margin;
+    display: block;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
     img {
         position: relative;
         -webkit-transition: all .6s;
         transition: all .6s;
+        @include border-radius(3px);
+        min-width: 100%;
+        min-height: 100%;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
     }
     .media-type-icon {
         position: absolute;

@@ -19,15 +19,15 @@
     <section>
         <div ng-include="'views/views-panels/top-people-panel.html'"></div>
     </section>
-       
+
     <section>
         <div ng-include="'views/views-panels/languages-panel.html'"></div>
     </section>
-    
+
     <section>
         <div ng-include="'views/views-panels/hashtags-cloud-panel.html'"></div>
     </section>
-    
+
 
 </aside>
 
@@ -44,8 +44,16 @@
                 <a href ng-click="tab = 2">Most popular</a>
             </li>
         </ul>
-        
-        <strong class="pull-right">{{totalTweetsCount}} tweets</strong>
+
+
+        <div ng-show="loading" class="loading pull-left">
+            <div class="bullet"></div>
+            <div class="bullet"></div>
+            <div class="bullet"></div>
+        </div>
+
+
+        <strong class="pull-right" ng-show="showTotalTweetsNumber">{{totalTweetsCount}} tweets</strong>
     </aside>
 
     <button type="button" class="btn btn-load-more" ng-show="loadMoreButton()" ng-click="loadMoreTweets()"><strong><i class="fa fa-arrow-up"></i></strong> {{remainingTweetsCount}} New Tweets</button>

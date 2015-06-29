@@ -1,25 +1,26 @@
 // UI Views transitions
 .fadein.ng-enter {
-  -webkit-transition: 1s;
-  transition: 1s;
-  opacity: 0;
+    -webkit-transition: 1s;
+    transition: 1s;
+    opacity: 0;
 }
+
 .fadein.ng-enter.ng-enter-active {
-  opacity: 1;
+    opacity: 1;
 }
 
 .inline-fadein.ng-hide-remove {
-  -webkit-transition: 500ms ease all;
-  -moz-transition: 500ms ease all;
-  -o-transition: 500ms ease all;
-  transition: 500ms ease all;
-  display: inline-block !important;
-  opacity: 0;
-}
-.inline-fadein.ng-hide-remove.ng-hide-remove-active {
-  opacity: 1;
+    -webkit-transition: 500ms ease all;
+    -moz-transition: 500ms ease all;
+    -o-transition: 500ms ease all;
+    transition: 500ms ease all;
+    display: inline-block !important;
+    opacity: 0;
 }
 
+.inline-fadein.ng-hide-remove.ng-hide-remove-active {
+    opacity: 1;
+}
 
 // Loader
 .loader {
@@ -45,91 +46,107 @@
 
 // HOMEPAGE LOADING
 .loadEvents {
-  width: 40px;
-  height: 40px;
-
-  position: relative;
-  margin: 100px auto;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    margin: 100px auto;
 }
 
-.bounce1, .bounce2 {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: $white;
-  opacity: 0.6;
-  position: absolute;
-  top: 0;
-  left: 0;
-  
-  -webkit-animation: bounce 2.0s infinite ease-in-out;
-  animation: bounce 2.0s infinite ease-in-out;
+.bounce1,
+.bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: $white;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-animation: bounce 2.0s infinite ease-in-out;
+    animation: bounce 2.0s infinite ease-in-out;
 }
 
 .bounce2 {
-  -webkit-animation-delay: -1.0s;
-  animation-delay: -1.0s;
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
 }
 
 @-webkit-keyframes bounce {
-  0%, 100% { -webkit-transform: scale(0.0) }
-  50% { -webkit-transform: scale(1.0) }
+    0%, 100% {
+        -webkit-transform: scale(0.0)
+    }
+    50% {
+        -webkit-transform: scale(1.0)
+    }
 }
 
 @keyframes bounce {
-  0%, 100% { 
-    transform: scale(0.0);
-    -webkit-transform: scale(0.0);
-  } 50% { 
-    transform: scale(1.0);
-    -webkit-transform: scale(1.0);
-  }
+    0%, 100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    }
+    50% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
 }
 
+.loading {
+    margin: $margin - 2 0 0 $margin;
+}
 
-
-.spinner {
-    @include size(94px);
+.loading .bullet {
     position: absolute;
-    z-index: 9;
-    margin:9px 22px;
-    opacity:0;
-    left: 81%;
-    top: 22%;
+    padding: 2px;
+    border-radius: 50%;
+    background: #65a3ff;
+    -webkit-animation: animIn .5s ease-in-out 0s infinite;
+    animation: animIn .5s ease-in-out 0s infinite;
 }
 
-.double-bounce1,
-.double-bounce2 {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background-color: rgba(12, 133, 167, 0.40);
-  opacity: 0.6;
-  position: absolute;
-  top: 0;
-  left: 0;
-  
-  -webkit-animation: bounce 2.0s infinite ease-in-out;
-  animation: bounce 2.0s infinite ease-in-out;
+.loading .bullet:nth-child(1) {
+    -webkit-animation-delay: 0.1s;
+    animation-delay: 0.1s;
 }
 
-.double-bounce2 {
-  -webkit-animation-delay: -1.0s;
-  animation-delay: -1.0s;
+.loading .bullet:nth-child(2) {
+    -webkit-animation-delay: 0.3s;
+    animation-delay: 0.3s;
 }
 
-@-webkit-keyframes bounce {
-  0%, 100% { -webkit-transform: scale(0.0) }
-  50% { -webkit-transform: scale(1.0) }
+.loading .bullet:nth-child(3) {
+    -webkit-animation-delay: 0.5s;
+    animation-delay: 0.5s;
 }
 
-@keyframes bounce {
-  0%, 100% { 
-    transform: scale(0.0);
-    -webkit-transform: scale(0.0);
-  } 50% { 
-    transform: scale(1.0);
-    -webkit-transform: scale(1.0);
-  }
+@-webkit-keyframes animIn {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: translateX(100px);
+        transform: translateX(100px);
+        opacity: 0;
+    }
 }
 
+@keyframes animIn {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: translateX(100px);
+        transform: translateX(100px);
+        opacity: 0;
+    }
+}

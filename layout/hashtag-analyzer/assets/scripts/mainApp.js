@@ -68,6 +68,7 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state, 
     }
     
     $rootScope.loadData = true;
+    $rootScope.showTotalTweetsNumber = true;
     
 })
 
