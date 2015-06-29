@@ -116,10 +116,11 @@ public class TweetProcessor {
         String text = tweet.getText();
 
         String originalSource = tweet.getSource();
-        String source = originalSource.substring(originalSource.indexOf(">" + 1), originalSource.lastIndexOf("<"));
-
-        if (source != null || !source.isEmpty()) {
-            tweetDataLogic.incrSourceCounter(source);
+        if(originalSource.indexOf(">") != -1 && originalSource.lastIndexOf("<") != -1) {
+            String source = originalSource.substring(originalSource.indexOf(">" + 1), originalSource.lastIndexOf("<"));
+            if (source != null || !source.isEmpty()) {
+                tweetDataLogic.incrSourceCounter(source);
+            }
         }
 
         Pattern patternForWords = Pattern.compile("\\w+");
@@ -244,7 +245,6 @@ public class TweetProcessor {
         return containsFromList(tweet.getUser().getScreenName(), approvedUsers);
     }
 
-
     private boolean containsFromList(String text, List<String> list) {
         for (String string : list) {
             if (text.contains(string))
@@ -252,6 +252,7 @@ public class TweetProcessor {
         }
         return false;
     }
+
 
     public List<TweetsOverTimeAnalyzer.TweetsCountPerTime> getTweetsPerTime(int sampleRate, int period) {
         return tweetsOverTimeAnalyzer.getTweetsPerTime(sampleRate, period);
