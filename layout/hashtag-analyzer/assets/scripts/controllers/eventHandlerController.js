@@ -198,6 +198,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 $scope.drawLocationGeoChart();
                 $scope.drawLocationPieChart();
                 $scope.getTopHashtags();
+                $scope.getTopSources();
             } else {
                 console.log("NO AUTH");
                 $state.transitionTo('home');
@@ -644,9 +645,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         }
         
         $scope.topSource = [];
-        $scope.getTopSource = function() {
+        $scope.getTopSources = function() {
             var requestAction = "GET";
-            var apiUrl = '/api/events/' + $rootScope.eventID + '/topSource';
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topSources';
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
