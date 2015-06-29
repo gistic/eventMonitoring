@@ -117,7 +117,7 @@ public class TweetProcessor {
 
         String originalSource = tweet.getSource();
         if(originalSource.indexOf(">") != -1 && originalSource.lastIndexOf("<") != -1) {
-            String source = originalSource.substring(originalSource.indexOf(">" + 1), originalSource.lastIndexOf("<"));
+            String source = originalSource.substring(originalSource.indexOf(">") + 1, originalSource.lastIndexOf("<"));
             if (source != null || !source.isEmpty()) {
                 tweetDataLogic.incrSourceCounter(source);
             }
