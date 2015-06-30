@@ -1,12 +1,15 @@
-var myAppFilters = angular.module('myAppFilters', []);
+'use strict';
 
-myAppFilters.filter('trusted', ['$sce', function ($sce) {
+/** Directives */
+angular.module('trackHashtagApp.filters', [])
+
+.filter('trusted', ['$sce', function ($sce) {
     return function (url) {
         return $sce.trustAsResourceUrl(url);
     };
-}]);
+}])
 
-myAppFilters.filter('parseUrl', function () {
+.filter('parseUrl', function () {
     
     return function (tweetText, target) {
         

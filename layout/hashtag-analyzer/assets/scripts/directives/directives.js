@@ -1,7 +1,12 @@
-var myAppDirectives = angular.module('myAppDirectives', []);
+'use strict';
+
+/** Directives */
+angular.module('trackHashtagApp.directives', [])
+
+//var myAppDirectives = angular.module('myAppDirectives', []);
 
 // Directive : Activate ' ENTER ' keypress to make the same action as click
-myAppDirectives.directive('ngEnter', function () {
+.directive('ngEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if (event.which === 13) {
@@ -12,10 +17,10 @@ myAppDirectives.directive('ngEnter', function () {
             }
         });
     };
-});
+})
 
 // Directive : Image lazy load
-myAppDirectives.directive('lazyLoad', function ($timeout) {
+.directive('lazyLoad', function ($timeout) {
     return {
         restrict: 'A',
         scope: {},
@@ -25,10 +30,10 @@ myAppDirectives.directive('lazyLoad', function ($timeout) {
             });
         },
     }
-});
+})
 
 // Directive : On error or missing user profile image -> Load this default image
-myAppDirectives.directive('onErrorSrc', function ($rootScope) {
+.directive('onErrorSrc', function ($rootScope) {
 
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
 
@@ -41,10 +46,10 @@ myAppDirectives.directive('onErrorSrc', function ($rootScope) {
             });
         }
     }
-});
+})
 
 // Directive : Focus into input on page laod
-myAppDirectives.directive('focusMe', function($timeout, $parse) {
+.directive('focusMe', function($timeout, $parse) {
   return {
     link: function(scope, element, attrs) {
       var model = $parse(attrs.focusMe);
