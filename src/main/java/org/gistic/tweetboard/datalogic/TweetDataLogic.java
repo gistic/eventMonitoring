@@ -168,8 +168,8 @@ public class TweetDataLogic {
 
     public void updateEventConfig(EventConfig eventConfig) {
         tweetDao.updateEventConfig(uuid, eventConfig);
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
+//        Client client = ClientBuilder.newClient();
+//        WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
         String configString = "";
         try {
             configString = new ObjectMapper().writeValueAsString(eventConfig);
@@ -177,7 +177,8 @@ public class TweetDataLogic {
             LoggerFactory.getLogger(this.getClass()).error("Error converting pojo, SHOULD NEVER HAPPEN");
         }
         Message msg = new Message(uuid, Message.Type.UiUpdate, configString);
-        target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
+        LiveTweetsBroadcasterSingleton.broadcast(msg);
+//        target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
     }
 
     public EventConfig getEventConfig(String uuid) {
@@ -222,10 +223,12 @@ public class TweetDataLogic {
 
     public void incrCountryCounter(String countryCode) {
         double count = tweetDao.incrCountryCounter(uuid, countryCode);
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
+//        Client client = ClientBuilder.newClient();
+//        WebTarget target = client.target("http://127.0.0.1:8080/api/liveTweets");
+        //Message msg = new Message(uuid, Message.Type.LiveTweet, statusString);
         Message msg = new Message(uuid, Message.Type.CountryUpdate, createCountryUpdateMessage(countryCode, count));
-        target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
+        LiveTweetsBroadcasterSingleton.broadcast(msg);
+        //target.request().post(Entity.entity(msg, MediaType.APPLICATION_JSON), Message.class);
     }
 
     private String createCountryUpdateMessage(String countryCode, double count) {
@@ -424,6 +427,13 @@ public class TweetDataLogic {
                 incrCountryCounter(place.getCountryCode());
             } else {
                 //count tweets without country specified?
+            }
+            String originalSource = tweet.getSource();
+            if(originalSource.indexOf(">") != -1 && originalSource.lastIndexOf("<") != -1) {
+                String source = originalSource.substring(originalSource.indexOf(">") + 1, originalSource.lastIndexOf("<"));
+                if (source != null || !source.isEmpty()) {
+                    incrSourceCounter(source);
+                }
             }
             //tweetsOverTimeAnalyzer.TweetArrived(status);
             //event.updateStats(tweet);
