@@ -51,10 +51,25 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             return currentState === $state.current.name;
         };
 
-                                   
+        $scope.eventsLimitExceeded = false;
+        $scope.getEvents = function () {
+            var requestAction = "GET";
+            var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
+            var requestData = ""
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .then(function (response) {
+                    // Running User Events
+                    $scope.runningUserEvents = response.data.runningUserEvents;
+                    if ($scope.runningUserEvents.length == 3) {
+                        $scope.eventsLimitExceeded = true;
+                    }
+                });
+        }
+
+
         // Search from the dashboard
         $scope.dashboardSearch = function () {
-            
+
             var eventHashtag = $('#eventHashtag').val();
             // Check hashtag
             var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
@@ -63,48 +78,93 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 $(".search-error").text(checkHashtag);
             } else {
 
-                SweetAlert.swal({
-                        title: "Are you sure?",
-                        text: "if you start new event, you can come back to current one from the homepage",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes, Start it!"
-                    },
-                    function (isConfirm) {
-                        if (isConfirm) {
-                            
-                            $scope.startNewEvent = function (action) {
+                if ($scope.eventsLimitExceeded) {
+                    SweetAlert.swal({
+                            title: "Are you sure?",
+                            text: "You have reached the max. number of active events .. by starting a new one we will close your first event",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes, Start it!"
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
 
-                                // Check if there is an authentication key in the browser cookies
-                                if (User.getUserAuth()) {
-                                    $scope.$broadcast();
-                                    RequestData.startEvent('POST', eventHashtag)
-                                        .success(function (response) {
-                                            $rootScope.eventID = response.uuid;
-                                            // Redirect the front website page to the admin page
-                                            $state.transitionTo('dashboard.liveStreaming', {
-                                                uuid: $scope.eventID
+                                $scope.startNewEvent = function (action) {
+
+                                    // Check if there is an authentication key in the browser cookies
+                                    if (User.getUserAuth()) {
+                                        $scope.$broadcast();
+                                        RequestData.startEvent('POST', eventHashtag)
+                                            .success(function (response) {
+                                                $rootScope.eventID = response.uuid;
+                                                // Redirect the front website page to the admin page
+                                                $state.transitionTo('dashboard.liveStreaming', {
+                                                    uuid: $scope.eventID
+                                                });
+
+                                                $scope.initDashboardData();
+                                            })
+                                    } else {
+                                        var requestAction = "GET";
+                                        var apiUrl = '/api/events/login/twitter?hashtags=' + eventHashtag;
+                                        var requestData = ""
+                                        RequestData.fetchData(requestAction, apiUrl, requestData)
+                                            .then(function (response) {
+                                                var openUrl = response.data.url;
+                                                $window.location.href = openUrl;
                                             });
+                                    }
+                                };
 
-                                            $scope.initDashboardData();
-                                        })
-                                } else {
-                                    var requestAction = "GET";
-                                    var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
-                                    var requestData = ""
-                                    RequestData.fetchData(requestAction, apiUrl, requestData)
-                                        .then(function (response) {
-                                            var openUrl = response.data.url;
-                                            $window.location.href = openUrl;
-                                        });
-                                }
-                            };
+                                $scope.startNewEvent();
 
-                            $scope.startNewEvent();
+                            }
+                        });
+                } else {
+                    SweetAlert.swal({
+                            title: "Are you sure?",
+                            text: "if you start new event, you can come back to current one from the homepage",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes, Start it!"
+                        },
+                        function (isConfirm) {
+                            if (isConfirm) {
 
-                        }
-                    });
+                                $scope.startNewEvent = function (action) {
+
+                                    // Check if there is an authentication key in the browser cookies
+                                    if (User.getUserAuth()) {
+                                        $scope.$broadcast();
+                                        RequestData.startEvent('POST', eventHashtag)
+                                            .success(function (response) {
+                                                $rootScope.eventID = response.uuid;
+                                                // Redirect the front website page to the admin page
+                                                $state.transitionTo('dashboard.liveStreaming', {
+                                                    uuid: $scope.eventID
+                                                });
+
+                                                $scope.initDashboardData();
+                                            })
+                                    } else {
+                                        var requestAction = "GET";
+                                        var apiUrl = '/api/events/login/twitter?hashtags=' + eventHashtag;
+                                        var requestData = ""
+                                        RequestData.fetchData(requestAction, apiUrl, requestData)
+                                            .then(function (response) {
+                                                var openUrl = response.data.url;
+                                                $window.location.href = openUrl;
+                                            });
+                                    }
+                                };
+
+                                $scope.startNewEvent();
+
+                            }
+                        });
+                }
             }
 
         }
@@ -187,6 +247,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 $scope.drawLocationPieChart();
                 $scope.getTopHashtags();
                 $scope.getTopSources();
+                $scope.getEvents();
             } else {
                 console.log("NO AUTH");
                 $state.transitionTo('home');
@@ -961,8 +1022,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             drawTweetsOverTimeChart();
 
         }
-        
-        
+
+
         // Logout User
         $scope.logOutUser = function () {
             User.userSignOut();
