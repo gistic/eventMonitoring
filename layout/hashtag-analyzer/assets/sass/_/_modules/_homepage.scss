@@ -73,8 +73,6 @@
             margin: 0 auto;
             max-width: 101%;
             width: 101%;
-            -webkit-transition: all .6s;
-            transition: all .6s;
         }
     }
     .full-box-link {
@@ -143,9 +141,7 @@
     // Eventbox : hover
     &:hover {
         img {
-            -webkit-transform: scale(1.15);
-            -ms-transform: scale(1.15);
-            transform: scale(1.15);
+            @extend .hover-zoom:hover;
         }
         header {
             -webkit-transform: translateY(-70%) !important;

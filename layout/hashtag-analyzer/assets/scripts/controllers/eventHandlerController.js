@@ -29,14 +29,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         // 2. Event streaming
         // 3. Draw charts and panels 
         // 4. Stop and kill event
-                                       
-        
+
+
         // 1. Set the initializing values
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
         }
-                                       
+
         // Lightbox for media
         $scope.Lightbox = Lightbox;
         $scope.openLightboxModal = function (index) {
@@ -51,71 +51,140 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             return currentState === $state.current.name;
         };
 
+                                       
         // Search from the dashboard
         $scope.dashboardSearch = function () {
-            var eventHashtag = $('#eventHashtag').val();
-            var validSearch = true;
-            if (eventHashtag === undefined) {
-                validSearch = false;
-                $(".search-error").css("display", "inline-block");
-                $(".search-error").text("Please type at least three letters to start your event");
-            }
-            var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
-            if (checkHashtag) {
-                validSearch = false;
-                $(".search-error").css("display", "inline-block");
-                $(".search-error").text("We prevent searching for sexual hashtags .. choose other hashtag");
-            }
-            if (validSearch) {
 
-                SweetAlert.swal({
-                        title: "Are you sure?",
-                        text: "if you start new event, you can come back to current one from the homepage",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes, Start it!",
-                        closeOnConfirm: false
-                    },
-                    function (isConfirm) {
-                        if (isConfirm) {
-                            $scope.stopEventHandler();
-                            SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+            $scope.maxEventsNumberReached = false;
 
-                            $scope.startNewEvent = function (action) {
+            $scope.getEvents = function () {
+                var requestAction = "GET";
+                var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
+                var requestData = ""
+                RequestData.fetchData(requestAction, apiUrl, requestData)
+                    .then(function (response) {
+                        // Running User Events
+                        $scope.runningUserEvents = response.data.runningUserEvents;
+                        if ($scope.runningUserEvents.length >= 3) {
+                            $scope.maxEventsNumberReached = true;
+                            var eventHashtag = $('#eventHashtag').val();
+                            var validSearch = true;
+                            if (!$scope.maxEventsNumberReached) {
+                                
+                                if (eventHashtag === undefined) {
+                                    validSearch = false;
+                                    $(".search-error").css("display", "inline-block");
+                                    $(".search-error").text("Please type at least three letters to start your event");
+                                }
+                                var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
+                                if (checkHashtag) {
+                                    validSearch = false;
+                                    $(".search-error").css("display", "inline-block");
+                                    $(".search-error").text("We prevent searching for sexual hashtags .. choose other hashtag");
+                                }
+                                if (validSearch) {
+                                    SweetAlert.swal({
+                                            title: "Are you sure?",
+                                            text: "if you start new event, you can come back to current one from the homepage",
+                                            type: "warning",
+                                            showCancelButton: true,
+                                            confirmButtonColor: "#DD6B55",
+                                            confirmButtonText: "Yes, Start it!",
+                                            closeOnConfirm: true
+                                        },
+                                        function (isConfirm) {
+                                            if (isConfirm) {
+                                                $scope.stopEventHandler();
+                                                SweetAlert.swal("Done");
 
-                                // Check if there is an authentication key in the browser cookies
-                                if (User.getUserAuth()) {
-                                    $scope.$broadcast();
-                                    RequestData.startEvent('POST', eventHashtag)
-                                        .success(function (response) {
-                                            $rootScope.eventID = response.uuid;
-                                            // Redirect the front website page to the admin page
-                                            $state.transitionTo('dashboard.liveStreaming', {
-                                                uuid: $scope.eventID
-                                            });
+                                                $scope.startNewEvent = function (action) {
 
-                                            $scope.initDashboardData();
-                                        })
-                                } else {
-                                    var requestAction = "GET";
-                                    var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
-                                    var requestData = ""
-                                    RequestData.fetchData(requestAction, apiUrl, requestData)
-                                        .then(function (response) {
-                                            var openUrl = response.data.url;
-                                            $window.location.href = openUrl;
+                                                    // Check if there is an authentication key in the browser cookies
+                                                    if (User.getUserAuth()) {
+                                                        $scope.$broadcast();
+                                                        $scope.loadData = true;
+                                                        RequestData.startEvent('POST', eventHashtag)
+                                                            .success(function (response) {
+                                                                $rootScope.eventID = response.uuid;
+                                                                // Redirect the front website page to the admin page
+                                                                $state.transitionTo('dashboard.liveStreaming', {
+                                                                    uuid: $scope.eventID
+                                                                });
+
+                                                                $scope.initDashboardData();
+                                                                $scope.loadData = false;
+                                                            })
+                                                    } else {
+                                                        var requestAction = "GET";
+                                                        var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
+                                                        var requestData = ""
+                                                        RequestData.fetchData(requestAction, apiUrl, requestData)
+                                                            .then(function (response) {
+                                                                var openUrl = response.data.url;
+                                                                $window.location.href = openUrl;
+                                                            });
+                                                    }
+                                                };
+
+                                                $scope.startNewEvent();
+
+                                            } else {
+                                                SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
+                                            }
                                         });
                                 }
-                            };
+                            } else {
+                                SweetAlert.swal({
+                                    title: "Are you sure?",
+                                    text: "You have reached the max. number of active events .. by starting a new one we will close your first event",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: "Yes, stop it!",
+                                    closeOnConfirm: true
+                                }, function (isConfirm) {
+                                    if (isConfirm) {
+                                        $scope.startNewEvent = function (action) {
 
-                            $scope.startNewEvent();
+                                            // Check if there is an authentication key in the browser cookies
+                                            if (User.getUserAuth()) {
+                                                $scope.$broadcast();
+                                                $scope.loadData = true;
+                                                RequestData.startEvent('POST', eventHashtag)
+                                                    .success(function (response) {
+                                                        $rootScope.eventID = response.uuid;
+                                                        // Redirect the front website page to the admin page
+                                                        $state.transitionTo('dashboard.liveStreaming', {
+                                                            uuid: $scope.eventID
+                                                        });
 
-                        } else {
-                            SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
+                                                        $scope.initDashboardData();
+                                                        $scope.loadData = false;
+                                                    })
+                                            } else {
+                                                var requestAction = "GET";
+                                                var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
+                                                var requestData = ""
+                                                RequestData.fetchData(requestAction, apiUrl, requestData)
+                                                    .then(function (response) {
+                                                        var openUrl = response.data.url;
+                                                        $window.location.href = openUrl;
+                                                    });
+                                            }
+                                        };
+
+                                        $scope.startNewEvent();
+                                        SweetAlert.swal("Done");
+                                    } else {
+                                        SweetAlert.swal("Cancelled", "Your imaginary file is safe :)",
+                                            "error");
+                                    }
+                                });
+                            }
                         }
                     });
             }
+            $scope.getEvents();
 
         }
 
@@ -160,7 +229,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
         // GET : Warm up data for event
         $scope.getWarmupData = function () {
-            
+
             var apiUrl = '/api/events/' + $rootScope.eventID + '/cachedTweets';
             var requestAction = "GET";
             var requestData = "";
@@ -170,14 +239,16 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.tweetsQueue.push($scope.tweet);
-                        
                     }
+
+                    $scope.loadData = false;
                 }).error(function () {
                     console.log("#");
                 })
         };
 
         // Intialize
+
         $scope.initDashboardData = function () {
             User.setUserAuth();
             console.log(User.getUserAuth());
@@ -188,26 +259,30 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 $scope.getViewOptions();
                 $scope.getEventStats();
                 User.getUserData();
-                
+                $scope.getLanguagesStats();
+                $scope.drawlanguagesPieChart();
+                $scope.getLocationStats();
+                $scope.drawLocationGeoChart();
+                $scope.drawLocationPieChart();
+                $scope.getTopHashtags();
+                $scope.getTopSources();
             } else {
                 console.log("NO AUTH");
                 $state.transitionTo('home');
             }
-
-
         }
-
 
         // TOP TWEETS
         $scope.topTweets = [];
         $scope.getTopTweets = function () {
-            
+
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets?authToken=' + $cookies.userAuthentication;
             var requestAction = "GET";
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
+                    $scope.topTweets = [];
                     for (var i = 0; i < response.items.length; i++) {
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.topTweets.push($scope.tweet);
@@ -215,7 +290,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                             return (b.score) - (a.score);
                         });
                     }
-                    
+                    $scope.loading = false;
                 }).error(function () {
                     console.log("#");
                 })
@@ -225,30 +300,26 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         $scope.showLoadMoreButton = function () {
             $scope.showLoadMore = true;
             $scope.loadMoreButton();
+            $scope.showTotalTweetsNumber = true;
         }
 
         $scope.loadMostPopular = function () {
             $scope.showLoadMore = false;
+            $scope.showTotalTweetsNumber = false;
+            $scope.loading = true;
             $scope.getTopTweets();
         }
 
         // Start New Event Handler
-        $scope.eventStarted = false;
-        $rootScope.timerRunning = false;
-
         $scope.tweetsQueue = []; // display
         $scope.lastNewTweets = []; // for button
         $scope.tweetsHistory = []; // history
         $scope.loadTweetsFromHistoryArray = [];
-
         $scope.tweetsQueueLength = 0;
         $scope.lastNewTweetsLength = 0;
-
         $scope.mediaQueue = [];
         $scope.lastNewMedia = [];
-
         $scope.topPeople = [];
-
         $scope.tweet = {};
 
 
@@ -296,6 +367,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             $(".angular-google-map-container").innerHTML = 'No Geolocation Support.';
             $scope.map = $scope.defaultMapOnError;
         }
+
         $scope.mapOptions = {
             scrollwheel: false
         };
@@ -341,6 +413,38 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                 }
 
+                // Update tweets sources
+                var sourceUpdated = false;
+                if ($scope.tweet.source != null) {
+                    var tweetSource = $scope.tweet.source;
+                    $scope.sourceName = tweetSource.substring(tweetSource.indexOf(">") + 1, tweetSource.lastIndexOf("<"));
+                    $scope.sourceName = $scope.sourceName.substring($scope.sourceName.indexOf(">"));
+
+                    for (var i = 0; i < $scope.topSource.length; i++) {
+                        if ($scope.topSource[i].code == $scope.sourceName) {
+                            $scope.topSource[i].count++;
+                            sourceUpdated = true;
+                            $scope.topSource.sort(function (a, b) {
+                                return (b.count) - (a.count);
+                            });
+                            $scope.drawTweetsSourcesChart($scope.topSource);
+                            break;
+                        }
+                    }
+                    if (!sourceUpdated) {
+                        $scope.topSource.push({
+                            code: $scope.sourceName,
+                            count: 1
+                        });
+                        $scope.topSource.sort(function (a, b) {
+                            return (b.count) - (a.count);
+                        });
+
+                        $scope.drawTweetsSourcesChart($scope.topSource);
+                    }
+
+                }
+
                 // Update languages pie chart
                 $scope.languageName = languageCode.getLanguageName($scope.tweet.lang);
                 var languageUpdated = false;
@@ -367,6 +471,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     $scope.userScreenName = $scope.tweet.user.screen_name;
                     $scope.userProfileImage = $scope.tweet.user.original_profile_image_urlhttps;
                     $scope.tweetCreatedAt = $scope.tweet.created_at;
+                    $scope.tweetIdStr = $scope.tweet.id_str;
 
 
                     for (var i = 0; i < mediaArrayLength; i++) {
@@ -376,7 +481,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
                         // Push only MP4 videos
                         if ($scope.mediaType == 'video') {
-                            
+
                             var videoVariantsArrayLength = $scope.tweet.extended_media_entities[i].video_variants.length;
                             for (var k = 0; k < videoVariantsArrayLength; k++) {
                                 var videoContentType = $scope.tweet.extended_media_entities[i].video_variants[k].content_type;
@@ -402,7 +507,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                             "caption": $scope.tweetText,
                                             "userScreenName": $scope.userScreenName,
                                             "userProfileImage": $scope.userProfileImage,
-                                            "tweetCreatedAt": $scope.tweetCreatedAt
+                                            "tweetIdStr": $scope.tweetIdStr,
+                                            "tweetCreatedAt": $scope.tweetCreatedAt,
+                                            "index": $scope.mediaQueue.length
                                         };
                                         $scope.mediaQueue.push($scope.mediaVideoObject);
                                         $scope.totalMediaCount++;
@@ -433,6 +540,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                                     "caption": $scope.tweetText,
                                     "userScreenName": $scope.userScreenName,
                                     "userProfileImage": $scope.userProfileImage,
+                                    "tweetIdStr": $scope.tweetIdStr,
                                     "tweetCreatedAt": $scope.tweetCreatedAt,
                                     "index": $scope.mediaQueue.length
                                 };
@@ -452,7 +560,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                         $scope.tweetsQueue.unshift($scope.tweet);
                     }
 
-                    
+
                 }, false);
 
                 $scope.totalTweetsCount++;
@@ -568,7 +676,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         }
 
         // GET : the last stats of top countries
-        $rootScope.getLocationStats = function () {
+        $scope.getLocationStats = function () {
 
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topCountries';
@@ -588,12 +696,8 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                 })
         }
 
-        $rootScope.getLocationStats();
-        $scope.drawLocationGeoChart();
-        $scope.drawLocationPieChart();
-
         // GET : the last stats of top languages
-        $rootScope.getLanguagesStats = function () {
+        $scope.getLanguagesStats = function () {
 
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topLanguages';
@@ -613,13 +717,10 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     console.log("#");
                 })
         }
-        $rootScope.getLanguagesStats();
-        $scope.drawlanguagesPieChart();
-
 
         // GET : Top Hashtags
         $scope.topHashtags = [];
-        $scope.tagCloudColors = ['rgb(222,235,247)', 'rgb(158,202,225)', 'rgb(49,130,189)'];
+        $scope.tagCloudColors = ['rgb(49,130,189)', 'rgb(20,100,255)', 'rgb(158,202,225)'];
 
         $scope.getTopHashtags = function () {
 
@@ -642,12 +743,23 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     console.log("#");
                 })
         }
-        $scope.getTopHashtags();
 
+        $scope.topSource = [];
+        $scope.getTopSources = function () {
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topSources';
+            var requestData = "";
 
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.topSource = response.items;
+                    $scope.drawTweetsSourcesChart($scope.topSource);
+                }).error(function () {
+                    console.log("#");
+                })
+        }
         $scope.pagesShown = 1;
         $scope.pageSize = 10;
-
         $scope.tweetsShowned = 0;
 
         // Tweet queue limit
@@ -666,9 +778,9 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         }
 
         $scope.loadMoreMediaButton = function () {
-                return $scope.pagesShown < ($scope.mediaQueue.length / $scope.pageSize);
-            }
-        
+            return $scope.pagesShown < ($scope.mediaQueue.length / $scope.pageSize);
+        }
+
         // Load more tweets handler
         $scope.loadMoreMedia = function () {
             $scope.pagesShown++;
@@ -718,13 +830,13 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Yes, stop it!",
-                    closeOnConfirm: false
+                    closeOnConfirm: true
                 },
                 function (isConfirm) {
                     if (isConfirm) {
                         $scope.stopEventHandler();
                         $state.transitionTo('home');
-                        SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+                        SweetAlert.swal("Done");
                     } else {
                         SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
                     }
@@ -740,14 +852,14 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: "Yes, stop it!",
-                    closeOnConfirm: false
+                    closeOnConfirm: true
                 },
                 function (isConfirm) {
                     if (isConfirm) {
                         $cookieStore.remove("userAuthentication");
                         $scope.stopEventHandler();
                         $state.transitionTo('home');
-                        SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
+                        SweetAlert.swal("Done");
                     } else {
                         SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
                     }
@@ -755,8 +867,110 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         };
 
         $scope.stopEventHandler = function () {
-            $scope.eventStarted = false;
             CreateEventSource.closeEventSource();
+        }
+
+
+        // Draw tweets sources chart
+        $scope.tweetsSourcesChartConfig = {
+            options: {
+                chart: {
+                    type: 'column',
+                    height: 250,
+                    backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                },
+                title: {
+                    text: ''
+                }
+
+            },
+        };
+
+
+        $scope.drawTweetsSourcesChart = function () {
+
+            $scope.tweetsSources = [];
+
+            function drawTweetsSourcesChart(data) {
+
+                for (i = 0; i < 7; i++) {
+                    $scope.tweetsSourceName = $scope.topSource[i].code;
+                    $scope.tweetsSourceCount = $scope.topSource[i].count;
+                    $scope.tweetsSources.push({
+                        name: $scope.tweetsSourceName,
+                        y: $scope.tweetsSourceCount
+                    });
+                }
+                $scope.chartSeries = [{
+                    "name": "Tweets count",
+                    data: $scope.tweetsSources,
+                    colorByPoint: true,
+                    showInLegend: false,
+                    "id": "tweetsChart",
+                    color: "rgb(22, 123, 230)"
+    }];
+                $scope.tweetsSourcesChartConfig = {
+                    options: {
+                        chart: {
+                            type: 'column',
+                            animation: {
+                                duration: 1500
+                            },
+                            height: 300,
+                            backgroundColor: 'rgba(255, 255, 255, 0.01)'
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)",
+
+
+                        labels: {
+                            enabled: true,
+                            rotation: -45,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '11px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        plotLines: [{
+                            value: 0,
+                            width: 0,
+                            color: '#ffffff'
+                }],
+                        title: {
+                            text: ''
+                        },
+                        labels: {
+                            enabled: true,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '10px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        },
+                        tickWidth: 0,
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)"
+                    },
+                    series: $scope.chartSeries,
+                    credits: {
+                        enabled: false
+                    },
+                    loading: false,
+                    title: {
+                        text: ''
+                    }
+                };
+                $scope.reflow = function () {
+                    $scope.$broadcast('highchartsng.reflow');
+                };
+            }
+
+            drawTweetsSourcesChart();
+
         }
 
         // Draw Tweets overtime Chart

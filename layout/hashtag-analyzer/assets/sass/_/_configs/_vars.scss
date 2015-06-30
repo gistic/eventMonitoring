@@ -1,9 +1,5 @@
 @import "compass";
 
-// Prepared for multi-languages support
-$site_direction: left;
-$site_direction_ops: opposite-position($site_direction);
-
 // Colors
 $white:#ffffff;
 $green:#93c01f;
@@ -12,7 +8,6 @@ $dark-green: #26CA9F;
 $red:#ff0000;
 $black:#000000;
 $orange-light:#fff7e4;
-
 
 $gray-super-light: #fafafa;
 $gray-light: #cdd2d4;
@@ -39,7 +34,6 @@ $layout-orange: $orange;
 $container-width: 960px;
 $grid-columns: 24;
 $grid-gutter-width: 20px;
-$border-radius-base: 0;
 
 $button-padding: 7px 10px;
 

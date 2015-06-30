@@ -8,8 +8,10 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'ui.bootstrap',
     'ui.router',
 
-    'myAppDirectives', // Custome application dependencies [Directives - Filters - Services]
-    'myAppFilters',
+    //'myAppDirectives', // Custome application dependencies [Directives - Filters - Services]
+    'trackHashtagApp.directives',
+    'trackHashtagApp.filters',
+    
     'myAppServices',
 
     'superAdminController', // Custome application dependencies [Controllers]
@@ -68,6 +70,7 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state, 
     }
     
     $rootScope.loadData = true;
+    $rootScope.showTotalTweetsNumber = true;
     
 })
 

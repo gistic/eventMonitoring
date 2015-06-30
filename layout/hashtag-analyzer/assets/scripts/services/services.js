@@ -122,8 +122,6 @@ myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$wind
 
         startEvent: function (requestAction, eventHashtag) {
 
-            //            var eventHashtag = $('#eventHashtag').val();
-
             var requestUrl = $rootScope.baseUrl + '/api/events?authToken=' + $cookies.userAuthentication;
 
             return $http({

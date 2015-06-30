@@ -69,18 +69,7 @@
         }
     }
     &:hover {
-        .tweet-content {
-//            -webkit-transform: translateX(-5%);
-//            -ms-transform: translateX(-5%);
-//            transform: translateX(-5%);
-            .media-left {
-//                -webkit-transform: translateX(-40%);
-//                -ms-transform: translateX(-40%);
-//                transform: translateX(-40%);
-            }
-        }
-        .tweet-actions,
-        .follow-user {
+        .tweet-actions, .follow-user {
             opacity: 1;
             display: inline-block;
         }
@@ -91,20 +80,18 @@
 .tweet-media {
     @extend .tweet;
     border: none !important;
-    &:hover {
-        .tweet-content {
-            -webkit-transform: translateX(0);
-            -ms-transform: translateX(0);
-            transform: translateX(0);
-            .media-left {
-                -webkit-transform: translateX(0);
-                -ms-transform: translateX(0);
-                transform: translateX(0);
-            }
-        }
-        .tweet-actions {
-            opacity: 1;
+    .tweet-actions {
+        opacity: 1;
+        margin-top: $margin - 3;
+        position: relative;
+        a {
             display: inline-block;
+            margin-right: $margin - 3;
+        }
+    }
+    &:hover {
+        .tweet-actions {
+            position: relative;
         }
     }
 }
