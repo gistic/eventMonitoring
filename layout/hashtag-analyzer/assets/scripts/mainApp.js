@@ -1,6 +1,6 @@
 'use strict';
 
-var trackHashtagApp = angular.module('trackHashtagApp', [
+angular.module('trackHashtagApp', [
     'ngSanitize', // AngularjS main dependencies
     'ngCookies',
     'ngAnimate',
@@ -36,12 +36,10 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'ngFx',
     'nsPopover',
     'me-lazyload'
-]);
-
-//angular.module('trackHashtagApp.services', []);
+])
 
 // Run : Intliaize the app with this values
-trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state, User) {
+.run(function ($window, $location, $rootScope, $cookies, $state, User) {
     $rootScope.appName = "Hashtag Analyser";
     $rootScope.appVersion = "V.1.0.0";
     $rootScope.socialLink = [{
@@ -76,7 +74,7 @@ trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state, 
 })
 
 // Config : Media lightbox configurations
-trackHashtagApp.config(function (LightboxProvider) {
+.config(function (LightboxProvider) {
     // set a custom template
     LightboxProvider.templateUrl = 'views/views-components/lightbox-modal.html';
 
@@ -91,10 +89,10 @@ trackHashtagApp.config(function (LightboxProvider) {
     LightboxProvider.getImageType = function (media) {
         return media.type;
     };
-});
+})
 
 // Config : Routing configurations
-trackHashtagApp.config(function ($stateProvider, $urlRouterProvider) {
+.config(function ($stateProvider, $urlRouterProvider) {
     window.routes = {
         "home": {
             url: '',
