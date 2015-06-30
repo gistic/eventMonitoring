@@ -113,24 +113,16 @@ StartNewEvent.controller('StartNewEventController', [
         $scope.startNewEvent = function (action) {
 
             // Check hashtag
-            var validSearch = true;
-            if ($scope.eventHashtag === undefined) {
-                validSearch = false;
-                $(".search-error").css("display", "inline-block");
-                $(".search-error").text("Please type at least three letters to start your event");
-            }
-
             var checkHashtag = filterHashtags.preventBadHashtags($scope.eventHashtag);
             if (checkHashtag) {
-                validSearch = false;
                 $(".search-error").css("display", "inline-block");
-                $(".search-error").text("We prevent searching for sexual hashtags .. choose other hashtag");
-            }
-
-
-            if (validSearch) {
+                $(".search-error").text(checkHashtag);
+            } else {
+                
                 $(".spinner").css("opacity", 1);
+                
                 if (User.getUserAuth()) {
+                    
                     if ($scope.runningUserEvents.length >= 3) {
                         SweetAlert.swal({
                             title: "Are you sure?",
@@ -138,15 +130,10 @@ StartNewEvent.controller('StartNewEventController', [
                             type: "warning",
                             showCancelButton: true,
                             confirmButtonColor: "#DD6B55",
-                            confirmButtonText: "Yes, stop it!",
-                            closeOnConfirm: false
+                            confirmButtonText: "Yes, stop it!"                    
                         }, function (isConfirm) {
                             if (isConfirm) {
                                 $scope.startServerEvent();
-                                SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
-                            } else {
-                                SweetAlert.swal("Cancelled", "Your imaginary file is safe :)",
-                                    "error");
                             }
                         });
                     } else {
@@ -175,27 +162,8 @@ StartNewEvent.controller('StartNewEventController', [
             }
         }
 
-        // Logout
+        // Logout User
         $scope.logOutUser = function () {
-            SweetAlert.swal({
-                title: "Are you sure?",
-                text: "Your will not be able to recover this hashtag tracking!",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Yes, stop it!",
-                closeOnConfirm: false
-            }, function (isConfirm) {
-                if (isConfirm) {
-                    $cookieStore.remove("userAuthentication");
-                    $scope.logedInUser = false;
-                    SweetAlert.swal("Deleted!", "Your event has been deleted.", "success");
-                } else {
-                    SweetAlert.swal("Cancelled", "Your imaginary file is safe :)",
-                        "error");
-                }
-            });
+            User.userSignOut();
         };
- }
-
-]);
+}]);

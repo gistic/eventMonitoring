@@ -51,140 +51,61 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             return currentState === $state.current.name;
         };
 
-                                       
+                                   
         // Search from the dashboard
         $scope.dashboardSearch = function () {
+            
+            var eventHashtag = $('#eventHashtag').val();
+            // Check hashtag
+            var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
+            if (checkHashtag) {
+                $(".search-error").css("display", "inline-block");
+                $(".search-error").text(checkHashtag);
+            } else {
 
-            $scope.maxEventsNumberReached = false;
+                SweetAlert.swal({
+                        title: "Are you sure?",
+                        text: "if you start new event, you can come back to current one from the homepage",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, Start it!"
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            
+                            $scope.startNewEvent = function (action) {
 
-            $scope.getEvents = function () {
-                var requestAction = "GET";
-                var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
-                var requestData = ""
-                RequestData.fetchData(requestAction, apiUrl, requestData)
-                    .then(function (response) {
-                        // Running User Events
-                        $scope.runningUserEvents = response.data.runningUserEvents;
-                        if ($scope.runningUserEvents.length >= 3) {
-                            $scope.maxEventsNumberReached = true;
-                            var eventHashtag = $('#eventHashtag').val();
-                            var validSearch = true;
-                            if (!$scope.maxEventsNumberReached) {
-                                
-                                if (eventHashtag === undefined) {
-                                    validSearch = false;
-                                    $(".search-error").css("display", "inline-block");
-                                    $(".search-error").text("Please type at least three letters to start your event");
-                                }
-                                var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
-                                if (checkHashtag) {
-                                    validSearch = false;
-                                    $(".search-error").css("display", "inline-block");
-                                    $(".search-error").text("We prevent searching for sexual hashtags .. choose other hashtag");
-                                }
-                                if (validSearch) {
-                                    SweetAlert.swal({
-                                            title: "Are you sure?",
-                                            text: "if you start new event, you can come back to current one from the homepage",
-                                            type: "warning",
-                                            showCancelButton: true,
-                                            confirmButtonColor: "#DD6B55",
-                                            confirmButtonText: "Yes, Start it!",
-                                            closeOnConfirm: true
-                                        },
-                                        function (isConfirm) {
-                                            if (isConfirm) {
-                                                $scope.stopEventHandler();
-                                                SweetAlert.swal("Done");
+                                // Check if there is an authentication key in the browser cookies
+                                if (User.getUserAuth()) {
+                                    $scope.$broadcast();
+                                    RequestData.startEvent('POST', eventHashtag)
+                                        .success(function (response) {
+                                            $rootScope.eventID = response.uuid;
+                                            // Redirect the front website page to the admin page
+                                            $state.transitionTo('dashboard.liveStreaming', {
+                                                uuid: $scope.eventID
+                                            });
 
-                                                $scope.startNewEvent = function (action) {
-
-                                                    // Check if there is an authentication key in the browser cookies
-                                                    if (User.getUserAuth()) {
-                                                        $scope.$broadcast();
-                                                        $scope.loadData = true;
-                                                        RequestData.startEvent('POST', eventHashtag)
-                                                            .success(function (response) {
-                                                                $rootScope.eventID = response.uuid;
-                                                                // Redirect the front website page to the admin page
-                                                                $state.transitionTo('dashboard.liveStreaming', {
-                                                                    uuid: $scope.eventID
-                                                                });
-
-                                                                $scope.initDashboardData();
-                                                                $scope.loadData = false;
-                                                            })
-                                                    } else {
-                                                        var requestAction = "GET";
-                                                        var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
-                                                        var requestData = ""
-                                                        RequestData.fetchData(requestAction, apiUrl, requestData)
-                                                            .then(function (response) {
-                                                                var openUrl = response.data.url;
-                                                                $window.location.href = openUrl;
-                                                            });
-                                                    }
-                                                };
-
-                                                $scope.startNewEvent();
-
-                                            } else {
-                                                SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
-                                            }
+                                            $scope.initDashboardData();
+                                        })
+                                } else {
+                                    var requestAction = "GET";
+                                    var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
+                                    var requestData = ""
+                                    RequestData.fetchData(requestAction, apiUrl, requestData)
+                                        .then(function (response) {
+                                            var openUrl = response.data.url;
+                                            $window.location.href = openUrl;
                                         });
                                 }
-                            } else {
-                                SweetAlert.swal({
-                                    title: "Are you sure?",
-                                    text: "You have reached the max. number of active events .. by starting a new one we will close your first event",
-                                    type: "warning",
-                                    showCancelButton: true,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: "Yes, stop it!",
-                                    closeOnConfirm: true
-                                }, function (isConfirm) {
-                                    if (isConfirm) {
-                                        $scope.startNewEvent = function (action) {
+                            };
 
-                                            // Check if there is an authentication key in the browser cookies
-                                            if (User.getUserAuth()) {
-                                                $scope.$broadcast();
-                                                $scope.loadData = true;
-                                                RequestData.startEvent('POST', eventHashtag)
-                                                    .success(function (response) {
-                                                        $rootScope.eventID = response.uuid;
-                                                        // Redirect the front website page to the admin page
-                                                        $state.transitionTo('dashboard.liveStreaming', {
-                                                            uuid: $scope.eventID
-                                                        });
+                            $scope.startNewEvent();
 
-                                                        $scope.initDashboardData();
-                                                        $scope.loadData = false;
-                                                    })
-                                            } else {
-                                                var requestAction = "GET";
-                                                var apiUrl = '/api/events/login/twitter?hashtags=' + $scope.eventHashtag;
-                                                var requestData = ""
-                                                RequestData.fetchData(requestAction, apiUrl, requestData)
-                                                    .then(function (response) {
-                                                        var openUrl = response.data.url;
-                                                        $window.location.href = openUrl;
-                                                    });
-                                            }
-                                        };
-
-                                        $scope.startNewEvent();
-                                        SweetAlert.swal("Done");
-                                    } else {
-                                        SweetAlert.swal("Cancelled", "Your imaginary file is safe :)",
-                                            "error");
-                                    }
-                                });
-                            }
                         }
                     });
             }
-            $scope.getEvents();
 
         }
 
@@ -821,56 +742,6 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize, $scope.pageSize);
         }
 
-        // Stop Event Handler
-        $scope.killEvent = function () {
-            SweetAlert.swal({
-                    title: "Are you sure?",
-                    text: "Your will not be able to recover this hashtag tracking!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, stop it!",
-                    closeOnConfirm: true
-                },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        $scope.stopEventHandler();
-                        $state.transitionTo('home');
-                        SweetAlert.swal("Done");
-                    } else {
-                        SweetAlert.swal("Cancelled", "Your event is in safe :)", "error");
-                    }
-                });
-        };
-
-        // Logout
-        $scope.logOutUser = function () {
-            SweetAlert.swal({
-                    title: "Are you sure?",
-                    text: "Your will not be able to recover this hashtag tracking!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, stop it!",
-                    closeOnConfirm: true
-                },
-                function (isConfirm) {
-                    if (isConfirm) {
-                        $cookieStore.remove("userAuthentication");
-                        $scope.stopEventHandler();
-                        $state.transitionTo('home');
-                        SweetAlert.swal("Done");
-                    } else {
-                        SweetAlert.swal("Cancelled", "Your imaginary file is safe :)", "error");
-                    }
-                });
-        };
-
-        $scope.stopEventHandler = function () {
-            CreateEventSource.closeEventSource();
-        }
-
-
         // Draw tweets sources chart
         $scope.tweetsSourcesChartConfig = {
             options: {
@@ -893,7 +764,7 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
 
             function drawTweetsSourcesChart(data) {
 
-                for (i = 0; i < 7; i++) {
+                for (i = 0; i < $scope.topSource.length; i++) {
                     $scope.tweetsSourceName = $scope.topSource[i].code;
                     $scope.tweetsSourceCount = $scope.topSource[i].count;
                     $scope.tweetsSources.push({
@@ -1090,5 +961,12 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             drawTweetsOverTimeChart();
 
         }
+        
+        
+        // Logout User
+        $scope.logOutUser = function () {
+            User.userSignOut();
+            $state.transitionTo('home');
+        };
 
 }]);

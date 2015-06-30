@@ -11,8 +11,7 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     //'myAppDirectives', // Custome application dependencies [Directives - Filters - Services]
     'trackHashtagApp.directives',
     'trackHashtagApp.filters',
-    
-    'myAppServices',
+    'trackHashtagApp.services',
 
     'superAdminController', // Custome application dependencies [Controllers]
     'StartNewEvent',
@@ -38,6 +37,8 @@ var trackHashtagApp = angular.module('trackHashtagApp', [
     'nsPopover',
     'me-lazyload'
 ]);
+
+//angular.module('trackHashtagApp.services', []);
 
 // Run : Intliaize the app with this values
 trackHashtagApp.run(function ($window, $location, $rootScope, $cookies, $state, User) {
