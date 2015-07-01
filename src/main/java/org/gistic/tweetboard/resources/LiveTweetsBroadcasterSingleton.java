@@ -14,14 +14,14 @@ public class LiveTweetsBroadcasterSingleton {
     }
 
     public static void broadcast(Message msg) {
-        String jsonString = msg.getMsg();
-        JSONObject json = new JSONObject(jsonString);
         if(msg.getType().equals(Message.Type.LiveTweet)) {
+            String jsonString = msg.getMsg();
+            JSONObject json = new JSONObject(jsonString);
             long id = json.getLong("id");
             String idAsString = String.valueOf(id);
             json.put("id_str", idAsString);
+            msg.setMsg(json.toString());
         }
-        msg.setMsg( json.toString() );
         broadcaster.broadcastMessage(msg);
 
     }
