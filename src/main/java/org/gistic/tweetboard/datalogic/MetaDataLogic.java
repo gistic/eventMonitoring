@@ -122,6 +122,9 @@ public class MetaDataLogic {
                     }
                 }
             }
+            if (runningServerEvents.size() > 10) {
+                break;
+            }
         }
 
         for (String historicUserEventId : historicUserEventIds) {
@@ -129,6 +132,9 @@ public class MetaDataLogic {
             if (!hashtagsSet.contains(eventMeta.getHashtags())) {
                 historicUserEvents.add(eventMeta);
                 hashtagsSet.add(eventMeta.getHashtags());
+            }
+            if (historicUserEvents.size() > 10) {
+                break;
             }
         }
         EventsList eventsList = new EventsList();
