@@ -19,7 +19,7 @@
             </div>
             <span class="search-error" ng-show="searchError"></span>
         </form>
-        
+
 
         <div ng-hide="dashboardState" class="navs">
 
@@ -38,18 +38,20 @@
 
         <div class="navs pull-right clearfix">
 
-            <ul class="list-inline dashboard-nav pull-left">
-                <li ng-show="dashboardState" class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.liveStreaming')}">
+            <ul class="list-inline dashboard-nav pull-left" ng-show="dashboardState">
+                <li class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.liveStreaming')}">
                     <a ui-sref=".liveStreaming">Tweets</a>
                 </li>
-                <li ng-show="dashboardState" class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.media')}">
+                <li class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.media')}">
                     <a ui-sref=".media">Media</a>
                 </li>
-                <li ng-show="dashboardState" class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.map')}">
+                <li class="hvr-underline-from-center" ng-class="{active : isActive('dashboard.map')}">
                     <a ui-sref=".map">Map</a>
                 </li>
-
-                <li role="presentation" class="nav-user dropdown" ng-show="logedInUser">
+            </ul>
+            
+            <ul class="list-inline dashboard-nav pull-left">
+                <li class="nav-user dropdown" ng-show="logedInUser">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
                         <img lazy-load ng-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}
                         <span class="caret"></span>
@@ -69,7 +71,7 @@
                         <i class="fa fa-twitter"></i> Sign in with Twitter
                     </a>
                 </li>
-           
+
             </ul>
 
         </div>
