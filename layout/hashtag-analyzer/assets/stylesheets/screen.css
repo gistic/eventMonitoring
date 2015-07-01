@@ -19699,14 +19699,26 @@ img.hover-zoom:hover, .event-box:hover img {
   line-height: 28px;
 }
 
-/* line 4, ../sass/_/_atoms/_hover.scss */
+/* line 66, ../sass/_/_atoms/_buttons.scss */
+.btn-group-vertical > .btn:first-child:not(:last-child) {
+  border-top-right-radius: 0;
+}
+
+/* line 3, ../sass/_/_atoms/_hover.scss */
+.hvr-rectangle-out {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+/* line 7, ../sass/_/_atoms/_hover.scss */
 .hvr-rectangle-out:active,
 .hvr-rectangle-out:focus,
 .hvr-rectangle-out:hover {
   color: #ffffff;
 }
 
-/* line 10, ../sass/_/_atoms/_hover.scss */
+/* line 13, ../sass/_/_atoms/_hover.scss */
 .hvr-underline-from-center:before {
   background: #ffffff;
 }
@@ -20674,7 +20686,7 @@ footer .social-links a:hover, footer .social-links a:focus {
   color: #ffffff;
   font-size: 21px;
   font-size: 2.1rem;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 }
 /* line 125, ../sass/_/_modules/_homepage.scss */
 .event-box.trending-box ul li {

@@ -42,9 +42,11 @@ EventHandlerController.controller('EventMainController',
 
         // Search from the dashboard
         $scope.dashboardSearch = function () {
-
+            
+            // $scope.hashtagBeforeSearch = $scope.eventHashtag;
             $rootScope.eventHashtag = $('#eventHashtag').val();
             eventHashtag = $rootScope.eventHashtag;
+            
             // Check hashtag
             var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
             if (checkHashtag) {
@@ -89,7 +91,7 @@ EventHandlerController.controller('EventMainController',
                 .success(function (response) {
                     $scope.totalMediaCount = response.totalMedia;
                     $scope.totalUsersCount = response.numberOfUsers;
-                    $scope.totalTweetsCount = response.totalTweets;
+                    $scope.totalTweetsCount = response.totalTweets + response.totalRetweets;
                 }).error(function () {
                     console.log("#");
                 })
