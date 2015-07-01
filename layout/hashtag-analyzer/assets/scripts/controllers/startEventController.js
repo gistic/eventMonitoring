@@ -36,6 +36,10 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
                     $scope.runningUserEvents[i].hashtags = $scope.serverEventHashtag;
                 }
 
+                if ($scope.runningUserEvents.length == 3) {
+                    $scope.eventsLimitExceeded = true;
+                }
+
                 // Historic User Events
                 $scope.historicUserEvents = response.historicUserEvents;
                 for (var i = 0; i < $scope.historicUserEvents.length; i++) {
@@ -71,17 +75,29 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
         // Check hashtag
         var checkHashtag = filterHashtags.preventBadHashtags($scope.eventHashtag);
         eventHashtag = $scope.eventHashtag;
-        
+
         if (checkHashtag) {
             $rootScope.searchError = true;
             $(".search-error").text(checkHashtag);
         } else {
 
             $(".spinner").css("opacity", 1);
-            
-            if ($rootScope.logedInUser) {
 
-                if ($scope.runningUserEvents.length >= 3) {
+            if ($rootScope.logedInUser) {
+                var sameEventIsRunning = false;
+                for (var i = 0; i < $scope.runningUserEvents.length; i++) {
+                    if ($scope.runningUserEvents[i].hashtags.toLowerCase() === eventHashtag.toLowerCase()) {
+                        var sameEventIsRunning = true;
+                        $scope.runningEventID = $scope.runningUserEvents[i].uuid;
+                    }
+                }
+
+                if (sameEventIsRunning) {
+                    // Redirect the front website page to the admin page
+                    $state.transitionTo('dashboard.liveStreaming', {
+                        uuid: $scope.runningEventID
+                    });
+                } else if ($scope.eventsLimitExceeded) {
                     var alertText = "You have reached the max. number of active events .. by starting a new one we will close your first event";
                     var alertConfirmButtonText = "Yes, stop it!";
                     SweetAlertFactory.showSweetAlert(alertText, alertConfirmButtonText);

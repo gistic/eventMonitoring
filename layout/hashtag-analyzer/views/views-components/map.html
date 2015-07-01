@@ -1,9 +1,11 @@
 <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="false" options="mapOptions">
    
    <ui-gmap-marker coords="userPositionMarker.coords" options="userPositionMarker.options" events="userPositionMarker.events" idkey="userPositionMarker.id" click="onClick()">
+<!--
        <ui-gmap-window options="windowOptions" closeClick="closeClick()">
             <div>Here is your location .. you can expand your map view using map controllers at the left</div>
         </ui-gmap-window>
+-->
    </ui-gmap-marker>
    
     <ui-gmap-markers models="tweetsLocation" coords="'self'" icon="'icon'" click="onClick">

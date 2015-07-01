@@ -119,7 +119,7 @@
         .list-header {
             color: $white;
             @include font-size($font-large);
-            margin-bottom: 5px;
+            margin-bottom: $margin + 5;
         }
         ul {
             li {

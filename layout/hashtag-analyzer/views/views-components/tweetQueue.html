@@ -3,7 +3,9 @@
     <div class="tweet-content">
        
         <div class="media-left">
-            <img lazy-src="{{tweet.user.original_profile_image_urlhttps}}" on-error-src="{{defultImage}}" class="media-object user-img" />
+           <a ng-href="{{twitterBaseUrl}}{{tweet.user.screen_name}}" target="_blank" class="pull-left tweet-userName">
+                    <img lazy-src="{{tweet.user.original_profile_image_urlhttps}}" on-error-src="{{defultImage}}" class="media-object user-img" />
+            </a>
         </div>
         
         <div class="media-body tweet-content">

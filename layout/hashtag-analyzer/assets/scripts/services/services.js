@@ -21,6 +21,9 @@ angular.module('trackHashtagApp.services', [])
             }, function (isConfirm) {
                 if (isConfirm) {
                     GetEventsData.startServerEvent(eventHashtag);
+                } else {
+//                    eventHashtag = $rootScope.hashtagBeforeSearch;
+//                    $rootScope.eventHashtag = $rootScope.hashtagBeforeSearch;
                 }
             });
             return this.sweetAlertObject;

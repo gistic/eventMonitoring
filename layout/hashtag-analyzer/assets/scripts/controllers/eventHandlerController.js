@@ -19,7 +19,6 @@ EventHandlerController.controller('EventMainController',
 
         // SET : Event UUID, userAuthentication, Hashtags, Username, Profile images, User ID
         $rootScope.eventID = $location.search().uuid;
-        $rootScope.authoUserName = $location.search().screenName;
 
         $scope.isActive = function (currentState) {
             return currentState === $state.current.name;
@@ -43,8 +42,10 @@ EventHandlerController.controller('EventMainController',
 
         // Search from the dashboard
         $scope.dashboardSearch = function () {
-
+            
+            // $scope.hashtagBeforeSearch = $scope.eventHashtag;
             $rootScope.eventHashtag = $('#eventHashtag').val();
+            eventHashtag = $rootScope.eventHashtag;
             
             // Check hashtag
             var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
@@ -90,7 +91,7 @@ EventHandlerController.controller('EventMainController',
                 .success(function (response) {
                     $scope.totalMediaCount = response.totalMedia;
                     $scope.totalUsersCount = response.numberOfUsers;
-                    $scope.totalTweetsCount = response.totalTweets;
+                    $scope.totalTweetsCount = response.totalTweets + response.totalRetweets;
                 }).error(function () {
                     console.log("#");
                 })
@@ -127,8 +128,6 @@ EventHandlerController.controller('EventMainController',
 
         $scope.initDashboardData = function () {
             User.setUserAuth();
-            console.log(User.getUserAuth());
-
             if (User.getUserAuth()) {
                 console.log("AUTH. User");
                 $scope.getWarmupData();
@@ -203,7 +202,7 @@ EventHandlerController.controller('EventMainController',
         // Close event source if he leave the media or tweet stream stats
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
-                if (toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" || toState.name == "dashboard.map") {} else {
+                if (!(toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" || toState.name == "dashboard.map")) {
                     CreateEventSource.closeEventSource();
                 }
             })
@@ -635,6 +634,8 @@ EventHandlerController.controller('EventMainController',
                     console.log("#");
                 })
         }
+        
+        // Tweet queue logic
         $scope.pagesShown = 1;
         $scope.pageSize = 10;
         $scope.tweetsShowned = 0;
@@ -698,6 +699,8 @@ EventHandlerController.controller('EventMainController',
             $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize, $scope.pageSize);
         }
 
+        
+        
         // Draw tweets sources chart
         $scope.tweetsSourcesChartConfig = {
             options: {
@@ -712,7 +715,6 @@ EventHandlerController.controller('EventMainController',
 
             },
         };
-
 
         $scope.drawTweetsSourcesChart = function () {
 
@@ -917,7 +919,6 @@ EventHandlerController.controller('EventMainController',
             drawTweetsOverTimeChart();
 
         }
-
 
         // Logout User
         $scope.logOutUser = function () {

@@ -1,5 +1,8 @@
 // Extended from button hover
 // bower_components/Hover
+.hvr-rectangle-out {
+    @include border-radius(0);
+}
 
 .hvr-rectangle-out:active,
 .hvr-rectangle-out:focus,
