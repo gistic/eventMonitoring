@@ -61,6 +61,11 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
 
             });
     }
+    
+    $scope.twitterLogIn = function() {
+        User.getTwitterAuth(true);
+    }
+    
 
     // Start event at server
     $scope.startServerEvent = function () {
@@ -115,14 +120,17 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
     $scope.createEventFromTrending = function (hashtag, uuid) {
 
         $scope.eventHashtag = hashtag;
-
+        
         if (uuid != null) {
-            $rootScope.eventID = uuid;
-            // Redirect the front website page to the admin page
-            $state.transitionTo('dashboard.liveStreaming', {
-                uuid: $rootScope.eventID
-            });
-
+            if ($rootScope.logedInUser) {
+                $rootScope.eventID = uuid;
+                // Redirect the front website page to the admin page
+                $state.transitionTo('dashboard.liveStreaming', {
+                    uuid: $rootScope.eventID
+                });
+            }  else {
+                User.getTwitterAuth(true);
+            }
         } else {
             $scope.startNewEvent();
         }

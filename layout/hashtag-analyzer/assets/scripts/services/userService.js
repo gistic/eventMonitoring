@@ -2,7 +2,7 @@
 
 angular.module('trackHashtagApp.services')
 
-.factory('User', ['$rootScope', '$cookies', '$cookieStore', 'RequestData', '$location','$window', function ($rootScope, $cookies, $cookieStore, RequestData, $location, $window) {
+.factory('User', function ($rootScope, $cookies, $cookieStore, RequestData, $location, $window, $state) {
 
     return {
 
@@ -35,13 +35,27 @@ angular.module('trackHashtagApp.services')
         },
 
         setUserAuth: function () {
+            
             $rootScope.logedInUser = false;
+            
+             var locationUrl = $location.absUrl();
+             var homeAuthToken = locationUrl.substring(locationUrl.indexOf("=") + 1, locationUrl.indexOf("&"));
+            
+            if ($state.current.name == "home" && homeAuthToken != "") {
+                $rootScope.authToken = homeAuthToken;
+                $cookies.userAuthentication = $rootScope.authToken;
+                $rootScope.logedInUser = true;
+                return !$rootScope.logedInUser;
+            }
+            
             if ($location.search().authToken != undefined) {
+                
                 $rootScope.authToken = $location.search().authToken;
                 $cookies.userAuthentication = $rootScope.authToken;
                 $rootScope.logedInUser = true;
                 return !$rootScope.logedInUser;
             }
+            
             if ($cookies.userAuthentication == undefined) {
                 $rootScope.logedInUser = false;
                 return $rootScope.logedInUser;
@@ -62,4 +76,4 @@ angular.module('trackHashtagApp.services')
         }
     }
 
-}])
+})
