@@ -69,6 +69,7 @@ angular.module('trackHashtagApp', [
     }
     
     $rootScope.loadData = true;
+    $rootScope.searchError = false;
     $rootScope.showTotalTweetsNumber = true;
     
 })

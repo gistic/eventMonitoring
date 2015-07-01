@@ -53,7 +53,7 @@
             <div class="search-homepage">
                 <div class="start-event">
                     <input type="search" ng-model-options="{allowInvalid: true}" name="hashtag" id="eventHashtag" focus-me="shouldBeOpen" class="form-control" placeholder="#Hashtag" ng-model="$parent.eventHashtag" value="" ng-enter="startNewEvent()">
-                    <span class="search-error" style="display: none;"></span>
+                    <span class="search-error" ng-show="searchError"></span>
                     <button class="btn btn-search" type="button" ng-click="startNewEvent()">
                         <i class="fa fa-search fa-2x"></i>
                     </button>

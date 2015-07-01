@@ -1,8 +1,7 @@
 var StartNewEvent = angular.module('StartNewEvent', ['trackHashtagApp.services']);
 
 /* Controller : Homepage controller */
-StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope, $state, $cookies, RequestData, User, SweetAlert, filterHashtags) {
-
+StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope, $state, $cookies, RequestData, User, GetEventsData, SweetAlert, SweetAlertFactory, filterHashtags) {
 
     $scope.initHomepage = function () {
         User.setUserAuth();
@@ -18,10 +17,10 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
         var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
         var requestData = ""
         RequestData.fetchData(requestAction, apiUrl, requestData)
-            .then(function (response) {
+            .success(function (response) {
 
                 // Running Server Events
-                $scope.runningServerEvents = response.data.runningServerEvents;
+                $scope.runningServerEvents = response.runningServerEvents;
                 for (var i = 0; i < $scope.runningServerEvents.length; i++) {
                     var eventHashtag = $scope.runningServerEvents[i].hashtags;
                     $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
@@ -29,7 +28,7 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
                 }
 
                 // Running User Events
-                $scope.runningUserEvents = response.data.runningUserEvents;
+                $scope.runningUserEvents = response.runningUserEvents;
 
                 for (var i = 0; i < $scope.runningUserEvents.length; i++) {
                     var eventHashtag = $scope.runningUserEvents[i].hashtags;
@@ -38,7 +37,7 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
                 }
 
                 // Historic User Events
-                $scope.historicUserEvents = response.data.historicUserEvents;
+                $scope.historicUserEvents = response.historicUserEvents;
                 for (var i = 0; i < $scope.historicUserEvents.length; i++) {
                     var eventHashtag = $scope.historicUserEvents[i].hashtags;
                     if (eventHashtag != null) {
@@ -48,7 +47,7 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
                 }
 
                 // Trending Events On Twitter
-                $scope.trendingHashtags = response.data.trendingHashtags;
+                $scope.trendingHashtags = response.trendingHashtags;
                 for (var i = 0; i < $scope.trendingHashtags.length; i++) {
                     var eventHashtag = $scope.trendingHashtags[i];
                     $scope.trendingEventHashtag = eventHashtag.replace(/\#/g, '');
@@ -61,23 +60,9 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
 
             });
     }
-    
-    $scope.twitterLogIn = function() {
-        User.getTwitterAuth(true);
-    }
-    
 
-    // Start event at server
-    $scope.startServerEvent = function () {
-        eventHashtag = $scope.eventHashtag;
-        $scope.$broadcast();
-        RequestData.startEvent('POST', eventHashtag).success(function (response) {
-            $rootScope.eventID = response.uuid;
-            // Redirect the front website page to the admin page
-            $state.transitionTo('dashboard.liveStreaming', {
-                uuid: $scope.eventID
-            });
-        })
+    $scope.twitterLogIn = function () {
+        User.getTwitterAuth(true);
     }
 
     // Action on button
@@ -85,30 +70,23 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
 
         // Check hashtag
         var checkHashtag = filterHashtags.preventBadHashtags($scope.eventHashtag);
+        eventHashtag = $scope.eventHashtag;
+        
         if (checkHashtag) {
-            $(".search-error").css("display", "inline-block");
+            $rootScope.searchError = true;
             $(".search-error").text(checkHashtag);
         } else {
 
             $(".spinner").css("opacity", 1);
-
-            if (User.getUserAuth()) {
+            
+            if ($rootScope.logedInUser) {
 
                 if ($scope.runningUserEvents.length >= 3) {
-                    SweetAlert.swal({
-                        title: "Are you sure?",
-                        text: "You have reached the max. number of active events .. by starting a new one we will close your first event",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes, stop it!"
-                    }, function (isConfirm) {
-                        if (isConfirm) {
-                            $scope.startServerEvent();
-                        }
-                    });
+                    var alertText = "You have reached the max. number of active events .. by starting a new one we will close your first event";
+                    var alertConfirmButtonText = "Yes, stop it!";
+                    SweetAlertFactory.showSweetAlert(alertText, alertConfirmButtonText);
                 } else {
-                    $scope.startServerEvent();
+                    GetEventsData.startServerEvent(eventHashtag);
                 }
             } else {
                 User.getTwitterAuth(false, $scope.eventHashtag);
@@ -120,7 +98,7 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
     $scope.createEventFromTrending = function (hashtag, uuid) {
 
         $scope.eventHashtag = hashtag;
-        
+
         if (uuid != null) {
             if ($rootScope.logedInUser) {
                 $rootScope.eventID = uuid;
@@ -128,7 +106,7 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
                 $state.transitionTo('dashboard.liveStreaming', {
                     uuid: $rootScope.eventID
                 });
-            }  else {
+            } else {
                 User.getTwitterAuth(true);
             }
         } else {

@@ -20,27 +20,27 @@ angular.module('trackHashtagApp.services')
             }).error(function () {
                 console.log("Request failed");
             });
-        },
-
-        startEvent: function (requestAction, eventHashtag) {
-
-            var requestUrl = $rootScope.baseUrl + '/api/events?authToken=' + $cookies.userAuthentication;
-
-            return $http({
-                method: requestAction,
-                url: requestUrl,
-                data: {
-                    "hashTags": [eventHashtag]
-                }
-            }).success(function (response) {
-                $rootScope.eventHashtag = eventHashtag;
-                $rootScope.eventID = response.uuid;
-                return response.uuid;
-            }).error(function (response) {
-                $cookieStore.remove("userAuthentication");
-                console.log("Request failed");
-            });
         }
+
+//        startEvent: function (requestAction, eventHashtag) {
+//
+//            var requestUrl = $rootScope.baseUrl + '/api/events?authToken=' + $cookies.userAuthentication;
+//
+//            return $http({
+//                method: requestAction,
+//                url: requestUrl,
+//                data: {
+//                    "hashTags": [eventHashtag]
+//                }
+//            }).success(function (response) {
+//                $rootScope.eventHashtag = eventHashtag;
+//                $rootScope.eventID = response.uuid;
+//                return response.uuid;
+//            }).error(function (response) {
+//                $cookieStore.remove("userAuthentication");
+//                console.log("Request failed");
+//            });
+//        }
     }
 
 }])
