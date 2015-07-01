@@ -117,6 +117,7 @@ public class MetaDataLogic {
                 eventMeta.setProfileImageUrl(profileImgUrl);
                 if (!userEventIds.contains(uuid)) {
                     if (!hashtagsSet.contains(eventMeta.getHashtags())) {
+                        eventMeta.setUuid(null);
                         runningServerEvents.add(eventMeta);
                         hashtagsSet.add(eventMeta.getHashtags());
                     }
