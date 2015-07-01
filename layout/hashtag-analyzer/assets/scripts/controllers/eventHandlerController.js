@@ -1,34 +1,8 @@
 var EventHandlerController = angular.module('EventHandlerController', []);
 
 // Controller : Populate the recieved data and update Dashboard
-EventHandlerController.controller('EventMainController', ['$rootScope',
-                                   '$scope',
-                                   '$http',
-                                   '$location',
-                                   '$window',
-                                   '$anchorScroll',
-                                   '$state',
-                                   'RequestData',
-                                   'CreateEventSource',
-                                   '$timeout',
-                                   'SweetAlert',
-                                   'ISO3166',
-                                   'Lightbox',
-                                   '$modal',
-                                   '$sce',
-                                   '$cookies',
-                                   '$cookieStore',
-                                   'languageCode',
-                                   'User',
-                                   'filterHashtags',
-                                   function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, languageCode, User, filterHashtags) {
-
-
-
-
-        // 2. Event streaming
-        // 3. Draw charts and panels 
-        // 4. Stop and kill event
+EventHandlerController.controller('EventMainController',
+    function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, SweetAlertFactory, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, languageCode, User, filterHashtags) {
 
 
         // 1. Set the initializing values
@@ -70,101 +44,22 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
         // Search from the dashboard
         $scope.dashboardSearch = function () {
 
-            var eventHashtag = $('#eventHashtag').val();
+            $rootScope.eventHashtag = $('#eventHashtag').val();
+            
             // Check hashtag
             var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
             if (checkHashtag) {
-                $(".search-error").css("display", "inline-block");
+                $rootScope.searchError = true;
                 $(".search-error").text(checkHashtag);
             } else {
-
                 if ($scope.eventsLimitExceeded) {
-                    SweetAlert.swal({
-                            title: "Are you sure?",
-                            text: "You have reached the max. number of active events .. by starting a new one we will close your first event",
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#DD6B55",
-                            confirmButtonText: "Yes, Start it!"
-                        },
-                        function (isConfirm) {
-                            if (isConfirm) {
-
-                                $scope.startNewEvent = function (action) {
-
-                                    // Check if there is an authentication key in the browser cookies
-                                    if (User.getUserAuth()) {
-                                        $scope.$broadcast();
-                                        RequestData.startEvent('POST', eventHashtag)
-                                            .success(function (response) {
-                                                $rootScope.eventID = response.uuid;
-                                                // Redirect the front website page to the admin page
-                                                $state.transitionTo('dashboard.liveStreaming', {
-                                                    uuid: $scope.eventID
-                                                });
-
-                                                $scope.initDashboardData();
-                                            })
-                                    } else {
-                                        var requestAction = "GET";
-                                        var apiUrl = '/api/events/login/twitter?hashtags=' + eventHashtag;
-                                        var requestData = ""
-                                        RequestData.fetchData(requestAction, apiUrl, requestData)
-                                            .then(function (response) {
-                                                var openUrl = response.data.url;
-                                                $window.location.href = openUrl;
-                                            });
-                                    }
-                                };
-
-                                $scope.startNewEvent();
-
-                            }
-                        });
+                    var alertText = "You have reached the max. number of active events .. by starting a new one we will close your first event";
+                    var alertConfirmButtonText = "Yes, stop it!";
                 } else {
-                    SweetAlert.swal({
-                            title: "Are you sure?",
-                            text: "if you start new event, you can come back to current one from the homepage",
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#DD6B55",
-                            confirmButtonText: "Yes, Start it!"
-                        },
-                        function (isConfirm) {
-                            if (isConfirm) {
-
-                                $scope.startNewEvent = function (action) {
-
-                                    // Check if there is an authentication key in the browser cookies
-                                    if (User.getUserAuth()) {
-                                        $scope.$broadcast();
-                                        RequestData.startEvent('POST', eventHashtag)
-                                            .success(function (response) {
-                                                $rootScope.eventID = response.uuid;
-                                                // Redirect the front website page to the admin page
-                                                $state.transitionTo('dashboard.liveStreaming', {
-                                                    uuid: $scope.eventID
-                                                });
-
-                                                $scope.initDashboardData();
-                                            })
-                                    } else {
-                                        var requestAction = "GET";
-                                        var apiUrl = '/api/events/login/twitter?hashtags=' + eventHashtag;
-                                        var requestData = ""
-                                        RequestData.fetchData(requestAction, apiUrl, requestData)
-                                            .then(function (response) {
-                                                var openUrl = response.data.url;
-                                                $window.location.href = openUrl;
-                                            });
-                                    }
-                                };
-
-                                $scope.startNewEvent();
-
-                            }
-                        });
+                    var alertText = "if you start new event, you can come back to current one from the homepage";
+                    var alertConfirmButtonText = "Yes, Start it!";
                 }
+                SweetAlertFactory.showSweetAlert(alertText, alertConfirmButtonText);
             }
 
         }
@@ -1030,4 +925,4 @@ EventHandlerController.controller('EventMainController', ['$rootScope',
             $state.transitionTo('home');
         };
 
-}]);
+    });

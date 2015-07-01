@@ -15,7 +15,9 @@ import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by osama-hussain on 6/21/15.
@@ -63,6 +65,9 @@ public class MetaDataLogic {
     }
 
     public EventsList getRunningEventsList(String authToken) {
+        Set<String> hashtagsSet = new HashSet<>();
+        Set<String> runningNonUserHashTags = new HashSet<>();
+        Set<String> historicUserHashTags = new HashSet<>();
         EventMetaList allEvents = getAllEventsInfo();
         String[] trendingHashtags = updateAndSetTrendingHashtags();
         EventMeta[] eventMetaList = allEvents.getData();
@@ -89,14 +94,48 @@ public class MetaDataLogic {
                 eventMeta.setScreenName(screenName);
                 eventMeta.setProfileImageUrl(profileImgUrl);
                 if (userEventIds.contains(uuid)) {
-                    runningUserEvents.add(eventMeta);
-                } else {
-                    runningServerEvents.add(eventMeta);
+                    if (!hashtagsSet.contains(eventMeta.getHashtags())) {
+                        runningUserEvents.add(eventMeta);
+                        hashtagsSet.add(eventMeta.getHashtags());
+                    }
                 }
             }
         }
+
+        for (EventMeta event : eventMetaList) {
+            String uuid = event.getUuid();
+            EventMeta eventMeta = dao.getEventMeta(uuid);
+            String accessToken = eventMeta.getAccessToken();
+            if (!accessToken.isEmpty()) {
+                AuthDao authDao = new AuthDaoImpl();
+                org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(accessToken, authDao.getAccessTokenSecret(accessToken));
+                String userJsonString = new TwitterUserResource().getLoggedInUser(user);
+                org.json.JSONObject userJson = new org.json.JSONObject(userJsonString);
+                String screenName = userJson.getString("screenName");
+                String profileImgUrl = userJson.getString("profileImageURL");
+                eventMeta.setScreenName(screenName);
+                eventMeta.setProfileImageUrl(profileImgUrl);
+                if (!userEventIds.contains(uuid)) {
+                    if (!hashtagsSet.contains(eventMeta.getHashtags())) {
+                        runningServerEvents.add(eventMeta);
+                        hashtagsSet.add(eventMeta.getHashtags());
+                    }
+                }
+            }
+            if (runningServerEvents.size() > 10) {
+                break;
+            }
+        }
+
         for (String historicUserEventId : historicUserEventIds) {
-            historicUserEvents.add( dao.getHistoricUserEvent(historicUserEventId) );
+            HistoricUserEvent eventMeta = dao.getHistoricUserEvent(historicUserEventId);
+            if (!hashtagsSet.contains(eventMeta.getHashtags())) {
+                historicUserEvents.add(eventMeta);
+                hashtagsSet.add(eventMeta.getHashtags());
+            }
+            if (historicUserEvents.size() > 10) {
+                break;
+            }
         }
         EventsList eventsList = new EventsList();
         eventsList.setRunningServerEvents(runningServerEvents);
