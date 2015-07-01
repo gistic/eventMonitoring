@@ -48,7 +48,7 @@ logging:
   level: INFO
   appenders:
     - type: file
-      currentLogFilename: /var/log/event-board.log
+      currentLogFilename: ~/var/log/event-board.log
       threshold: ALL
       archive: true
-      archivedLogFilenamePattern: /var/log/event-board-%d.log
+      archivedLogFilenamePattern: ~/var/log/event-board-%d.log
