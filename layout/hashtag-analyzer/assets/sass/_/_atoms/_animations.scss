@@ -1,0 +1,441 @@
+// 1. UI Views transitions
+.fadein.ng-enter {
+    -webkit-transition: 1s;
+    transition: 1s;
+    opacity: 0;
+}
+
+.fadein.ng-enter.ng-enter-active {
+    opacity: 1;
+}
+
+// 2. LOGO : Use it @ Header
+.hashtag-logo {
+    -webkit-transform: rotate(135deg);
+    -ms-transform: rotate(135deg);
+    transform: rotate(135deg);
+    display: inline-block;
+    @include size(25px);
+    &:before, &:after {
+        content: '';
+        position: absolute;
+        animation-delay: 1s;
+        animation-iteration-count: 2;
+        animation-duration: 3s;
+        display: block;
+        @include size(4px);
+        @include border-radius(10px);
+        transform: translate(-5%, -5%);
+        top: -60%;
+        left: 15%;
+    }
+    &:before {
+        animation-name: before;
+        width: 25px;
+        @include box-shadow($white 1px 23px, $white 1px 13px);
+    }
+    &:after {
+        animation-name: after;
+        height: 25px;
+        @include box-shadow($white 15px 9px, $white 5px 9px);
+    }
+}
+
+@keyframes before {
+    0% {
+        width: 25px;
+        @include box-shadow($white 1px 23px, $white 1px 13px);
+    }
+    50% {
+        width: 10px;
+        @include box-shadow($white 7px 20px);
+    }
+    100% {
+        width: 25px;
+        @include box-shadow($white 1px 23px, $white 1px 13px);
+    }
+}
+
+@-webkit-keyframes before {
+    0% {
+        width: 25px;
+        @include box-shadow($white 1px 23px, $white 1px 13px);
+    }
+    50% {
+        width: 10px;
+        @include box-shadow($white 7px 20px);
+    }
+    100% {
+        width: 25px;
+        @include box-shadow($white 1px 23px, $white 1px 13px);
+    }
+}
+
+@keyframes after {
+    0% {
+        height: 25px;
+        @include box-shadow($white 15px 9px, $white 5px 9px);
+    }
+    50% {
+        height: 15px;
+        @include box-shadow($white 15px 15px, $white 5px 15px);
+    }
+    100% {
+        height: 25px;
+        @include box-shadow($white 15px 9px, $white 5px 9px);
+    }
+}
+
+@-webkit-keyframes after {
+    0% {
+        height: 25px;
+        @include box-shadow($white 15px 9px, $white 5px 9px);
+    }
+    50% {
+        height: 15px;
+        @include box-shadow($white 15px 15px, $white 5px 15px);
+    }
+    100% {
+        height: 25px;
+        @include box-shadow($white 15px 9px, $white 5px 9px);
+    }
+}
+
+
+.hashtag-loading {
+    @extend .hashtag-logo;
+    &:before, &:after {
+        animation-delay: 0;
+        animation-iteration-count: infinite;
+        animation-duration: 2s;
+        @include size(6px);
+    }
+    &:before {
+        animation-name: loadingBefore;
+        width: 75px;
+        @include box-shadow($white -13px 50px, $white -13px 25px);
+    }
+    &:after {
+        animation-name: loadingAfter;
+        height: 75px;
+        @include box-shadow($white 30px 7px, $white 5px 7px);
+    }
+}
+@keyframes loadingBefore {
+    0% {
+        opacity: 1;
+        @include box-shadow($white -13px 50px, $gray -13px 25px);
+    }
+    50% {
+        opacity: 0.5;
+        @include box-shadow($gray -13px 50px, $white -13px 25px);
+    }
+    100% {
+        opacity: 1;
+        @include box-shadow($white -13px 50px, $gray -13px 25px);
+    }
+}
+
+@-webkit-keyframes loadingBefore {
+    0% {
+        opacity: 1;
+        @include box-shadow($white -13px 50px, $gray -13px 25px);
+    }
+    50% {
+        opacity: 0.5;
+        @include box-shadow($gray -13px 50px, $white -13px 25px);
+    }
+    100% {
+        opacity: 1;
+        @include box-shadow($white -13px 50px, $gray -13px 25px);
+    }
+}
+
+@keyframes loadingAfter {
+    0% {
+        opacity: 1;
+        @include box-shadow($gray 30px 7px, $white 5px 7px);
+    }
+    50% {
+        opacity: 0.5;
+        @include box-shadow($white 30px 7px, $gray 5px 7px);
+    }
+    100% {
+        opacity: 1;
+        @include box-shadow($gray 30px 7px, $white 5px 7px);
+    }
+}
+
+@-webkit-keyframes loadingAfter {
+    0% {
+        opacity: 1;
+        @include box-shadow($gray 30px 7px, $white 5px 7px);
+    }
+    50% {
+        @include box-shadow($white 30px 7px, $gray 5px 7px);
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+        @include box-shadow($gray 30px 7px, $white 5px 7px);
+    }
+}
+
+// 3. Homepage search loading
+.loading-pulse {
+    @include size(94px);
+    position: absolute;
+    z-index: 9;
+    margin: 9px 22px;
+    left: 81%;
+    top: 22%;
+    .bounce1, .bounce2 {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: rgba(12, 133, 167, 0.40);
+        opacity: 0.6;
+        position: absolute;
+        top: 0;
+        left: 0;
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+    }
+    .bounce2 {
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+    }
+}
+
+@-webkit-keyframes bounce {
+    0%, 100% {
+        -webkit-transform: scale(0.0)
+    }
+    50% {
+        -webkit-transform: scale(1.0)
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    }
+    50% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
+}
+
+// 4. Homepage getting events loading
+.loadEvents {
+    .bounce1, .bounce2 {
+        @include size(100%);
+        @include border-radius(50%);
+        background-color: $white;
+        opacity: 0.6;
+        position: absolute;
+        top: 0;
+        left: 0;
+        -webkit-animation: bounce 2.0s infinite ease-in-out;
+        animation: bounce 2.0s infinite ease-in-out;
+    }
+    .bounce2 {
+        -webkit-animation-delay: -1.0s;
+        animation-delay: -1.0s;
+    }
+}
+
+@-webkit-keyframes bounce {
+    0%, 100% {
+        -webkit-transform: scale(0.0)
+    }
+    50% {
+        -webkit-transform: scale(1.0)
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    }
+    50% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
+}
+
+// 5. Most popular tweets loading
+.loading {
+    margin: $margin - 2 0 0 $margin;
+    .bullet {
+        position: absolute;
+        padding: 2px;
+        border-radius: 50%;
+        background: #65a3ff;
+        -webkit-animation: animIn .5s ease-in-out 0s infinite;
+        animation: animIn .5s ease-in-out 0s infinite;
+        &:nth-child(1) {
+            -webkit-animation-delay: 0.1s;
+            animation-delay: 0.1s;
+        }
+        &:nth-child(2) {
+            -webkit-animation-delay: 0.3s;
+            animation-delay: 0.3s;
+        }
+        &::nth-child(3) {
+            -webkit-animation-delay: 0.5s;
+            animation-delay: 0.5s;
+        }
+    }
+}
+
+@-webkit-keyframes animIn {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: translateX(100px);
+        transform: translateX(100px);
+        opacity: 0;
+    }
+}
+
+@keyframes animIn {
+    0% {
+        -webkit-transform: translateX(0);
+        transform: translateX(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        -webkit-transform: translateX(100px);
+        transform: translateX(100px);
+        opacity: 0;
+    }
+}
+
+// Loader
+.overlay {
+    z-index: 999;
+    position: fixed;
+    @include size(100%);
+    background: black center center no-repeat;
+    opacity: .9;
+    .loading {
+        margin: auto;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: block;
+        position: absolute;
+        @include size(40px, 550px);
+        &.loading-text {
+            top: 20%;
+            width: 25%;
+            color: $white;
+            text-align: center;
+            white-space: nowrap;
+            word-break: normal;
+        }
+    }
+    &.overlay-homepage {
+        .loading {
+            @include size(40px);
+        }
+    }
+}
+
+.orbit {
+    position: fixed;
+    left: 50%;
+    top: 30%;
+    margin-left: -100px;
+    margin-top: -100px;
+    @include size(150px);
+    border-radius: 50%;
+    background-image: url(http://rachouanrejeb.be/weather/images/assets/satelite.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    -webkit-animation: orbit 2s linear infinite;
+    -moz-animation: orbit 2s linear infinite;
+    -ms-animation: orbit 2s linear infinite;
+    animation: orbit 2s linear infinite;
+}
+
+@keyframes orbit {
+    0% {
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes orbit {
+    0% {
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes orbit {
+    0% {
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-ms-keyframes orbit {
+    0% {
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

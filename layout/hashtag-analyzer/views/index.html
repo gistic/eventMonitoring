@@ -5,8 +5,8 @@
 
     <!-- END OF / Header -->
 
-    <div ng-show="loadData" class="overlay overlay-homepage">
-        <div class="loadEvents loader">
+    <div ng-show="loadingHomepageTrending" class="overlay overlay-homepage">
+        <div class="loadEvents loading">
             <div class="bounce1"></div>
             <div class="bounce2"></div>
         </div>
@@ -57,9 +57,9 @@
                     <button class="btn btn-search" type="button" ng-click="startNewEvent()">
                         <i class="fa fa-search fa-2x"></i>
                     </button>
-                    <div class="spinner">
-                        <div class="double-bounce1"></div>
-                        <div class="double-bounce2"></div>
+                    <div class="loading-pulse" ng-show="loadingSearchButton">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
                     </div>
                 </div>
             </div>

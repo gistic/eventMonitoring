@@ -3,10 +3,14 @@
     <!-- Header -->
     <div ng-include="'views/views-components/header.html'"></div>
     <!-- END OF / Header -->
-    <div ng-show="loadData" class="overlay overlay-homepage">
-        <div class="loadEvents loader">
-            <div class="bounce1"></div>
-            <div class="bounce2"></div>
+    <div ng-show="loadingEvent" class="overlay">
+        <div class="loadEvents loading">
+            <span class="orbit"></span>
+            <span class="hashtag-logo hashtag-loading"></span>
+        </div>
+        <div class="loadEvents loading loading-text">
+            <p>Be patient .. We are starting your event</p>
+            <p>Getting <strong class="text-muted">{{eventDataChunk}}</strong></p>
         </div>
     </div>
     <!-- Main Content [ Using UI-Router @ /views-components ] -->

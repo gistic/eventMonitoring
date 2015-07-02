@@ -1,10 +1,16 @@
 <div class="view--top-people">
 
-    <div class="view-header">
-        <img class="event-logo" src="../../assets/images/taghreed.png" alt="">
-        <strong class="">Most Active Users</strong>
+      <div class="view-header clearfix">
+        <strong class="pull-left">
+        <img lazy-load class="event-logo" ll-src="../../assets/images/taghreed.png" />
+            Most Active Users
+            <span><timer>{{minutes}} : {{seconds}}</timer></span>
+        </strong>
+        <strong class="pull-right">
+            #{{hashtag}}
+        </strong>
     </div>
-
+    
     <div class="tweets-container row">
         <div ng-repeat="user in data | limitTo : 4" class="media tweet lang-en clearfix fx-fade-down fx-easing-bounce fx-speed-1000 top-user">
             <div class="user-ranks">

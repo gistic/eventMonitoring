@@ -45,8 +45,12 @@
 
     <!-- UI Customization -->
     <section class="panel panel-default admin-customization">
-        <h3 class="panel-heading text-center">UI Customization</h3>
-        <div class="panel-body">
+        <h3 class="panel-heading text-center clearfix">UI Customization
+        
+        <a class="btn btn-sm" role="button" data-toggle="collapse" href="#panelBody" aria-expanded="true" aria-controls="panelBody">collapse</a>
+        
+        </h3>
+        <div class="panel-body collapse" id="panelBody">
 
             <div class="row first-row">
                 <article class="col-md-12 custom-option">
@@ -149,11 +153,11 @@
                     </ul>
 
                     <div class="text-right save-layout-options">
-                        <button class="btn" ng-click="updateViewOptions()">
+                        <button class="btn" ng-click="updateViewOptions()" data-toggle="collapse" href="#panelBody" aria-expanded="true" aria-controls="panelBody">
                             Save
                         </button>
                     </div>
-
+                
                 </article>
             </div>
         </div>

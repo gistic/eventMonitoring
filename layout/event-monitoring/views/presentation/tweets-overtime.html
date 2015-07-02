@@ -1,8 +1,14 @@
 <div class="view--tweets-overtime">
 
-    <div class="view-header">
+    <div class="view-header clearfix">
+        <strong class="pull-left">
         <img class="event-logo" src="../../assets/images/taghreed.png" alt="">
-        <strong class="">Tweets Over Time : {{hashtag}}</strong>
+            Tweets Over Time
+            <span><timer>{{minutes}} : {{seconds}}</timer></span>
+        </strong>
+        <strong class="pull-right">
+            #{{hashtag}}
+        </strong>
     </div>
 
     <highchart id="chart1" config="chartConfig" class=""></highchart>

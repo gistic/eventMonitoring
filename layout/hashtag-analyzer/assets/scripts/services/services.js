@@ -20,10 +20,11 @@ angular.module('trackHashtagApp.services', [])
                 closeOnConfirm: true
             }, function (isConfirm) {
                 if (isConfirm) {
+                    $rootScope.loadingEvent = true;
+                    console.log($rootScope.loadingEvent);
                     GetEventsData.startServerEvent(eventHashtag);
                 } else {
-//                    eventHashtag = $rootScope.hashtagBeforeSearch;
-//                    $rootScope.eventHashtag = $rootScope.hashtagBeforeSearch;
+                    $rootScope.loadingSearchButton = false;
                 }
             });
             return this.sweetAlertObject;
