@@ -4,8 +4,12 @@ import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
+import org.gistic.tweetboard.dao.TweetDao;
+import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.representations.Event;
+import org.gistic.tweetboard.representations.EventMeta;
 import org.gistic.tweetboard.representations.EventUuid;
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Twitter;
@@ -27,6 +31,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * Created by osama-hussain on 5/25/15.
@@ -130,22 +135,38 @@ public class LoginResource {
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
         URI uri  = null;
         if (!redirectToHomeFlag) {
-            //make event on user's behalf
-            logger.info("making event");
-            Client client = ClientBuilder.newClient();
-            WebTarget target = client.target("http://127.0.0.1:8080/api/events?authToken=" + accessToken);
-            //target.queryParam("authToken", accessToken);
-            Event event = new Event(hashtags.split(","));
-            //set default profile image
-            //String profileImageUrl = "http://s.twimg.com/a/1292022067/images/default_profile_2_reasonably_small.png";
-            EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
-            logger.info("made event with uuid: " + eventUuid.getUuid());
+            String uuid = null;
+            boolean eventExists = false;
+            TweetDao dao = new TweetDaoImpl();
+            List<String> userEventIds = dao.getUserEventsList(userIdFromTwitter);
+            for (String userEventUuid : userEventIds) {
+                EventMeta userEventMeta = dao.getEventMeta(userEventUuid);
+                String userEventHashtags = userEventMeta.getHashtags();
+                if ( userEventHashtags.toLowerCase().contains(hashtags.toLowerCase()) ){
+                    //TODO TODO :P
+                    eventExists = true;
+                    uuid = userEventUuid;
+                }
+            }
+            if (!eventExists) {
+                //make event on user's behalf
+                logger.info("making event");
+                Client client = ClientBuilder.newClient();
+                WebTarget target = client.target("http://127.0.0.1:8080/api/events?authToken=" + accessToken);
+                //target.queryParam("authToken", accessToken);
+                Event event = new Event(hashtags.split(","));
+                EventUuid eventUuid = target.request().post(Entity.entity(event, MediaType.APPLICATION_JSON)).readEntity(EventUuid.class);
+                logger.info("made event with uuid: " + eventUuid.getUuid());
+                uuid = eventUuid.getUuid();
+            }
             uri = UriBuilder.fromUri(
-                    "http://"+baseDomain+"/hashtag-analyzer/#/dashboard/liveStreaming?hashtags=" +hashtags
+                    "http://"+baseDomain+"/hashtag-analyzer/#/dashboard/liveStreaming?"
+                            +"uuid="+uuid
+//                            +"hashtags=" +hashtags
                             +"&authToken="+accessToken
-                            +"&userId="+userId
-                            +"&screenName="+screenName
-                            +"&uuid="+eventUuid.getUuid()
+//                            +"&userId="+userId
+//                            +"&screenName="+screenName
+
                     //+"&profileImageUrl="+profileImageUrl
             ).build();
         } else {

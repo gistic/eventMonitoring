@@ -853,6 +853,7 @@ public class TweetDaoImpl implements TweetDao {
             String noOfTweets = jedis.hget(uuid, HISTORIC_META_NO_OF_TWEETS);
             String noOfRetweets = jedis.hget(uuid, HISTORIC_META_NO_OF_RETWEETS);
             String mediaUrl = jedis.hget(uuid, HISTORIC_META_MEDIA_URL);
+            if (hashtags == null && hashtags.isEmpty()) return null;
             return new HistoricUserEvent(hashtags, startTime, screenName, profileImgUrl, noOfTweets, noOfRetweets, mediaUrl);
         } catch (JedisException jE) {
             jE.printStackTrace();

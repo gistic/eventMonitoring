@@ -16,6 +16,7 @@ import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcasterSingleton;
 import org.gistic.tweetboard.resources.TwitterUserResource;
+import org.gistic.tweetboard.security.*;
 import org.gistic.tweetboard.util.Misc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import redis.clients.jedis.Tuple;
 import twitter4j.*;
 import twitter4j.JSONException;
 import twitter4j.JSONObject;
+import twitter4j.User;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -487,6 +489,17 @@ public class TweetDataLogic {
     }
 
     public void addToUserEvents(String uuid, String authCode) {
+        org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(authCode, new AuthDaoImpl().getAccessTokenSecret(authCode));
+        try {
+            String userProfileStr = new TwitterUserDataLogic().getUserProfile(user);
+            JSONObject userJson = new JSONObject(userProfileStr);
+            long authCodeLong = userJson.getLong("id");
+            authCode = String.valueOf(authCodeLong);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         tweetDao.addToUserEventsList(uuid, authCode);
     }
 
