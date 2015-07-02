@@ -77,6 +77,14 @@ public class MetaDataLogic {
         List<String> historicUserEventIds = new ArrayList<>();
         List<HistoricUserEvent> historicUserEvents = new ArrayList<>();
         if (authToken != null) {
+            org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(authToken, new AuthDaoImpl().getAccessTokenSecret(authToken));
+            try {
+                authToken = new JSONObject( new TwitterUserDataLogic().getUserProfile(user) ).getString("id_str");
+            } catch (TwitterException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             userEventIds = dao.getUserEventsList(authToken);
             historicUserEventIds = dao.getHistoricUserEventIds(authToken);
         }
@@ -130,7 +138,7 @@ public class MetaDataLogic {
 
         for (String historicUserEventId : historicUserEventIds) {
             HistoricUserEvent eventMeta = dao.getHistoricUserEvent(historicUserEventId);
-            if (!hashtagsSet.contains(eventMeta.getHashtags())) {
+            if (eventMeta != null && !hashtagsSet.contains(eventMeta.getHashtags())) {
                 historicUserEvents.add(eventMeta);
                 hashtagsSet.add(eventMeta.getHashtags());
             }
