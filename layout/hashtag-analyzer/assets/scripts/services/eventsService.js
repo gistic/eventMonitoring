@@ -18,9 +18,11 @@ angular.module('trackHashtagApp.services')
                     $rootScope.eventHashtag = eventHashtag;
                     $rootScope.eventID = response.uuid;
                     // Redirect the front website page to the admin page
+                    $rootScope.loadingSearchButton = false;
                     $state.transitionTo('dashboard.liveStreaming', {
                         uuid: $rootScope.eventID
                     });
+                
                     return response.uuid;
                 }).error(function (response) {
                     $state.transitionTo('home');

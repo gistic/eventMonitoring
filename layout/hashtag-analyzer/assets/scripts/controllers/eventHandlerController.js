@@ -26,6 +26,7 @@ EventHandlerController.controller('EventMainController',
 
         $scope.eventsLimitExceeded = false;
         $scope.getEvents = function () {
+            $scope.eventDataChunk = "Trending Events";
             var requestAction = "GET";
             var apiUrl = '/api/events/runningEvents?authToken=' + $cookies.userAuthentication;
             var requestData = ""
@@ -33,6 +34,11 @@ EventHandlerController.controller('EventMainController',
                 .then(function (response) {
                     // Running User Events
                     $scope.runningUserEvents = response.data.runningUserEvents;
+                    for (var i = 0; i < $scope.runningUserEvents.length; i++) {
+                        var eventHashtag = $scope.runningUserEvents[i].hashtags;
+                        $scope.serverEventHashtag = eventHashtag.replace(/\[|]/g, '');
+                        $scope.runningUserEvents[i].hashtags = $scope.serverEventHashtag;
+                    }
                     if ($scope.runningUserEvents.length == 3) {
                         $scope.eventsLimitExceeded = true;
                     }
@@ -42,25 +48,40 @@ EventHandlerController.controller('EventMainController',
 
         // Search from the dashboard
         $scope.dashboardSearch = function () {
-            
+
             // $scope.hashtagBeforeSearch = $scope.eventHashtag;
             $rootScope.eventHashtag = $('#eventHashtag').val();
             eventHashtag = $rootScope.eventHashtag;
-            
+
             // Check hashtag
             var checkHashtag = filterHashtags.preventBadHashtags(eventHashtag);
             if (checkHashtag) {
                 $rootScope.searchError = true;
                 $(".search-error").text(checkHashtag);
             } else {
-                if ($scope.eventsLimitExceeded) {
+
+                var sameEventIsRunning = false;
+                for (var i = 0; i < $scope.runningUserEvents.length; i++) {
+                    if ($scope.runningUserEvents[i].hashtags.toLowerCase() === eventHashtag.toLowerCase()) {
+                        var sameEventIsRunning = true;
+                        $scope.runningEventID = $scope.runningUserEvents[i].uuid;
+                    }
+                }
+
+                if (sameEventIsRunning) {
+                    // Redirect the front website page to the admin page
+                    $state.transitionTo('dashboard.liveStreaming', {
+                        uuid: $scope.runningEventID
+                    });
+                } else if ($scope.eventsLimitExceeded) {
                     var alertText = "You have reached the max. number of active events .. by starting a new one we will close your first event";
                     var alertConfirmButtonText = "Yes, stop it!";
+                    SweetAlertFactory.showSweetAlert(alertText, alertConfirmButtonText);
                 } else {
                     var alertText = "if you start new event, you can come back to current one from the homepage";
                     var alertConfirmButtonText = "Yes, Start it!";
+                    SweetAlertFactory.showSweetAlert(alertText, alertConfirmButtonText);
                 }
-                SweetAlertFactory.showSweetAlert(alertText, alertConfirmButtonText);
             }
 
         }
@@ -75,6 +96,7 @@ EventHandlerController.controller('EventMainController',
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
                     $scope.eventHashtag = response.hashtags[0];
+
                 }).error(function () {
                     console.log("#");
                 })
@@ -82,7 +104,7 @@ EventHandlerController.controller('EventMainController',
 
         // GET : Event basic stats
         $scope.getEventStats = function () {
-
+            $scope.eventDataChunk = "Event Statistics";
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/basicStats';
             var requestData = "";
@@ -92,6 +114,7 @@ EventHandlerController.controller('EventMainController',
                     $scope.totalMediaCount = response.totalMedia;
                     $scope.totalUsersCount = response.numberOfUsers;
                     $scope.totalTweetsCount = response.totalTweets + response.totalRetweets;
+
                 }).error(function () {
                     console.log("#");
                 })
@@ -106,7 +129,7 @@ EventHandlerController.controller('EventMainController',
 
         // GET : Warm up data for event
         $scope.getWarmupData = function () {
-
+            $scope.eventDataChunk = "Warm Up Tweets";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/cachedTweets';
             var requestAction = "GET";
             var requestData = "";
@@ -117,14 +140,14 @@ EventHandlerController.controller('EventMainController',
                         $scope.tweet = JSON.parse(response.items[i]);
                         $scope.tweetsQueue.push($scope.tweet);
                     }
-
-                    $scope.loadData = false;
+                    $rootScope.loadingEvent = false;
                 }).error(function () {
                     console.log("#");
                 })
         };
 
         // Intialize
+
 
         $scope.initDashboardData = function () {
             User.setUserAuth();
@@ -151,7 +174,7 @@ EventHandlerController.controller('EventMainController',
         // TOP TWEETS
         $scope.topTweets = [];
         $scope.getTopTweets = function () {
-
+            $scope.eventDataChunk = "Top Tweets";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topTweets?authToken=' + $cookies.userAuthentication;
             var requestAction = "GET";
             var requestData = "";
@@ -265,7 +288,7 @@ EventHandlerController.controller('EventMainController',
             var source = CreateEventSource.createSource($scope.eventSourceUrl);
 
             source.addEventListener('approved-tweets', function (response) {
-
+                $scope.eventDataChunk = "Live Streaming";
                 $scope.tweet = JSON.parse(response.data);
                 $scope.tweetID = $scope.tweet.id_str;
 
@@ -553,7 +576,7 @@ EventHandlerController.controller('EventMainController',
 
         // GET : the last stats of top countries
         $scope.getLocationStats = function () {
-
+            $scope.eventDataChunk = "Locations & Countries";
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topCountries';
             var requestData = "";
@@ -574,7 +597,7 @@ EventHandlerController.controller('EventMainController',
 
         // GET : the last stats of top languages
         $scope.getLanguagesStats = function () {
-
+            $scope.eventDataChunk = "Languages";
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topLanguages';
             var requestData = "";
@@ -599,7 +622,7 @@ EventHandlerController.controller('EventMainController',
         $scope.tagCloudColors = ['rgb(49,130,189)', 'rgb(20,100,255)', 'rgb(158,202,225)'];
 
         $scope.getTopHashtags = function () {
-
+            $scope.eventDataChunk = "Top Related Hashtags";
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topHashtags';
             var requestData = "";
@@ -622,6 +645,7 @@ EventHandlerController.controller('EventMainController',
 
         $scope.topSource = [];
         $scope.getTopSources = function () {
+            $scope.eventDataChunk = "Tweets Sources";
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topSources';
             var requestData = "";
@@ -634,7 +658,7 @@ EventHandlerController.controller('EventMainController',
                     console.log("#");
                 })
         }
-        
+
         // Tweet queue logic
         $scope.pagesShown = 1;
         $scope.pageSize = 10;
@@ -699,8 +723,8 @@ EventHandlerController.controller('EventMainController',
             $scope.tweetsHistory.splice($scope.tweetsHistory.length - $scope.pageSize, $scope.pageSize);
         }
 
-        
-        
+
+
         // Draw tweets sources chart
         $scope.tweetsSourcesChartConfig = {
             options: {

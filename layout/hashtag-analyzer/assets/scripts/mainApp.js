@@ -40,8 +40,11 @@ angular.module('trackHashtagApp', [
 
 // Run : Intliaize the app with this values
 .run(function ($window, $location, $rootScope, $cookies, $state, User) {
+    
     $rootScope.appName = "Hashtag Analyser";
     $rootScope.appVersion = "V.1.0.0";
+    
+    
     $rootScope.socialLink = [{
         "title": "Linkedin",
         "url": "http://www.linkedin.com",
@@ -59,16 +62,22 @@ angular.module('trackHashtagApp', [
         "url": "http://mailto:",
         "icon": "envelope"
     }];
+    
     $rootScope.baseUrl = $window.location.origin;
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
-    $rootScope.eventID = $location.search().uuid;
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
+    
+    $rootScope.eventID = $location.search().uuid;
 
     if ($state.current.name == "") {
         $state.transitionTo('home');
     }
     
-    $rootScope.loadData = true;
+    // LOADING
+    $rootScope.loadingHomepageTrending = true;
+    $rootScope.loadingSearchButton = false;
+    $rootScope.loadingEvent = true;
+    
     $rootScope.searchError = false;
     $rootScope.showTotalTweetsNumber = true;
     

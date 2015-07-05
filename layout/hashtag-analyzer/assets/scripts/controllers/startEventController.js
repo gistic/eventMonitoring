@@ -2,7 +2,7 @@ var StartNewEvent = angular.module('StartNewEvent', ['trackHashtagApp.services']
 
 /* Controller : Homepage controller */
 StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope, $state, $cookies, RequestData, User, GetEventsData, SweetAlert, SweetAlertFactory, filterHashtags) {
-
+    
     $scope.initHomepage = function () {
         User.setUserAuth();
         if ($rootScope.logedInUser) {
@@ -60,7 +60,7 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
                 }
 
                 $scope.homepageEvents = $scope.runningUserEvents.concat($scope.runningServerEvents, $scope.historicUserEvents, $scope.trendingHashtags);
-                $scope.loadData = false;
+                $scope.loadingHomepageTrending = false;
 
             });
     }
@@ -81,7 +81,7 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
             $(".search-error").text(checkHashtag);
         } else {
 
-            $(".spinner").css("opacity", 1);
+            $rootScope.loadingSearchButton = true;
 
             if ($rootScope.logedInUser) {
                 var sameEventIsRunning = false;
@@ -114,7 +114,7 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
     $scope.createEventFromTrending = function (hashtag, uuid) {
 
         $scope.eventHashtag = hashtag;
-
+        
         if (uuid != null) {
             if ($rootScope.logedInUser) {
                 $rootScope.eventID = uuid;
