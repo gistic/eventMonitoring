@@ -428,7 +428,11 @@ public class TweetDataLogic {
                 System.out.println("found place:" + place.getCountryCode());
                 incrCountryCounter(place.getCountryCode());
             } else {
-                //count tweets without country specified?
+                //try and get country from user location
+                String countryCode = Misc.checkCountryAndGetCode(tweet.getUser().getLocation());
+                if (countryCode != null && !countryCode.isEmpty()) {
+                    this.incrCountryCounter(countryCode);
+                }
             }
             String originalSource = tweet.getSource();
             if(originalSource.indexOf(">") != -1 && originalSource.lastIndexOf("<") != -1) {

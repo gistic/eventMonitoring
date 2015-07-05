@@ -106,7 +106,11 @@ public class TweetProcessor {
         if (place != null) {
             tweetDataLogic.incrCountryCounter(place.getCountryCode());
         } else {
-            //count tweets without country specified?
+            //try and get country from user location
+            String countryCode = Misc.checkCountryAndGetCode(tweet.getUser().getLocation());
+            if (countryCode != null && !countryCode.isEmpty()) {
+                tweetDataLogic.incrCountryCounter(countryCode);
+            }
         }
         activePeopleAnalyzer.TweetArrived(tweet);
         tweetsOverTimeAnalyzer.TweetArrived(status);
