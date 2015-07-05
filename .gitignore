@@ -39,3 +39,4 @@ configuration.yml
 /layout/hashtag-analyzer/dump.rdb
 /dump.rdb
 /tweet-board-1.0-SNAPSHOT.jar
+/layout/event-monitoring/Gruntfile.js
