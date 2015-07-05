@@ -112,7 +112,7 @@
             padding: 58px 30px;
             color: $white;
             background: rgb(35, 35, 36);
-            @include placeholderColor($gray-super-light);
+            @include placeholderColor($gray-super-light, 0.5);
         }
         .btn.btn-search {
             z-index: 99;
