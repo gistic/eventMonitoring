@@ -85,7 +85,9 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
 
             if ($rootScope.logedInUser) {
                 var sameEventIsRunning = false;
+                
                 for (var i = 0; i < $scope.runningUserEvents.length; i++) {
+                
                     if ($scope.runningUserEvents[i].hashtags.toLowerCase() === eventHashtag.toLowerCase()) {
                         var sameEventIsRunning = true;
                         $scope.runningEventID = $scope.runningUserEvents[i].uuid;
