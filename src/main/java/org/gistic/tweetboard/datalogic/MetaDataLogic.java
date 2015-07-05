@@ -79,7 +79,7 @@ public class MetaDataLogic {
         if (authToken != null) {
             org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(authToken, new AuthDaoImpl().getAccessTokenSecret(authToken));
             try {
-                authToken = new JSONObject( new TwitterUserDataLogic().getUserProfile(user) ).getString("id_str");
+                authToken = String.valueOf( new JSONObject( new TwitterUserDataLogic().getUserProfile(user) ).getLong("id") );
             } catch (TwitterException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
