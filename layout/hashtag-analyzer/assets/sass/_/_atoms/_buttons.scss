@@ -1,0 +1,68 @@
+.btn {
+    border: none;
+    padding: $button-padding;
+    color: $white;
+    &:hover, &:focus, &:active:focus, &:active.focus {
+        color: $white;
+        outline: 0;
+    }
+    &.hvr-rectangle-out {
+        &:hover {
+            border: 1px solid #2098d1;
+        }
+    }
+    &.btn-event {
+        background: $button-bg;
+    }
+    &.btn-search {
+        background: $gray-light;
+        padding: $padding - 8 $padding;
+    }
+    &.btn-stop {
+        background: $orange;
+    }
+    &.btn-load-more {
+        padding: $padding / 2 $padding;
+        background: $blue;
+        position: fixed;
+        z-index: 9;
+        right: 30px;
+        bottom: 25px;
+        @include border-radius(50px);
+        @include box-shadow(rgba(darken($blue, 50%), 0.2) 0 0 15px);
+        strong {
+            @include size(20px);
+            @include border-radius(50%);
+            background: darken($blue, 20%);
+            display: inline-block;
+            i {
+                @include font-size($font-tiny);
+            }
+        }
+    }
+    &.btn-load-history {
+        margin: $margin 0 0;
+        background: $gray-light;
+        padding: $padding 0;
+        color: $gray;
+    }
+    &.btn-social {
+        &.btn-twitter {
+            padding: $padding / 3 $padding * 3;
+            color: $white;
+            border: 1px solid lighten($blue, 20%);
+            background: none;
+            @include border-radius(5px);
+            margin-top: $margin - 1;
+        }
+        >:first-child {
+            width: 38px;
+            line-height: 28px;
+        }
+    }
+}
+
+
+.btn-group-vertical > .btn:first-child:not(:last-child) {
+    border-top-right-radius : 0;
+}

@@ -1,0 +1,190 @@
+.flexbox {
+    @include display-flex;
+    @include flex-wrap(wrap);
+}
+
+.event-box {
+    width: 25%;
+    position: absolute;
+    @include transition-property(opacity);
+    @include transition-duration(0.4s);
+    @include transition-delay(0.4s);
+    padding: 0;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    opacity: 1;
+    background: #181818;
+    header {
+        @include transition-property(all);
+        @include transition-duration(.6s);
+        position: absolute;
+        z-index: 3;
+        text-align: center;
+        top: 50%;
+        left: 0;
+        right: 0;
+        padding: 0 20px;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        h1, h2 {
+            color: rgb(46, 46, 46);
+            font-weight: 600;
+            text-transform: uppercase;
+            word-wrap: break-word;
+            font-size: 24px;
+            a {
+                color: #fff;
+                &:hover {
+                    @include opacity(0.9);
+                }
+            }
+        }
+        h3 {
+            font-size: 12px;
+            font-weight: 700;
+            margin: 0 0 3px;
+            a {
+                color: rgb(32, 224, 249);
+            }
+        }
+        .created-by {
+            img {
+                @include size(24px);
+                margin-right: 5px;
+            }
+        }
+        .meta {
+            color: $white;
+            @include font-size($font-small);
+            font-style: italic;
+        }
+    }
+    .mediaBox {
+        height: 207px;
+        img {
+            height: auto;
+            display: block;
+            max-width: 100%;
+            margin: 0 auto;
+            max-width: 101%;
+            width: 101%;
+        }
+    }
+    .full-box-link {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 6;
+    }
+    // Search Box 
+    &.search-box {
+        display: none;
+        width: 50%;
+        position: relative;
+        height: 100%;
+        height: 207px;
+        .search-error {
+            position: absolute;
+            color: $gray;
+            top: 65%;
+            left: 5%;
+            -webkit-transition: all .6s;
+            transition: all .6s;
+            opacity: 1;
+        }
+        &.showed {
+            display: inline-block;
+        }
+        @include tablet {
+            width: 100%;
+            order: -1;
+        }
+        @include phone {
+            width: 100%;
+            order: -1;
+        }
+    }
+    // Trending Hashtags
+    &.trending-box {
+        background: rgb(35, 35, 36);
+        padding: $padding;
+        .list-header {
+            color: $white;
+            @include font-size($font-large);
+            margin-bottom: $margin + 5;
+        }
+        ul {
+            li {
+                margin-bottom: $margin - 3;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+                a {
+                    color: rgb(17, 192, 207);
+                    white-space: pre;
+                    word-wrap: break-word;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+    // Eventbox : hover
+    &:hover {
+        img {
+            @extend .hover-zoom:hover;
+        }
+        header {
+            -webkit-transform: translateY(-70%) !important;
+            -ms-transform: translateY(-70%) !important;
+            transform: translateY(-70%) !important;
+        }
+    }
+    @include tablet {
+        width: 50%;
+    }
+    @include phone {
+        width: 100%;
+    }
+}
+
+// Eventbox : Shading
+.shading:before,
+.shading:after {
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    @include opacity(1);
+    background-color: rgba(28, 28, 28, 0.75);
+    @include transition-property(all);
+    @include transition-duration(600ms);
+}
+
+.shading:after {
+    z-index: 2;
+    @include opacity(0);
+    background: -webkit-linear-gradient(rgba(28, 28, 28, 0.7), rgba(28, 28, 28, 0.1));
+    background: linear-gradient(rgba(28, 28, 28, 0.7), rgba(28, 28, 28, 0.1));
+}
+
+.shading:hover:before {
+    @include opacity(0);
+}
+
+.shading:hover:after {
+    @include opacity(1);
+}

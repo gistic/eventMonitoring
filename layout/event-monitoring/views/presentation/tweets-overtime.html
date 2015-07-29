@@ -1,0 +1,18 @@
+<div class="view--tweets-overtime">
+
+    <div class="view-header clearfix">
+        <strong class="pull-left">
+        <img class="event-logo" src="../../assets/images/taghreed.png" alt="">
+            Tweets Over Time
+            <span><timer>{{minutes}} : {{seconds}}</timer></span>
+        </strong>
+        <strong class="pull-right">
+            #{{hashtag}}
+        </strong>
+    </div>
+
+    <highchart id="chart1" config="chartConfig" class=""></highchart>
+    <h2 class="pg-hd tweets-count">
+            Live : {{totalTweets}} tweets
+    </h2>
+</div>

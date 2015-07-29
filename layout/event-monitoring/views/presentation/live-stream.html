@@ -1,0 +1,46 @@
+<div ng-init="init()" class="view--live-tweets">
+   
+   
+   <div class="view-header clearfix">
+        <strong class="pull-left">
+        <img lazy-load class="event-logo" ll-src="../../assets/images/taghreed.png" />
+            Live Streaming
+            <span><timer>{{minutes}} : {{seconds}}</timer></span>
+        </strong>
+        <strong class="pull-right">
+            #{{hashtag}}
+        </strong>
+    </div>
+    
+    <div class="tweets-container">
+
+        <div class="media tweet clearfix fx-fade-down fx-easing-bounce fx-speed-1000" ng-class="{'lang-ar' : tweet.lang == 'ar', 'stared' : tweet.starred == true, 'showd' : display == block }" ng-repeat="tweet in allTweets | reverse | limitTo : 10" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
+
+            <span ng-show="{{tweet.starred == true}}">
+                <span class="star-tweet">
+                <img src="../../assets/images/star-icon.png" alt="">
+                </span>
+            </span>
+
+            <div class="user-img">
+                <img lazy-load ll-src="{{tweet.user.profile_image_url }}" on-error-src="{{defultImage}}" />
+            </div>
+
+            <div class="media-body">
+               <h4 class="media-heading">
+                    <strong class="tweet-userName">
+                        {{tweet.user.name}}
+                    </strong>
+                    <span class="tweet-screenName">
+                        @{{tweet.user.screen_name}}
+                    </span>
+
+                </h4>
+                <p class="tweet-text">{{tweet.text}}</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
