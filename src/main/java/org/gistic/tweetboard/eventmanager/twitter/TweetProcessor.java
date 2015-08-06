@@ -135,7 +135,7 @@ public class TweetProcessor {
         while (matcher.find()) {
             String word = matcher.group().toLowerCase();
             if (Misc.isBadWord(word)) return;
-            if (Misc.isCommon(word)) return;
+            if (Misc.isCommon(word)) continue;
             tweetDataLogic.incrWordCounter(word);
 //            if ( word.startsWith("#") ) {
 //                LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ word);
