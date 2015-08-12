@@ -29,4 +29,5 @@ target/
 
 
 # Images
-/assets/logo/
+/assets/logo
+*.log
