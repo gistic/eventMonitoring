@@ -61,7 +61,7 @@ public class TweetsOverTimeAnalyzer {
             JSONObject object = new JSONObject();
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
             try {
-                object.put("time", sdf.format(time));
+                object.put("time", time.getTime());
                 object.put("tweets_count", tweetsCount);
             } catch (JSONException e) {
                 e.printStackTrace();
