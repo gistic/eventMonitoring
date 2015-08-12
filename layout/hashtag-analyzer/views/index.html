@@ -52,7 +52,7 @@
             <form name="myForm" novalidate>
                 <div class="search-homepage">
                     <div class="start-event">
-                        <input type="search" ng-model-options="{allowInvalid: true}" name="hashtag" id="eventHashtag" focus-me="shouldBeOpen" class="form-control" placeholder="#Hashtag" ng-model="$parent.eventHashtag" value="" ng-enter="startNewEvent()" ng-minlength="3" ng-maxlength="10">
+                        <input type="search" ng-model-options="{allowInvalid: true}" name="hashtag" id="eventHashtag" focus-me="shouldBeOpen" class="form-control" placeholder="#Hashtag" ng-model="$parent.eventHashtag" value="" ng-enter="startNewEvent()" ng-minlength="3" ng-maxlength="15">
                         <span class="search-error" ng-show="searchError"></span>
                         <span class="search-error" ng-show="myForm.hashtag.$error.minlength">Too short!</span>
                         <span class="search-error" ng-show="myForm.hashtag.$error.maxlength">Too long!</span>
