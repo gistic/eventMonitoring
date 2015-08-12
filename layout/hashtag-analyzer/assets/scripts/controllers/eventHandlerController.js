@@ -152,7 +152,6 @@ EventHandlerController.controller('EventMainController',
         $scope.initDashboardData = function () {
             User.setUserAuth();
             if (User.getUserAuth()) {
-                console.log("AUTH. User");
                 $scope.getWarmupData();
                 $scope.getViewOptions();
                 $scope.getEventStats();
@@ -166,7 +165,6 @@ EventHandlerController.controller('EventMainController',
                 $scope.getTopSources();
                 $scope.getEvents();
             } else {
-                console.log("NO AUTH");
                 $state.transitionTo('home');
             }
         }
@@ -843,10 +841,7 @@ EventHandlerController.controller('EventMainController',
         $scope.tweetsTime = [];
         $scope.tweetsCount = [];
 
-        $scope.drawChart = function () {
-
-            $scope.tweetsTime = $scope.data.time;
-            $scope.tweetsCount = $scope.data.tweets_count;
+        $scope.drawChart = function (data) {
 
             function drawTweetsOverTimeChart() {
                 var arrayLength = $scope.data.length;
@@ -854,10 +849,13 @@ EventHandlerController.controller('EventMainController',
                 var tweetsTimeArray = [];
 
                 $scope.totalTweets = 0;
+                
                 for (var i = 0; i < arrayLength; i++) {
                     tweetsCountArray[i] = $scope.data[i].tweets_count;
                     $scope.totalTweets += $scope.data[i].tweets_count;
-                    tweetsTimeArray[i] = $scope.data[i].time;
+                    var localTime = new Date(($scope.data[i].time));
+                    var formatedTime = localTime.getHours() + ":" + localTime.getMinutes();
+                    tweetsTimeArray[i] = formatedTime;
                 }
 
                 $scope.chartSeries = [{
