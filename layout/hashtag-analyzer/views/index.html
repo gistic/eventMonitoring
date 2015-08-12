@@ -49,20 +49,23 @@
 
         <!-- Search Box -->
         <div class="event-box search-box tile" ng-class="{'showed':$index == 4}">
-
-            <div class="search-homepage">
-                <div class="start-event">
-                    <input type="search" ng-model-options="{allowInvalid: true}" name="hashtag" id="eventHashtag" focus-me="shouldBeOpen" class="form-control" placeholder="#Hashtag" ng-model="$parent.eventHashtag" value="" ng-enter="startNewEvent()">
-                    <span class="search-error" ng-show="searchError"></span>
-                    <button class="btn btn-search" type="button" ng-click="startNewEvent()">
-                        <i class="fa fa-search fa-2x"></i>
-                    </button>
-                    <div class="loading-pulse" ng-show="loadingSearchButton">
-                        <div class="bounce1"></div>
-                        <div class="bounce2"></div>
+            <form name="myForm" novalidate>
+                <div class="search-homepage">
+                    <div class="start-event">
+                        <input type="search" ng-model-options="{allowInvalid: true}" name="hashtag" id="eventHashtag" focus-me="shouldBeOpen" class="form-control" placeholder="#Hashtag" ng-model="$parent.eventHashtag" value="" ng-enter="startNewEvent()" ng-minlength="3" ng-maxlength="15">
+                        <span class="search-error" ng-show="searchError"></span>
+                        <span class="search-error" ng-show="myForm.hashtag.$error.minlength">Too short!</span>
+                        <span class="search-error" ng-show="myForm.hashtag.$error.maxlength">Too long!</span>
+                        <button class="btn btn-search" type="button" ng-click="startNewEvent()">
+                            <i class="fa fa-search fa-2x"></i>
+                        </button>
+                        <div class="loading-pulse" ng-show="loadingSearchButton">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
 
 

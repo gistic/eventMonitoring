@@ -71,11 +71,10 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
 
     // Action on button
     $scope.startNewEvent = function (action) {
-
         // Check hashtag
         var checkHashtag = filterHashtags.preventBadHashtags($scope.eventHashtag);
         eventHashtag = $scope.eventHashtag;
-
+        
         if (checkHashtag) {
             $rootScope.searchError = true;
             $(".search-error").text(checkHashtag);
