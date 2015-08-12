@@ -1,4 +1,4 @@
-# Eclipse
+g# Eclipse
 .classpath
 .project
 .settings/
@@ -16,18 +16,32 @@ log/
 target/
 
 # Node
-/assets/node_modules/
+/layout/event-monitoring/node_modules/
+/layout/hashtag-analyzer/node_modules/
 
 # Sass
-/assets/.sass-cache/
+/layout/event-monitoring/.sass-cache/
+/layout/hashtag-analyzer/.sass-cache/
 
 # HTML
-/assets/data/
+/layout/data/
 
 # JS
-/dump.rdb
-
+**/dump.rdb
 
 # Images
+<<<<<<< HEAD
 /assets/logo
 *.log
+=======
+/layout/logo/
+
+configuration.yml
+/layout/hashtag-analyzer/README.md
+/layout/hashtag-analyzer/package.json
+/layout/hashtag-analyzer/Gruntfile.js
+/layout/hashtag-analyzer/dump.rdb
+/dump.rdb
+/tweet-board-1.0-SNAPSHOT.jar
+/layout/event-monitoring/Gruntfile.js
+>>>>>>> c82183b2ef4a2876328ee3ef4abcdf463b0fd6c8

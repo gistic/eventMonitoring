@@ -23,6 +23,10 @@ public class TweetsOverTimeAnalyzer {
 
     public void TweetArrived(InternalStatus status) {
         Status tweet = status.getInternalStatus();
+        tweetArrived(tweet);
+    }
+
+    public void tweetArrived(Status tweet) {
         tweetTime.setTime(tweet.getCreatedAt());
         long diff = (tweetTime.getTimeInMillis() - start.getTimeInMillis()) / (60 * 1000);
         int diffInMinutes;

@@ -1,0 +1,51 @@
+<div class="modal-body" ng-swipe-left="Lightbox.nextImage()" ng-swipe-right="Lightbox.prevImage()">
+
+    <!-- image -->
+    <div class="lightbox-image-container">
+
+        <img ng-if="Lightbox.image.type == 'photo'" class="img-responsive" ng-class="{{Lightbox.image.type}}" lazy-load ll-src="{{Lightbox.imageUrl}}" on-error-src="{{defultImage}}" />
+
+        <video ng-if="Lightbox.image.type == 'video'" width="500" controls preload="none" ng-src="{{Lightbox.image.url | trusted}}"></video>
+
+        <article class="media clearfix tweet-media">
+
+            <div class="media-left">
+                <img lazy-load ll-src="{{Lightbox.image.userProfileImage}}" on-error-src="{{defultImage}}" class="media-object user-img" />
+            </div>
+
+            <div class="media-body tweet-content">
+                <h6 class="media-heading tweet-user">
+                <a ng-href="{{twitterBaseUrl}}{{Lightbox.image.userScreenName}}" target="_blank">
+                    {{Lightbox.image.userScreenName}}
+                </a>
+                
+                <a class="pull-right tweet-time" ng-href="{{twitterBaseUrl}}{{Lightbox.image.userScreenName}}/status/{{Lightbox.image.tweetIdStr}}" target="_blank" title="Open in Twitter">
+                  <strong class="pull-right">
+                  <small am-time-ago="Lightbox.image.tweetCreatedAt"></small>
+                   </strong>
+           </a>
+            </h6>
+
+                                <p ng-if="Lightbox.image.type == 'photo'" ng-bind-html="Lightbox.imageCaption | parseUrl:'_blank'"></p>
+<!--                                <p ng-bind-html="Lightbox.image.caption | parseUrl:'_blank'"></p>-->
+                <p></p>
+<!--                {{Lightbox.image.caption}}-->
+
+                <aside class="tweet-actions text-right">
+                    <a class="text-muted" ng-href="{{twitterBaseUrl}}intent/tweet?in_reply_to={{Lightbox.image.tweetIdStr}}" tooltip-placement="top" tooltip="Reply">
+                        <span class="fa fa-reply"></span>
+                    </a>
+                    <a class="text-muted" ng-href="{{twitterBaseUrl}}intent/retweet?tweet_id={{Lightbox.image.tweetIdStr}}" tooltip-placement="top" tooltip="Retweet">
+                        <span class="fa fa-retweet"></span>
+                    </a>
+                    <a class="text-muted" ng-href="{{twitterBaseUrl}}intent/favorite?tweet_id={{Lightbox.image.tweetIdStr}}" tooltip-placement="top" tooltip="Favorite">
+                        <span class="fa fa-star"></span>
+                    </a>
+                </aside>
+            </div>
+
+        </article>
+
+    </div>
+
+</div>

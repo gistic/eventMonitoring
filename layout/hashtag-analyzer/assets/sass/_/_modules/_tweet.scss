@@ -1,0 +1,126 @@
+.dashboard {
+    margin-top: $margin * 2;
+}
+
+.tweet {
+    background: $white;
+    min-height: 98px;
+    position: relative;
+    padding: $padding / 2;
+    border: 1px solid $gray-light;
+    @include border-radius(3px);
+    margin-top: $margin;
+    text-align: left;
+    .user-img {
+        @include size(72px);
+        @include border-radius(3px);
+    }
+    .tweet-user {
+        @include font-size($font-small);
+        font-weight: bold;
+    }
+    .tweet-content {
+        word-wrap: break-word;
+    }
+    .tweet-userName {
+        color: $blue;
+        font-weight: 100;
+    }
+    .tweet-screenName {
+        font-style: italic;
+        color: darken($gray-super-light, 40%);
+    }
+    .tweet-time {
+        margin-right: $margin * 4;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    .follow-user {
+        margin-left: $margin;
+        @include transition-property(all);
+        @include transition-duration(0.5s);
+        @include transition-delay(0.05s);
+        opacity: 0;
+    }
+    &.tweet:first-child {
+        opacity: 1;
+    }
+    .tweet-content {
+        @include transition-property(all);
+        @include transition-duration(0.4s);
+        -webkit-perspective: 1000;
+        -webkit-backface-visibility: hidden;
+        .media-left {
+            @include transition-property(all);
+            @include transition-duration(0.4s);
+        }
+    }
+    .tweet-actions {
+        @include transition-property(all);
+        @include transition-duration(0.5s);
+        @include transition-delay(0.05s);
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        a {
+            display: block;
+        }
+    }
+    &:hover {
+        .tweet-actions, .follow-user {
+            opacity: 1;
+            display: inline-block;
+        }
+    }
+}
+
+// Tweet in media lightbox
+.tweet-media {
+    @extend .tweet;
+    border: none !important;
+    .tweet-actions {
+        opacity: 1;
+        margin-top: $margin - 3;
+        position: relative;
+        a {
+            display: inline-block;
+            margin-right: $margin - 3;
+        }
+    }
+    &:hover {
+        .tweet-actions {
+            position: relative;
+        }
+    }
+}
+
+.tweet.lang-ar {
+    @extend .tweet;
+    direction: rtl;
+    text-align: right;
+    .user-img {
+        float: right;
+        padding-right: 0;
+        padding-left: $padding;
+    }
+    .media-body {
+        margin-left: 0;
+        margin-right: $margin;
+    }
+}
+
+.tweets-queue {
+    @include phone {
+        .tweet {
+            img {
+                @include size(48px);
+            }
+        }
+    }
+}
+
+.tweets-queue-options {
+    margin-bottom: $margin;
+}

@@ -1,0 +1,40 @@
+body {
+    background: #e2e6f1;
+    font-family: 'Roboto', sans-serif;
+}
+
+a {
+    color: $blue;
+    &:hover, &:focus {
+        color: darken($blue, 20%);
+        outline: 0;
+        text-decoration: none;
+    }
+}
+
+a[ng-click] {
+    cursor: pointer;
+}
+
+.form-control {
+    &:hover, &:focus {
+        outline: 0;
+        border-color: transparent;
+        box-shadow: none;
+    }
+}
+
+// TODO : Remove this for production
+img {
+//    @include opacity(0.9);
+//    -webkit-filter: brightness(9.9);
+    &.hover-zoom {
+        -webkit-transition: all .6s;
+        transition: all .6s;
+        &:hover {
+            -webkit-transform: scale(1.15);
+            -ms-transform: scale(1.15);
+            transform: scale(1.15);
+        }
+    }
+}

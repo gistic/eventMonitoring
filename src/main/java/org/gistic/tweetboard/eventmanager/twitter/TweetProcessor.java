@@ -3,12 +3,20 @@ package org.gistic.tweetboard.eventmanager.twitter;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
+import org.gistic.tweetboard.util.Misc;
+import org.slf4j.LoggerFactory;
+import twitter4j.HashtagEntity;
+import twitter4j.Place;
+import twitter4j.MediaEntity;
 import twitter4j.Status;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -59,27 +67,96 @@ public class TweetProcessor {
     }
 
     public void stop() throws Exception {
-        bus.unregister(this);
+        try {
+            bus.unregister(this);
+        } catch(IllegalArgumentException e) {
+            LoggerFactory.getLogger(this.getClass()).info("Bus already unregistered.");
+        }
     }
 
     @Subscribe
     @AllowConcurrentEvents
     public void onStatusUpdate(InternalStatus status) {
+
         Status tweet = status.getInternalStatus();
-        if(tweet.isRetweet() || tweet.getText().contains("RT")) {
+        //status.getInternalStatus().getRetweetCount();
+        for (MediaEntity mediaEntity : tweet.getExtendedMediaEntities()) {
+            //System.out.println("media!! "+mediaEntity.getType() + ": " + mediaEntity.getMediaURL()+ ": " + mediaEntity.getDisplayURL()+ ": " + mediaEntity.getExpandedURL());
+            tweetDataLogic.incrMediaCounter(mediaEntity);
+            tweetDataLogic.setMediaUrl(mediaEntity.getMediaURLHttps());
+        }
+        String language = tweet.getLang();
+        if (language!=null || !language.isEmpty()) {
+            tweetDataLogic.incrLaguageCounter(language);
+        }
+        boolean isRetweet = tweet.isRetweet();
+        if(isRetweet || tweet.getText().contains("RT")) {
             tweetDataLogic.incrTotalRetweets();
+            if (isRetweet) {
+                long retweetedStatusId = tweet.getRetweetedStatus().getId();
+                long retweetCreatedAt = tweet.getRetweetedStatus().getCreatedAt().getTime();
+                tweetDataLogic.incrTweetScore(retweetedStatusId, retweetCreatedAt);
+            }
         } else {
             tweetDataLogic.incrOriginalTweets();
         }
-
+        tweetDataLogic.setCreatedDate(tweet.getId(), tweet.getCreatedAt().getTime());
+        tweetDataLogic.setNewTweetMeta(status);
+        Place place = tweet.getPlace();
+        if (place != null) {
+            tweetDataLogic.incrCountryCounter(place.getCountryCode());
+        } else {
+            //try and get country from user location
+            String countryCode = Misc.checkCountryAndGetCode(tweet.getUser().getLocation());
+            if (countryCode != null && !countryCode.isEmpty()) {
+                tweetDataLogic.incrCountryCounter(countryCode);
+            }
+        }
         activePeopleAnalyzer.TweetArrived(tweet);
         tweetsOverTimeAnalyzer.TweetArrived(status);
+
+        if (tweet.isPossiblySensitive()) return;
+
+        String text = tweet.getText();
+
+        String originalSource = tweet.getSource();
+        if(originalSource.indexOf(">") != -1 && originalSource.lastIndexOf("<") != -1) {
+            String source = originalSource.substring(originalSource.indexOf(">") + 1, originalSource.lastIndexOf("<"));
+            if (source != null || !source.isEmpty()) {
+                tweetDataLogic.incrSourceCounter(source);
+            }
+        }
+
+        Pattern patternForWords = Pattern.compile("\\w+");
+        text = text.replaceAll("((https?|ftp|file):\\/\\/[-a-zA-Z0-9+&@#\\/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#\\/%=~_|])", "");
+        Pattern pattern = Pattern.compile("(\\b(?<!#|http)\\w+)");
+//         pattern.toString();
+        Matcher matcher = patternForWords.matcher(text);
+        while (matcher.find()) {
+            String word = matcher.group().toLowerCase();
+            if (Misc.isBadWord(word)) return;
+            if (Misc.isCommon(word)) continue;
+            tweetDataLogic.incrWordCounter(word);
+//            if ( word.startsWith("#") ) {
+//                LoggerFactory.getLogger(this.getClass()).debug("got hashtag: "+ word);
+//                tweetDataLogic.incrHashtagCounter(language);
+//            }
+//            else {
+//                process it as word in word cloud
+//            }
+        }
+
+        HashtagEntity[] hashtagEntities = tweet.getHashtagEntities();
+        for ( HashtagEntity entity : hashtagEntities ) {
+            String hashtag = entity.getText();
+            tweetDataLogic.incrHashtagCounter(hashtag);
+        }
 
         if (retweetEnabled) {
             checkModeratedAndThen(status, tweet);
         } else {
             if (tweet.isRetweet() || tweet.getText().contains("RT")) {
-                tweetDataLogic.setNewTweetMeta(status);
+                //tweetDataLogic.setNewTweetMeta(status);
             } else {
                 checkModeratedAndThen(status, tweet);
             }
@@ -135,8 +212,9 @@ public class TweetProcessor {
 
     private void checkModeratedAndThen(InternalStatus status, Status tweet) {
         if (moderated) {
+            //tweetDataLogic.setNewTweetMeta(status); MOVED TO onStatusUpdate
             if (isBlockedUserTweet(tweet) || isBadKeywordTweet(tweet)) {
-                tweetDataLogic.setNewTweetMeta(status);
+//                tweetDataLogic.setNewTweetMeta(status);  MOVED UP
                 System.out.println("blocked user detected "
                         + tweet.getUser().getScreenName() + ":" + tweet.getText());
                 System.out.println(" OR bad tweet detected " + tweet.getText());
@@ -152,6 +230,9 @@ public class TweetProcessor {
             }
         } else {
             tweetDataLogic.addToApproved(status, true);
+            if (ConfigurationSingleton.getInstance().isV2()) {
+                tweetDataLogic.addToCache(status);
+            }
         }
     }
 
@@ -168,7 +249,6 @@ public class TweetProcessor {
         return containsFromList(tweet.getUser().getScreenName(), approvedUsers);
     }
 
-
     private boolean containsFromList(String text, List<String> list) {
         for (String string : list) {
             if (text.contains(string))
@@ -177,7 +257,12 @@ public class TweetProcessor {
         return false;
     }
 
+
     public List<TweetsOverTimeAnalyzer.TweetsCountPerTime> getTweetsPerTime(int sampleRate, int period) {
         return tweetsOverTimeAnalyzer.getTweetsPerTime(sampleRate, period);
+    }
+
+    public void updateStats(Status status) {
+        tweetsOverTimeAnalyzer.tweetArrived(status);
     }
 }

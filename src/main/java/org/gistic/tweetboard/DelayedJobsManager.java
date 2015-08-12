@@ -34,28 +34,35 @@ public class DelayedJobsManager {
         workerThread.start();
     }
 
-    public static void createEventDestroyJob(String uuid) {
+    public static void createEventDestroyJob(String uuid, String accessToken) {
         final Config config = new ConfigBuilder().build();
         Client client = new ClientImpl(config);
         final long delayInSeconds = ConfigurationSingleton.getInstance().getDefaultAutoShutdownDelayInHours() * 60 * 60; // in seconds
         final long future = System.currentTimeMillis() + (delayInSeconds * 1000);
         // Add a job to the delayed queue
-        final Job job = new Job(DESTROY_EVENT_ACTION, new Object[]{ uuid });
+        final Job job = new Job(DESTROY_EVENT_ACTION, new Object[]{ uuid, accessToken });
         client.delayedEnqueue(EVENT_DESTROY_QUEUE, job, future);
         client.end();
     }
 
-    public static void refreshEventDestroyJob(String uuid) {
+    public static void refreshEventDestroyJob(String uuid, String accessToken) {
         final Config config = new ConfigBuilder().build();
         Client client = new ClientImpl(config);
         // Remove old job
-        final Job job = new Job(DESTROY_EVENT_ACTION, new Object[]{ uuid });
-        client.removeDelayedEnqueue(EVENT_DESTROY_QUEUE, job);
+        deleteEventDestroyJob(uuid, accessToken);
         // Add a job to the delayed queue
-        final long delayInSeconds = ConfigurationSingleton.getInstance().getDefaultAutoShutdownDelayInHours() * 60 * 60; // in seconds
+        final long delayInSeconds = ConfigurationSingleton.getInstance().getDefaultAutoShutdownDelayInHours() * 60 * 60;
         final long future = System.currentTimeMillis() + (delayInSeconds * 1000);
+        final Job job = new Job(DESTROY_EVENT_ACTION, new Object[]{ uuid, accessToken });
         client.delayedEnqueue(EVENT_DESTROY_QUEUE, job, future);
         client.end();
+    }
+
+    public static void deleteEventDestroyJob(String uuid, String accessToken) {
+        final Config config = new ConfigBuilder().build();
+        Client client = new ClientImpl(config);
+        final Job job = new Job(DESTROY_EVENT_ACTION, new Object[]{ uuid, accessToken });
+        client.removeDelayedEnqueue(EVENT_DESTROY_QUEUE, job);
     }
 
     public static void destroy() {

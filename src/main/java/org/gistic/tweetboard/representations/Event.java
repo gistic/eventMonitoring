@@ -20,7 +20,7 @@ public class Event {
 //    public String getEventId() {
 //        return eventId;
 //    }
-//    public String[] getHashTags() {
+//    public String[] getHashtags() {
 //        return hashTags;
 //    }
     @NotNull @Size(min = 1, max = 1)
@@ -28,7 +28,7 @@ public class Event {
 
     Event() {}
 
-    Event(String[] hashTags) {
+    public Event(String[] hashTags) {
         this.hashTags = hashTags;
     }
     public String[] getHashTags() {

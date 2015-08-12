@@ -6,20 +6,34 @@ package org.gistic.tweetboard.representations;
 public class EventMeta {
     private String uuid;
     private String startTime;
-    private String hashTags;
+    private String hashtags;
+    private String mediaUrl;
+    private String accessToken;
+    private String screenName;
+    private String profileImageUrl;
 
-    public String getHashTags() {
-        return hashTags;
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setHashTags(String hashTags) {
-        this.hashTags = hashTags;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public EventMeta(String uuid, String startTime, String hashTags) {
+    public String getHashtags() {
+        return hashtags;
+    }
+
+    public void setHashtags(String hashtags) {
+        this.hashtags = hashtags;
+    }
+
+    public EventMeta(String uuid, String startTime, String hashtags, String mediaUrl, String accessToken) {
         this.uuid = uuid;
         this.startTime = startTime;
-        this.hashTags = hashTags;
+        this.hashtags = hashtags;
+        this.mediaUrl = mediaUrl;
+        this.accessToken = accessToken;
     }
 
     public String getUuid() {
@@ -36,5 +50,29 @@ public class EventMeta {
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public void setMediaUrl(String mediaUrl) {
+        this.mediaUrl = mediaUrl;
+    }
+
+    public void setScreenName(String screenName) {
+        this.screenName = screenName;
+    }
+
+    public String getScreenName() {
+        return screenName;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 }

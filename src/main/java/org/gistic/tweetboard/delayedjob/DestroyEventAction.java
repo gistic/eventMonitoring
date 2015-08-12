@@ -12,9 +12,11 @@ import javax.ws.rs.client.WebTarget;
  */
 public class DestroyEventAction implements Runnable{
     private final String uuid;
+    private final String accessToken;
 
-    public DestroyEventAction(String uuid) {
+    public DestroyEventAction(String uuid, String accesstoekn) {
         this.uuid = uuid;
+        this.accessToken = accesstoekn;
     }
 
     @Override
@@ -23,6 +25,9 @@ public class DestroyEventAction implements Runnable{
         LoggerFactory.getLogger(this.getClass()).info("destroy event triggered for event: "+uuid);
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(Misc.getBaseUri()+"/api/events/"+uuid);
+        if (accessToken != null && !accessToken.equalsIgnoreCase("undefined")) {
+            target = target.queryParam("authToken", accessToken);
+        }
         target.request().delete();
     }
 }
