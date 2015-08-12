@@ -849,13 +849,13 @@ EventHandlerController.controller('EventMainController',
                 var tweetsTimeArray = [];
 
                 $scope.totalTweets = 0;
-                var localTime = new Date().getTimezoneOffset() / -60;
                 
                 for (var i = 0; i < arrayLength; i++) {
                     tweetsCountArray[i] = $scope.data[i].tweets_count;
                     $scope.totalTweets += $scope.data[i].tweets_count;
-                    console.log(Date.parse($scope.data[i].time));
-                    tweetsTimeArray[i] = $scope.data[i].time;
+                    var localTime = new Date(($scope.data[i].time));
+                    var formatedTime = localTime.getHours() + ":" + localTime.getMinutes();
+                    tweetsTimeArray[i] = formatedTime;
                 }
 
                 $scope.chartSeries = [{
