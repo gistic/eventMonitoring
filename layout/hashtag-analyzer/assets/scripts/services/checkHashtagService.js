@@ -16,10 +16,13 @@ angular.module('trackHashtagApp.services')
 
             var badHashtags = badEnglishHashtags.concat(badArabicHashtags);
             var badHashtagsLength = badHashtags.length;
-
-            if (hashtag == undefined || hashtag == "") {
+            if (hashtag == undefined || hashtag == "" || hashtag.length < 3) {
                 badHashtag = true;
                 var errorMsg = "Please type at least three letters to start your event";
+                return errorMsg;
+            } else if (hashtag.length > 10) {
+                badHashtag = true;
+                var errorMsg = "Too long hashtag";
                 return errorMsg;
             } else {
                 for (var i = 0; i < badHashtagsLength; i++) {
