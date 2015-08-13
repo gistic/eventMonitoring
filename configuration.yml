@@ -43,7 +43,7 @@ twitter:
 #  user-secret: E86Yjk5ZPNnFqVQzRE0UlxiTdp82SjBX4tXUnr7kcM7eN
 defaultAutoShutdownDelayInHours: 1
 v2: true
-baseDomain: 52.10.140.166
+baseDomain: hashtails.com
 logging:
   level: INFO
   appenders:
