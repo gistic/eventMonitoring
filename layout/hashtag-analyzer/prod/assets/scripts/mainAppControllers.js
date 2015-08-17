@@ -362,7 +362,7 @@ EventHandlerController.controller('EventMainController',
                 if ($scope.languageName != undefined) {
                     for (var i = 0; i < languagesPieChart.data.length; i++) {
                         if (languagesPieChart.data[i][0] == $scope.languageName) {
-                            languagesPieChart.data[i][1] ++;
+                            languagesPieChart.data[i][1]++;
                             languageUpdated = true;
                             break;
                         }
@@ -862,7 +862,7 @@ EventHandlerController.controller('EventMainController',
                 var tweetsTimeArray = [];
 
                 $scope.totalTweets = 0;
-                
+
                 for (var i = 0; i < arrayLength; i++) {
                     tweetsCountArray[i] = $scope.data[i].tweets_count;
                     $scope.totalTweets += $scope.data[i].tweets_count;
