@@ -53,7 +53,7 @@ angular.module('trackHashtagApp.services')
                 badHashtag = true;
                 var errorMsg = "Please type at least three letters to start your event";
                 return errorMsg;
-            } else if (hashtag.length > 15) {
+            } else if (hashtag.length > 35) {
                 badHashtag = true;
                 var errorMsg = "Too long hashtag";
                 return errorMsg;

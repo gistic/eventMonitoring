@@ -1035,18 +1035,11 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$s
 
     // Action on button
     
-    
-    
-    $scope.startNewEvent = function () {
+    $scope.startNewEvent = function (hashtag) {
         
-        $rootScope.eventHashtag = $('#homepageSearchHashtag').val();
-        
+        $rootScope.eventHashtag = hashtag;
         // Check hashtag
-        var checkHashtag = filterHashtags.preventBadHashtags($rootScope.eventHashtag);
-        var eventHashtag = $rootScope.eventHashtag;
-        console.log(eventHashtag);
-        console.log($rootScope.eventHashtag);
-        
+        var checkHashtag = filterHashtags.preventBadHashtags($rootScope.eventHashtag);        
         
         if (checkHashtag) {
             $rootScope.searchError = true;
@@ -1079,7 +1072,7 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$s
                     GetEventsData.startServerEvent($rootScope.eventHashtag);
                 }
             } else {
-                User.getTwitterAuth(false, $scope.eventHashtag);
+                User.getTwitterAuth(false, $rootScope.eventHashtag);
             }
         }
     };
@@ -1087,11 +1080,10 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$s
     // Start event from thumb
     $scope.createEventFromTrending = function (hashtag, uuid) {
         
-        $scope.eventHashtag = $('#homepageSearchHashtag').val();
-        
         $rootScope.eventHashtag = hashtag;
         
-        //$scope.eventHashtag = hashtag;
+        $rootScope.inputValue = $('#homepageSearchHashtag').val();
+        $rootScope.inputValue = $rootScope.eventHashtag;
         
         if (uuid != null) {
             if ($rootScope.logedInUser) {
@@ -1104,7 +1096,7 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$s
                 User.getTwitterAuth(true);
             }
         } else {
-            $scope.startNewEvent();
+            $scope.startNewEvent($rootScope.eventHashtag);
         }
     }
 
