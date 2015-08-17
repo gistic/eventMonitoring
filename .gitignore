@@ -30,6 +30,10 @@ target/
 **/dump.rdb
 
 # Images
+<<<<<<< HEAD
+/assets/logo
+*.log
+=======
 /layout/logo/
 
 configuration.yml
@@ -40,3 +44,4 @@ configuration.yml
 /dump.rdb
 /tweet-board-1.0-SNAPSHOT.jar
 /layout/event-monitoring/Gruntfile.js
+>>>>>>> c82183b2ef4a2876328ee3ef4abcdf463b0fd6c8
