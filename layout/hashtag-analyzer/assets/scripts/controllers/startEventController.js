@@ -70,12 +70,13 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
     }
 
     // Action on button
-    $scope.startNewEvent = function (action) {
-
+    
+    $scope.startNewEvent = function (hashtag) {
+        
+        $rootScope.eventHashtag = hashtag;
         // Check hashtag
-        var checkHashtag = filterHashtags.preventBadHashtags($scope.eventHashtag);
-        eventHashtag = $scope.eventHashtag;
-
+        var checkHashtag = filterHashtags.preventBadHashtags($rootScope.eventHashtag);        
+        
         if (checkHashtag) {
             $rootScope.searchError = true;
             $(".search-error").text(checkHashtag);
@@ -88,7 +89,7 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
                 
                 for (var i = 0; i < $scope.runningUserEvents.length; i++) {
                 
-                    if ($scope.runningUserEvents[i].hashtags.toLowerCase() === eventHashtag.toLowerCase()) {
+                    if ($scope.runningUserEvents[i].hashtags.toLowerCase() === $rootScope.eventHashtag.toLowerCase()) {
                         var sameEventIsRunning = true;
                         $scope.runningEventID = $scope.runningUserEvents[i].uuid;
                     }
@@ -104,18 +105,21 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
                     var alertConfirmButtonText = "Yes, stop it!";
                     SweetAlertFactory.showSweetAlert(alertText, alertConfirmButtonText);
                 } else {
-                    GetEventsData.startServerEvent(eventHashtag);
+                    GetEventsData.startServerEvent($rootScope.eventHashtag);
                 }
             } else {
-                User.getTwitterAuth(false, $scope.eventHashtag);
+                User.getTwitterAuth(false, $rootScope.eventHashtag);
             }
         }
     };
 
     // Start event from thumb
     $scope.createEventFromTrending = function (hashtag, uuid) {
-
-        $scope.eventHashtag = hashtag;
+        
+        $rootScope.eventHashtag = hashtag;
+        
+        $rootScope.inputValue = $('#homepageSearchHashtag').val();
+        $rootScope.inputValue = $rootScope.eventHashtag;
         
         if (uuid != null) {
             if ($rootScope.logedInUser) {
@@ -128,7 +132,7 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
                 User.getTwitterAuth(true);
             }
         } else {
-            $scope.startNewEvent();
+            $scope.startNewEvent($rootScope.eventHashtag);
         }
     }
 
