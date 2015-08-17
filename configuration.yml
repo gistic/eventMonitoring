@@ -45,6 +45,10 @@ twitter:
   consumer-secret: GOe5YzFEL5b189ZqfBRUF78e5KKUCWlw7eNlFZCBPvLvqgWJX9
   user-key: 1974931724-99y199ECdu3BlIDy8oA1cYpxNRDK77PF5a6XUvx
   user-secret: rXQVL0Jinj7IiD6dmkobEuoY9ScL8U1JaVAA1XR6wS2VA
+#  consumer-key: R0PfrkIzE9TuO2QPpnRjyfOiA
+#  consumer-secret: sKne91sywB1asSk9Zr9va6VbWSJFpiOxkBy7ieEO7bdbMD3Z1S
+#  user-key: 1974931724-Uw7uXF2eCGOpzwK909VwdejEUuuGBiSaedENT3E
+#  user-secret: mCsectp6Gj6uf2Ezh4Gy1lk68LtsCbzmb0NLcyvaHvAVY
 defaultAutoShutdownDelayInHours: 1
 v2: true
 baseDomain: localhost:8080
