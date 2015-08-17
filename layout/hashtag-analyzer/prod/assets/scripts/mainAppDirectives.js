@@ -20,7 +20,7 @@ angular.module('trackHashtagApp.directives', [])
 })
 
 // Directive : Image lazy load
-.directive('lazyLoad', function ($timeout) {
+.directive('lazyLoad', ['$timeout', function ($timeout) {
     return {
         restrict: 'A',
         scope: {},
@@ -30,10 +30,10 @@ angular.module('trackHashtagApp.directives', [])
             });
         },
     }
-})
+}])
 
 // Directive : On error or missing user profile image -> Load this default image
-.directive('onErrorSrc', function ($rootScope) {
+.directive('onErrorSrc', ['$rootScope', function ($rootScope) {
 
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
 
@@ -46,10 +46,10 @@ angular.module('trackHashtagApp.directives', [])
             });
         }
     }
-})
+}])
 
 // Directive : Focus into input on page laod
-.directive('focusMe', function($timeout, $parse) {
+.directive('focusMe', ['$timeout', '$parse', function($timeout, $parse) {
   return {
     link: function(scope, element, attrs) {
       var model = $parse(attrs.focusMe);
@@ -65,4 +65,4 @@ angular.module('trackHashtagApp.directives', [])
       })
     }
   };
-})
+}])

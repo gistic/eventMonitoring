@@ -17,29 +17,13 @@ angular.module('trackHashtagApp', [
     'StartNewEvent',
     'EventHandlerController',
 
-    'highcharts-ng',
     'oitozero.ngSweetAlert',
-    'iso-3166-country-codes',
-    'iso-language-codes',
-    'googlechart',
-    'bootstrapLightbox',
-
-    // map
-    'uiGmapgoogle-maps',
-
-    'wu.masonry',
-    'angular-images-loaded',
-
-    'angular-jqcloud',
-    'angularMoment',
-    'infinite-scroll',
     'ngFx',
-    'nsPopover',
-    'me-lazyload'
+    'nsPopover'
 ])
 
 // Run : Intliaize the app with this values
-.run(function ($window, $location, $rootScope, $cookies, $state, User) {
+.run(['$window', '$location', '$rootScope', '$cookies', '$state', '$templateCache', 'User', function ($window, $location, $rootScope, $cookies, $state,$templateCache, User) {
     
     $rootScope.appName = "Hashtag Analyser";
     $rootScope.appVersion = "V.1.0.0";
@@ -81,10 +65,10 @@ angular.module('trackHashtagApp', [
     $rootScope.searchError = false;
     $rootScope.showTotalTweetsNumber = true;
     
-})
+}])
 
 // Config : Media lightbox configurations
-.config(function (LightboxProvider) {
+.config(['LightboxProvider', function (LightboxProvider) {
     // set a custom template
     LightboxProvider.templateUrl = 'views/views-components/lightbox-modal.html';
 
@@ -99,10 +83,10 @@ angular.module('trackHashtagApp', [
     LightboxProvider.getImageType = function (media) {
         return media.type;
     };
-})
+}])
 
 // Config : Routing configurations
-.config(function ($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     window.routes = {
         "home": {
             url: '',
@@ -140,4 +124,4 @@ angular.module('trackHashtagApp', [
 
     $urlRouterProvider.otherwise('/');
 
-});
+}]);
