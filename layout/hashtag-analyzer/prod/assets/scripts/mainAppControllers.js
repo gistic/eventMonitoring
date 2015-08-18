@@ -969,9 +969,11 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$s
     
     $scope.initHomepage = function () {
         User.setUserAuth();
+        
         if ($rootScope.logedInUser) {
             User.getUserData();
         }
+        
         $scope.getEvents();
     }
 
