@@ -18357,7 +18357,11 @@ footer.views--footer p {
   vertical-align: middle;
   font-size: 32;
 }
-/* line 61, ../sass/_/_modules/_live-view.scss */
+/* line 59, ../sass/_/_modules/_live-view.scss */
+.event-ui-views .view-header span {
+  font-size: 12px;
+}
+/* line 64, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .user-img img {
   width: 92px;
   height: 92px;
@@ -18365,27 +18369,27 @@ footer.views--footer p {
   -webkit-border-radius: 10%;
   border-radius: 10%;
 }
-/* line 69, ../sass/_/_modules/_live-view.scss */
+/* line 72, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--live-tweets .tweets-container {
   margin: 0 auto;
   height: 750px;
 }
-/* line 77, ../sass/_/_modules/_live-view.scss */
+/* line 80, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--top-people .tweets-container {
   overflow: visible;
 }
-/* line 80, ../sass/_/_modules/_live-view.scss */
+/* line 83, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--top-people .media-heading {
   color: #2493de;
   width: 50%;
   height: auto;
 }
-/* line 84, ../sass/_/_modules/_live-view.scss */
+/* line 87, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--top-people .media-body {
   width: 80%;
   height: auto;
 }
-/* line 89, ../sass/_/_modules/_live-view.scss */
+/* line 92, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--top-people .user-ranks {
   position: absolute;
   top: 20px;
@@ -18402,14 +18406,14 @@ footer.views--footer p {
   font-weight: bold;
   text-align: center;
 }
-/* line 106, ../sass/_/_modules/_live-view.scss */
+/* line 109, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--tweets-overtime .tweets-count {
   font-size: 60px;
   margin-top: 30px;
   color: #ffffff;
 }
 
-/* line 129, ../sass/_/_modules/_live-view.scss */
+/* line 132, ../sass/_/_modules/_live-view.scss */
 .media,
 .media-body {
   overflow: visible;
