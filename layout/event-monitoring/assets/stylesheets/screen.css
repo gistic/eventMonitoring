@@ -17653,6 +17653,11 @@ ol {
   font-family: 'Roboto', sans-serif;
 }
 
+/* line 15, ../sass/_/_atoms/_typography.scss */
+.note {
+  margin-top: 10px;
+}
+
 /* line 1, ../sass/_/_atoms/_icons.scss */
 .icon-massive {
   font-size: 60px;
