@@ -37,18 +37,18 @@ twitter:
   consumer-secret: Xl3TKJwNQtZmbYGhLcXzUseO9CrdoMav54qODCr2CnFiSIIZpb
   user-key: 1974931724-iUek6BFqWg3SSyuTMfTDhvL5DrzDGDkClgd9yB0
   user-secret: 3SrUJH57ROyLlIoTle81CP1LDtbWDlGf4ew4tocDekuil
-#  consumer-key: NOtR3vUPHLg9SkQZ8xPKUWNuB
-#  consumer-secret: e3TrmlIMDUeaDFOvnVzWXF09FU7yK8G40Ju6eryazzaOLn7IUJ
-#  user-key: 1974931724-eOfQXnlkGUKq1Nh7x3dElaGMUwu00dFOrZbkuIi
-#  user-secret: E86Yjk5ZPNnFqVQzRE0UlxiTdp82SjBX4tXUnr7kcM7eN
+#  consumer-key: YzZKKQ2v793ClhDvOvpg2XtNO
+#  consumer-secret: vQToihSmBVtZK6ziYKORtGNWKxAGEVUAxo5VyuHxPRBQk8JNgw
+#  user-key: 146937078-oJdMfF0B849bQgqLMNElQzvFpeD8iaeYBZ5hNeaK
+#  user-secret: g5MWqiIvkYE41Gu0BYuv0NbL3arCIIE80NzIzeIrD98ml
 defaultAutoShutdownDelayInHours: 1
 v2: true
-baseDomain: hashtails.com
+baseDomain: localhost:8080
 logging:
   level: INFO
-  appenders:
-    - type: file
-      currentLogFilename: var/log/event-board.log
-      threshold: ALL
-      archive: true
-      archivedLogFilenamePattern: var/log/event-board-%d.log
+#  appenders:
+#    - type: file
+#      currentLogFilename: var/log/event-board.log
+#      threshold: ALL
+#      archive: true
+#      archivedLogFilenamePattern: var/log/event-board-%d.log
