@@ -43,12 +43,12 @@ twitter:
 #  user-secret: g5MWqiIvkYE41Gu0BYuv0NbL3arCIIE80NzIzeIrD98ml
 defaultAutoShutdownDelayInHours: 1
 v2: true
-baseDomain: hashtails.com
+baseDomain: localhost:8080
 logging:
   level: INFO
-  appenders:
-    - type: file
-      currentLogFilename: var/log/event-board.log
-      threshold: ALL
-      archive: true
-      archivedLogFilenamePattern: var/log/event-board-%d.log
+#  appenders:
+#    - type: file
+#      currentLogFilename: var/log/event-board.log
+#      threshold: ALL
+#      archive: true
+#      archivedLogFilenamePattern: var/log/event-board-%d.log
