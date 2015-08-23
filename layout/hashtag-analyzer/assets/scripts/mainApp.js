@@ -26,7 +26,7 @@ angular.module('trackHashtagApp', [
 // Run : Intliaize the app with this values
 .run(['$window', '$location', '$rootScope', '$cookies', '$state', '$templateCache', 'User', function ($window, $location, $rootScope, $cookies, $state, $templateCache, User) {
 
-    $rootScope.appName = "Hashtag Analyser";
+    $rootScope.appName = "Hashtails";
     $rootScope.appVersion = "V.1.0.0";
 
 
