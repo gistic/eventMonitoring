@@ -140,7 +140,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             source.addEventListener('tweet', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
-                
+
 
                 $scope.$apply(function () {
                     $scope.tweetsQueue.push($scope.tweet);
@@ -356,21 +356,18 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                 type: 'notice'
             });
 
+            $scope.eventStarted = false;
+            $scope.$broadcast('timer-stop');
+            $rootScope.timerRunning = false;
 
-            var eventID = $rootScope.eventID;
-            var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID;
-            var requestData = "";
+            // show the notification
+            notification.show();
+            $state.transitionTo('home');
 
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    $scope.eventStarted = false;
-                    $scope.$broadcast('timer-stop');
-                    $rootScope.timerRunning = false;
-
-                    // show the notification
-                    notification.show();
-                    $state.transitionTo('/');
-                })
+            // var eventID = $rootScope.eventID;
+            // var requestAction = "DELETE";
+            // var apiUrl = '/api/events/' + eventID;
+            // var requestData = "";
+            // RequestData.fetchData(requestAction, apiUrl, requestData).then(function (response) {})
         }
 }]);

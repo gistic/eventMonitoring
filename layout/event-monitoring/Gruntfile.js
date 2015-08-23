@@ -62,6 +62,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // the default task can be run just by typing "grunt" on the command line
-    grunt.registerTask('default', ['cssmin:css', 'uglify:js', 'imagemin']);
+    grunt.registerTask('default', ['cssmin:css', 'uglify:js']);
 
 };
