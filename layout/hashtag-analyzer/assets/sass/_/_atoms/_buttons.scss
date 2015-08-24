@@ -53,7 +53,6 @@
             border: 1px solid lighten($blue, 20%);
             background: none;
             @include border-radius(5px);
-            margin-top: $margin - 1;
         }
         >:first-child {
             width: 38px;

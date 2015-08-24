@@ -53,6 +53,12 @@ module.exports = function (grunt) {
     });
 
     // the default task can be run just by typing "grunt" on the command line
+<<<<<<< HEAD
     grunt.registerTask('default', ['watch']);
+||||||| merged common ancestors
+    grunt.registerTask('default', ['cssmin:css', 'uglify:js', 'imagemin']);
+=======
+    grunt.registerTask('default', ['cssmin:css', 'uglify:js']);
+>>>>>>> dev
 
 };
