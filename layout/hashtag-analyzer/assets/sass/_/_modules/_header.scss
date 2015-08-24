@@ -128,7 +128,7 @@
 .header-homepage {
     @extend .header;
     margin: 0;
-    padding: $padding / 2 0;
+//    padding: $padding / 2 0;
     .search-error {
         color: $white;
         @include font-size($font-tiny);
