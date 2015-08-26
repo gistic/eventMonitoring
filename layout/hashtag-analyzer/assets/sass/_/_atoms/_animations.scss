@@ -15,7 +15,7 @@
     -ms-transform: rotate(135deg);
     transform: rotate(135deg);
     display: inline-block;
-    @include size(25px);
+    @include size(29px);
     &:before, &:after {
         content: '';
         position: absolute;

@@ -4,7 +4,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
   $templateCache.put('views/views-components/footer.html',
     "<footer class=\"clearfix text-center\">\n" +
     "    <div class=\"container\">\n" +
-    "       <p>{{appName}} is a trademark related to GISTIC at Umm Al-Qurra University</p>\n" +
+    "       <p>{{appName}} ™ for KACST GIS Technology Innovation Center at Umm Al-Qura University</p>\n" +
     "<!--\n" +
     "        <ul class=\"list-inline social-links\">\n" +
     "           <li>Connect with us: </li>\n" +
@@ -28,7 +28,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "\n" +
     "        <a class=\"navbar-logo pull-left\" ui-sref=\"home\">\n" +
     "            <span class=\"hashtag-logo\"></span>\n" +
-    "            <span ng-hide=\"dashboardState\" class=\"header-title\">HASHTAG ANALYSER</span>\n" +
+    "            <span ng-hide=\"dashboardState\" class=\"header-title\">{{appName}}</span>\n" +
     "        </a>\n" +
     "\n" +
     "        <form ng-show=\"dashboardState\" class=\"navbar-form pull-left\" role=\"search\">\n" +
