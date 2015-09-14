@@ -155,6 +155,7 @@ EventHandlerController.controller('EventMainController',
                     }
                     $rootScope.loadingEvent = false;
                 }).error(function () {
+                    $rootScope.loadingEvent = false;
                     console.log("#");
                 })
         };
