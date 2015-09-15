@@ -142,8 +142,7 @@ public class LoginResource {
             for (String userEventUuid : userEventIds) {
                 EventMeta userEventMeta = dao.getEventMeta(userEventUuid);
                 String userEventHashtags = userEventMeta.getHashtags();
-                if ( userEventHashtags.toLowerCase().contains(hashtags.toLowerCase()) ){
-                    //TODO TODO :P
+                if (userEventHashtags != null && userEventHashtags.toLowerCase().contains(hashtags.toLowerCase()) ){
                     eventExists = true;
                     uuid = userEventUuid;
                 }
