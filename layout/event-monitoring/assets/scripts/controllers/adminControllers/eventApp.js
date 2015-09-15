@@ -333,19 +333,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                 effect: 'genie',
                 type: 'notice'
             });
-
-<<<<<<< HEAD
-            var eventID = $rootScope.eventID;
-            var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID;
-            var requestData = "";
-||||||| merged common ancestors
-
-            var eventID = $rootScope.eventID;
-            var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID;
-            var requestData = "";
-=======
+            
             $scope.eventStarted = false;
             $scope.$broadcast('timer-stop');
             $rootScope.timerRunning = false;
@@ -353,41 +341,10 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             // show the notification
             notification.show();
             $state.transitionTo('home');
->>>>>>> dev
-
-<<<<<<< HEAD
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    notification.show();
-                    $scope.eventStarted = false;
-                    $scope.$broadcast('timer-stop');
-                    $rootScope.timerRunning = false;
-                    $state.transitionTo('home');
-                }, function (error) {
-                    $timeout(function () {
-                        notification.dismiss();
-                    }, 3000);
-
-                    $scope.eventStarted = false;
-                    $state.transitionTo('home');
-                });
-||||||| merged common ancestors
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    $scope.eventStarted = false;
-                    $scope.$broadcast('timer-stop');
-                    $rootScope.timerRunning = false;
-
-                    // show the notification
-                    notification.show();
-                    $state.transitionTo('/');
-                })
-=======
             // var eventID = $rootScope.eventID;
             // var requestAction = "DELETE";
             // var apiUrl = '/api/events/' + eventID;
             // var requestData = "";
             // RequestData.fetchData(requestAction, apiUrl, requestData).then(function (response) {})
->>>>>>> dev
         }
 }]);

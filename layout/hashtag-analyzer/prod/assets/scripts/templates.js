@@ -22,7 +22,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
   $templateCache.put('views/views-components/header.html',
     "<!-- HEADER -->\n" +
-    "<header class=\"header header-homepage clearfix\">\n" +
+    "<header class=\"header header-homepage clearfix\" ng-class=\"{'header-dashboard' : dashboardState}\">\n" +
     "\n" +
     "    <div class=\"container\">\n" +
     "\n" +

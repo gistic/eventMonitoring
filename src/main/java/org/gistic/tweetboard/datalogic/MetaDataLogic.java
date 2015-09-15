@@ -76,6 +76,7 @@ public class MetaDataLogic {
         List<EventMeta> runningUserEvents = new ArrayList<>();
         List<String> historicUserEventIds = new ArrayList<>();
         List<HistoricUserEvent> historicUserEvents = new ArrayList<>();
+        historicUserEventIds = dao.getHistoricUserEventIds(authToken);
         if (authToken != null) {
             org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(authToken, new AuthDaoImpl().getAccessTokenSecret(authToken));
             try {
@@ -86,7 +87,7 @@ public class MetaDataLogic {
                 e.printStackTrace();
             }
             userEventIds = dao.getUserEventsList(authToken);
-            historicUserEventIds = dao.getHistoricUserEventIds(authToken);
+//            historicUserEventIds = dao.getHistoricUserEventIds(authToken);
         }
         for (EventMeta event : eventMetaList) {
             String uuid = event.getUuid();
