@@ -1,7 +1,7 @@
 footer {
-    padding: $padding - 5 0 0;
+    padding: $padding * 3 0 $padding;
     border-top: 1px solid $gray-light;
-    margin: $margin*3 0 $margin;
+    margin: 0 ;
     .social-links {
         a {
             color: $gray;
@@ -24,3 +24,7 @@ footer {
     }
 }
 
+.contact-section {
+  width: 50%;
+  margin: 0 auto 20px;
+}

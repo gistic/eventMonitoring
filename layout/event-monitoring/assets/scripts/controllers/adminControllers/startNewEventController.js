@@ -3,10 +3,15 @@ var startNewEventController = angular.module('startNewEventController', []);
 /* Controller : Start new event */
 startNewEventController.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', 'filterHashtags', function ($rootScope, $scope, $http, $state, RequestData, filterHashtags) {
 
+  $scope.showSearchInput = false;
+  $scope.showSearchInput = function () {
+    $scope.showSearchInput = !$scope.showSearchInput;
+  }
+
     $scope.startNewEvent = function (action) {
-        
+
         $scope.validHashtag = filterHashtags.preventBadHashtags($scope.eventHashtag);
-        
+
         if (!$scope.validHashtag) {
             $scope.$broadcast();
 
