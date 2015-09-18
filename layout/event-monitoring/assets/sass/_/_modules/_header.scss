@@ -1,80 +1,106 @@
 body {
-    font-family: 'Roboto', sans-serif;
-    background: $white;
+  background: $white;
 }
-
+.navbar {
+  background-color: rgba(34, 34, 34, 0.3);
+  border: none;
+}
 header {
-    padding: $padding - 5 0;
-    background: $white;
-    border-bottom: 1px solid $gray-light;
-    @include phone {
-        text-align: center;
-    }
-    .logo {
-        font-family: 'Lobster', cursive;
-        a {
-            color: $black;
-            &:hover, &:focus {
-                text-decoration: none;
-            }
-        }
-    }
-    .header-buttons {
-        @include phone {
-            float: none !important;
-        }
-    }
-}
-
-.header-admin {
-    .input-group {
-        @include phone {
-            text-align: center;
-            display: inline-block;
-        }
-    }
-}
-
-.header-homepage {
-    background: $dark-green;
-    color: $white;
-    padding: $padding * 5 0;
-    @include phone {
-        padding: $padding * 2 0;
-    }
+  padding: $padding - 5 0;
+  background: $white;
+  border-bottom: 1px solid $gray-light;
+  @include phone {
     text-align: center;
-    .start-event {
-        margin-top: $margin * 3;
-        margin-left: auto;
-        margin-right: auto;
-        @include size(40%, auto);
-        @include phone {
-            @include size(80%, auto);
-        }
-        input {
-            @include border-radius(5px);
-            color: $white;
-            font-weight: 300;
-            background: darken($dark-green, 8%);
-            &::-webkit-input-placeholder {
-                color: darken($dark-green, 17%);
-            }
-            &:-moz-placeholder {
-                color: darken($dark-green, 17%);
-                @include opacity(1);
-            }
-            &::-moz-placeholder {
-                color: darken($dark-green, 17%);
-                @include opacity(1);
-            }
-            &:-ms-input-placeholder {
-                color: darken($dark-green, 17%);
-            }
-        }
-        .btn.btn-search {
-            background: darken($dark-green, 15%);
-            @include border-right-radius(5px);
-            line-height: 20px;
-        }
+  }
+  .logo {a {
+      color: $black;
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
     }
+  }
+  .header-buttons {@include phone {
+      float: none !important;
+    }
+  }
+}
+.header-admin {.input-group {@include phone {
+      text-align: center;
+      display: inline-block;
+    }
+  }
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  background-color: rgba(32, 32, 32, 0.8);
+}
+.header-homepage {
+  position: relative;
+  width: 100%;
+  min-height: auto;
+  text-align: center;
+  background-image: url("../images/eventyzer-header.jpg");
+  background-position: center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+  min-height: 100vh;
+  color: $white;
+  @include phone {
+    padding: $padding * 2 0;
+  }
+  text-align: center;
+  .header-content {
+    position: absolute;
+    top: 50%;
+    padding: 0 50px;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 100%;
+    text-align: center;
+    z-index: 99;
+  }
+  .start-event {
+    margin-top: $margin * 3;
+    margin-left: auto;
+    margin-right: auto;
+    @include size(40%, auto);
+    @include phone {
+      @include size(80%, auto);
+    }
+    input {
+      @include border-radius(5px);
+      color: $gray-dark;
+      font-weight: 300;
+      background: $white;
+      height: 48px;
+      &::-webkit-input-placeholder {
+        color: darken($gray-dark, 17%);
+      }
+      &:-moz-placeholder {
+        color: darken($gray-dark, 17%);
+        @include opacity(1);
+      }
+      &::-moz-placeholder {
+        color: darken($gray-dark, 17%);
+        @include opacity(1);
+      }
+      &:-ms-input-placeholder {
+        color: darken($gray-dark, 17%);
+      }
+    }
+    .btn.btn-search {
+      // background: darken($dark-green, 15%);
+      @include border-right-radius(5px);
+      line-height: 30px;
+    }
+  }
 }
