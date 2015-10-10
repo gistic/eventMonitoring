@@ -2,14 +2,12 @@ var StartNewEvent = angular.module('StartNewEvent', ['trackHashtagApp.services']
 
 /* Controller : Homepage controller */
 StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope, $state, $cookies, RequestData, User, GetEventsData, SweetAlert, SweetAlertFactory, filterHashtags) {
-    
+
     $scope.initHomepage = function () {
         User.setUserAuth();
-        
         if ($rootScope.logedInUser) {
             User.getUserData();
         }
-        
         $scope.getEvents();
     }
 
@@ -72,13 +70,13 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
     }
 
     // Action on button
-    
+
     $scope.startNewEvent = function (hashtag) {
-        
+
         $rootScope.eventHashtag = hashtag;
         // Check hashtag
-        var checkHashtag = filterHashtags.preventBadHashtags($rootScope.eventHashtag);        
-        
+        var checkHashtag = filterHashtags.preventBadHashtags($rootScope.eventHashtag);
+
         if (checkHashtag) {
             $rootScope.searchError = true;
             $(".search-error").text(checkHashtag);
@@ -88,9 +86,9 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
 
             if ($rootScope.logedInUser) {
                 var sameEventIsRunning = false;
-                
+
                 for (var i = 0; i < $scope.runningUserEvents.length; i++) {
-                
+
                     if ($scope.runningUserEvents[i].hashtags.toLowerCase() === $rootScope.eventHashtag.toLowerCase()) {
                         var sameEventIsRunning = true;
                         $scope.runningEventID = $scope.runningUserEvents[i].uuid;
@@ -117,12 +115,12 @@ StartNewEvent.controller('StartNewEventController', function ($rootScope, $scope
 
     // Start event from thumb
     $scope.createEventFromTrending = function (hashtag, uuid) {
-        
+
         $rootScope.eventHashtag = hashtag;
-        
+
         $rootScope.inputValue = $('#homepageSearchHashtag').val();
         $rootScope.inputValue = $rootScope.eventHashtag;
-        
+
         if (uuid != null) {
             if ($rootScope.logedInUser) {
                 $rootScope.eventID = uuid;

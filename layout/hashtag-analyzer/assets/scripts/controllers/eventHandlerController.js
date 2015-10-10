@@ -17,7 +17,6 @@ var EventHandlerController = angular.module('EventHandlerController', [
 EventHandlerController.controller('EventMainController',
     function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, SweetAlertFactory, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, languageCode, User, filterHashtags) {
 
-
         // 1. Set the initializing values
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {

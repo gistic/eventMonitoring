@@ -12,9 +12,28 @@
         </div>
     </div>
 
+    <form name="myForm" novalidate>
+        <div class="search-homepage">
+            <div class="start-event">
+                <input type="search" name="hashtag" id="homepageSearchHashtag" class="form-control" placeholder="#Hashtag" ng-model="$parent.eventHashtag" value="" ng-enter="startNewEvent($parent.eventHashtag)" ng-minlength="2" ng-maxlength="35">
+
+                <span class="search-error" ng-show="searchError"></span>
+                <span class="search-error" ng-show="myForm.hashtag.$error.minlength">Too short!</span>
+                <span class="search-error" ng-show="myForm.hashtag.$error.maxlength">Too long!</span>
+                <button class="btn btn-search" type="button" ng-click="startNewEvent($parent.eventHashtag)">
+                    <i class="fa fa-search fa-2x"></i>
+                </button>
+                <div class="loading-pulse" ng-show="loadingSearchButton">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                </div>
+            </div>
+        </div>
+    </form>
+
     <div class="flexbox tilesWall">
-        <div class="event-box" ng-repeat="event in homepageEvents | limitTo : 21" ng-class="{'search-box tile':$index == 5, 'trending-box':$index == 6}">
-            <div class="shading" ng-if="$index !== 5 && $index !== 6">
+        <div class="event-box" ng-repeat="event in homepageEvents | limitTo : 8">
+            <div class="shading">
 
                 <!-- Check if event is trending or server one -->
                 <a ng-if="event.hashtags" ng-click="createEventFromTrending(event.hashtags, event.uuid)" class="full-box-link"></a>
@@ -37,7 +56,7 @@
                     <span ng-if="!event.noOfTweets">Running Now</span>
 
                     <span ng-if="event.startTime">
-                    - 
+                    -
                     <span am-time-ago="event.startTime"></span>
                     </span>
 
@@ -48,42 +67,8 @@
             </div>
 
             <!-- Search Box -->
-            <div ng-if="$index == 5">
-                <form name="myForm" novalidate>
-                    <div class="search-homepage">
-                        <div class="start-event">
-                            <input type="search" name="hashtag" id="homepageSearchHashtag" class="form-control" placeholder="#Hashtag" ng-model="$parent.eventHashtag" value="" ng-enter="startNewEvent($parent.eventHashtag)" ng-minlength="2" ng-maxlength="35">
-
-                            <span class="search-error" ng-show="searchError"></span>
-                            <span class="search-error" ng-show="myForm.hashtag.$error.minlength">Too short!</span>
-                            <span class="search-error" ng-show="myForm.hashtag.$error.maxlength">Too long!</span>
-                            <button class="btn btn-search" type="button" ng-click="startNewEvent($parent.eventHashtag)">
-                                <i class="fa fa-search fa-2x"></i>
-                            </button>
-                            <div class="loading-pulse" ng-show="loadingSearchButton">
-                                <div class="bounce1"></div>
-                                <div class="bounce2"></div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
 
 
-            <!-- Trending Twitter -->
-            <div ng-if="$index == 6">
-                <h4 class="list-header">Trending in Twitter</h4>
-                <ul class="col-md-12">
-                    <li ng-repeat="hashtag in trendingHashtags | limitTo : 4">
-                        <a ng-click="createEventFromTrending(hashtag)">#{{hashtag}}</a>
-                    </li>
-                </ul>
-                <ul class="col-md-12">
-                    <li ng-repeat="hashtag in trendingHashtags | orderBy: index : reverse | limitTo : 4">
-                        <a ng-click="createEventFromTrending(hashtag)">#{{hashtag}}</a>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
 

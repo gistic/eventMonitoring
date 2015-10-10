@@ -4,19 +4,9 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
   $templateCache.put('views/views-components/footer.html',
     "<footer class=\"clearfix text-center\">\n" +
     "    <div class=\"container\">\n" +
-    "       <p>{{appName}} ™ for KACST GIS Technology Innovation Center at Umm Al-Qura University</p>\n" +
-    "<!--\n" +
-    "        <ul class=\"list-inline social-links\">\n" +
-    "           <li>Connect with us: </li>\n" +
-    "            <li ng-repeat=\"link in socialLink\">\n" +
-    "                <a href=\"{{link.url}}\" title=\"{{link.title}}\">\n" +
-    "                    <span class=\"icon-{{link.icon}}\"></span>\n" +
-    "                </a>\n" +
-    "            </li>\n" +
-    "        </ul>\n" +
-    "-->\n" +
+    "       <p>Hashtails ™ for KACST GIS Technology Innovation Center at Umm Al-Qura University</p>\n" +
     "    </div>\n" +
-    "</footer>"
+    "</footer>\n"
   );
 
 
@@ -74,7 +64,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                    <a ui-sref=\".map\">Map</a>\n" +
     "                </li>\n" +
     "            </ul>\n" +
-    "            \n" +
+    "\n" +
     "            <ul class=\"list-inline dashboard-nav pull-left\">\n" +
     "                <li class=\"nav-user dropdown\" ng-show=\"logedInUser\">\n" +
     "                    <a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"\" role=\"button\" aria-expanded=\"false\">\n" +
@@ -102,7 +92,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "        </div>\n" +
     "\n" +
     "    </div>\n" +
-    "</header>"
+    "</header>\n"
   );
 
 
@@ -127,7 +117,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                <a ng-href=\"{{twitterBaseUrl}}{{Lightbox.image.userScreenName}}\" target=\"_blank\">\n" +
     "                    {{Lightbox.image.userScreenName}}\n" +
     "                </a>\n" +
-    "                \n" +
+    "\n" +
     "                <a class=\"pull-right tweet-time\" ng-href=\"{{twitterBaseUrl}}{{Lightbox.image.userScreenName}}/status/{{Lightbox.image.tweetIdStr}}\" target=\"_blank\" title=\"Open in Twitter\">\n" +
     "                  <strong class=\"pull-right\">\n" +
     "                  <small am-time-ago=\"Lightbox.image.tweetCreatedAt\"></small>\n" +
@@ -135,10 +125,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "           </a>\n" +
     "            </h6>\n" +
     "\n" +
-    "                                <p ng-if=\"Lightbox.image.type == 'photo'\" ng-bind-html=\"Lightbox.imageCaption | parseUrl:'_blank'\"></p>\n" +
-    "<!--                                <p ng-bind-html=\"Lightbox.image.caption | parseUrl:'_blank'\"></p>-->\n" +
-    "                <p></p>\n" +
-    "<!--                {{Lightbox.image.caption}}-->\n" +
+    "                <p ng-if=\"Lightbox.image.type == 'photo'\" ng-bind-html=\"Lightbox.imageCaption | parseUrl:'_blank'\"></p>\n" +
     "\n" +
     "                <aside class=\"tweet-actions text-right\">\n" +
     "                    <a class=\"text-muted\" ng-href=\"{{twitterBaseUrl}}intent/tweet?in_reply_to={{Lightbox.image.tweetIdStr}}\" tooltip-placement=\"top\" tooltip=\"Reply\">\n" +
@@ -157,7 +144,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "\n" +
     "    </div>\n" +
     "\n" +
-    "</div>"
+    "</div>\n"
   );
 
 

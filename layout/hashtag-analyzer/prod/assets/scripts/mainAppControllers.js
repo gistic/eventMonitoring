@@ -17,7 +17,6 @@ var EventHandlerController = angular.module('EventHandlerController', [
 EventHandlerController.controller('EventMainController',
     ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'SweetAlertFactory', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore', 'languageCode', 'User', 'filterHashtags', function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, SweetAlertFactory, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, languageCode, User, filterHashtags) {
 
-
         // 1. Set the initializing values
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
@@ -963,18 +962,17 @@ EventHandlerController.controller('EventMainController',
         };
 
     }]);
+
 var StartNewEvent = angular.module('StartNewEvent', ['trackHashtagApp.services']);
 
 /* Controller : Homepage controller */
 StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$state', '$cookies', 'RequestData', 'User', 'GetEventsData', 'SweetAlert', 'SweetAlertFactory', 'filterHashtags', function ($rootScope, $scope, $state, $cookies, RequestData, User, GetEventsData, SweetAlert, SweetAlertFactory, filterHashtags) {
-    
+
     $scope.initHomepage = function () {
         User.setUserAuth();
-        
         if ($rootScope.logedInUser) {
             User.getUserData();
         }
-        
         $scope.getEvents();
     }
 
@@ -1037,13 +1035,13 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$s
     }
 
     // Action on button
-    
+
     $scope.startNewEvent = function (hashtag) {
-        
+
         $rootScope.eventHashtag = hashtag;
         // Check hashtag
-        var checkHashtag = filterHashtags.preventBadHashtags($rootScope.eventHashtag);        
-        
+        var checkHashtag = filterHashtags.preventBadHashtags($rootScope.eventHashtag);
+
         if (checkHashtag) {
             $rootScope.searchError = true;
             $(".search-error").text(checkHashtag);
@@ -1053,9 +1051,9 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$s
 
             if ($rootScope.logedInUser) {
                 var sameEventIsRunning = false;
-                
+
                 for (var i = 0; i < $scope.runningUserEvents.length; i++) {
-                
+
                     if ($scope.runningUserEvents[i].hashtags.toLowerCase() === $rootScope.eventHashtag.toLowerCase()) {
                         var sameEventIsRunning = true;
                         $scope.runningEventID = $scope.runningUserEvents[i].uuid;
@@ -1082,12 +1080,12 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$s
 
     // Start event from thumb
     $scope.createEventFromTrending = function (hashtag, uuid) {
-        
+
         $rootScope.eventHashtag = hashtag;
-        
+
         $rootScope.inputValue = $('#homepageSearchHashtag').val();
         $rootScope.inputValue = $rootScope.eventHashtag;
-        
+
         if (uuid != null) {
             if ($rootScope.logedInUser) {
                 $rootScope.eventID = uuid;
@@ -1108,6 +1106,7 @@ StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$s
         User.userSignOut();
     };
 }]);
+
 var superAdminController = angular.module('superAdminController', []);
 
 /* Controller : Super admin page */

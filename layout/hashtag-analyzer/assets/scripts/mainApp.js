@@ -26,28 +26,6 @@ angular.module('trackHashtagApp', [
 // Run : Intliaize the app with this values
 .run(['$window', '$location', '$rootScope', '$cookies', '$state', '$templateCache', 'User', function ($window, $location, $rootScope, $cookies, $state, $templateCache, User) {
 
-    $rootScope.appName = "Hashtails";
-    $rootScope.appVersion = "V.1.0.0";
-
-
-    $rootScope.socialLink = [{
-        "title": "Linkedin",
-        "url": "http://www.linkedin.com",
-        "icon": "linkedin"
-    }, {
-        "title": "twitter",
-        "url": "http://www.twitter.com",
-        "icon": "twitter"
-    }, {
-        "title": "facebook",
-        "url": "http://www.facebook.com",
-        "icon": "facebook"
-    }, {
-        "title": "Email",
-        "url": "http://mailto:",
-        "icon": "envelope"
-    }];
-
     $rootScope.baseUrl = $window.location.origin;
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
@@ -55,9 +33,8 @@ angular.module('trackHashtagApp', [
     $rootScope.eventID = $location.search().uuid;
 
     if ($state.current.name == "") {
-        $state.transitionTo('home');
+      $state.transitionTo('home');
     }
-
     // LOADING
     $rootScope.loadingHomepageTrending = true;
     $rootScope.loadingSearchButton = false;

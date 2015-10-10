@@ -5,7 +5,7 @@
 
         <a class="navbar-logo pull-left" ui-sref="home">
             <span class="hashtag-logo"></span>
-            <span ng-hide="dashboardState" class="header-title">{{appName}}</span>
+            <span ng-hide="dashboardState" class="header-title">Hashtails</span>
         </a>
 
         <form ng-show="dashboardState" class="navbar-form pull-left" role="search">
@@ -20,24 +20,6 @@
             <span class="search-error" ng-show="searchError"></span>
         </form>
 
-
-        <div ng-hide="dashboardState" class="navs">
-
-<!--
-            <ul class="list-inline dashboard-nav pull-left">
-                <li class="hvr-underline-from-center">
-                    <a ui-sref="home">Home</a>
-                </li>
-                <li class="hvr-underline-from-center">
-                    <a ui-sref="about">About</a>
-                </li>
-                <li class="hvr-underline-from-center">
-                    <a ui-sref="contact">Contact</a>
-                </li>
-            </ul>
--->
-        </div>
-
         <div class="navs pull-right clearfix">
 
             <ul class="list-inline dashboard-nav pull-left" ng-show="dashboardState">
@@ -51,7 +33,7 @@
                     <a ui-sref=".map">Map</a>
                 </li>
             </ul>
-            
+
             <ul class="list-inline dashboard-nav pull-left">
                 <li class="nav-user dropdown" ng-show="logedInUser">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
