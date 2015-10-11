@@ -13,7 +13,6 @@ angular.module('trackHashtagApp', [
     'trackHashtagApp.filters',
     'trackHashtagApp.services',
 
-    'superAdminController', // Custome application dependencies [Controllers]
     'StartNewEvent',
     'EventHandlerController',
 
@@ -71,6 +70,16 @@ angular.module('trackHashtagApp', [
             templateUrl: 'views/index.html',
             controller: 'StartNewEventController'
         },
+          "home.features": {
+              url: '/home#features',
+              templateUrl: 'views/index.html',
+              controller: 'StartNewEventController'
+          },
+          "home.realTime": {
+              url: '/home#realTime',
+              templateUrl: 'views/index.html',
+              controller: 'StartNewEventController'
+          },
         "dashboard": {
             url: '/dashboard?uuid',
             templateUrl: 'views/dashboard.html',
@@ -87,12 +96,6 @@ angular.module('trackHashtagApp', [
         "dashboard.map": {
             url: '/map',
             templateUrl: 'views/views-components/map.html'
-        },
-
-        "superAdmin": {
-            url: '/superAdmin',
-            templateUrl: 'views/super-admin.html',
-            controller: 'SuperAdminCtrl'
         }
     };
 
@@ -103,6 +106,13 @@ angular.module('trackHashtagApp', [
     $urlRouterProvider.otherwise('/');
 
 }])
+
+.run(function($rootScope, $location, $anchorScroll) {
+  //when the route is changed scroll to the proper element.
+  $rootScope.$on('$routeChangeSuccess', function(newRoute, oldRoute) {
+    if($location.hash()) $anchorScroll();
+  });
+})
 
 // Config: Google Analytics
 .config(function (AngularyticsProvider) {

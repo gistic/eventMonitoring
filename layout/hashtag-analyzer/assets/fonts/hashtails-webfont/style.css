@@ -1,0 +1,44 @@
+@font-face {
+	font-family: 'hashtails-webfont';
+	src:url('fonts/hashtails-webfont.eot?9pfzoo');
+	src:url('fonts/hashtails-webfont.eot?9pfzoo#iefix') format('embedded-opentype'),
+		url('fonts/hashtails-webfont.ttf?9pfzoo') format('truetype'),
+		url('fonts/hashtails-webfont.woff?9pfzoo') format('woff'),
+		url('fonts/hashtails-webfont.svg?9pfzoo#hashtails-webfont') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'hashtails-webfont';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-hash:before {
+	content: "\e805";
+}
+.icon-location:before {
+	content: "\e800";
+}
+.icon-piechart:before {
+	content: "\e801";
+}
+.icon-columnchart:before {
+	content: "\e802";
+}
+.icon-twitter:before {
+	content: "\e803";
+}
+.icon-globe:before {
+	content: "\e804";
+}
+

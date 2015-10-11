@@ -1,0 +1,18 @@
+.icon-hash {
+	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe805;');
+}
+.icon-location {
+	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe800;');
+}
+.icon-piechart {
+	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe801;');
+}
+.icon-columnchart {
+	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe802;');
+}
+.icon-twitter {
+	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe803;');
+}
+.icon-globe {
+	*zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe804;');
+}
