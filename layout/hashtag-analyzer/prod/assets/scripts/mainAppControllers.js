@@ -967,12 +967,6 @@ var StartNewEvent = angular.module('StartNewEvent', ['trackHashtagApp.services']
 
 /* Controller : Homepage controller */
 StartNewEvent.controller('StartNewEventController', ['$rootScope', '$scope', '$state', '$cookies', 'RequestData', 'User', 'GetEventsData', 'SweetAlert', 'SweetAlertFactory', 'filterHashtags', '$location', '$anchorScroll', function($rootScope, $scope, $state, $cookies, RequestData, User, GetEventsData, SweetAlert, SweetAlertFactory, filterHashtags, $location, $anchorScroll) {
-
-  $scope.goToDiv = function(moveToID) {
-     $location.hash(moveToID);
-     $anchorScroll();
-   };
-
   $scope.initHomepage = function() {
     User.setUserAuth();
     if ($rootScope.logedInUser) {

@@ -13,10 +13,9 @@
             <strong>#</strong>
             and get real time updates for tweets, media and statistics
           </p>
-          <a class="btn btn-rounded btn-show-search" ng-click="showSearchInput()" ng-show="showSearchInput">Start your event</a>
         </div>
 
-        <div class="start-event wow bounceIn" ng-hide="showSearchInput">
+        <div class="start-event wow bounceIn">
 
           <form name="myForm" novalidate>
             <div class="search-homepage">
@@ -34,6 +33,18 @@
         </div>
         <div class="note">{{validHashtag}}</div>
       </div>
+
+      <div class="header-content header-content-bottom">
+      <div class="">
+        <ul class="list-inline">
+          <li>Trending on Twitter:</li>
+          <li ng-repeat="hashtag in trendingHashtags">
+            <a ng-click="createEventFromTrending(hashtag)">#{{hashtag}}</a>
+          </li>
+        </ul>
+      </div>
+      </div>
+
     </header>
 
     <div class="flexbox tilesWall">
@@ -92,7 +103,6 @@
     <div class="row">
       <div class="col-md-10">
         <h3 class="heading-half">Real live stream for tweets & media</h3>
-        <p>Keep your eyes on live tweets update for three events in the same time</p>
         <ul class="features-list">
           <li class="media">
             <div class="media-left media-middle">
@@ -144,11 +154,6 @@
     </div>
     <img alt="" class="img-responsive" src="assets/images/hashtails-homepage-grids-chart.png" srcset="assets/images/hashtails-homepage-grids-chart.png 1x, assets/images/hashtails-homepage-grids-chart@2x.png 2x">
   </section>
-
-  <!-- <aside class="homepage-before-footer clearfix">
-    <h3 class="pull-left">As a free user you are allowed to track up to three hashtags in the same time</h3>
-    <button class="pull-right">Start Tracking</button>
-  </aside> -->
 
   <!-- Footer -->
   <footer>

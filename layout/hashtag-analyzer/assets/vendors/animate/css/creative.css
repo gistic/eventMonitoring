@@ -160,6 +160,22 @@ section.homepage-section {
         -ms-transform: translateY(-50%);
         transform: translateY(-50%);
     }
+    .header-content.header-content-bottom {
+      top: 93%;
+      padding: 0;
+      text-align: left;
+      left: 3%;
+      width: auto;
+    }
+      .header-content.header-content-bottom a {
+        color:#20e0f9;
+      }
+      .header-content.header-content-bottom a:hover,
+      .header-content.header-content-bottom a:focus {
+        color: #dedede;
+      } {
+        color:#20e0f9;
+      }
 
     .header-content-inner {
         margin-right: auto;
