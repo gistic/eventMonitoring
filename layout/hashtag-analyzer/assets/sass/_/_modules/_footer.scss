@@ -1,18 +1,7 @@
 footer {
-    padding: $padding - 2 0;
-    z-index: 9;
-    @include background-image(linear-gradient(right, #0056bd, #015bbb, #015fb7, #0465b6, #066db2, #0872ae, #0872b0, #0877ac, #0b81a9, #0d89a5, #0e8ca2, #0d8ea1, #0f939f, #11969d, #12999c, #129d9a, #13a497, #15a895, #15a895, #15ae90));
-    bottom: 0;
-    width: 100%;
-    color: $white;
-    .social-links {
-        a {
-            color: $white;
-            &:hover,
-            &:focus {
-                text-decoration: none;
-            }
-        }
+    padding: $padding 0;
+    background: #f0f0f0;
+    .footer-copyright {
+      width: 40%;
     }
 }
-

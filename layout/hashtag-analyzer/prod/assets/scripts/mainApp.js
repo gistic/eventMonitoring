@@ -13,7 +13,6 @@ angular.module('trackHashtagApp', [
     'trackHashtagApp.filters',
     'trackHashtagApp.services',
 
-    'superAdminController', // Custome application dependencies [Controllers]
     'StartNewEvent',
     'EventHandlerController',
 
@@ -26,28 +25,6 @@ angular.module('trackHashtagApp', [
 // Run : Intliaize the app with this values
 .run(['$window', '$location', '$rootScope', '$cookies', '$state', '$templateCache', 'User', function ($window, $location, $rootScope, $cookies, $state, $templateCache, User) {
 
-    $rootScope.appName = "Hashtails";
-    $rootScope.appVersion = "V.1.0.0";
-
-
-    $rootScope.socialLink = [{
-        "title": "Linkedin",
-        "url": "http://www.linkedin.com",
-        "icon": "linkedin"
-    }, {
-        "title": "twitter",
-        "url": "http://www.twitter.com",
-        "icon": "twitter"
-    }, {
-        "title": "facebook",
-        "url": "http://www.facebook.com",
-        "icon": "facebook"
-    }, {
-        "title": "Email",
-        "url": "http://mailto:",
-        "icon": "envelope"
-    }];
-
     $rootScope.baseUrl = $window.location.origin;
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
@@ -55,9 +32,8 @@ angular.module('trackHashtagApp', [
     $rootScope.eventID = $location.search().uuid;
 
     if ($state.current.name == "") {
-        $state.transitionTo('home');
+      $state.transitionTo('home');
     }
-
     // LOADING
     $rootScope.loadingHomepageTrending = true;
     $rootScope.loadingSearchButton = false;
@@ -94,6 +70,16 @@ angular.module('trackHashtagApp', [
             templateUrl: 'views/index.html',
             controller: 'StartNewEventController'
         },
+          "home.features": {
+              url: '/home#features',
+              templateUrl: 'views/index.html',
+              controller: 'StartNewEventController'
+          },
+          "home.realTime": {
+              url: '/home#realTime',
+              templateUrl: 'views/index.html',
+              controller: 'StartNewEventController'
+          },
         "dashboard": {
             url: '/dashboard?uuid',
             templateUrl: 'views/dashboard.html',
@@ -110,12 +96,6 @@ angular.module('trackHashtagApp', [
         "dashboard.map": {
             url: '/map',
             templateUrl: 'views/views-components/map.html'
-        },
-
-        "superAdmin": {
-            url: '/superAdmin',
-            templateUrl: 'views/super-admin.html',
-            controller: 'SuperAdminCtrl'
         }
     };
 
@@ -127,6 +107,13 @@ angular.module('trackHashtagApp', [
 
 }])
 
+.run(['$rootScope', '$location', '$anchorScroll', function($rootScope, $location, $anchorScroll) {
+  //when the route is changed scroll to the proper element.
+  $rootScope.$on('$routeChangeSuccess', function(newRoute, oldRoute) {
+    if($location.hash()) $anchorScroll();
+  });
+}])
+
 // Config: Google Analytics
 .config(['AngularyticsProvider', function (AngularyticsProvider) {
     AngularyticsProvider.setEventHandlers(['Console', 'GoogleUniversal']);
@@ -134,38 +121,34 @@ angular.module('trackHashtagApp', [
 .run(['Angularytics', function (Angularytics) {
     Angularytics.init();
 }]);
+
 angular.module('trackHashtagApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
-  $templateCache.put('views/views-components/footer.html',
-    "<footer class=\"clearfix text-center\">\n" +
-    "    <div class=\"container\">\n" +
-    "       <p>{{appName}} ™ for KACST GIS Technology Innovation Center at Umm Al-Qura University</p>\n" +
-    "<!--\n" +
-    "        <ul class=\"list-inline social-links\">\n" +
-    "           <li>Connect with us: </li>\n" +
-    "            <li ng-repeat=\"link in socialLink\">\n" +
-    "                <a href=\"{{link.url}}\" title=\"{{link.title}}\">\n" +
-    "                    <span class=\"icon-{{link.icon}}\"></span>\n" +
-    "                </a>\n" +
-    "            </li>\n" +
-    "        </ul>\n" +
-    "-->\n" +
-    "    </div>\n" +
-    "</footer>"
-  );
-
-
   $templateCache.put('views/views-components/header.html',
     "<!-- HEADER -->\n" +
-    "<header class=\"header header-homepage clearfix\" ng-class=\"{'header-dashboard' : dashboardState}\">\n" +
+    "<nav class=\"navbar navbar-inverse navbar-fixed-top clearfix\" ng-class=\"{'header-dashboard' : dashboardState}\">\n" +
     "\n" +
     "    <div class=\"container\">\n" +
     "\n" +
     "        <a class=\"navbar-logo pull-left\" ui-sref=\"home\">\n" +
-    "            <span class=\"hashtag-logo\"></span>\n" +
-    "            <span ng-hide=\"dashboardState\" class=\"header-title\">{{appName}}</span>\n" +
+    "            <span class=\"icon-hash\"></span>\n" +
+    "            <span ng-hide=\"dashboardState\" class=\"header-title\">Hashtails</span>\n" +
     "        </a>\n" +
+    "\n" +
+    "        <div class=\"navs pull-left clearfix\">\n" +
+    "\n" +
+    "            <ul class=\"list-inline homepage-nav pull-left\" ng-hide=\"dashboardState\">\n" +
+    "                <li class=\"hvr-underline-from-center\">\n" +
+    "                    <a ui-sref=\"home.features\">Features</a>\n" +
+    "                </li>\n" +
+    "                <li class=\"hvr-underline-from-center\">\n" +
+    "                    <a ui-sref=\"home.realTime\">Real Time</a>\n" +
+    "                </li>\n" +
+    "            </ul>\n" +
+    "\n" +
+    "        </div>\n" +
+    "\n" +
     "\n" +
     "        <form ng-show=\"dashboardState\" class=\"navbar-form pull-left\" role=\"search\">\n" +
     "            <div class=\"form-group\">\n" +
@@ -178,24 +161,6 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "            </div>\n" +
     "            <span class=\"search-error\" ng-show=\"searchError\"></span>\n" +
     "        </form>\n" +
-    "\n" +
-    "\n" +
-    "        <div ng-hide=\"dashboardState\" class=\"navs\">\n" +
-    "\n" +
-    "<!--\n" +
-    "            <ul class=\"list-inline dashboard-nav pull-left\">\n" +
-    "                <li class=\"hvr-underline-from-center\">\n" +
-    "                    <a ui-sref=\"home\">Home</a>\n" +
-    "                </li>\n" +
-    "                <li class=\"hvr-underline-from-center\">\n" +
-    "                    <a ui-sref=\"about\">About</a>\n" +
-    "                </li>\n" +
-    "                <li class=\"hvr-underline-from-center\">\n" +
-    "                    <a ui-sref=\"contact\">Contact</a>\n" +
-    "                </li>\n" +
-    "            </ul>\n" +
-    "-->\n" +
-    "        </div>\n" +
     "\n" +
     "        <div class=\"navs pull-right clearfix\">\n" +
     "\n" +
@@ -210,8 +175,8 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                    <a ui-sref=\".map\">Map</a>\n" +
     "                </li>\n" +
     "            </ul>\n" +
-    "            \n" +
-    "            <ul class=\"list-inline dashboard-nav pull-left\">\n" +
+    "\n" +
+    "            <ul class=\"list-inline pull-left\">\n" +
     "                <li class=\"nav-user dropdown\" ng-show=\"logedInUser\">\n" +
     "                    <a class=\"dropdown-toggle\" data-toggle=\"dropdown\" href=\"\" role=\"button\" aria-expanded=\"false\">\n" +
     "                        <img lazy-load ng-src=\"{{authoUserPicture}}\" on-error-src=\"{{defultImage}}\" class=\"\" /> {{authoUserName}}\n" +
@@ -228,8 +193,8 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                </li>\n" +
     "\n" +
     "                <li>\n" +
-    "                    <a ng-click=\"twitterLogIn()\" ng-hide=\"logedInUser\" class=\"btn btn-block btn-social btn-twitter\">\n" +
-    "                        <i class=\"fa fa-twitter\"></i> Sign in with Twitter\n" +
+    "                    <a ng-click=\"twitterLogIn()\" ng-hide=\"logedInUser\" class=\"btn btn-block btn-social btn-twitter btn-rounded\">\n" +
+    "                        <i class=\"icon-twitter\"></i> Sign in with Twitter\n" +
     "                    </a>\n" +
     "                </li>\n" +
     "\n" +
@@ -238,7 +203,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "        </div>\n" +
     "\n" +
     "    </div>\n" +
-    "</header>"
+    "</nav>\n"
   );
 
 
@@ -263,7 +228,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                <a ng-href=\"{{twitterBaseUrl}}{{Lightbox.image.userScreenName}}\" target=\"_blank\">\n" +
     "                    {{Lightbox.image.userScreenName}}\n" +
     "                </a>\n" +
-    "                \n" +
+    "\n" +
     "                <a class=\"pull-right tweet-time\" ng-href=\"{{twitterBaseUrl}}{{Lightbox.image.userScreenName}}/status/{{Lightbox.image.tweetIdStr}}\" target=\"_blank\" title=\"Open in Twitter\">\n" +
     "                  <strong class=\"pull-right\">\n" +
     "                  <small am-time-ago=\"Lightbox.image.tweetCreatedAt\"></small>\n" +
@@ -271,10 +236,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "           </a>\n" +
     "            </h6>\n" +
     "\n" +
-    "                                <p ng-if=\"Lightbox.image.type == 'photo'\" ng-bind-html=\"Lightbox.imageCaption | parseUrl:'_blank'\"></p>\n" +
-    "<!--                                <p ng-bind-html=\"Lightbox.image.caption | parseUrl:'_blank'\"></p>-->\n" +
-    "                <p></p>\n" +
-    "<!--                {{Lightbox.image.caption}}-->\n" +
+    "                <p ng-if=\"Lightbox.image.type == 'photo'\" ng-bind-html=\"Lightbox.imageCaption | parseUrl:'_blank'\"></p>\n" +
     "\n" +
     "                <aside class=\"tweet-actions text-right\">\n" +
     "                    <a class=\"text-muted\" ng-href=\"{{twitterBaseUrl}}intent/tweet?in_reply_to={{Lightbox.image.tweetIdStr}}\" tooltip-placement=\"top\" tooltip=\"Reply\">\n" +
@@ -293,7 +255,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "\n" +
     "    </div>\n" +
     "\n" +
-    "</div>"
+    "</div>\n"
   );
 
 

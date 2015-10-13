@@ -13,7 +13,6 @@ angular.module('trackHashtagApp', [
     'trackHashtagApp.filters',
     'trackHashtagApp.services',
 
-    'superAdminController', // Custome application dependencies [Controllers]
     'StartNewEvent',
     'EventHandlerController',
 
@@ -26,28 +25,6 @@ angular.module('trackHashtagApp', [
 // Run : Intliaize the app with this values
 .run(['$window', '$location', '$rootScope', '$cookies', '$state', '$templateCache', 'User', function ($window, $location, $rootScope, $cookies, $state, $templateCache, User) {
 
-    $rootScope.appName = "Hashtails";
-    $rootScope.appVersion = "V.1.0.0";
-
-
-    $rootScope.socialLink = [{
-        "title": "Linkedin",
-        "url": "http://www.linkedin.com",
-        "icon": "linkedin"
-    }, {
-        "title": "twitter",
-        "url": "http://www.twitter.com",
-        "icon": "twitter"
-    }, {
-        "title": "facebook",
-        "url": "http://www.facebook.com",
-        "icon": "facebook"
-    }, {
-        "title": "Email",
-        "url": "http://mailto:",
-        "icon": "envelope"
-    }];
-
     $rootScope.baseUrl = $window.location.origin;
     $rootScope.twitterBaseUrl = "http://www.twitter.com/";
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
@@ -55,9 +32,8 @@ angular.module('trackHashtagApp', [
     $rootScope.eventID = $location.search().uuid;
 
     if ($state.current.name == "") {
-        $state.transitionTo('home');
+      $state.transitionTo('home');
     }
-
     // LOADING
     $rootScope.loadingHomepageTrending = true;
     $rootScope.loadingSearchButton = false;
@@ -94,6 +70,16 @@ angular.module('trackHashtagApp', [
             templateUrl: 'views/index.html',
             controller: 'StartNewEventController'
         },
+          "home.features": {
+              url: '/home#features',
+              templateUrl: 'views/index.html',
+              controller: 'StartNewEventController'
+          },
+          "home.realTime": {
+              url: '/home#realTime',
+              templateUrl: 'views/index.html',
+              controller: 'StartNewEventController'
+          },
         "dashboard": {
             url: '/dashboard?uuid',
             templateUrl: 'views/dashboard.html',
@@ -110,12 +96,6 @@ angular.module('trackHashtagApp', [
         "dashboard.map": {
             url: '/map',
             templateUrl: 'views/views-components/map.html'
-        },
-
-        "superAdmin": {
-            url: '/superAdmin',
-            templateUrl: 'views/super-admin.html',
-            controller: 'SuperAdminCtrl'
         }
     };
 
@@ -126,6 +106,13 @@ angular.module('trackHashtagApp', [
     $urlRouterProvider.otherwise('/');
 
 }])
+
+.run(function($rootScope, $location, $anchorScroll) {
+  //when the route is changed scroll to the proper element.
+  $rootScope.$on('$routeChangeSuccess', function(newRoute, oldRoute) {
+    if($location.hash()) $anchorScroll();
+  });
+})
 
 // Config: Google Analytics
 .config(function (AngularyticsProvider) {

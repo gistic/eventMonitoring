@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     // load all grunt tasks matching the ['grunt-*', '@*/grunt-*'] patterns
     require('load-grunt-tasks')(grunt);
 
-    // 1. All configuration goes here 
+    // 1. All configuration goes here
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -129,7 +129,7 @@ module.exports = function (grunt) {
                 }
             },
             html: {
-                files: ['dev/*.html'],
+                files: ['dev/*.html','views/*.html'],
                 tasks: ['htmlmin'],
                 options: {
                     spawn: false,

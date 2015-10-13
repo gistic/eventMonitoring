@@ -1,93 +1,183 @@
 <div class="wrapper" ng-init="initHomepage()">
+  <!-- Header -->
+  <div ng-include="'views/views-components/header.html'"></div>
+  <!-- END OF / Header -->
 
-    <!-- Header -->
-    <div ng-include="'views/views-components/header.html'"></div>
-
-    <!-- END OF / Header -->
-
-    <div ng-show="loadingHomepageTrending" class="overlay overlay-homepage">
-        <div class="loadEvents loading">
-            <div class="bounce1"></div>
-            <div class="bounce2"></div>
+  <div class="header-overfold">
+    <header class="header-homepage" id="header">
+      <div class="overlay"></div>
+      <div class="header-content">
+        <div class="header-content-inner wow">
+          <h1>See how a trends go in Twitter</h1>
+          <p>Track your targted
+            <strong>#</strong>
+            and get real time updates for tweets, media and statistics
+          </p>
         </div>
-    </div>
+
+        <div class="start-event wow bounceIn">
+
+          <form name="myForm" novalidate>
+            <div class="search-homepage">
+              <div class="start-event">
+                <input class="form-control" id="homepageSearchHashtag" name="hashtag" ng-enter="startNewEvent($parent.eventHashtag)" ng-maxlength="35" ng-minlength="2" ng-model="$parent.eventHashtag" placeholder="#Hashtag" type="search" value="">
+                <button class="btn btn-search" ng-click="startNewEvent($parent.eventHashtag)" type="button">
+                  <i class="fa fa-search fa-1x"></i>
+                </button>
+                <span class="search-error" ng-show="searchError"></span>
+                <span class="search-error" ng-show="myForm.hashtag.$error.minlength">Too short!</span>
+                <span class="search-error" ng-show="myForm.hashtag.$error.maxlength">Too long!</span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="note">{{validHashtag}}</div>
+      </div>
+
+      <div class="header-content header-content-bottom">
+      <div class="">
+        <ul class="list-inline">
+          <li>Trending on Twitter:</li>
+          <li ng-repeat="hashtag in trendingHashtags">
+            <a ng-click="createEventFromTrending(hashtag)">#{{hashtag}}</a>
+          </li>
+        </ul>
+      </div>
+      </div>
+
+    </header>
 
     <div class="flexbox tilesWall">
-        <div class="event-box" ng-repeat="event in homepageEvents | limitTo : 21" ng-class="{'search-box tile':$index == 5, 'trending-box':$index == 6}">
-            <div class="shading" ng-if="$index !== 5 && $index !== 6">
+      <div class="overlay overlay-homepage" ng-show="loadingHomepageTrending">
+        <div class="loadEvents loading">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+        </div>
+      </div>
+      <div class="event-box" ng-repeat="event in homepageEvents | limitTo : 8">
+        <div class="shading">
 
-                <!-- Check if event is trending or server one -->
-                <a ng-if="event.hashtags" ng-click="createEventFromTrending(event.hashtags, event.uuid)" class="full-box-link"></a>
-                <a ng-if="!event.hashtags" ng-click="createEventFromTrending(event)" class="full-box-link"></a>
+          <!-- Check if event is trending or server one -->
+          <a class="full-box-link" ng-click="createEventFromTrending(event.hashtags, event.uuid)" ng-if="event.hashtags"></a>
+          <a class="full-box-link" ng-click="createEventFromTrending(event)" ng-if="!event.hashtags"></a>
 
-                <div class="mediaBox">
-                    <img ng-src="{{event.mediaUrl}}" class="img-responsive hover-zoom">
-                </div>
+          <div class="mediaBox">
+            <img class="img-responsive hover-zoom" ng-src="{{event.mediaUrl}}">
+          </div>
 
-                <header>
+          <header>
 
-                    <h2><a href="#">#{{event.hashtags || event}}</a></h2>
-                    <h3 ng-if="event.profileImageUrl" class="created-by">
-                <img ng-src="{{event.profileImageUrl}}" alt="{{event.hashtags}}" class="img-circle">
-                <a href="#">@{{event.screenName}}</a>
+            <h2>
+              <a href="#">#{{event.hashtags || event}}</a>
+            </h2>
+
+            <span class="meta">
+              <span ng-if="event.noOfTweets">{{event.noOfTweets}}
+                Tweets</span>
+              <span ng-if="!event.noOfTweets">Running Now</span>
+
+              <span ng-if="event.startTime">
+                -
+                <span am-time-ago="event.startTime"></span>
+              </span>
+
+            </span>
+
+            <h3 class="created-by" ng-if="event.profileImageUrl">
+              <img alt="{{event.hashtags}}" class="img-circle" ng-src="{{event.profileImageUrl}}">
+              <a href="#">@{{event.screenName}}</a>
             </h3>
 
-                    <span class="meta">
-                <span ng-if="event.noOfTweets">{{event.noOfTweets}} Tweets</span>
-                    <span ng-if="!event.noOfTweets">Running Now</span>
+          </header>
 
-                    <span ng-if="event.startTime">
-                    - 
-                    <span am-time-ago="event.startTime"></span>
-                    </span>
-
-                    </span>
-
-                </header>
-
-            </div>
-
-            <!-- Search Box -->
-            <div ng-if="$index == 5">
-                <form name="myForm" novalidate>
-                    <div class="search-homepage">
-                        <div class="start-event">
-                            <input type="search" name="hashtag" id="homepageSearchHashtag" class="form-control" placeholder="#Hashtag" ng-model="$parent.eventHashtag" value="" ng-enter="startNewEvent($parent.eventHashtag)" ng-minlength="2" ng-maxlength="35">
-
-                            <span class="search-error" ng-show="searchError"></span>
-                            <span class="search-error" ng-show="myForm.hashtag.$error.minlength">Too short!</span>
-                            <span class="search-error" ng-show="myForm.hashtag.$error.maxlength">Too long!</span>
-                            <button class="btn btn-search" type="button" ng-click="startNewEvent($parent.eventHashtag)">
-                                <i class="fa fa-search fa-2x"></i>
-                            </button>
-                            <div class="loading-pulse" ng-show="loadingSearchButton">
-                                <div class="bounce1"></div>
-                                <div class="bounce2"></div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-
-            <!-- Trending Twitter -->
-            <div ng-if="$index == 6">
-                <h4 class="list-header">Trending in Twitter</h4>
-                <ul class="col-md-12">
-                    <li ng-repeat="hashtag in trendingHashtags | limitTo : 4">
-                        <a ng-click="createEventFromTrending(hashtag)">#{{hashtag}}</a>
-                    </li>
-                </ul>
-                <ul class="col-md-12">
-                    <li ng-repeat="hashtag in trendingHashtags | orderBy: index : reverse | limitTo : 4">
-                        <a ng-click="createEventFromTrending(hashtag)">#{{hashtag}}</a>
-                    </li>
-                </ul>
-            </div>
         </div>
+
+      </div>
     </div>
 
-    <!-- Footer -->
-    <div ng-include="'views/views-components/footer.html'"></div>
-    <!-- END OF / Footer -->
+  </div>
+</div>
+
+<section class="homepage-sections features" id="features">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10">
+        <h3 class="heading-half">Real live stream for tweets & media</h3>
+        <ul class="features-list">
+          <li class="media">
+            <div class="media-left media-middle">
+            <span class="icon-media icon-massive text-muted"></span>
+            </div>
+            <p class="media-body">
+              <strong>Tweet & Media Stream</strong> Tweets, pictures and videos posted about the hashtag. It shows top tweets (according to number of re-tweets, favorites, and time posted).
+            </p>
+          </li>
+          <li class="media">
+            <div class="media-left media-middle">
+            <span class="icon-piechart icon-massive text-muted"></span>
+            </div>
+            <p class="media-body">
+              <strong>Top Sources & Languages</strong> The pie-charts and bar charts are used to show top sources (Operating Systems such as iOS, Android, Facebook, etc.) and text languages (English, Arabic, Spanish, etc.).
+            </p>
+          </li>
+          <li class="media">
+            <div class="media-left media-middle">
+            <span class="icon-location icon-massive text-muted"></span>
+            </div>
+            <p class="media-body">
+              <strong>Locations</strong> It shows the locations of the geo-tagged tweets on the map and also aggregate the location information in form of  a pie-chart.
+            </p>
+          </li>
+          <li class="media">
+            <div class="media-left media-middle">
+            <span class="icon-globe icon-massive text-muted"></span>
+            </div>
+            <p class="media-body">
+              <strong>Related Hashtags</strong> We show a word cloud of other related hashtags being used with this hashtag.
+            </p>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-14">
+        <img alt="" class="img-responsive" src="assets/images/hashtails-homepage-grids-gallery.png" srcset="assets/images/hashtails-homepage-grids-gallery.png 1x, assets/images/hashtails-homepage-grids-gallery@2x.png 2x">
+      </div>
+
+    </div>
+  </section>
+
+  <section class="homepage-sections charts text-center" id="realTime">
+    <div class="header-content-inner">
+      <h1>See how the trend grows</h1>
+      <p>
+        Hashtails is an interactive application for showing insights and info graphics for the given hashtags. It uses various visualizations such as line graphs,  pie-charts, bar charts, word cloud, and heat maps, to show the analytics of the hashtags. The application is dynamic and keep updating the visualizations as the new data is received.
+      </p>
+    </div>
+    <img alt="" class="img-responsive" src="assets/images/hashtails-homepage-grids-chart.png" srcset="assets/images/hashtails-homepage-grids-chart.png 1x, assets/images/hashtails-homepage-grids-chart@2x.png 2x">
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container clearfix">
+
+      <div class="media footer-copyright pull-left">
+        <div class="media-left media-middle">
+          <a href="#">
+            <img alt="" src="assets/images/hashtails-homepage-grids-gallery.png" srcset="assets/images/gistic-footer-logo.png 1x, assets/images/gistic-footer-logo@2x.png 2x">
+          </a>
+        </div>
+        <div class="media-body">
+          <span>Hashtails ™ (1.2) for KACST GIS Technology Innovation Center at Umm Al-Qura University</span>
+        </div>
+      </div>
+
+      <div class="pull-right">
+        <p>
+          For custome soultions and feedback:
+          <a href="hashtails@gistic.org">hashtails@gistic.org</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+  <!-- END OF / Footer -->
+
 </div>

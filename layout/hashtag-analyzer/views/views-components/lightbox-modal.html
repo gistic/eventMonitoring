@@ -18,7 +18,7 @@
                 <a ng-href="{{twitterBaseUrl}}{{Lightbox.image.userScreenName}}" target="_blank">
                     {{Lightbox.image.userScreenName}}
                 </a>
-                
+
                 <a class="pull-right tweet-time" ng-href="{{twitterBaseUrl}}{{Lightbox.image.userScreenName}}/status/{{Lightbox.image.tweetIdStr}}" target="_blank" title="Open in Twitter">
                   <strong class="pull-right">
                   <small am-time-ago="Lightbox.image.tweetCreatedAt"></small>
@@ -26,10 +26,7 @@
            </a>
             </h6>
 
-                                <p ng-if="Lightbox.image.type == 'photo'" ng-bind-html="Lightbox.imageCaption | parseUrl:'_blank'"></p>
-<!--                                <p ng-bind-html="Lightbox.image.caption | parseUrl:'_blank'"></p>-->
-                <p></p>
-<!--                {{Lightbox.image.caption}}-->
+                <p ng-if="Lightbox.image.type == 'photo'" ng-bind-html="Lightbox.imageCaption | parseUrl:'_blank'"></p>
 
                 <aside class="tweet-actions text-right">
                     <a class="text-muted" ng-href="{{twitterBaseUrl}}intent/tweet?in_reply_to={{Lightbox.image.tweetIdStr}}" tooltip-placement="top" tooltip="Reply">

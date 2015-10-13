@@ -1,8 +1,3 @@
-body {
-    background: #e2e6f1;
-    font-family: 'Roboto', sans-serif;
-}
-
 a {
     color: $blue;
     &:hover, &:focus {
@@ -24,10 +19,7 @@ a[ng-click] {
     }
 }
 
-// TODO : Remove this for production
 img {
-//    @include opacity(0.9);
-//    -webkit-filter: brightness(9.9);
     &.hover-zoom {
         -webkit-transition: all .6s;
         transition: all .6s;
@@ -36,5 +28,8 @@ img {
             -ms-transform: scale(1.15);
             transform: scale(1.15);
         }
+    }
+    &.img-responsive {
+      margin: 0 auto;
     }
 }
