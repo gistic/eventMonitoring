@@ -22,7 +22,6 @@ EventHandlerController.controller('EventMainController',
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
         }
-
         // Lightbox for media
         $scope.Lightbox = Lightbox;
         $scope.openLightboxModal = function (index) {

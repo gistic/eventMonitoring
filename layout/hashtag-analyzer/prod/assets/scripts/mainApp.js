@@ -149,7 +149,6 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "\n" +
     "        </div>\n" +
     "\n" +
-    "\n" +
     "        <form ng-show=\"dashboardState\" class=\"navbar-form pull-left\" role=\"search\">\n" +
     "            <div class=\"form-group\">\n" +
     "                <div class=\"input-group start-event\">\n" +
