@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'hashtails-webfont';
-	src:url('fonts/hashtails-webfont.eot?9pfzoo');
-	src:url('fonts/hashtails-webfont.eot?9pfzoo#iefix') format('embedded-opentype'),
-		url('fonts/hashtails-webfont.ttf?9pfzoo') format('truetype'),
-		url('fonts/hashtails-webfont.woff?9pfzoo') format('woff'),
-		url('fonts/hashtails-webfont.svg?9pfzoo#hashtails-webfont') format('svg');
+	src:url('fonts/hashtails-webfont.eot?jzv0e9');
+	src:url('fonts/hashtails-webfont.eot?jzv0e9#iefix') format('embedded-opentype'),
+		url('fonts/hashtails-webfont.ttf?jzv0e9') format('truetype'),
+		url('fonts/hashtails-webfont.woff?jzv0e9') format('woff'),
+		url('fonts/hashtails-webfont.svg?jzv0e9#hashtails-webfont') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -26,6 +26,12 @@
 .icon-hash:before {
 	content: "\e805";
 }
+.icon-media:before {
+	content: "\e2bb";
+}
+.icon-twitter:before {
+	content: "\e803";
+}
 .icon-location:before {
 	content: "\e800";
 }
@@ -34,9 +40,6 @@
 }
 .icon-columnchart:before {
 	content: "\e802";
-}
-.icon-twitter:before {
-	content: "\e803";
 }
 .icon-globe:before {
 	content: "\e804";

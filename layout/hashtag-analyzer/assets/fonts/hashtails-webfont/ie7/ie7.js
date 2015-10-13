@@ -14,10 +14,11 @@
 	}
 	var icons = {
 		'icon-hash': '&#xe805;',
+		'icon-media': '&#xe2bb;',
+		'icon-twitter': '&#xe803;',
 		'icon-location': '&#xe800;',
 		'icon-piechart': '&#xe801;',
 		'icon-columnchart': '&#xe802;',
-		'icon-twitter': '&#xe803;',
 		'icon-globe': '&#xe804;',
 		'0': 0
 		},
