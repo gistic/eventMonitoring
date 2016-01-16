@@ -18270,7 +18270,7 @@ footer .social-links a {
 footer .social-links a:hover, footer .social-links a:focus {
   text-decoration: none;
 }
-/* line 14, ../sass/_/_modules/_footer.scss */
+/* line 15, ../sass/_/_modules/_footer.scss */
 footer.views--footer {
   bottom: 0px;
   position: absolute;
@@ -18279,14 +18279,14 @@ footer.views--footer {
   width: 100%;
   height: auto;
 }
-/* line 20, ../sass/_/_modules/_footer.scss */
+/* line 21, ../sass/_/_modules/_footer.scss */
 footer.views--footer p {
   color: #ffffff;
   font-size: 14px;
   font-size: 1.75rem;
 }
 
-/* line 27, ../sass/_/_modules/_footer.scss */
+/* line 28, ../sass/_/_modules/_footer.scss */
 .contact-section {
   width: 50%;
   margin: 0 auto 20px;
