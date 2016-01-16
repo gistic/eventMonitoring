@@ -18258,7 +18258,7 @@ header .logo a:hover, header .logo a:focus {
 
 /* line 1, ../sass/_/_modules/_footer.scss */
 footer {
-  padding: 45px 0 15px;
+  padding: 15px 0;
   border-top: 1px solid #cdd2d4;
   margin: 0;
 }
