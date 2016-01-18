@@ -6,7 +6,7 @@
 	padding: 22px;
 	line-height: 1.4;
 	z-index: 1000;
-	pointer-events: none;
+/*	pointer-events: none;*/
 	color: rgba(250,251,255,0.95);
 	font-size: 90%;
 	font-family: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;

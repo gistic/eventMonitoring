@@ -48,3 +48,11 @@ twitter:
 defaultAutoShutdownDelayInHours: 1
 v2: true
 baseDomain: localhost:8080
+#logging:
+#  level: INFO
+#  appenders:
+#    - type: file
+#      currentLogFilename: var/log/event-board.log
+#      threshold: ALL
+#      archive: true
+#      archivedLogFilenamePattern: var/log/event-board-%d.log

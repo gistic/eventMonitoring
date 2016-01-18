@@ -1,12 +1,25 @@
 <!-- HEADER -->
-<header class="header header-homepage clearfix">
+<nav class="navbar navbar-inverse navbar-fixed-top clearfix" ng-class="{'header-dashboard' : dashboardState}">
 
     <div class="container">
 
         <a class="navbar-logo pull-left" ui-sref="home">
-            <span class="hashtag-logo"></span>
-            <span ng-hide="dashboardState" class="header-title">HASHTAG ANALYSER</span>
+            <span class="icon-hash"></span>
+            <span ng-hide="dashboardState" class="header-title">Hashtails</span>
         </a>
+
+        <div class="navs pull-left clearfix">
+
+            <ul class="list-inline homepage-nav pull-left" ng-hide="dashboardState">
+                <li class="hvr-underline-from-center">
+                    <a ui-sref="home.features">Features</a>
+                </li>
+                <li class="hvr-underline-from-center">
+                    <a ui-sref="home.realTime">Real Time</a>
+                </li>
+            </ul>
+
+        </div>
 
         <form ng-show="dashboardState" class="navbar-form pull-left" role="search">
             <div class="form-group">
@@ -19,22 +32,6 @@
             </div>
             <span class="search-error" ng-show="searchError"></span>
         </form>
-
-
-        <div ng-hide="dashboardState" class="navs">
-
-            <ul class="list-inline dashboard-nav pull-left">
-                <li class="hvr-underline-from-center">
-                    <a ui-sref="home">Home</a>
-                </li>
-                <li class="hvr-underline-from-center">
-                    <a ui-sref="about">About</a>
-                </li>
-                <li class="hvr-underline-from-center">
-                    <a ui-sref="contact">Contact</a>
-                </li>
-            </ul>
-        </div>
 
         <div class="navs pull-right clearfix">
 
@@ -49,8 +46,8 @@
                     <a ui-sref=".map">Map</a>
                 </li>
             </ul>
-            
-            <ul class="list-inline dashboard-nav pull-left">
+
+            <ul class="list-inline pull-left">
                 <li class="nav-user dropdown" ng-show="logedInUser">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
                         <img lazy-load ng-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}
@@ -67,8 +64,8 @@
                 </li>
 
                 <li>
-                    <a ng-click="twitterLogIn()" ng-hide="logedInUser" class="btn btn-block btn-social btn-twitter">
-                        <i class="fa fa-twitter"></i> Sign in with Twitter
+                    <a ng-click="twitterLogIn()" ng-hide="logedInUser" class="btn btn-block btn-social btn-twitter btn-rounded">
+                        <i class="icon-twitter"></i> Sign in with Twitter
                     </a>
                 </li>
 
@@ -77,4 +74,4 @@
         </div>
 
     </div>
-</header>
+</nav>

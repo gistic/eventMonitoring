@@ -1,35 +1,96 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+  <span class="navbar-brand">
+    <strong class="icon icon-small icon-bird"></strong> Eventyzer
+  </span>
+  </div>
+</nav>
 <!-- Header -->
-<header class="header-homepage">
-    <h1 class="icon icon-massive icon-bird"></h1>
-    <h1>TweetBoard</h1>
-    <small>Show realtime tweets for your events</small>
+<header id="header" class="header-homepage">
+  <div class="overlay"></div>
+  <div class="header-content">
+        <div class="header-content-inner">
+            <h1>Show realtime tweets for your events</h1>
+            <hr>
+            <p><strong>Eventyzer</strong> updates in sub-second realtime. Don't make your event-goers wait, allow the instantaneity of Twitter drive event engagement.</p>
+            <a ng-click="showSearchInput()" class="btn btn-primary btn-xl page-scroll btn-creative" ng-show="showSearchInput">Start your event</a>
+        </div>
 
-    <div class="input-group start-event">
-        <input type="search" id="eventHashtag" class="form-control" placeholder="#Hashtag" ng-model="eventHashtag" value="" ng-enter="startNewEvent()">
-        <span class="input-group-btn">
-            <button class="btn btn-search" type="button" ng-click="startNewEvent()">
-                <i class="fa fa-search"></i>
-            </button>
-        </span>
+    <div class="input-group start-event wow bounceIn" ng-hide="showSearchInput">
+      <input class="form-control" id="eventHashtag" ng-enter="startNewEvent()" ng-model="eventHashtag" placeholder="#Hashtag" type="search" value="">
+      <span class="input-group-btn">
+        <button class="btn btn-search" ng-click="startNewEvent()" type="button">
+          <i class="fa fa-search fa-2x"></i>
+        </button>
+      </span>
     </div>
+    <div class="note">{{validHashtag}}</div>
+  </div>
 </header>
 
-<main class="container">
-    <section class="row text-center homepage-boxes">
-        <article class="col-md-8 box">
-            <span class="icon icon-bird icon icon-massive"></span>
-            <h4>100% Free</h4>
-            <p>We are offering this service for free .. Enjoy!</p>
-        </article>
-        <article class="col-md-8 box">
-            <span class="icon icon-presentation icon icon-massive"></span>
-            <h4>UI Customization</h4>
-            <p>Change how the tweets are going to look like to fit for your event.</p>
-        </article>
-        <article class="col-md-8 box">
-            <span class="icon icon-circle-check icon icon-massive"></span>
-            <h4>Tweets Moderation</h4>
-            <p>Control which tweets to show / hide during your event.</p>
-        </article>
-    </section>
+<main class="">
+
+  <section class="homepage-section bg-primary">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-12 col-md-offset-6 text-center">
+                  <h2 class="section-heading">We've got what you need .. 100% customizable</h2>
+                  <hr class="light">
+                  <p class="text-faded">You can run your event on our server totally customizable and also use all current features like, White & Black users lists, Presentation views custom UI with your favoruite colors and screens</p>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <section class="homepage-section" id="services">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-24 text-center">
+                  <h2 class="section-heading">Tweets Moderation</h2>
+                  <hr class="primary">
+              </div>
+          </div>
+      </div>
+      <div class="container">
+          <div class="row">
+              <div class="col-md-8 text-center">
+                  <div class="service-box">
+                      <i class="fa fa-4x fa-star wow bounceIn text-primary"></i>
+                      <h3>Star Tweets</h3>
+                      <p class="text-muted">If you see that there is a good voice tweet you want your audicane to focus on it you can star it.</p>
+                  </div>
+              </div>
+              <div class="col-md-8 text-center">
+                  <div class="service-box">
+                      <i class="fa fa-4x fa-user wow bounceIn text-primary" data-wow-delay=".1s"></i>
+                      <h3>Trusted / Blocked Users</h3>
+                      <p class="text-muted">Trusted users is allowed to be automatically approved, You can also Block specific user and you will not see his/her tweets any more.</p>
+                  </div>
+              </div>
+              <div class="col-md-8 text-center">
+                  <div class="service-box">
+                      <i class="fa fa-4x fa-lock wow bounceIn text-primary" data-wow-delay=".3s"></i>
+                      <h3>Close Moderation</h3>
+                      <p class="text-muted">If you don't have time to moderate your event you can close moderation at all. Tweets will be sended automatically to presentation screen.</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <section class="homepage-section header-homepage testmonials">
+    <div class="overlay"></div>
+    <div class="header-content">
+          <div class="header-content-inner">
+              <h1>Perfect views for your event</h1>
+              <hr class="light">
+              <p><strong>Eventyzer</strong> gives you the ability to change your presentation screens style.</p>
+          </div>
+    </div>
+  </section>
+
 </main>
+
+
+<!-- Footer -->
+<div ng-include src="'views/admin/homepage-footer.html'"></div>

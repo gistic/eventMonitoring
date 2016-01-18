@@ -11,3 +11,19 @@ ol {
 	padding: 0;
     font-family: 'Roboto', sans-serif;
 }
+
+.note {
+    margin-top: $margin;
+}
+
+a {
+    color: #55caee;
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+}
+
+a:hover,
+a:focus {
+    color: #55caee;
+}

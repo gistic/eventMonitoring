@@ -2,9 +2,9 @@
 
       <div class="view-header clearfix">
         <strong class="pull-left">
-        <img lazy-load class="event-logo" ll-src="../../assets/images/taghreed.png" />
+        <img lazy-load class="event-logo" ll-src="../../assets/images/mit-logo.png" />
             Most Active Users
-            <span><timer>{{minutes}} : {{seconds}}</timer></span>
+            <span>Time to next screen <timer countdown="topPeopleTimeout" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></span>
         </strong>
         <strong class="pull-right">
             #{{hashtag}}

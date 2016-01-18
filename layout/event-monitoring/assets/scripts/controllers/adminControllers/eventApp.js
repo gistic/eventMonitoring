@@ -1,32 +1,8 @@
 var eventApp = angular.module('eventApp', []);
 
 // Controller : Populate the recieved data and update admin page
-eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'RequestViewsLayoutData', 'CreateEventSource',
-                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, RequestViewsLayoutData, CreateEventSource) {
-
-        // Reloading, Closing or navigatiging from the admin panel will cause event closing
-
-        //        $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-        //            if (fromState.name == 'admin') {
-        //                var answer = confirm('Reloading or leaving this page will cause your event stopping.');
-        //                if (answer == false) {
-        //                    event.preventDefault();
-        //                } else {
-        //                    $scope.stopEventHandler();
-        //                }
-        //            }
-        //
-        //        });
-
-        //        if ($state.current.name == "admin") {
-        //            window.onbeforeunload = function (event) {
-        //                var message = 'Reloading or leaving this page will cause your event stopping.';
-        //                return message;
-        //            }
-        //            $(window).on('unload', function () {
-        //                $scope.stopEventHandler();
-        //            });
-        //        }
+eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', '$timeout', 'RequestData', 'RequestViewsLayoutData', 'CreateEventSource',
+                                            function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, $timeout, RequestData, RequestViewsLayoutData, CreateEventSource) {
 
         $rootScope.eventID = $location.search().uuid;
         $scope.eventID = $location.search().uuid;
@@ -140,7 +116,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             source.addEventListener('tweet', function (response) {
 
                 $scope.tweet = JSON.parse(response.data);
-                
+
 
                 $scope.$apply(function () {
                     $scope.tweetsQueue.push($scope.tweet);
@@ -156,7 +132,6 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
         }
 
         $scope.startEventSource();
-
 
         $scope.pagesShown = 1;
         $scope.pageSize = 20;
@@ -293,9 +268,9 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             var notification = new NotificationFx({
                 message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to blocked users list.</p></div>',
                 layout: 'other',
-                ttl: 6000,
+                ttl: 3000,
                 effect: 'thumbslider',
-                type: 'success'
+                type: 'error'
             });
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
@@ -324,7 +299,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             var notification = new NotificationFx({
                 message: '<div class="ns-thumb"><img src="' + userPicture + '"/></div><div class="ns-content"><p><a href="#">"' + screenName + '</a> haven been added to trusted users list.</p></div>',
                 layout: 'other',
-                ttl: 6000,
+                ttl: 3000,
                 effect: 'thumbslider',
                 type: 'success'
             });
@@ -334,13 +309,15 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                     // show the notification
                     notification.show();
 
-                    var tweetQueueWithoutTrusted = [];
+                    $scope.tweetQueueWithoutTrusted = [];
+
                     angular.forEach($scope.tweetsQueue, function (tweet) {
                         if (tweet.user.id_str != userID) {
-                            tweetQueueWithoutTrusted.push(tweet);
+                            $scope.tweetQueueWithoutTrusted.push(tweet);
                         }
                     });
-                    $scope.tweetsQueue = tweetQueueWithoutTrusted;
+
+                    $scope.tweetsQueue = $scope.tweetQueueWithoutTrusted;
                 })
 
         }
@@ -352,25 +329,22 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             var notification = new NotificationFx({
                 message: '<p>Hello there! Your event have been stoped.</p>',
                 layout: 'growl',
+                ttl: 3000,
                 effect: 'genie',
                 type: 'notice'
             });
+            
+            $scope.eventStarted = false;
+            $scope.$broadcast('timer-stop');
+            $rootScope.timerRunning = false;
 
-
-            var eventID = $rootScope.eventID;
-            var requestAction = "DELETE";
-            var apiUrl = '/api/events/' + eventID;
-            var requestData = "";
-
-            RequestData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
-                    $scope.eventStarted = false;
-                    $scope.$broadcast('timer-stop');
-                    $rootScope.timerRunning = false;
-
-                    // show the notification
-                    notification.show();
-                    $state.transitionTo('/');
-                })
+            // show the notification
+            notification.show();
+            $state.transitionTo('home');
+            // var eventID = $rootScope.eventID;
+            // var requestAction = "DELETE";
+            // var apiUrl = '/api/events/' + eventID;
+            // var requestData = "";
+            // RequestData.fetchData(requestAction, apiUrl, requestData).then(function (response) {})
         }
 }]);

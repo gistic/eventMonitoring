@@ -21,8 +21,7 @@ angular.module('trackHashtagApp.services', [])
             }, function (isConfirm) {
                 if (isConfirm) {
                     $rootScope.loadingEvent = true;
-                    console.log($rootScope.loadingEvent);
-                    GetEventsData.startServerEvent(eventHashtag);
+                    GetEventsData.startServerEvent($rootScope.eventHashtag);
                 } else {
                     $rootScope.loadingSearchButton = false;
                 }

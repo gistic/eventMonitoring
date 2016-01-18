@@ -56,6 +56,9 @@
             vertical-align: middle;
             font-size: $font-huge;
         }
+        span {
+            font-size: 12px;
+        }
 
     }
     .user-img img {
@@ -82,7 +85,7 @@
             @include size(50%, auto);
         }
         .media-body {
-            @include size(80%, auto);
+            @include size(70%, auto);
         }
         .tweets-count {
         }
@@ -111,19 +114,6 @@
 
     }
 }
-
-// {
-//    background: #0025c0 url(../images/taghreed.jpg) center no-repeat;
-//    background-position: center -180px;
-//}
-
-//#live-tweets .star-tweet {
-//	position: absolute;
-//	top: -20%;
-//	left: -35px;
-//}
-
-
 
 // Fix user rank issue
 .media,

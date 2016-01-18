@@ -1,136 +1,178 @@
-.header {
+.navbar {
+  background-color: rgba(34, 34, 34, 0.75);
+  border: none;
+  margin: 0;
+  padding: $padding - 5 0;
+  height: 20px;
+  position: absolute;
+  .navbar-logo {
+    color: $white;
+    @include font-size($font-large);
+    font-family: $header-font;
+    text-transform: uppercase;
+  }
+  &.header-dashboard {
     @include background-image(linear-gradient(right, #0056bd, #015bbb, #015fb7, #0465b6, #066db2, #0872ae, #0872b0, #0877ac, #0b81a9, #0d89a5, #0e8ca2, #0d8ea1, #0f939f, #11969d, #12999c, #129d9a, #13a497, #15a895, #15a895, #15ae90));
-    margin-bottom: $margin;
-    padding: 0;
+    padding: 10px;
+    height: 20px;
     .navbar-form {
-        margin-top: $margin;
-    }
-    .dashboard-nav {
-        line-height: 32px;
-        margin-left: 40px;
-        li {
-            padding: 0;
-            a {
-                padding: 7px 5px;
-                display: inline-block;
-            }
-            &:hover {
-                a {
-                    cursor: pointer;
-                    text-decoration: none;
-                }
-            }
-            &.active.hvr-underline-from-center {
-                &:before {
-                    background: rgb(255, 255, 255);
-                    left: 0;
-                    right: 0;
-                }
-            }
+        margin-top: 0;
+        .form-control {
+          background: $white;
         }
     }
-    .navs {
+  }
+}
+
+.navs {
+  ul{
+    li {
+        padding: 0;
         a {
+            padding: 0 $padding / 3 $padding - 5;
+            display: inline-block;
             color: $white;
         }
-        .nav-user {
-            margin-left: $margin * 5;
+        &:hover {
             a {
-                &:hover, &:focus {
-                    text-decoration: none;
-                }
+                cursor: pointer;
+                text-decoration: none;
             }
-            img {
-                @include size(28px);
-                @include border-radius(10%);
-            }
-            .dropdown-menu {
-                background: rgba(253, 253, 253, 0.9);
-                @include box-shadow(none);
-                border: none;
-                top: 103%;
-                padding: 0;
-                li {
-                    a {
-                        color: $gray;
-                        padding: $padding - 5 $padding + 5;
-                        &:hover, &:focus {
-                            background: #015fb7;
-                            color: $white;
-                            display: block;
-                        }
-                    }
-                }
+        }
+        &.active.hvr-underline-from-center {
+            &:before {
+                background: rgb(255, 255, 255);
+                left: 0;
+                right: 0;
             }
         }
     }
-    .navbar-logo {
-        line-height: 47px;
-        img {
-            margin-right: $margin;
-            @include size(30px);
-        }
+    &.homepage-nav {
+      margin: $margin / 2 $margin * 5 ;
+    }
+  }
+}
+
+// Search in Dashboard
+.start-event {
+    .form-control {
+        background: $white;
+        padding: 0 $margin;
+        @include border-left-radius(3px);
+        height: 29px;
+    }
+    .btn.btn-search {
+        @include border-right-radius(5px);
+        margin-left: $margin * 2;
+        padding: $padding / 3 $padding;
+    }
+}
+.input-group {
+    @include phone {
+        text-align: center;
+        display: inline-block;
+    }
+}
+.nav-user {
+  margin-left: $margin * 5;
+  a {
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+  img {
+    @include size(28px);
+    @include border-radius(50%);
+  }
+  .dropdown-menu {
+    background: rgba(253, 253, 253, 0.9);
+    @include box-shadow(none);
+    border: none;
+    top: 103%;
+    padding: 0;
+    li {
+      a {
+        color: $gray;
+        padding: $padding / 2 $padding / 3;
         &:hover,
         &:focus {
-            text-decoration: none;
+          background: #015fb7;
+          color: $white;
+          display: block;
         }
+      }
     }
-    // Search in Dashboard
-    .start-event {
-        .form-control {
-            background: $white;
-            padding: 0 $margin;
-            @include border-left-radius(3px);
-            height: 29px;
-        }
-        .btn.btn-search {
-            @include border-right-radius(5px);
-            margin-left: $margin * 2;
-            padding: $padding / 3 $padding;
-        }
-    }
-    .input-group {
-        @include phone {
-            text-align: center;
-            display: inline-block;
-        }
-    }
-    .header-title {
-        color: $white;
-        margin-left: $margin;
-        @include font-size($font-tiny);
-    }
+  }
 }
-
 .search-homepage {
-    .start-event {
-        input {
-            @include border-radius(0);
-            font-size: 60px;
-            font-weight: 300;
-            height: 100%;
-            padding: 58px 30px;
-            color: $white;
-            background: rgb(35, 35, 36);
-            @include placeholderColor($gray-super-light, 0.5);
-        }
-        .btn.btn-search {
-            z-index: 99;
-            background: rgb(12, 133, 167);
-            @include border-radius(50%);
-            @include size(75px);
-            position: absolute;
-            top: 31.5%;
-            right: 30px;
-        }
+  .start-event {
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+    height: auto;
+    position: relative;
+    input {
+      @include border-radius(5px);
+      font-size: 20px;
+      font-weight: 300;
+      height: 100%;
+      padding: 15px;
+      background: $white;
+      color: rgb(35, 35, 36);
+      @include placeholderColor($gray, 0.5);
     }
+    .btn.btn-search {
+      z-index: 99;
+      background: rgb(12, 133, 167);
+      @include border-radius(50%);
+      @include size(40px);
+      position: absolute;
+      top: 15%;
+      right: 0;
+    }
+  }
+  .search-error {}
 }
 
+.header-overfold {
+  min-height: 100vh;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9;
+  background-color: rgba(32, 32, 32, 0.5);
+}
 .header-homepage {
-    @extend .header;
-    margin: 0;
-    .search-error {
-        color: $white;
-        @include font-size($font-tiny);
-    }
+  position: relative;
+  width: 100%;
+  min-height: auto;
+  text-align: center;
+  background-image: url("../images/header-bg-1.jpg");
+  background-position: center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+  min-height: 60vh;
+  color: $white;
+  @include phone {
+    padding: $padding * 2 0;
+  }
+  .header-content {
+    position: absolute;
+    top: 50%;
+    padding: 0 50px;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 100%;
+    text-align: center;
+    z-index: 99;
+  }
 }

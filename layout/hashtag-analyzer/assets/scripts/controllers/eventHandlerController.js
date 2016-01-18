@@ -1,16 +1,27 @@
-var EventHandlerController = angular.module('EventHandlerController', []);
+var EventHandlerController = angular.module('EventHandlerController', [
+    'highcharts-ng',
+    'iso-3166-country-codes',
+    'iso-language-codes',
+    'googlechart',
+    'bootstrapLightbox',
+    'uiGmapgoogle-maps',
+    'wu.masonry',
+    'angular-images-loaded',
+    'angular-jqcloud',
+    'angularMoment',
+    'infinite-scroll',
+    'me-lazyload'
+]);
 
 // Controller : Populate the recieved data and update Dashboard
 EventHandlerController.controller('EventMainController',
     function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, SweetAlertFactory, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, languageCode, User, filterHashtags) {
-
 
         // 1. Set the initializing values
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
         }
-
         // Lightbox for media
         $scope.Lightbox = Lightbox;
         $scope.openLightboxModal = function (index) {
@@ -142,6 +153,7 @@ EventHandlerController.controller('EventMainController',
                     }
                     $rootScope.loadingEvent = false;
                 }).error(function () {
+                    $rootScope.loadingEvent = false;
                     console.log("#");
                 })
         };
@@ -152,7 +164,6 @@ EventHandlerController.controller('EventMainController',
         $scope.initDashboardData = function () {
             User.setUserAuth();
             if (User.getUserAuth()) {
-                console.log("AUTH. User");
                 $scope.getWarmupData();
                 $scope.getViewOptions();
                 $scope.getEventStats();
@@ -166,7 +177,6 @@ EventHandlerController.controller('EventMainController',
                 $scope.getTopSources();
                 $scope.getEvents();
             } else {
-                console.log("NO AUTH");
                 $state.transitionTo('home');
             }
         }
@@ -351,7 +361,7 @@ EventHandlerController.controller('EventMainController',
                 if ($scope.languageName != undefined) {
                     for (var i = 0; i < languagesPieChart.data.length; i++) {
                         if (languagesPieChart.data[i][0] == $scope.languageName) {
-                            languagesPieChart.data[i][1] ++;
+                            languagesPieChart.data[i][1]++;
                             languageUpdated = true;
                             break;
                         }
@@ -843,10 +853,7 @@ EventHandlerController.controller('EventMainController',
         $scope.tweetsTime = [];
         $scope.tweetsCount = [];
 
-        $scope.drawChart = function () {
-
-            $scope.tweetsTime = $scope.data.time;
-            $scope.tweetsCount = $scope.data.tweets_count;
+        $scope.drawChart = function (data) {
 
             function drawTweetsOverTimeChart() {
                 var arrayLength = $scope.data.length;
@@ -854,10 +861,13 @@ EventHandlerController.controller('EventMainController',
                 var tweetsTimeArray = [];
 
                 $scope.totalTweets = 0;
+
                 for (var i = 0; i < arrayLength; i++) {
                     tweetsCountArray[i] = $scope.data[i].tweets_count;
                     $scope.totalTweets += $scope.data[i].tweets_count;
-                    tweetsTimeArray[i] = $scope.data[i].time;
+                    var localTime = new Date(($scope.data[i].time));
+                    var formatedTime = localTime.getHours() + ":" + localTime.getMinutes();
+                    tweetsTimeArray[i] = formatedTime;
                 }
 
                 $scope.chartSeries = [{

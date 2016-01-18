@@ -15,7 +15,7 @@ This README would normally document whatever steps are necessary to get your app
 * Run `mvn package`
 * Install redis
 * Run redis
-* Run server by `java -jar target/XXXXXXXXXXXXXX-SNAPSHOT.jar server configuration.yml`
+* Run server by `java -jar target/maptrends-1.0-SNAPSHOT.jar server config.yml`
 
 ### Contribution guidelines ###
 

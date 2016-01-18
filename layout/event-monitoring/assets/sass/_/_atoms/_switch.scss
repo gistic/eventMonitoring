@@ -59,7 +59,6 @@
         @include transition-duration(0.3s);
         @include transition-timing-function(ease-out);
     }
-    
     &.checked {
         background: rgb(100, 189, 99);
         border-color: rgb(100, 189, 99);

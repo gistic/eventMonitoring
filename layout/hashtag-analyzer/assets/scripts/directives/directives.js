@@ -65,4 +65,4 @@ angular.module('trackHashtagApp.directives', [])
       })
     }
   };
-});
+})

@@ -50,7 +50,7 @@ public class TweetDaoImpl implements TweetDao {
     final String START_TIME_KEY = "startTime";
     final String HASHTAGS_KEY = "hashTags";
     final String SCREENTIMES_KEY = "screensTime";
-    final String SCREENTIMES_DEFAULT = "[12000, 12000, 12000]";
+    final String SCREENTIMES_DEFAULT = "[45000, 45000, 45000]";
 
     public TweetDaoImpl() {
         //this.jedis = jedis;

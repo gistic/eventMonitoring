@@ -12,6 +12,7 @@ blockedUsersController.controller('BlockedUsersModalController', ['$scope', '$mo
     };
 }]);
 
+
 // Controller : Blocked users main controller
 blockedUsersController.controller('BlockedUsersController', ['$rootScope', '$scope', '$http', '$modalInstance', 'RequestData',
    function ($rootScope, $scope, $http, $modalInstance, RequestData) {
