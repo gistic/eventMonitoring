@@ -1,16 +1,16 @@
 <div class="view--tweets-overtime">
-
     <div class="view-header clearfix">
         <strong class="pull-left">
-        <img class="event-logo" src="../../assets/images/mit-logo.png" alt="">
-            Tweets Over Time
-            <span>Time to next screen <timer countdown="tweetsOverTimeTimeout" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></span>
+            <img lazy-load class="event-logo" ll-src="../../assets/images/mit-logo.png" />
+            <h3 class="visible-lg-inline-block">#{{hashtag}} <span>Tweets Over Time</span></h3>
+            <!-- <span>Time to next screen <timer countdown="tweetsOverTimeTimeout" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></span> -->
         </strong>
         <strong class="pull-right">
-            #{{hashtag}}
+            <a href="http://www.gistic.org">
+                <img src="../../assets/images/gisitc-logo.png" width="125px" alt="">
+            </a>
         </strong>
     </div>
-
     <highchart id="chart1" config="chartConfig" class=""></highchart>
     <h2 class="pg-hd tweets-count">
             Live : {{totalTweets}} tweets

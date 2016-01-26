@@ -3,12 +3,14 @@
    
    <div class="view-header clearfix">
         <strong class="pull-left">
-        <img lazy-load class="event-logo" ll-src="../../assets/images/mit-logo.png" />
-            Live Streaming
-            <span>Time to next screen <timer countdown="liveTweetsTimeout" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></span>
+            <img lazy-load class="event-logo" ll-src="../../assets/images/mit-logo.png" />
+            <h3 class="visible-lg-inline-block">#{{hashtag}} <span>Live</span></h3>
+            <!-- <span>Time to next screen <timer countdown="liveTweetsTimeout" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></span> -->
         </strong>
         <strong class="pull-right">
-            #{{hashtag}}
+            <a href="http://www.gistic.org">
+                <img src="../../assets/images/gisitc-logo.png" width="125px" alt="">
+            </a>
         </strong>
     </div>
     
