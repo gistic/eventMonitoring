@@ -54,7 +54,7 @@ module.exports = function (grunt) {
 
     // the default task can be run just by typing "grunt" on the command line
 
-    grunt.registerTask('default', ['watch']);
-    //grunt.registerTask('default', ['cssmin:css', 'uglify:js']);
+    // grunt.registerTask('default', ['watch']);
+    grunt.registerTask('default', ['uglify:js']);
 
 };

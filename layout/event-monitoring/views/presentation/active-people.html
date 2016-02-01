@@ -1,31 +1,32 @@
 <div class="view--top-people">
 
-      <div class="view-header clearfix">
+    <div class="view-header clearfix">
         <strong class="pull-left">
-        <img lazy-load class="event-logo" ll-src="../../assets/images/mit-logo.png" />
-            Most Active Users
-            <span>Time to next screen <timer countdown="topPeopleTimeout" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></span>
+            <img lazy-load class="event-logo" ll-src="../../assets/images/mit-logo.png" />
+            <h3 class="visible-lg-inline-block">#{{hashtag}} <span>Active Users</span></h3>
+            <!-- <span>Time to next screen <timer countdown="topPeopleTimeout" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></span> -->
         </strong>
         <strong class="pull-right">
-            #{{hashtag}}
+            <a href="http://www.gistic.org">
+                <img src="../../assets/images/gisitc-logo.png" width="125px" alt="">
+            </a>
         </strong>
     </div>
-    
+
     <div class="tweets-container row">
         <div ng-repeat="user in data | limitTo : 4" class="media tweet lang-en clearfix fx-fade-down fx-easing-bounce fx-speed-1000 top-user">
-            <div class="user-ranks">
-                {{$index + 1}}
-            </div>
             <div class="user-img pull-left">
                 <img ng-src="{{user.profileImageUrl}}" err-SRC="http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png" />
             </div>
             <div class="media-body pull-right">
                 <h1 class="media-heading">
-                {{user.screenName}}</h1>
+                {{user.screenName}}
+                    <div class="pull-right user-ranks">
+                    {{$index + 1}}
+                    </div>
+                </h1>
                 <h1 class="tweets-count">{{user.score}} Tweets</h1>
             </div>
         </div>
-
-
     </div>
 </div>
