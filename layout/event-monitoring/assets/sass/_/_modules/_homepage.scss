@@ -6,7 +6,6 @@
     .box {
         @include phone {
             margin-bottom: $margin * 3;
-
         }
     }
     .icon {
@@ -27,15 +26,15 @@
 }
 
 .testmonials {
-  position: relative;
-  width: 100%;
-  min-height: auto;
-  text-align: center;
-  background-image: url("../images/eventyzer-chart.jpg");
-  background-position: center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-  -o-background-size: cover;
-  min-height: 50vh;
+    position: relative;
+    width: 100%;
+    min-height: auto;
+    text-align: center;
+    background-image: url("../images/eventyzer-chart.jpg");
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    min-height: 50vh;
 }

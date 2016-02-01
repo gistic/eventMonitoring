@@ -4,7 +4,7 @@ var eventApp = angular.module('eventApp', []);
 eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', '$timeout', 'RequestData', 'RequestViewsLayoutData', 'CreateEventSource',
     function($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, $timeout, RequestData, RequestViewsLayoutData, CreateEventSource) {
 
-        $scope.preventDefault = function ($event) {
+        $scope.preventDefault = function($event) {
             $event.preventDefault();
         }
 
@@ -19,6 +19,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function(response) {
+                    $rootScope.keywords = response.hashtags;
                     $rootScope.userColor = response.backgroundColor;
                     $rootScope.userSize = response.size;
                     $scope.showRetweets = response.retweetEnabled;
