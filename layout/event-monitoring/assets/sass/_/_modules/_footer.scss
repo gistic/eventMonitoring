@@ -1,5 +1,5 @@
 footer {
-    padding: $padding * 3 0 $padding;
+    padding: $padding 0;
     border-top: 1px solid $gray-light;
     margin: 0 ;
     .social-links {
@@ -11,12 +11,13 @@ footer {
             }
         }
     }
+    
     &.views--footer {
-        bottom: -10px;
+        bottom: 0px;
         position: absolute;
         border: none;
         background: rgba(13, 13, 13, 0.60);
-        @include size(100%, 45px);
+        @include size(100%, auto);
         p {
             color: $white;
             @include font-size($font-small);

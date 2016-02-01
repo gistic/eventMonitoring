@@ -18258,7 +18258,7 @@ header .logo a:hover, header .logo a:focus {
 
 /* line 1, ../sass/_/_modules/_footer.scss */
 footer {
-  padding: 45px 0 15px;
+  padding: 15px 0;
   border-top: 1px solid #cdd2d4;
   margin: 0;
 }
@@ -18270,23 +18270,23 @@ footer .social-links a {
 footer .social-links a:hover, footer .social-links a:focus {
   text-decoration: none;
 }
-/* line 14, ../sass/_/_modules/_footer.scss */
+/* line 15, ../sass/_/_modules/_footer.scss */
 footer.views--footer {
-  bottom: -10px;
+  bottom: 0px;
   position: absolute;
   border: none;
   background: rgba(13, 13, 13, 0.6);
   width: 100%;
-  height: 45px;
+  height: auto;
 }
-/* line 20, ../sass/_/_modules/_footer.scss */
+/* line 21, ../sass/_/_modules/_footer.scss */
 footer.views--footer p {
   color: #ffffff;
   font-size: 14px;
   font-size: 1.75rem;
 }
 
-/* line 27, ../sass/_/_modules/_footer.scss */
+/* line 28, ../sass/_/_modules/_footer.scss */
 .contact-section {
   width: 50%;
   margin: 0 auto 20px;
@@ -18454,7 +18454,7 @@ footer.views--footer p {
 }
 /* line 87, ../sass/_/_modules/_live-view.scss */
 .event-ui-views .view--top-people .media-body {
-  width: 80%;
+  width: 70%;
   height: auto;
 }
 /* line 92, ../sass/_/_modules/_live-view.scss */
