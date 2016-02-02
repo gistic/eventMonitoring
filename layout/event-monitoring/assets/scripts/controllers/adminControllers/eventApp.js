@@ -197,8 +197,8 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                 .success(function(response) {
                     $scope.tweetsQueue.splice(tweetIndex, 1);
                     $scope.approvedTweetsCount++;
-                }).error(function() {
-                    console.log("#");
+                }).error(function (error) {
+                    console.log(error);
                 })
         }
 

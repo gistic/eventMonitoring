@@ -19,6 +19,7 @@
         <div class="media tweet clearfix fx-fade-down fx-easing-bounce fx-speed-1000" ng-class="{'lang-ar' : tweet.lang == 'ar', 'stared' : tweet.starred == true, 'showd' : display == block }" ng-repeat="tweet in allTweets | reverse | limitTo : 10" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
 
             <span ng-show="{{tweet.starred == true}}">
+            <!-- <span> -->
                 <span class="star-tweet">
                 <img src="../../assets/images/star-icon.png" alt="">
                 </span>
