@@ -280,12 +280,10 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function(response) {
-                    // show the notification
                     notification.show();
-
                     var tweetQueueWithoutBlocked = [];
                     angular.forEach($scope.tweetsQueue, function(tweet) {
-                        if (tweet.user.id_str != userID) {
+                        if (tweet.user.id != userID) {
                             tweetQueueWithoutBlocked.push(tweet);
                         }
                     });
@@ -311,13 +309,10 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .then(function(response) {
-                    // show the notification
                     notification.show();
-
                     $scope.tweetQueueWithoutTrusted = [];
-
-                    angular.forEach($scope.tweetsQueue, function(tweet) {
-                        if (tweet.user.id_str != userID) {
+                    angular.forEach($scope.tweetsQueue, function (tweet) {
+                        if (tweet.user.id != userID) {
                             $scope.tweetQueueWithoutTrusted.push(tweet);
                         }
                     });
