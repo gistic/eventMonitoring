@@ -3,10 +3,8 @@ package org.gistic.tweetboard.dao;
 import org.apache.commons.lang3.StringUtils;
 import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.datalogic.TweetMeta;
-import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.representations.*;
-import org.gistic.tweetboard.resources.LiveTweetsBroadcasterSingleton;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -328,16 +326,12 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public void approveAllExistingTweetsByUser(String uuid, String screenName) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            String userId = jedis.get(getUserIdKey(uuid, screenName));
+            String userId = jedis.get(getUserIdKey(screenName, uuid));
             Set<String> tweetIds = jedis.smembers(getUserTweetsSetKey(uuid, userId));
             for (String tweetId : tweetIds) {
                 removeFromArrived(uuid, tweetId);
                 removeFromSentForApproval(uuid, tweetId);
                 addToApproved(uuid, tweetId, false);
-                String statusString = getStatusString(uuid, tweetId);
-                deleteTweetJson(uuid, tweetId);
-                Message msg = new Message(uuid, Message.Type.LiveTweet, statusString);
-                LiveTweetsBroadcasterSingleton.broadcast(msg);
             }
         } catch (JedisException jE) {
             jE.printStackTrace();
