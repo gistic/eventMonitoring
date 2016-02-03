@@ -134,11 +134,12 @@
                 </article>
                 <article class="col-md-12 custom-option">
                     <h6>Screens</h6>
-                    <ul class="list-inline row">
-                        <li class="col-md-8" ng-repeat="(key, value) in layoutScreens">
+                    <ul class="row">
+                        <li class="" ng-repeat="(key, value) in layoutScreens">
                             <div class="checkbox">
-                                <label>
+                                <label class="col-md-6">
                                     <input ng-checked="value.selected==true" ng-model="value.selected" type="checkbox" /> {{value.name}}
+                                    <input type="text" name="" id="">
                                 </label>
                             </div>
                         </li>
