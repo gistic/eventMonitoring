@@ -1,0 +1,25 @@
+.keywords-tags {
+	margin-top: $margin * 3;
+}
+
+tags-input {
+    display: inline-block;
+    width: 500px;
+    vertical-align: middle;
+    .tags {
+        .tag-item {
+            .remove-button {
+                color: $white;
+            }
+        }
+    }
+}
+
+.start-event tags-input {
+    min-height: 48px;
+    .tags {
+        .tag-item {
+            margin: 12px 7px;
+        }
+    }
+}

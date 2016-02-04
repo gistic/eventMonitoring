@@ -32,6 +32,7 @@ myAppDirectives.directive('lazyLoad', function ($timeout) {
 myAppDirectives.directive('onErrorSrc', function ($rootScope) {
 
     $rootScope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
+    $rootScope.defultEventLogo = "../../assets/images/taghreed.png";
 
     return {
         link: function (scope, element, attrs) {

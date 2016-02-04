@@ -4,7 +4,7 @@ var activePeopleController = angular.module('activePeopleController', []);
 activePeopleController.controller('ActivePeopleController', ['$scope', '$rootScope', '$http', '$timeout', 'RequestData', function ($scope, $rootScope, $http, $timeout, RequestData) {
 
     $scope.defultImage = "http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png";
-
+    
     $scope.fetchData = function () {
 
         var requestAction = "GET";

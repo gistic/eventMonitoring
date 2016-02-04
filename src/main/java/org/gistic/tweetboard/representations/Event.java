@@ -23,7 +23,7 @@ public class Event {
 //    public String[] getHashtags() {
 //        return hashTags;
 //    }
-    @NotNull @Size(min = 1, max = 1)
+    @NotNull @Size(min = 1, max = 5)
     private  String[] hashTags;
 
     Event() {}

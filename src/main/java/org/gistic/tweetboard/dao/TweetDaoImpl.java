@@ -3,8 +3,10 @@ package org.gistic.tweetboard.dao;
 import org.apache.commons.lang3.StringUtils;
 import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.datalogic.TweetMeta;
+import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.eventmanager.twitter.InternalStatus;
 import org.gistic.tweetboard.representations.*;
+import org.gistic.tweetboard.resources.LiveTweetsBroadcasterSingleton;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -50,7 +52,7 @@ public class TweetDaoImpl implements TweetDao {
     final String START_TIME_KEY = "startTime";
     final String HASHTAGS_KEY = "hashTags";
     final String SCREENTIMES_KEY = "screensTime";
-    final String SCREENTIMES_DEFAULT = "[90000, 30000, 30000]";
+    final String SCREENTIMES_DEFAULT = "[45000, 10000, 8000]";
 
     public TweetDaoImpl() {
         //this.jedis = jedis;
@@ -326,12 +328,16 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public void approveAllExistingTweetsByUser(String uuid, String screenName) {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            String userId = jedis.get(getUserIdKey(screenName, uuid));
+            String userId = jedis.get(getUserIdKey(uuid, screenName));
             Set<String> tweetIds = jedis.smembers(getUserTweetsSetKey(uuid, userId));
             for (String tweetId : tweetIds) {
                 removeFromArrived(uuid, tweetId);
                 removeFromSentForApproval(uuid, tweetId);
                 addToApproved(uuid, tweetId, false);
+                String statusString = getStatusString(uuid, tweetId);
+                deleteTweetJson(uuid, tweetId);
+                Message msg = new Message(uuid, Message.Type.LiveTweet, statusString);
+                LiveTweetsBroadcasterSingleton.broadcast(msg);
             }
         } catch (JedisException jE) {
             jE.printStackTrace();
