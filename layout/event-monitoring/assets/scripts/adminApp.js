@@ -2,6 +2,7 @@
 
 var eventAdminApp = angular.module('eventAdminApp', [
     'ui.bootstrap',
+    'ngTagsInput',
     'timer',
     'ui.router',
     'uiSwitch',
@@ -26,7 +27,9 @@ eventAdminApp.run(function ($window, $location, $rootScope, $state) {
     
     if ($state.current.name == "") {
         $state.transitionTo('home');
-    }
+    };
+
+    $rootScope.keywords = [];
 })
 
 eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {

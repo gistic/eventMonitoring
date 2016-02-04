@@ -35,6 +35,11 @@
     &.tweet.stared {
         position: relative;
         border: 5px solid rgba(29, 64, 141, 1);
+        .star-tweet {
+            position: absolute;
+            right: -30px;
+            top: -15px;
+        }
     }
 }
 
