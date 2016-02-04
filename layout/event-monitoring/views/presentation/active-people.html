@@ -2,7 +2,7 @@
 
     <div class="view-header clearfix">
         <strong class="pull-left">
-            <img lazy-load class="event-logo" ll-src="../../assets/images/taghreed.png" height="73" width="72" />
+            <img lazy-load class="event-logo" on-error-src="{{defultEventLogo}}" ng-src="{{../../assets/images/{{eventID}}/logo.png}}" width="75px"/>
             <h3 class="visible-lg-inline-block">#{{hashtag}} <span>Active Users</span></h3>
             <!-- <span>Time to next screen <timer countdown="topPeopleTimeout" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></span> -->
         </strong>
