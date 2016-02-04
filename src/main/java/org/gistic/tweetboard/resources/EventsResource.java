@@ -451,7 +451,7 @@ public class EventsResource {
          */
         System.out.println(fileDetail.getSize());
         //todo refactor
-        String uploadedFileLocation = "./assets/logo/"+uuid+"/";// + fileDetail.getFileName();
+        String uploadedFileLocation = "./layout/event-monitoring/assets/"+uuid+"/";// + fileDetail.getFileName();
         String fileName =fileDetail.getFileName();
         System.out.println(fileName);
         String fileType = fileName.substring(fileName.lastIndexOf("."));
