@@ -4,10 +4,12 @@ var viewsLayoutController = angular.module('viewsLayoutController', []);
 viewsLayoutController.controller('layoutCtrl', function ($rootScope, $scope, $timeout, $location, RequestData, CreateEventSource) {
 
     var source = CreateEventSource.getSourceObject();
+    $rootScope.eventID = $location.search().uuid;
 
     source.addEventListener('broadcast-ui-customization', function (response) {
         $scope.layoutOptions = JSON.parse(response.data);
         $scope.$apply(function () {
+            
             $rootScope.userColor = $scope.layoutOptions.backgroundColor;
             $rootScope.userSize = $scope.layoutOptions.size;
             $rootScope.pages = $scope.layoutOptions.screens;
@@ -24,6 +26,7 @@ viewsLayoutController.controller('layoutCtrl', function ($rootScope, $scope, $ti
 
         RequestData.fetchData(requestAction, apiUrl, requestData)
             .success(function (response) {
+                console.log(response)
                 $rootScope.userColor = response.backgroundColor;
                 $rootScope.userSize = response.size;
                 $rootScope.pagesTimeout = response.screenTimes;
@@ -33,7 +36,7 @@ viewsLayoutController.controller('layoutCtrl', function ($rootScope, $scope, $ti
                 $rootScope.tweetsOverTimeTimeout = $rootScope.pagesTimeout[2] / 1000;
 
                 $rootScope.pages = response.screens;
-                $rootScope.hashtag = response.hashtags[0];
+                $rootScope.hashtag = response.hashtags;
 
                 // Get the current page path index
                 $rootScope.eventHashtags = response.hashtags;
@@ -51,7 +54,6 @@ viewsLayoutController.controller('layoutCtrl', function ($rootScope, $scope, $ti
 
     $scope.intervalFunction = function () {
         $timeout(function () {
-            // Redirect the page
             $location.path($scope.pages[$scope.pageIndex]);
             $scope.intervalFunction();
 

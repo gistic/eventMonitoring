@@ -17,7 +17,8 @@
         </div>
 
     <div class="input-group start-event wow bounceIn" ng-hide="showSearchInput">
-      <input class="form-control" id="eventHashtag" ng-enter="startNewEvent()" ng-model="eventHashtag" placeholder="#Hashtag" type="search" value="">
+      <!-- <input class="form-control" id="eventHashtag" ng-enter="startNewEvent()" ng-model="eventHashtag" placeholder="#Hashtag" type="search" value=""> -->
+      <tags-input placeholder="Add new hashtag" min-length="2" min-tags="1" max-tags="3" id="eventHashtag" on-tag-added="newKeywordAdded($tag)" on-tag-removed="keywordRemoved($tag)" ng-model="eventHashtag"></tags-input>
       <span class="input-group-btn">
         <button class="btn btn-search" ng-click="startNewEvent()" type="button">
           <i class="fa fa-search fa-2x"></i>

@@ -33,16 +33,15 @@ myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$wind
                 url: requestUrl,
                 data: requestData
             }).success(function (response) {
-                console.log("Request Successed");
                 return response.data;
-            }).error(function () {
-                console.log("Request failed");
+            }).error(function (error) {
+                console.log(error);
             });
         },
 
-        startEvent: function (requestAction) {
+        startEvent: function (eventHashtag) {
 
-            var eventHashtag = $('#eventHashtag').val();
+            // var eventHashtag = $('#eventHashtag').val();
             
             var requestUrl = $rootScope.baseUrl + '/api/events';
 
@@ -50,14 +49,14 @@ myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$wind
                 method: 'POST',
                 url: requestUrl,
                 data: {
-                    "hashTags": [eventHashtag]
+                    "hashTags": eventHashtag
                 }
             }).success(function (response) {
                 $rootScope.eventHashtag = eventHashtag;
                 $rootScope.eventID = response.uuid;
                 return response.uuid;
-            }).error(function () {
-                console.log("Request failed");
+            }).error(function (error) {
+                console.log(error);
             });
         }
     }
@@ -160,6 +159,7 @@ myAppServices.factory('filterHashtags', ['$rootScope', function ($rootScope) {
 
             var badHashtags = badEnglishHashtags.concat(badArabicHashtags);
             var badHashtagsLength = badHashtags.length;
+
             if (hashtag == undefined || hashtag == "" || hashtag.length < 2) {
                 badHashtag = true;
                 var errorMsg = "Please type at least two letters to start your event";

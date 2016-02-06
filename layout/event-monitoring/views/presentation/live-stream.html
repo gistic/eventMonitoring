@@ -3,12 +3,16 @@
    
    <div class="view-header clearfix">
         <strong class="pull-left">
-        <img lazy-load class="event-logo" ll-src="../../assets/images/mit-logo.png" />
-            Live Streaming
-            <span>Time to next screen <timer countdown="liveTweetsTimeout" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></span>
+            <img lazy-load class="event-logo" on-error-src="{{defultEventLogo}}" ng-src="../../assets/images/{{eventID}}/logo.png" width="75px"/>
+            <h3 class="visible-lg-inline-block">
+            <strong ng-repeat="tag in hashtag">{{tag}}{{$last ? '' : ' - '}}</strong>
+            <span>Live</span></h3>
+            <!-- <span>Time to next screen <timer countdown="liveTweetsTimeout" max-time-unit="'minute'" interval="1000">{{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}}</timer></span> -->
         </strong>
         <strong class="pull-right">
-            #{{hashtag}}
+            <a href="http://www.gistic.org">
+                <img src="../../assets/images/gisitc-logo.png" width="125px" alt="">
+            </a>
         </strong>
     </div>
     
@@ -17,6 +21,7 @@
         <div class="media tweet clearfix fx-fade-down fx-easing-bounce fx-speed-1000" ng-class="{'lang-ar' : tweet.lang == 'ar', 'stared' : tweet.starred == true, 'showd' : display == block }" ng-repeat="tweet in allTweets | reverse | limitTo : 10" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
 
             <span ng-show="{{tweet.starred == true}}">
+            <!-- <span> -->
                 <span class="star-tweet">
                 <img src="../../assets/images/star-icon.png" alt="">
                 </span>
