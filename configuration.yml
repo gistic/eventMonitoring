@@ -45,7 +45,7 @@ twitter:
   consumer-secret: GOe5YzFEL5b189ZqfBRUF78e5KKUCWlw7eNlFZCBPvLvqgWJX9
   user-key: 1974931724-99y199ECdu3BlIDy8oA1cYpxNRDK77PF5a6XUvx
   user-secret: rXQVL0Jinj7IiD6dmkobEuoY9ScL8U1JaVAA1XR6wS2VA
-defaultAutoShutdownDelayInHours: 1
+defaultAutoShutdownDelayInHours: 168
 v2: true
 baseDomain: localhost:8080
 #logging:
