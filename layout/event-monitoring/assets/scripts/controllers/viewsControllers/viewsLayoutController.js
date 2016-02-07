@@ -9,7 +9,7 @@ viewsLayoutController.controller('layoutCtrl', function ($rootScope, $scope, $ti
     source.addEventListener('broadcast-ui-customization', function (response) {
         $scope.layoutOptions = JSON.parse(response.data);
         $scope.$apply(function () {
-            console.log($scope.layoutOptions)
+            
             $rootScope.userColor = $scope.layoutOptions.backgroundColor;
             $rootScope.userSize = $scope.layoutOptions.size;
             $rootScope.pages = $scope.layoutOptions.screens;
@@ -36,7 +36,7 @@ viewsLayoutController.controller('layoutCtrl', function ($rootScope, $scope, $ti
                 $rootScope.tweetsOverTimeTimeout = $rootScope.pagesTimeout[2] / 1000;
 
                 $rootScope.pages = response.screens;
-                $rootScope.hashtag = response.hashtags[0];
+                $rootScope.hashtag = response.hashtags;
 
                 // Get the current page path index
                 $rootScope.eventHashtags = response.hashtags;
