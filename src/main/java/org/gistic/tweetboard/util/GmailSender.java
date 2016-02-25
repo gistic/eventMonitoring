@@ -1,4 +1,4 @@
-package org.gistic.tweetboard.util;
+package org.gistic.tweetboard.Util;
 
 
 import org.slf4j.Logger;
