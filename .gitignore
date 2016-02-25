@@ -11,6 +11,8 @@
 # Mac
 .DS_Store
 
+layout/hashtag-analyzer/bower_components/
+
 # Maven
 log/
 target/
