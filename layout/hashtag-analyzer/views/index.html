@@ -38,7 +38,7 @@
       <div class="">
         <ul class="list-inline">
           <li>Trending on Twitter:</li>
-          <li ng-repeat="hashtag in trendingHashtags">
+          <li ng-repeat="hashtag in trendingHashtags | limitTo : 8">
             <a ng-click="createEventFromTrending(hashtag)">#{{hashtag}}</a>
           </li>
         </ul>
@@ -54,7 +54,7 @@
           <div class="bounce2"></div>
         </div>
       </div>
-      <div class="event-box" ng-repeat="event in homepageEvents | limitTo : 8">
+      <div class="event-box" ng-repeat="event in homepageEvents | limitTo : 10">
         <div class="shading">
 
           <!-- Check if event is trending or server one -->
