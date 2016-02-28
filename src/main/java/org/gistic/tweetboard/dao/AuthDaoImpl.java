@@ -28,7 +28,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
     }
 
@@ -40,7 +40,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
         return null;
     }
@@ -53,7 +53,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
     }
 
@@ -65,7 +65,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
         return null;
     }
@@ -78,7 +78,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
         return null;
     }
@@ -91,7 +91,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
     }
 
@@ -103,7 +103,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
     }
 
@@ -115,7 +115,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
         return null;
     }
@@ -128,7 +128,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
     }
 
@@ -140,7 +140,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
     }
 
@@ -173,7 +173,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
         return null;
     }
@@ -186,7 +186,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
     }
 
@@ -198,7 +198,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
         return "false";
     }
@@ -211,7 +211,7 @@ public class AuthDaoImpl implements AuthDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+            if(jedis != null) jedis.close();
         }
     }
 
