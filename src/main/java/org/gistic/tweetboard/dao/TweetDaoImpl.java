@@ -53,7 +53,6 @@ public class TweetDaoImpl implements TweetDao {
     final String HASHTAGS_KEY = "hashTags";
     final String SCREENTIMES_KEY = "screensTime";
     final String SCREENTIMES_DEFAULT = "[45000, 10000, 8000]";
-    Jedis jedis = null;
 
     public TweetDaoImpl() {
         //this.jedis = jedis;
@@ -63,20 +62,16 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void addNewEventToList(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
             jedis.lpush(All_EVENTS_KEY, uuid);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void setDefaultEventProperties(String uuid, String[] hashTags, String accessToken) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hset(uuid, BG_COLOR_KEY, BG_COLOR_DEFAULT);
             jedis.hset(uuid, SIZE_KEY, SIZE_DEAFULT);
             jedis.hset(uuid, SCREENS_KEY, SCREENS_DEFAULT);
@@ -89,21 +84,16 @@ public class TweetDaoImpl implements TweetDao {
             jedis.hset(uuid, SCREENTIMES_KEY, SCREENTIMES_DEFAULT);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void addToArrived(String uuid, Status tweet, String statusString) {
         String id = String.valueOf(tweet.getId());
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lpush(getArrivedNotSentListKey(uuid), id);
         }  catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
@@ -112,8 +102,7 @@ public class TweetDaoImpl implements TweetDao {
         String id = String.valueOf(tweet.getId());
         if (statusString == null || statusString.isEmpty() || id.isEmpty()) {
             LoggerFactory.getLogger(TweetDaoImpl.class).error("Status string empty!"); }
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.set(getTweetIdString(uuid, id), statusString);
 //            if (newArrival) {
 //                String screenName = String.valueOf(tweet.getUser().getScreenName());
@@ -123,8 +112,6 @@ public class TweetDaoImpl implements TweetDao {
 //            }
         }  catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
@@ -147,47 +134,35 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void removeFromArrived(String uuid, String id) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lrem(getArrivedNotSentListKey(uuid), 0, id);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void addToSentForApproval(String uuid, String id) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lpush(getSentForApprovalListKey(uuid), id);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public JSONObject getOldestTweetNotSentForApproval(String uuid) throws TwitterException {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             String statusId = jedis.lpop(getArrivedNotSentListKey(uuid));
             if (statusId == null) return null;
             return getStatusJson(uuid, statusId);
-        } catch (JedisConnectionException e) {
-            LoggerFactory.getLogger(this.getClass()).warn("DB access: error in front end hanging request");
-        } finally {
-            if(jedis != null) jedis.close();
-        }
+        } catch (JedisConnectionException e) { LoggerFactory.getLogger(this.getClass()).warn("DB access: error in front end hanging request"); }
         return null;
     }
 
     @Override
     public void addToApproved(String uuid, String tweetId, boolean starred) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             String statusString = jedis.get(getTweetIdString(uuid, tweetId));
             if (starred) { //TODO: refactor
                 statusString = statusString.substring(0, statusString.length()-1).concat(",\"starred\":true}");
@@ -196,8 +171,6 @@ public class TweetDaoImpl implements TweetDao {
             jedis.lpush(getApprovedListKey(uuid), tweetId);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
@@ -211,13 +184,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void removeFromSentForApproval(String uuid, String tweetId) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lrem(getSentForApprovalListKey(uuid), 0, tweetId);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
@@ -226,13 +196,10 @@ public class TweetDaoImpl implements TweetDao {
         String screenName = String.valueOf(tweet.getUser().getScreenName());
         String userId = String.valueOf(tweet.getUser().getId());
         String tweetId = String.valueOf(tweet.getId());
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             setNewTweetMeta(uuid, tweet, jedis, screenName, userId, tweetId);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
@@ -242,13 +209,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public Set<Tuple> getTopNUsers(String uuid, int topN) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getUsersRankSetKey(uuid), "+inf", "-inf", 0, topN);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -256,13 +220,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public String getGetUserId(String screenName, String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.get(getUserIdKey(uuid, screenName));
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -274,13 +235,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public String removeFromApproved(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.rpop(getApprovedListKey(uuid));
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -288,17 +246,15 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void addToApprovedSentToClient(String uuid, String... tweetIds) {
-//        try (Jedis jedis = JedisPoolContainer.getInstance()) {
-//            // No longer maintaining sent to client tweets
-////            if (tweetIds.length == 0) {
-////                return;
-////            }
-////            jedis.lpush(getApprovedSentToClientListKey(uuid), tweetIds);
-//        } catch (JedisException jE) {
-//            jE.printStackTrace();
-//        } finally {
-//            if(jedis != null) jedis.close();
-//        }
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            // No longer maintaining sent to client tweets
+//            if (tweetIds.length == 0) {
+//                return;
+//            }
+//            jedis.lpush(getApprovedSentToClientListKey(uuid), tweetIds);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
     }
 
     @Override
@@ -317,13 +273,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public String getStatusString(String uuid, String tweetId) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.get(getTweetIdString(uuid, tweetId));
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -331,24 +284,20 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void updateEventConfig(String uuid, EventConfig eventConfig) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hset(uuid, BG_COLOR_KEY, eventConfig.getBackgroundColor());
             jedis.hset(uuid, SIZE_KEY, eventConfig.getSize());
             jedis.hset(uuid, SCREENS_KEY, Arrays.toString(eventConfig.getScreens()));
             jedis.hset(uuid, SCREENTIMES_KEY, Arrays.toString(eventConfig.getScreenTimes()));
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public EventConfig getEventConfig(String uuid) {
         EventConfig eventConfig = new EventConfig();
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             eventConfig.setBackgroundColor(jedis.hget(uuid, BG_COLOR_KEY));
             eventConfig.setSize(jedis.hget(uuid, SIZE_KEY));
             String screens = jedis.hget(uuid, SCREENS_KEY);
@@ -363,8 +312,6 @@ public class TweetDaoImpl implements TweetDao {
             eventConfig.setHashtags(hashtagsArray);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return eventConfig;
     }
@@ -380,8 +327,7 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void approveAllExistingTweetsByUser(String uuid, String screenName) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             String userId = jedis.get(getUserIdKey(uuid, screenName));
             Set<String> tweetIds = jedis.smembers(getUserTweetsSetKey(uuid, userId));
             for (String tweetId : tweetIds) {
@@ -395,20 +341,15 @@ public class TweetDaoImpl implements TweetDao {
             }
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public String getProfileImageUrl(String uuid, String screenName) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.get(getUserProfileImageKey(uuid, screenName));
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -416,8 +357,7 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public EventMetaList getEventMetaList() {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             List<String> list = jedis.lrange(All_EVENTS_KEY, 0, -1);
             List<EventMeta> metaList = list.stream()
                     .map(event -> new EventMeta(event,
@@ -435,8 +375,6 @@ public class TweetDaoImpl implements TweetDao {
             return new EventMetaList(eventStatsArray, metaArray);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -444,13 +382,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void incrRetweets(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.incr(getTotalRetweetsKey(uuid));
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
@@ -460,13 +395,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void incrTweets(String uuid) {
-        try{
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.incr(getTotalTweetsKey(uuid));
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
@@ -476,8 +408,7 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public BasicStats getBasicStats(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             Long numberOfUsers = jedis.zcard(getUsersRankSetKey(uuid));
             Long totalTweets = 0l;
             Long totalRetweets = 0l;
@@ -495,8 +426,6 @@ public class TweetDaoImpl implements TweetDao {
             return new BasicStats(startTime, numberOfUsers, totalTweets, totalRetweets, totalMedia);
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -504,15 +433,12 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public List<String> getAllTweetIdsSentForApprovalAndDeleteFromSentForApproval(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             List<String> tweetIds = jedis.lrange(getSentForApprovalListKey(uuid), 0, -1);
             jedis.del(getSentForApprovalListKey(uuid));
             return tweetIds;
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -520,13 +446,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void deleteTweetJson(String uuid, String tweetId) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.del(getTweetIdString(uuid, tweetId));
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
@@ -534,135 +457,104 @@ public class TweetDaoImpl implements TweetDao {
     public void setNewTweetMeta(String uuid, InternalStatus status) {
         Status tweet = status.getInternalStatus();
         User user = tweet.getUser();
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             setNewTweetMeta(uuid, tweet, jedis, tweet.getUser().getScreenName(), String.valueOf(user.getId()),
                     String.valueOf(tweet.getId()));
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void setNewTweetMeta(String uuid, Status tweet) {
         User user = tweet.getUser();
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             setNewTweetMeta(uuid, tweet, jedis, tweet.getUser().getScreenName(), String.valueOf(user.getId()),
                     String.valueOf(tweet.getId()));
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public Double incrCountryCounter(String uuid, String countryCode) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zincrby(getCountryRankSetKey(uuid), 1, countryCode);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return 0.0;
     }
     public void incrMedia(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.incr(getTotalMediaKey(uuid));
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void setTweetMetaDate(String uuid, long retweetedStatusId, long retweetCreatedAt) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             String createdAtString = Long.toString(retweetCreatedAt);
             if(createdAtString== null || createdAtString.isEmpty()) System.out.println("EERRRRROOOORRRR  EERRRRORRRRRR");
             jedis.hset(getTweetMetaKey(uuid, Long.toString(retweetedStatusId)), TWEET_META_DATE_KEY, createdAtString);
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void incrTweetRetweets(String uuid, long retweetedStatusId) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hincrBy(getTweetMetaKey(uuid, Long.toString(retweetedStatusId)), TWEET_META_RETWEETS_COUNT_KEY, 1);
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void incrTweetRetweetsByN(String uuid, long retweetedStatusId, int n) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hincrBy(getTweetMetaKey(uuid, Long.toString(retweetedStatusId)), TWEET_META_RETWEETS_COUNT_KEY, n);
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public String getTopTweetsGeneratedFlag(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.get(getTopTweetsGeneratedFlagKey(uuid));
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public void setTopTweetsGeneratedFlag(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.set(getTopTweetsGeneratedFlagKey(uuid), "true");
             jedis.expire(getTopTweetsGeneratedFlagKey(uuid), DEFAULT_TOP_TWEETS_CACHE_DURATION);
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public Set<String> getKeysWithPattern(String pattern) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.keys(pattern);
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public TweetMeta getTweetMeta(String key) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             //System.out.println("key is get tweet meta is: "+key);
             long date = 0l;
             try {
@@ -676,45 +568,34 @@ public class TweetDaoImpl implements TweetDao {
             return new TweetMeta(date, retweetsCount);
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public void setTweetScore(String uuid, String tweetId, double score) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.zadd(getTweetScoreSortedSetKey(uuid), score, tweetId);
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void deleteTopTweetsSortedSet(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try(Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.del(getTweetScoreSortedSetKey(uuid));
         } catch(JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public Set<Tuple> getTopNTweets(String uuid, int n) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getTweetScoreSortedSetKey(uuid), "+inf", "-inf", 0, n);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -723,27 +604,21 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public Long addToCache(String uuid, InternalStatus status) {
         Status tweet = status.getInternalStatus();
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             //jedis.set(getTweetIdString(uuid, id), statusString);
             return jedis.lpush(getTweetCacheKey(uuid), String.valueOf(tweet.getId()));
         }  catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return 0l;
     }
 
     @Override
     public String popFromCache(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.rpop(getTweetCacheKey(uuid));
         }  catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return null;
     }
@@ -751,65 +626,46 @@ public class TweetDaoImpl implements TweetDao {
     @Override
     public void addToTweetStringCache(String uuid, InternalStatus status) {
         String id = String.valueOf(status.getInternalStatus().getId());
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.set(getTweetStringCache(uuid, id), status.getStatusString().replace("_normal", ""));
-        } catch (JedisException jE) {
-            jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void removeFromTweetStringCache(String uuid, String poppedTweetId) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.del(getTweetStringCache(uuid, poppedTweetId));
-        } catch (JedisException jE) {
-            jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public String getTweetStringsCache(String uuid, String id) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.get(getTweetStringCache(uuid, id));
         } catch (JedisException e) {
             e.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public List<String> getIdsFromTweetCache(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             //jedis.set(getTweetIdString(uuid, id), statusString);
             return jedis.lrange(getTweetCacheKey(uuid), 0, -1);
         }  catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public Set<String> getAllTweetsIds(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             //jedis.set(getTweetIdString(uuid, id), statusString);
             return jedis.smembers(getAllTweetsIdsSetKey(uuid));
         }  catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return null;
     }
@@ -844,133 +700,102 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void incrLanguageCounter(String uuid, String language) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.zincrby(getLanguageRankSetKey(uuid), 1, language);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void incrHashtagCounter(String uuid, String hashtag) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.zincrby(getHashtagRankSetKey(uuid), 1, hashtag);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void incrWordCounter(String uuid, String word) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.zincrby(getWordRankSetKey(uuid), 1, word);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void incrSourceCounter(String uuid, String source) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.zincrby(getSourceRankSetKey(uuid), 1, source);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void setMediaUrl(String uuid, String mediaURLHttps) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hset(uuid, PLACEHOLDER_MEDIA_URL_KEY, mediaURLHttps);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
 
     }
 
     @Override
     public String[] getTrendingHashtags() {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             List<String> hashtags = jedis.lrange(TRENDS_KEY, 0, -1);
             return (hashtags == null || hashtags.isEmpty()) ? null : hashtags.toArray(new String[]{});
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public void setTrendindHashtags(String[] hashtags) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.rpush(TRENDS_KEY, hashtags);
             jedis.expire(TRENDS_KEY, DEFAULT_TRENDS_CACHE_DURATION);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void addToUserEventsList(String uuid, String authCode) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
             jedis.lpush(getUserEventsListKey(authCode), uuid);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public List<String> getUserEventsList(String authCode) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
             return jedis.lrange(getUserEventsListKey(authCode), 0, -1);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return new ArrayList<String>();
     }
 
     @Override
     public void removeFromUserEventsList(String uuid, String authToken) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
             jedis.lrem(getUserEventsListKey(authToken), 0, uuid);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public EventMeta getEventMeta(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
             String startTime = jedis.hget(uuid, START_TIME_KEY);
             String hashtags = jedis.hget(uuid, HASHTAGS_KEY);
             String mediaUrl = jedis.hget(uuid, PLACEHOLDER_MEDIA_URL_KEY);
@@ -991,16 +816,13 @@ public class TweetDaoImpl implements TweetDao {
             return new EventMeta(uuid, startTime, hashtags, mediaUrl, accessToken);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public void storeEventInUserHistory(String hashtags, String startTime, String screenName, String profileImgUrl, long noOfTweets, long noOfRetweets, String uuid, String authToken, String mediaUrl) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
             jedis.lpush(HISTORIC_USER_EVENTS_LIST, uuid);
             jedis.lpush(getHistoricUserEventIdsListKey(authToken), uuid);
             jedis.hset(uuid, HISTORIC_META_AUTHTOKEN, authToken);
@@ -1013,28 +835,22 @@ public class TweetDaoImpl implements TweetDao {
             jedis.hset(uuid, HISTORIC_META_MEDIA_URL, mediaUrl);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public List<String> getHistoricUserEventIds(String authToken) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
             return jedis.lrange(HISTORIC_USER_EVENTS_LIST, 0, -1);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return new ArrayList<String>();
     }
 
     @Override
     public HistoricUserEvent getHistoricUserEvent(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()){
             String authToken = jedis.hget(uuid, HISTORIC_META_AUTHTOKEN);
             String hashtags = jedis.hget(uuid, HISTORIC_META_HASHTAGS);
             String startTime = jedis.hget(uuid, HISTORIC_META_START_TIME);
@@ -1047,8 +863,6 @@ public class TweetDaoImpl implements TweetDao {
             return new HistoricUserEvent(hashtags, startTime, screenName, profileImgUrl, noOfTweets, noOfRetweets, mediaUrl);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         return null;
     }
@@ -1063,13 +877,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public Set<Tuple> getTopNCountries(String uuid, Integer count) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getCountryRankSetKey(uuid), "+inf", "-inf", 0, count);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -1077,13 +888,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public Set<Tuple> getTopNLanguages(String uuid, Integer count) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getLanguageRankSetKey(uuid), "+inf", "-inf", 0, count);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -1091,13 +899,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public Set<Tuple> getTopNSources(String uuid, Integer count) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getSourceRankSetKey(uuid), "+inf", "-inf", 0, count);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -1105,13 +910,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public Set<Tuple> getTopNHashtags(String uuid, Integer count) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getHashtagRankSetKey(uuid), "+inf", "-inf", 0, count);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -1119,13 +921,10 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public Set<Tuple> getTopNWords(String uuid, Integer count) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             return jedis.zrevrangeByScoreWithScores(getWordRankSetKey(uuid), "+inf", "-inf", 0, count);
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
         //TODO: error module
         return null;
@@ -1136,8 +935,7 @@ public class TweetDaoImpl implements TweetDao {
 
     @Override
     public void blockAllExistingTweetsByUser(String uuid, String screenName) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             String userId = jedis.get(getUserIdKey(screenName, uuid));
             Set<String> tweetIds = jedis.smembers(getUserTweetsSetKey(uuid, userId));
             for (String tweetId : tweetIds) {
@@ -1146,15 +944,12 @@ public class TweetDaoImpl implements TweetDao {
             }
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void destroyEvent(String uuid) {
-        try {
-            jedis = JedisPoolContainer.getInstance();
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.lrem(All_EVENTS_KEY, 0, uuid);
             jedis.del(uuid, getArrivedNotSentListKey(uuid), getApprovedSentToClientListKey(uuid),
                     getSentForApprovalListKey(uuid), getTotalTweetsKey(uuid), getTotalRetweetsKey(uuid), getCountryRankSetKey(uuid));
@@ -1164,8 +959,6 @@ public class TweetDaoImpl implements TweetDao {
             }
         } catch (JedisException jE) {
             jE.printStackTrace();
-        } finally {
-            if(jedis != null) jedis.close();
         }
     }
 
