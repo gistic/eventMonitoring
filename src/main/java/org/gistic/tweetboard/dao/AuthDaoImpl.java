@@ -19,104 +19,135 @@ public class AuthDaoImpl implements AuthDao {
     private static final String TWITTER_ACCESS_TOKEN_KEY_STUB = "twitterAccessTokenKey:";
     private static final String TWITTER_USER_ID_KEY_STUB = "twitterUserIdKey:";
     public static final String REDIRECT_TO_HOME = "redirectToHome";
-
+    Jedis jedis = null;
     @Override
     public void setRequestToken(String requestToken, String requestTokenSecret) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             jedis.set(getTwitterRequestTokenKey(requestToken), requestTokenSecret);
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public String getRequestToken(String oauthToken) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             return jedis.get(getTwitterRequestTokenKey(oauthToken));
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public void setAccessTokenSecret(String accessToken, String accessTokenSecret) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             jedis.set(getTwitterAccessTokenKey(accessToken), accessTokenSecret);
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public String getAccessTokenSecret(String accessToken) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             return jedis.get(getTwitterAccessTokenKey(accessToken));
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public String getUserId(String accessToken) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             return jedis.get(getTwitteruserIdKey(accessToken));
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public void setUserId(String accessToken, String userIdFromTwitter) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             jedis.set(getTwitteruserIdKey(accessToken), userIdFromTwitter);
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void setTempHashtags(String token, String hashtags) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             jedis.set("hashtags:"+token, hashtags);
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public String getTempHashtags(String oauthToken) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             return jedis.get("hashtags:"+oauthToken);
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public void deleteRequestToken(String oauthToken) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             jedis.del(getTwitterRequestTokenKey(oauthToken));
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public void deleteTempHashTags(String oauthToken) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             jedis.del("hashtags:"+oauthToken);
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public String getOrUpdateUserDetailsInCache(org.gistic.tweetboard.security.User user) throws TwitterException {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             String userDetailsString = null;
             User twitterUser = null;
             userDetailsString =jedis.get(getTwitterUserDetails(user.getAccessToken(), user.getAccessTokenSecret()));
@@ -141,35 +172,46 @@ public class AuthDaoImpl implements AuthDao {
             return userDetailsString;
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
         return null;
     }
 
     @Override
     public void setRedirectToHomeFlag(String token, String redirectToHome) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             jedis.set(REDIRECT_TO_HOME +":"+token, redirectToHome);
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
     }
 
     @Override
     public String getRedirectToHomeFlag(String oauthToken) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             return jedis.get(REDIRECT_TO_HOME+":"+oauthToken);
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
         return "false";
     }
 
     @Override
     public void deleteRedirectToHomeFlag(String oauthToken) {
-        try (Jedis jedis = JedisPoolContainer.getInstance()){
+        try {
+            jedis = JedisPoolContainer.getInstance();
             jedis.del(REDIRECT_TO_HOME+":"+oauthToken);
         } catch (JedisException jE) {
             jE.printStackTrace();
+        } finally {
+            if(jedis != null) jedis.close();
         }
     }
 
