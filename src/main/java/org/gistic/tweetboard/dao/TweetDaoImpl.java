@@ -69,7 +69,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -90,7 +90,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -103,7 +103,7 @@ public class TweetDaoImpl implements TweetDao {
         }  catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -124,7 +124,7 @@ public class TweetDaoImpl implements TweetDao {
         }  catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -153,7 +153,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -165,7 +165,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -179,7 +179,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisConnectionException e) {
             LoggerFactory.getLogger(this.getClass()).warn("DB access: error in front end hanging request");
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -197,7 +197,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -217,7 +217,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -232,7 +232,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -248,7 +248,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -262,7 +262,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -280,7 +280,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -297,7 +297,7 @@ public class TweetDaoImpl implements TweetDao {
 //        } catch (JedisException jE) {
 //            jE.printStackTrace();
 //        } finally {
-//            if(jedis != null) jedis.close();
+//            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
 //        }
     }
 
@@ -323,7 +323,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -340,7 +340,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -364,7 +364,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return eventConfig;
     }
@@ -396,7 +396,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -408,7 +408,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -436,7 +436,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -450,7 +450,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -466,7 +466,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -496,7 +496,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -512,7 +512,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -526,7 +526,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -541,7 +541,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -555,7 +555,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -567,7 +567,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return 0.0;
     }
@@ -578,7 +578,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -592,7 +592,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -604,7 +604,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -616,7 +616,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -628,7 +628,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -642,7 +642,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -654,7 +654,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -677,7 +677,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -690,7 +690,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -702,7 +702,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch(JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -714,7 +714,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -730,7 +730,7 @@ public class TweetDaoImpl implements TweetDao {
         }  catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return 0l;
     }
@@ -743,7 +743,7 @@ public class TweetDaoImpl implements TweetDao {
         }  catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -757,7 +757,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -769,7 +769,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -781,7 +781,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException e) {
             e.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -795,7 +795,7 @@ public class TweetDaoImpl implements TweetDao {
         }  catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -809,7 +809,7 @@ public class TweetDaoImpl implements TweetDao {
         }  catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -850,7 +850,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -862,7 +862,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -874,7 +874,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -886,7 +886,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -898,7 +898,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
 
     }
@@ -912,7 +912,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -926,7 +926,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -938,7 +938,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -950,7 +950,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return new ArrayList<String>();
     }
@@ -963,7 +963,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -992,7 +992,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -1014,7 +1014,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -1026,7 +1026,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return new ArrayList<String>();
     }
@@ -1048,7 +1048,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         return null;
     }
@@ -1069,7 +1069,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -1083,7 +1083,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -1097,7 +1097,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -1111,7 +1111,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -1125,7 +1125,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
         //TODO: error module
         return null;
@@ -1147,7 +1147,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
@@ -1165,7 +1165,7 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         } finally {
-            if(jedis != null) jedis.close();
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
         }
     }
 
