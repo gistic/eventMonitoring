@@ -2,9 +2,12 @@ package org.gistic.tweetboard.resources;
 
 import io.dropwizard.auth.Auth;
 import org.gistic.tweetboard.DelayedJobsManager;
+import org.gistic.tweetboard.Util.GmailSender;
+import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.MetaDataLogic;
+import org.gistic.tweetboard.datalogic.NewsDataLogic;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.gistic.tweetboard.eventmanager.*;
 import org.gistic.tweetboard.eventmanager.twitter.TweetsOverTimeAnalyzer;
@@ -12,7 +15,6 @@ import org.gistic.tweetboard.eventmanager.twitter.WarmupRunnable;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.representations.Event;
 import org.gistic.tweetboard.security.User;
-import org.gistic.tweetboard.util.GmailSender;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONArray;
@@ -71,6 +73,7 @@ public class EventsResource {
         String[] hashTags = event.getHashTags();
         String uuid = UUID.randomUUID().toString();
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        NewsDataLogic newsDataLogic = new NewsDataLogic(uuid);
         if (user == null) {
             //invalid token tweetboard v2.0
             throw new WebApplicationException(
@@ -98,6 +101,8 @@ public class EventsResource {
             }
         }
         DelayedJobsManager.createEventDestroyJob(uuid, authToken);
+        
+        newsDataLogic.callScrapySpiders(hashTags);
         return eventUuid;
     }
 

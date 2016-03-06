@@ -96,6 +96,10 @@ angular.module('trackHashtagApp', [
         "dashboard.map": {
             url: '/map',
             templateUrl: 'views/views-components/map.html'
+        },
+        "dashboard.news": {
+            url: '/news',
+            templateUrl: 'views/views-components/news.html'
         }
     };
 
@@ -169,6 +173,9 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                </li>\n" +
     "                <li class=\"hvr-underline-from-center\" ng-class=\"{active : isActive('dashboard.media')}\">\n" +
     "                    <a ui-sref=\".media\">Media</a>\n" +
+    "                </li>\n" +
+    "                <li class=\"hvr-underline-from-center\" ng-class=\"{active : isActive('dashboard.news')}\">\n" +
+    "                    <a ui-sref=\".news\">News</a>\n" +
     "                </li>\n" +
     "                <li class=\"hvr-underline-from-center\" ng-class=\"{active : isActive('dashboard.map')}\">\n" +
     "                    <a ui-sref=\".map\">Map</a>\n" +
@@ -380,6 +387,48 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "        </div>\n" +
     "    </div>\n" +
     "</section>"
+  );
+
+
+  $templateCache.put('views/views-components/news.html',
+    "<h2>NEWS</h2>\n" +
+    "\n" +
+    "<article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"news in newsQueue track by $index\">\n" +
+    "\n" +
+    "\t<div class=\"tweet-content\">\n" +
+    "       \n" +
+    "        <div class=\"media-left\">\n" +
+    "           \t<a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
+    "                    <img lazy-src=\"{{news.image_url}}\" on-error-src=\"{{defultImage}}\" class=\"media-object user-img\" />\n" +
+    "            </a>\n" +
+    "        </div>\n" +
+    "        <div class=\"media-body tweet-content\">\n" +
+    "           \n" +
+    "            <h6 class=\"media-heading tweet-user clearfix\">                \n" +
+    "                    <h4>جريدة مكة</h4>\n" +
+    "            </h6>\n" +
+    "\t\t\t\n" +
+    "            <p>\n" +
+    "\t\t      \t<span>\n" +
+    "\t\t\t     \t<a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
+    "\t                    {{news.title}}\n" +
+    "\t            \t</a>\n" +
+    "                </span>\n" +
+    "            \n" +
+    "\t\t\t</p>\n" +
+    "\t\t\t\n" +
+    "            <p>\n" +
+    "                <span class=\"fa fa-map-marker\">السعودية</span>\n" +
+    "            </p>\n" +
+    "\n" +
+    "            <p>\n" +
+    "                <span class=\"text-muted\">{{news.date}}</span>\n" +
+    "            </p>\n" +
+    "            \n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "</article>\n"
   );
 
 

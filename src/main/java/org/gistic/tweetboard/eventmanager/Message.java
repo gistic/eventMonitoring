@@ -50,6 +50,7 @@ public class Message {
 
         public static final String CountryUpdate = "countryUpdate";
         public static final String TopPeople = "topPeople";
+		public static final String NewsItem = "newsItem";
 
     }
 }

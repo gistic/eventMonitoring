@@ -19,7 +19,7 @@ EventHandlerController.controller('EventMainController',
 
         // 1. Set the initializing values
         $scope.dashboardState = false;
-        if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.map") {
+        if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.news" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
         }
         // Lightbox for media
@@ -229,13 +229,15 @@ EventHandlerController.controller('EventMainController',
         $scope.mediaQueue = [];
         $scope.lastNewMedia = [];
         $scope.topPeople = [];
+        $scope.newsQueue = [];
         $scope.tweet = {};
 
 
         // Close event source if he leave the media or tweet stream stats
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
-                if (!(toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" || toState.name == "dashboard.map")) {
+                if (!(toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" || toState.name == "dashboard.news" || toState.name == "dashboard.map")) {
+
                     CreateEventSource.closeEventSource();
                 }
             })
@@ -489,6 +491,16 @@ EventHandlerController.controller('EventMainController',
                 $scope.data = JSON.parse(response.data);
                 $scope.$apply(function () {
                     $scope.topPeople = $scope.data.topUsers;
+                }, false);
+            });
+
+            // News Item
+            source.addEventListener('news-item', function (response) {
+                var newsItem = JSON.parse(response.data);
+                
+                $scope.$apply(function () {
+
+                    $scope.newsQueue.push(newsItem)
                 }, false);
             });
 

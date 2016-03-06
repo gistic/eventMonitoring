@@ -76,6 +76,14 @@ public class LiveTweetsBroadcaster {
                         .build();
                 doBroadcast(uuid, event);
                 break;
+            case Message.Type.NewsItem:
+                event = eventBuilder
+                        .name("news-item")
+                        .mediaType(MediaType.TEXT_PLAIN_TYPE)
+                        .data(String.class, message.replace("_normal", ""))
+                        .build();
+                doBroadcast(uuid, event);
+                break;
         }
         return "{\"msg\":\"Message has been broadcasted.\"}";
     }

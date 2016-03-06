@@ -96,6 +96,10 @@ angular.module('trackHashtagApp', [
         "dashboard.map": {
             url: '/map',
             templateUrl: 'views/views-components/map.html'
+        },
+        "dashboard.news": {
+            url: '/news',
+            templateUrl: 'views/views-components/news.html'
         }
     };
 

@@ -1,0 +1,38 @@
+<h2>NEWS</h2>
+
+<article class="media clearfix tweet fx-fade fx-speed-2000" ng-repeat="news in newsQueue track by $index">
+
+	<div class="tweet-content">
+       
+        <div class="media-left">
+           	<a ng-href="{{news.url}}" target="_blank" class="pull-left tweet-userName">
+                    <img lazy-src="{{news.image_url}}" on-error-src="{{defultImage}}" class="media-object user-img" />
+            </a>
+        </div>
+        <div class="media-body tweet-content">
+           
+            <h6 class="media-heading tweet-user clearfix">                
+                    <h4>جريدة مكة</h4>
+            </h6>
+			
+            <p>
+		      	<span>
+			     	<a ng-href="{{news.url}}" target="_blank" class="pull-left tweet-userName">
+	                    {{news.title}}
+	            	</a>
+                </span>
+            
+			</p>
+			
+            <p>
+                <span class="fa fa-map-marker">السعودية</span>
+            </p>
+
+            <p>
+                <span class="text-muted">{{news.date}}</span>
+            </p>
+            
+        </div>
+    </div>
+
+</article>

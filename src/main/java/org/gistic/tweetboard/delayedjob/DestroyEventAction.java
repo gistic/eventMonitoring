@@ -1,6 +1,6 @@
 package org.gistic.tweetboard.delayedjob;
 
-import org.gistic.tweetboard.util.Misc;
+import org.gistic.tweetboard.Util.Misc;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.Client;

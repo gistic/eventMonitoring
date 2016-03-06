@@ -3,7 +3,8 @@ package org.gistic.tweetboard.dao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gistic.tweetboard.JedisPoolContainer;
-import org.gistic.tweetboard.util.Misc;
+import org.gistic.tweetboard.Util.Misc;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisException;
 import twitter4j.TwitterException;

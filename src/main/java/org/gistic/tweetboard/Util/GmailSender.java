@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.Util;
 
 
+import org.gistic.tweetboard.Util.GmailSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

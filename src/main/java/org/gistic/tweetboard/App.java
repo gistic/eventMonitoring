@@ -64,6 +64,9 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(new AdminEventSource());
         e.jersey().register(new LoginResource());
         e.jersey().register(new TwitterUserResource());
+        
+        e.jersey().register(new LiveNewsBroadcaster());
+
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
         DelayedJobsManager.initiate();
         //e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");
