@@ -14,15 +14,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.gistic.tweetboard.dao.NewsDao;
+import org.gistic.tweetboard.representations.GenericArray;
 
 import jersey.repackaged.com.google.common.collect.ImmutableList;
 
 public class NewsDataLogic {
 	private static final ImmutableList<String> spiders = ImmutableList.copyOf(Arrays.asList("makkah_newspaper").iterator());
 	private String uuid;
+	private NewsDao newsDao;
 	
 	public NewsDataLogic(String uuid){
 		this.uuid = uuid;
+		this.newsDao = new NewsDao();
 	}
 	
 	public void callScrapySpiders(String[] keywords){
@@ -66,13 +69,15 @@ public class NewsDataLogic {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
+
+	public GenericArray<String> getSavedNews() {
+		return this.newsDao.getSavedNewsFromRedis(this.uuid);
+	}
 	
 	public static void main(String[] args) {
-		NewsDataLogic ndl = new NewsDataLogic("9f383997-67c0-4b24-acf4-4d0f47fa3ec7");
-		String[] keywords = new String[1];
-		keywords[0] = "hajj";
-		ndl.callScrapySpiders(keywords);
-	}
+		NewsDataLogic ndl = new NewsDataLogic("197a8f76-0ce1-4f8f-8295-080fc8ee0b28");
+		System.out.println(ndl.getSavedNews().toString());
+}
 
 
 }

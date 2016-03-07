@@ -2,8 +2,10 @@ package org.gistic.tweetboard.dao;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import org.gistic.tweetboard.JedisPoolContainer;
+import org.gistic.tweetboard.representations.GenericArray;
 import org.json.JSONObject;
 
 import redis.clients.jedis.Jedis;
@@ -20,6 +22,20 @@ public class NewsDao {
         }catch(JedisException e){
         	e.printStackTrace();
         }
+	}
+	
+	public GenericArray<String> getSavedNewsFromRedis(String uuid){
+		List<String> results = null;
+		
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+        	
+			results = jedis.hvals(uuid+":news");
+        	
+        }catch(JedisException e){
+        	e.printStackTrace();
+        }
+		
+		return new GenericArray<String>(results.toArray(new String[]{}));
 	}
 	
 	private String MD5Encode(String string){

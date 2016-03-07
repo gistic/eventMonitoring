@@ -158,6 +158,24 @@ EventHandlerController.controller('EventMainController',
                 })
         };
 
+        $scope.getSavedNews = function () {
+            // $scope.eventDataChunk = "Warm Up Tweets";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/savedNews';
+            var requestAction = "GET";
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    for (var i = 0; i < response.items.length; i++) {
+                        $scope.newsQueue.push(JSON.parse(response.items[i]))
+                    }
+                    $rootScope.loadingEvent = false;
+                }).error(function () {
+                    $rootScope.loadingEvent = false;
+                    console.log("#");
+                })
+        };
+
         // Intialize
 
 
@@ -165,6 +183,7 @@ EventHandlerController.controller('EventMainController',
             User.setUserAuth();
             if (User.getUserAuth()) {
                 $scope.getWarmupData();
+                $scope.getSavedNews();
                 $scope.getViewOptions();
                 $scope.getEventStats();
                 User.getUserData();

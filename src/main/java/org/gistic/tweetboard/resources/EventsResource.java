@@ -493,5 +493,22 @@ public class EventsResource {
         return tweetDataLogic.getCachedTweets();
     }
 
+	@GET
+	@Path("/{uuid}/savedNews")
+	public GenericArray<String> getSavedNews(@PathParam("uuid") String uuid,
+            @DefaultValue("undefined") @QueryParam("authToken") String authToken,
+            @Auth(required = false) User user) {
+		checkUuid(uuid);
+		if (user==null) {
+			Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("{'error':'incorrect token'}").build();
+		}
+		
+        NewsDataLogic newsDataLogic = new NewsDataLogic(uuid);
+        GenericArray<String>  results = newsDataLogic.getSavedNews();
+        System.out.println("**************\n\n\n\n");
+        System.out.println(results.toString());
+        System.out.println("\n\n\n\n**************");
+		return results;
+	}
 
 }
