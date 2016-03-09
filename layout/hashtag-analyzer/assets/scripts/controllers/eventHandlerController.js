@@ -520,6 +520,13 @@ EventHandlerController.controller('EventMainController',
                 $scope.$apply(function () {
 
                     $scope.newsQueue.push(newsItem)
+                    $scope.newsQueue.sort(function(a,b){
+                        new_date = new Date(a.date)
+                        old_date = new Date(b.date)
+                        if (new_date > old_date) return -1;
+                        else if (old_date < new_date) return 1;
+                        else return 0;
+                    });
                 }, false);
             });
 
