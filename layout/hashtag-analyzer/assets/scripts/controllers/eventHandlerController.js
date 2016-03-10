@@ -167,7 +167,14 @@ EventHandlerController.controller('EventMainController',
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function (response) {
                     for (var i = 0; i < response.items.length; i++) {
-                        $scope.newsQueue.push(JSON.parse(response.items[i]))
+                        $scope.$apply(function () {
+                            $scope.newsQueue.push(JSON.parse(response.items[i]))
+                            $scope.newsQueue.sort(function(a,b){
+                                new_date = new Date(a.date)
+                                old_date = new Date(b.date)
+                                return old_date-new_date
+                            });
+                        });
                     }
                     $rootScope.loadingEvent = false;
                 }).error(function () {
@@ -518,16 +525,13 @@ EventHandlerController.controller('EventMainController',
                 var newsItem = JSON.parse(response.data);
                 
                 $scope.$apply(function () {
-
                     $scope.newsQueue.push(newsItem)
                     $scope.newsQueue.sort(function(a,b){
                         new_date = new Date(a.date)
                         old_date = new Date(b.date)
-                        if (new_date > old_date) return -1;
-                        else if (old_date < new_date) return 1;
-                        else return 0;
+                        return old_date-new_date
                     });
-                }, false);
+                });
             });
 
             // Top country
