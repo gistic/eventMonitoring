@@ -1,6 +1,7 @@
 package org.gistic.tweetboard.Util;
 
 import com.google.common.collect.ImmutableMap;
+
 import com.google.common.collect.ImmutableSet;
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
@@ -10,6 +11,8 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -74,4 +77,25 @@ public class Misc {
 //        }
         return null;
     }
+    
+    public static String MD5Encode(String string){
+        MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        md.update(string.getBytes());
+        
+        byte byteData[] = md.digest();
+ 
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+         sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+		return sb.toString();
+		
+	}
 }

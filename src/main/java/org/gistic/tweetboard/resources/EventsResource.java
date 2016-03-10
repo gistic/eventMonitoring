@@ -2,6 +2,7 @@ package org.gistic.tweetboard.resources;
 
 import io.dropwizard.auth.Auth;
 import org.gistic.tweetboard.DelayedJobsManager;
+import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.Util.GmailSender;
 import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.dao.TweetDao;
@@ -19,8 +20,10 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.exceptions.JedisException;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -45,6 +48,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -102,6 +106,22 @@ public class EventsResource {
         }
         DelayedJobsManager.createEventDestroyJob(uuid, authToken);
         
+        JSONObject json_body = new JSONObject();
+        json_body.put("uuid", uuid);
+        
+        StringBuilder builder = new StringBuilder();
+        for(String s : hashTags) {
+            builder.append(s);
+        }
+        
+        json_body.put("keywords", builder.toString());
+
+        jedis.hset("events:uuids", uuid,json_body.toString());
+//        Set<String> set = jedis.smembers("events-uuids");
+//        for (String s : set) {
+//        	System.out.println(s);
+//        	System.out.println("-------------------\n\n\n\n\n\n");
+//        }
         newsDataLogic.callScrapySpiders(hashTags);
         return eventUuid;
     }
@@ -133,6 +153,15 @@ public class EventsResource {
             EventMap.delete(uuid, authToken);
         }
         DelayedJobsManager.deleteEventDestroyJob(uuid, authToken);
+//       TODO: needs to be refactored 
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+        	
+            jedis.hdel("events:uuids", uuid);
+        	
+        }catch(JedisException e){
+        	e.printStackTrace();
+        }
+//        end of TODO
         return Response
                 .ok()
                 .build();
@@ -505,9 +534,6 @@ public class EventsResource {
 		
         NewsDataLogic newsDataLogic = new NewsDataLogic(uuid);
         GenericArray<String>  results = newsDataLogic.getSavedNews();
-        System.out.println("**************\n\n\n\n");
-        System.out.println(results.toString());
-        System.out.println("\n\n\n\n**************");
 		return results;
 	}
 

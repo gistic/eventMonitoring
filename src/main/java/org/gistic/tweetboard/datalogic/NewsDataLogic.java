@@ -38,7 +38,6 @@ public class NewsDataLogic {
 			httpCon.setRequestMethod("POST");
 	
 			String urlParameters = "project=newspiders&spider=makkah_newspaper&euuid="+uuid+"&keywords="+String.join(",", keywords);
-			System.out.println("==============\n"+urlParameters+"\n\n\n\n\n\n");
 			
 			// Send post request
 			httpCon.setDoOutput(true);
@@ -51,7 +50,6 @@ public class NewsDataLogic {
 		    while ((line = rd.readLine()) != null) {
 		      System.out.println(line);
 		    }
-		    System.out.println("==============\n");
 		    wr.close();
 		    rd.close();
 		  
