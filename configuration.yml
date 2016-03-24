@@ -56,3 +56,4 @@ baseDomain: localhost:8080
 #      threshold: ALL
 #      archive: true
 #      archivedLogFilenamePattern: var/log/event-board-%d.log
+cleanUpIntervalInSecs: 60

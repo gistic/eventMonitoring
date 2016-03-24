@@ -18,6 +18,14 @@ public class TweetBoardConfiguration extends Configuration implements AssetsBund
     @NotEmpty
     private String message;
 
+    public long getCleanUpIntervalInSecs() {
+        return cleanUpIntervalInSecs;
+    }
+
+    @JsonProperty
+    @NotEmpty
+    private long cleanUpIntervalInSecs;
+
     public String getBaseDomain() {
         return baseDomain;
     }

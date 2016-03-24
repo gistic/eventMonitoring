@@ -1,5 +1,6 @@
 package org.gistic.tweetboard.cleanup;
 
+import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.eventmanager.EventMap;
 
 /**
@@ -13,8 +14,9 @@ public class CleanTopRankings implements Runnable{
             System.out.println("#############");
             System.out.println("CLEANED UP!!!");
             System.out.println("#############");
+            long timeout = ConfigurationSingleton.getInstance().getCleanUpIntervalInSecs();
             try {
-                Thread.sleep(60000);
+                Thread.sleep(timeout*1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
