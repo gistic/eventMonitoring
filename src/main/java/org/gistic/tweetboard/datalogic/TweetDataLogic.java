@@ -429,9 +429,11 @@ public class TweetDataLogic {
                 incrCountryCounter(place.getCountryCode());
             } else {
                 //try and get country from user location
-                String countryCode = Misc.checkCountryAndGetCode(tweet.getUser().getLocation());
-                if (countryCode != null && !countryCode.isEmpty()) {
-                    this.incrCountryCounter(countryCode);
+                if(tweet.getUser().getLocation() != null) {
+                    String countryCode = Misc.checkCountryAndGetCode(tweet.getUser().getLocation());
+                    if (countryCode != null && !countryCode.isEmpty()) {
+                        this.incrCountryCounter(countryCode);
+                    }
                 }
             }
             String originalSource = tweet.getSource();
@@ -514,5 +516,9 @@ public class TweetDataLogic {
     public void createNewEvent(String[] hashTags, String accessToken) {
         tweetDao.addNewEventToList(uuid);
         tweetDao.setDefaultEventProperties(uuid, hashTags, accessToken);
+    }
+
+    public void removeBelowTopN() {
+        tweetDao.removeBelowTopN(uuid);
     }
 }

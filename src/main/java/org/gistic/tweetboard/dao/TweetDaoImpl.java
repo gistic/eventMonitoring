@@ -867,6 +867,16 @@ public class TweetDaoImpl implements TweetDao {
         return null;
     }
 
+    @Override
+    public void removeBelowTopN(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+//             jedis.zrevrangeByScoreWithScores(getLanguageRankSetKey(uuid), "+inf", "-inf", 0, count);
+            jedis.zremrangeByRank(getTweetScoreSortedSetKey(uuid), 0, -51);
+            jedis.zremrangeByRank(getUsersRankSetKey(uuid), 0, -51);
+        }
+    }
+
+
     private String getHistoricUserEventIdsListKey(String authToken) {
         return HISTORIC_USER_EVENTS_LIST + ":" + authToken;
     }

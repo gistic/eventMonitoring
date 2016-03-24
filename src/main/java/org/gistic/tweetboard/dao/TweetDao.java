@@ -163,4 +163,6 @@ public interface TweetDao {
     List<String> getHistoricUserEventIds(String authToken);
 
     HistoricUserEvent getHistoricUserEvent(String historicUserEventId);
+
+    void removeBelowTopN(String uuid);
 }

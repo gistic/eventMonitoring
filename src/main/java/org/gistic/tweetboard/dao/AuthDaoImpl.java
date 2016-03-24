@@ -129,7 +129,7 @@ public class AuthDaoImpl implements AuthDao {
                     e.printStackTrace();
                     return null;
                 }
-                System.out.println("userDetailsString is: "+ userDetailsString);
+                //System.out.println("userDetailsString is: "+ userDetailsString);
                 String accessToken = user.getAccessToken();
                 String accessTokenSecret = user.getAccessTokenSecret();
                 jedis.set(getTwitterUserDetails(accessToken, accessTokenSecret), userDetailsString);

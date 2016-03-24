@@ -77,7 +77,6 @@ public class TweetProcessor {
     @Subscribe
     @AllowConcurrentEvents
     public void onStatusUpdate(InternalStatus status) {
-
         Status tweet = status.getInternalStatus();
         //status.getInternalStatus().getRetweetCount();
         for (MediaEntity mediaEntity : tweet.getExtendedMediaEntities()) {
@@ -107,9 +106,11 @@ public class TweetProcessor {
             tweetDataLogic.incrCountryCounter(place.getCountryCode());
         } else {
             //try and get country from user location
-            String countryCode = Misc.checkCountryAndGetCode(tweet.getUser().getLocation());
-            if (countryCode != null && !countryCode.isEmpty()) {
-                tweetDataLogic.incrCountryCounter(countryCode);
+            if(tweet.getUser().getLocation() != null) {
+                String countryCode = Misc.checkCountryAndGetCode(tweet.getUser().getLocation());
+                if (countryCode != null && !countryCode.isEmpty()) {
+                    tweetDataLogic.incrCountryCounter(countryCode);
+                }
             }
         }
         activePeopleAnalyzer.TweetArrived(tweet);
@@ -208,6 +209,7 @@ public class TweetProcessor {
 //            DateTime now = new DateTime();
 //            dao.insert(now, tweet.getText());
 //        }
+        //tweetDataLogic.removeBelowTopN();
     }
 
     private void checkModeratedAndThen(InternalStatus status, Status tweet) {
