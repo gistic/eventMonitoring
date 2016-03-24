@@ -14,7 +14,7 @@ public class CleanTopRankings implements Runnable{
             System.out.println("#############");
             System.out.println("CLEANED UP!!!");
             System.out.println("#############");
-            long timeout = ConfigurationSingleton.getInstance().getCleanUpIntervalInSecs();
+            int timeout = ConfigurationSingleton.getInstance().getCleanUpIntervalInSecs();
             try {
                 Thread.sleep(timeout*1000);
             } catch (InterruptedException e) {
