@@ -15,4 +15,6 @@ class Article(scrapy.Item):
 	date = scrapy.Field()
 	image_url = scrapy.Field()
 	fb_score = scrapy.Field()
+	source = scrapy.Field()
+	country = scrapy.Field()
 

@@ -13,6 +13,6 @@ class NewspidersPipeline(object):
 
 	def process_item(self, item, spider):
 
-		data={'uuid': item['uuid'], 'title': item['title'], 'url': item['url'], 'image_url': item['image_url'], 'date': item['date']}
+		data={'source': item['source'], 'country': item['country'], 'uuid': item['uuid'], 'title': item['title'], 'url': item['url'], 'image_url': item['image_url'], 'date': item['date']}
 		r = requests.post("http://localhost:8080/api/liveNews", data=json.dumps(data), headers = {'content-type': 'application/json'})
 		return item
