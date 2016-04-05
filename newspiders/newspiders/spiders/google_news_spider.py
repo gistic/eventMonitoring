@@ -54,7 +54,7 @@ class GoogleNewsSpider(scrapy.Spider):
 		self.keywords = kwargs.get('keywords', '')
 		self.uuid = kwargs.get('euuid', '')
 		for news_source in GoogleNewsSpider.news_sources:
-			self.start_urls.append("http://www.news.google.com/news?output=rss&q=site:"+news_source+"+"+self.keywords)		
+			self.start_urls.append("http://www.news.google.com/news?output=rss&q=site:"+news_source+"+"+" OR ".join(self.keywords.split(",")))		
 
 	def parse(self, response):
 		rss_feed = feedparser.parse(response.url)

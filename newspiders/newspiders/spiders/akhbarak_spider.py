@@ -23,7 +23,8 @@ class AkhbarakSpider(scrapy.Spider):
 		super(AkhbarakSpider, self).__init__(*args, **kwargs)
 		self.keywords = kwargs.get('keywords', '')
 		self.uuid = kwargs.get('euuid', '')
-		self.start_urls = ["http://www.akhbarak.net/search?filter[search_in]=1&search_input="+self.keywords]
+		for keyword in self.keywords.split(","):
+			self.start_urls.append("http://www.akhbarak.net/search?filter[search_in]=1&search_input="+keyword)
 
 
 	def parse(self, response):
