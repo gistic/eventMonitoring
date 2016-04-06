@@ -78,6 +78,8 @@ class GoogleNewsSpider(scrapy.Spider):
 					article['image_url'] = image.attrs['src']
 				elif 'imgsrc' in image.attrs:
 					article['image_url'] = image.attrs['imgsrc']
+				else:
+					article['image_url'] = "assets/images/article_default.jpg"
 
 			yield article
 

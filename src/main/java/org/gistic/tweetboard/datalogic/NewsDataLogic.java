@@ -19,7 +19,7 @@ import org.gistic.tweetboard.representations.GenericArray;
 import jersey.repackaged.com.google.common.collect.ImmutableList;
 
 public class NewsDataLogic {
-	private static final ImmutableList<String> spiders = ImmutableList.copyOf(Arrays.asList("makkah_newspaper").iterator());
+	private static final ImmutableList<String> spiders = ImmutableList.copyOf(Arrays.asList("akhbarak", "google_news").iterator());
 	private String uuid;
 	private NewsDao newsDao;
 	
@@ -31,33 +31,35 @@ public class NewsDataLogic {
 	public void callScrapySpiders(String[] keywords){
 		try{
 			URL url = new URL("http://localhost:6800/schedule.json");
+			
+			for (String spider : spiders) {
+				
+			
+				HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+				
+				httpCon.setDoOutput(true);
+				httpCon.setRequestMethod("POST");
 		
-			HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-			
-			httpCon.setDoOutput(true);
-			httpCon.setRequestMethod("POST");
-	
-			String urlParameters = "project=newspiders&spider=makkah_newspaper&euuid="+uuid+"&keywords="+String.join(",", keywords);
-			
-			// Send post request
-			httpCon.setDoOutput(true);
-			OutputStream wr = httpCon.getOutputStream();
-			wr.write(urlParameters.getBytes(StandardCharsets.UTF_8));
-			wr.flush();
-			
-		    BufferedReader rd = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
-		    String line;
-		    while ((line = rd.readLine()) != null) {
-		      System.out.println(line);
-		    }
-		    wr.close();
-		    rd.close();
-		  
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.err.println("Check scrapyd status...");
-		}
-
+				String urlParameters = "project=newspiders&spider="+spider+"&euuid="+uuid+"&keywords="+String.join(",", keywords);
+				
+				// Send post request
+				httpCon.setDoOutput(true);
+				OutputStream wr = httpCon.getOutputStream();
+				wr.write(urlParameters.getBytes(StandardCharsets.UTF_8));
+				wr.flush();
+				
+			    BufferedReader rd = new BufferedReader(new InputStreamReader(httpCon.getInputStream()));
+			    String line;
+			    while ((line = rd.readLine()) != null) {
+			      System.out.println(line);
+			    }
+			    wr.close();
+			    rd.close();
+		} 
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.err.println("Check scrapyd status...");
+			}
 	}
 	
 	public String getUuid() {
