@@ -199,6 +199,8 @@ EventHandlerController.controller('EventMainController',
                 $scope.getLocationStats();
                 $scope.drawLocationGeoChart();
                 $scope.drawLocationPieChart();
+                $scope.drawNewsLocationGeoChart();
+                $scope.drawNewsLocationPieChart();
                 $scope.getTopHashtags();
                 $scope.getTopSources();
                 $scope.getEvents();
@@ -557,6 +559,31 @@ EventHandlerController.controller('EventMainController',
 
                 //Update country
 
+                $scope.newsTopCountry = newsItem.country.toUpperCase();
+
+                $scope.countryName = ISO3166.getCountryName($scope.newsTopCountry);
+                $scope.countryCount = 1;//$scope.topCountrey.count;
+                var countryUpdated = false;
+
+                $scope.$apply(function () {
+                    if (newsCountryChart.data.length != 0) {
+                        for (var i = 0; i < newsCountryChart.data.length; i++) {
+                            if (newsCountryChart.data[i][0] == $scope.countryName) {
+                                newsCountryChart.data[i][1] = newsCountryChart.data[i][1]+1;
+                                countryUpdated = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!countryUpdated) {
+                        newsCountryChart.data.push([$scope.countryName, $scope.countryCount]);
+                        //$scope.topCountriesLength++; TODO incr top countries news
+                    }
+
+                }, false);
+
+
                 // Update news queue
                 $scope.$apply(function () {
                     $scope.newsQueue.push(newsItem)
@@ -606,6 +633,49 @@ EventHandlerController.controller('EventMainController',
             languagesPieChart.data = [['Language', 'Count']];
 
             languagesPieChart.options = {
+                displayExactValues: true,
+                is3D: true,
+                chartArea: {
+                    left: 10,
+                    top: 0,
+                    width: '100%',
+                    height: '100%'
+                }
+            };
+        }
+
+        // News location map visualization
+        var newsCountryChart = [];
+        $scope.newsCountryChart = newsCountryChart;
+        $scope.drawNewsLocationGeoChart = function () {
+
+            newsCountryChart.type = "GeoChart";
+            newsCountryChart.data = [['Country', 'News Count: ']];
+
+            newsCountryChart.options = {
+                tooltip: {
+                    textStyle: {
+                        color: '#191919'
+                    },
+                    showColorCode: true
+                },
+                height: 250,
+                colorAxis: {
+                    colors: ['#deebf7', '#9ecae1', '#3182bd']
+                },
+                displayMode: 'regions'
+            };
+
+        }
+
+        var newsLocationPieChart = [];
+        $scope.newsLocationPieChart = newsLocationPieChart;
+        $scope.drawNewsLocationPieChart = function () {
+
+            newsLocationPieChart.type = "PieChart";
+            newsLocationPieChart.data = newsCountryChart.data;
+
+            newsLocationPieChart.options = {
                 displayExactValues: true,
                 is3D: true,
                 chartArea: {
