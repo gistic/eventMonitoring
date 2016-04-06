@@ -32,7 +32,7 @@ public class LiveNewsBroadcaster {
         		Message msg = new Message(obj.getString("uuid"), Message.Type.NewsItem, obj.toString());
         		NewsDao newsDao = new NewsDao();
         		newsDao.saveNewsToRedis(obj.getString("uuid"), obj);
-
+				System.out.println(newsItem);
 				newsDao.incrCountryCounter(obj.getString("uuid"), obj.getString("country"));
 				newsDao.incrSourceCounter(obj.getString("uuid"), obj.getString("source"));
         		LiveTweetsBroadcasterSingleton.broadcast(msg);

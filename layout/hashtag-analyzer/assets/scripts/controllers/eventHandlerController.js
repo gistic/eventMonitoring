@@ -522,8 +522,42 @@ EventHandlerController.controller('EventMainController',
 
             // News Item
             source.addEventListener('news-item', function (response) {
+                console.log("got news item");
                 var newsItem = JSON.parse(response.data);
-                
+
+                // Update tweets sources
+                var sourceUpdated = false;
+                if (newsItem.source != null) {
+                    console.log("got news source!");
+                    var newsSourceName = newsItem.source;
+                    console.log(newsItem.source);
+                    for (var i = 0; i < $scope.topNewsSource.length; i++) {
+                        if ($scope.topNewsSource[i].code == newsSourceName) {
+                            $scope.topNewsSource[i].count++;
+                            sourceUpdated = true;
+                            $scope.topNewsSource.sort(function (a, b) {
+                                return (b.count) - (a.count);
+                            });
+                            $scope.drawNewsSourcesChart($scope.topNewsSource);
+                            break;
+                        }
+                    }
+                    if (!sourceUpdated) {
+                        $scope.topNewsSource.push({
+                            code: newsSourceName,
+                            count: 1
+                        });
+                        $scope.topNewsSource.sort(function (a, b) {
+                            return (b.count) - (a.count);
+                        });
+
+                        $scope.drawNewsSourcesChart($scope.topNewsSource);
+                    }
+                }
+
+                //Update country
+
+                // Update news queue
                 $scope.$apply(function () {
                     $scope.newsQueue.push(newsItem)
                     $scope.newsQueue.sort(function(a,b){
@@ -711,6 +745,10 @@ EventHandlerController.controller('EventMainController',
                 })
         }
 
+        // TODO GET : Top news sources
+        $scope.topNewsSource = [];
+        // implement
+
         // Tweet queue logic
         $scope.pagesShown = 1;
         $scope.pageSize = 10;
@@ -806,14 +844,14 @@ EventHandlerController.controller('EventMainController',
                         y: $scope.tweetsSourceCount
                     });
                 }
-                $scope.chartSeries = [{
+                var chartSeries = [{
                     "name": "Tweets count",
                     data: $scope.tweetsSources,
                     colorByPoint: true,
                     showInLegend: false,
                     "id": "tweetsChart",
                     color: "rgb(22, 123, 230)"
-    }];
+                }];
                 $scope.tweetsSourcesChartConfig = {
                     options: {
                         chart: {
@@ -860,7 +898,7 @@ EventHandlerController.controller('EventMainController',
                         gridLineWidth: 1,
                         gridLineColor: "rgb(245, 245, 245)"
                     },
-                    series: $scope.chartSeries,
+                    series: chartSeries,
                     credits: {
                         enabled: false
                     },
@@ -875,6 +913,107 @@ EventHandlerController.controller('EventMainController',
             }
 
             drawTweetsSourcesChart();
+
+        }
+
+        // Draw news sources chart
+        $scope.newsSourcesChartConfig = {
+            options: {
+                chart: {
+                    type: 'column',
+                    height: 250,
+                    backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                },
+                title: {
+                    text: ''
+                }
+
+            },
+        };
+
+        $scope.drawNewsSourcesChart = function () {
+
+            var newsSources = [];
+
+            function drawNewsSourcesChart(data) {
+
+                for (i = 0; i < $scope.topNewsSource.length; i++) {
+                    var newsSourceName = $scope.topNewsSource[i].code;
+                    var newsSourceCount = $scope.topNewsSource[i].count;
+                    newsSources.push({
+                        name: newsSourceName,
+                        y: newsSourceCount
+                    });
+                }
+                var chartSeries = [{
+                    "name": "News count",
+                    data: newsSources,
+                    colorByPoint: true,
+                    showInLegend: false,
+                    "id": "newsChart",
+                    color: "rgb(22, 123, 230)"
+                }];
+                $scope.newsSourcesChartConfig = {
+                    options: {
+                        chart: {
+                            type: 'column',
+                            animation: {
+                                duration: 1500
+                            },
+                            height: 300,
+                            backgroundColor: 'rgba(255, 255, 255, 0.01)'
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)",
+
+
+                        labels: {
+                            enabled: true,
+                            rotation: -45,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '11px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        plotLines: [{
+                            value: 0,
+                            width: 0,
+                            color: '#ffffff'
+                        }],
+                        title: {
+                            text: ''
+                        },
+                        labels: {
+                            enabled: true,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '10px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        },
+                        tickWidth: 0,
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)"
+                    },
+                    series: chartSeries,
+                    credits: {
+                        enabled: false
+                    },
+                    loading: false,
+                    title: {
+                        text: ''
+                    }
+                };
+                $scope.reflow = function () {
+                    $scope.$broadcast('highchartsng.reflow');
+                };
+            }
+
+            drawNewsSourcesChart();
 
         }
 
@@ -912,7 +1051,7 @@ EventHandlerController.controller('EventMainController',
                     tweetsTimeArray[i] = formatedTime;
                 }
 
-                $scope.chartSeries = [{
+                var chartSeries = [{
                     "name": "Tweets count",
                     "data": tweetsCountArray,
                     showInLegend: false,
@@ -978,7 +1117,7 @@ EventHandlerController.controller('EventMainController',
                         gridLineWidth: 1,
                         gridLineColor: "rgb(245, 245, 245)"
                     },
-                    series: $scope.chartSeries,
+                    series: chartSeries,
                     credits: {
                         enabled: false
                     },

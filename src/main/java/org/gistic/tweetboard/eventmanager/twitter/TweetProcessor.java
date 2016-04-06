@@ -4,7 +4,7 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import org.gistic.tweetboard.ConfigurationSingleton;
-import org.gistic.tweetboard.Util.Misc;
+import org.gistic.tweetboard.util.Misc;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
 import org.slf4j.LoggerFactory;
 import twitter4j.HashtagEntity;

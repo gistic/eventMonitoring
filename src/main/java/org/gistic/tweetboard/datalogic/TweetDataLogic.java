@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
-import org.gistic.tweetboard.Util.Misc;
+import org.gistic.tweetboard.util.Misc;
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.dao.TweetDao;

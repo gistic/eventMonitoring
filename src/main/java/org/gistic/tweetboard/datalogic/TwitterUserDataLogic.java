@@ -1,6 +1,6 @@
 package org.gistic.tweetboard.datalogic;
 
-import org.gistic.tweetboard.Util.Misc;
+import org.gistic.tweetboard.util.Misc;
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
 import org.gistic.tweetboard.security.User;

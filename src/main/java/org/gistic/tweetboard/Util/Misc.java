@@ -1,4 +1,4 @@
-package org.gistic.tweetboard.Util;
+package org.gistic.tweetboard.util;
 
 import com.google.common.collect.ImmutableMap;
 

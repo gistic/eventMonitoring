@@ -3,7 +3,7 @@ package org.gistic.tweetboard.resources;
 import io.dropwizard.auth.Auth;
 import org.gistic.tweetboard.DelayedJobsManager;
 import org.gistic.tweetboard.JedisPoolContainer;
-import org.gistic.tweetboard.Util.GmailSender;
+import org.gistic.tweetboard.util.GmailSender;
 import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
