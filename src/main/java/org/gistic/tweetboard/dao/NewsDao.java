@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisException;
 
-import org.gistic.tweetboard.Util.Misc;
+import org.gistic.tweetboard.util.Misc;
 
 public class NewsDao {
 	
@@ -41,4 +41,19 @@ public class NewsDao {
 		return new GenericArray<String>(results.toArray(new String[]{}));
 	}
 
+	public void incrCountryCounter(String uuid, String country) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			jedis.hincrBy(uuid+":news:stats:country", country, 1);
+		}catch(JedisException e){
+			e.printStackTrace();
+		}
+	}
+
+	public void incrSourceCounter(String uuid, String source) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			jedis.hincrBy(uuid+":news:stats:source", source, 1);
+		}catch(JedisException e){
+			e.printStackTrace();
+		}
+	}
 }

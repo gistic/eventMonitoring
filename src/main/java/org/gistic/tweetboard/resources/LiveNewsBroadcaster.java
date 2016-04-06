@@ -1,7 +1,7 @@
 package org.gistic.tweetboard.resources;
 
 import org.gistic.tweetboard.JedisPoolContainer;
-import org.gistic.tweetboard.Util.Misc;
+import org.gistic.tweetboard.util.Misc;
 import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.eventmanager.Message;
 
@@ -32,6 +32,9 @@ public class LiveNewsBroadcaster {
         		Message msg = new Message(obj.getString("uuid"), Message.Type.NewsItem, obj.toString());
         		NewsDao newsDao = new NewsDao();
         		newsDao.saveNewsToRedis(obj.getString("uuid"), obj);
+
+				newsDao.incrCountryCounter(obj.getString("uuid"), obj.getString("country"));
+				newsDao.incrSourceCounter(obj.getString("uuid"), obj.getString("source"));
         		LiveTweetsBroadcasterSingleton.broadcast(msg);
         	}
         	
