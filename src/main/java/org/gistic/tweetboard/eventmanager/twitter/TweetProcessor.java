@@ -217,9 +217,9 @@ public class TweetProcessor {
             //tweetDataLogic.setNewTweetMeta(status); MOVED TO onStatusUpdate
             if (isBlockedUserTweet(tweet) || isBadKeywordTweet(tweet)) {
 //                tweetDataLogic.setNewTweetMeta(status);  MOVED UP
-                System.out.println("blocked user detected "
-                        + tweet.getUser().getScreenName() + ":" + tweet.getText());
-                System.out.println(" OR bad tweet detected " + tweet.getText());
+                //System.out.println("blocked user detected "
+                        //+ tweet.getUser().getScreenName() + ":" + tweet.getText());
+                //System.out.println(" OR bad tweet detected " + tweet.getText());
             } else {
 //                tweet.getUser().getOriginalProfileImageURLHttps();
 //                    activePeopleAnalyzer.TweetArrived(tweet);

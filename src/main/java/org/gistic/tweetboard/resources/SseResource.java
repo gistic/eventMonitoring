@@ -36,7 +36,7 @@ public class SseResource extends EventSourceServlet {
                     return;
                 }
                 connected = true;
-                System.out.println("Tweets queue connection opened");
+                //System.out.println("Tweets queue connection opened");
                 while (connected) {
                     Event e = EventMap.get(uuid);
                     try {
@@ -61,7 +61,7 @@ public class SseResource extends EventSourceServlet {
             }
 
             public void onClose() {
-                System.out.println("Tweets queue connection closed");
+                //System.out.println("Tweets queue connection closed");
                 connected = false;
             }
         };
