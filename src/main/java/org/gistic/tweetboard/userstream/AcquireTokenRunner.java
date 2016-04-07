@@ -32,10 +32,12 @@ public class AcquireTokenRunner {
 
         //twitter.setOAuthConsumer("YzZKKQ2v793ClhDvOvpg2XtNO", "vQToihSmBVtZK6ziYKORtGNWKxAGEVUAxo5VyuHxPRBQk8JNgw");
         RequestToken requestToken = twitter.getOAuthRequestToken("http://requestb.in/11kw81i1");
-        System.out.println(requestToken.getAuthenticationURL());
-        System.out.println(requestToken.getAuthorizationURL());
-        System.out.println(requestToken.getToken());
-        System.out.println(requestToken.getTokenSecret());
+//        System.out.println(requestToken.getAuthenticationURL());
+//        System.out.println(requestToken.getAuthorizationURL());
+//        System.out.println(requestToken.getToken());
+//        System.out.println(requestToken.getTokenSecret());
+
+
 //        AccessToken accessToken = null;
 //        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 //        while (null == accessToken) {

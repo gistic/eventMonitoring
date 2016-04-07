@@ -497,7 +497,7 @@ public class TweetDaoImpl implements TweetDao {
     public void setTweetMetaDate(String uuid, long retweetedStatusId, long retweetCreatedAt) {
         try(Jedis jedis = JedisPoolContainer.getInstance()) {
             String createdAtString = Long.toString(retweetCreatedAt);
-            if(createdAtString== null || createdAtString.isEmpty()) System.out.println("EERRRRROOOORRRR  EERRRRORRRRRR");
+            if(createdAtString== null || createdAtString.isEmpty()) //System.out.println("EERRRRROOOORRRR  EERRRRORRRRRR");
             jedis.hset(getTweetMetaKey(uuid, Long.toString(retweetedStatusId)), TWEET_META_DATE_KEY, createdAtString);
         } catch(JedisException jE) {
             jE.printStackTrace();
@@ -963,7 +963,8 @@ public class TweetDaoImpl implements TweetDao {
             jedis.lrem(All_EVENTS_KEY, 0, uuid);
             jedis.del(uuid, getArrivedNotSentListKey(uuid), getApprovedSentToClientListKey(uuid),
                     getSentForApprovalListKey(uuid), getTotalTweetsKey(uuid), getTotalRetweetsKey(uuid), getCountryRankSetKey(uuid));
-            Set<String> keys = jedis.keys(uuid + ":*");
+            Set<String> keys = jedis.keys(uuid + "*");
+            //System.out.println("DEBUG Number of keys to be deleted: " + keys.size());
             for (String key:keys) {
                 jedis.del(key);
             }

@@ -41,10 +41,6 @@ twitter:
 #  consumer-secret: e3TrmlIMDUeaDFOvnVzWXF09FU7yK8G40Ju6eryazzaOLn7IUJ
 #  user-key: 1974931724-eOfQXnlkGUKq1Nh7x3dElaGMUwu00dFOrZbkuIi
 #  user-secret: E86Yjk5ZPNnFqVQzRE0UlxiTdp82SjBX4tXUnr7kcM7eN
-#  consumer-key: x8mRgwkDLqtJAIbtF2exVGUAJ
-#  consumer-secret: GOe5YzFEL5b189ZqfBRUF78e5KKUCWlw7eNlFZCBPvLvqgWJX9
-#  user-key: 1974931724-99y199ECdu3BlIDy8oA1cYpxNRDK77PF5a6XUvx
-#  user-secret: rXQVL0Jinj7IiD6dmkobEuoY9ScL8U1JaVAA1XR6wS2VA
 defaultAutoShutdownDelayInHours: 24
 v2: true
 baseDomain: hashtails.com
@@ -56,4 +52,4 @@ logging:
       threshold: ALL
       archive: true
       archivedLogFilenamePattern: var/log/event-board-%d.log
-cleanUpIntervalInSecs: 60
+cleanUpIntervalInSecs: 180

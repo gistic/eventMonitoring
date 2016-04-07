@@ -83,6 +83,7 @@ public class AdminEventSource {
                             Thread.sleep(500);
                         }
                     } catch (Exception ex) {
+                        //TODO log minor network glitches
                         ex.printStackTrace();
                     }
                 }

@@ -11,9 +11,7 @@ public class CleanTopRankings implements Runnable{
         while(true) {
             EventMap.CleanupTopRankings();
 
-            System.out.println("#############");
-            System.out.println("CLEANED UP!!!");
-            System.out.println("#############");
+            System.out.println("DEBUG cleaned up top rankings");
             int timeout = ConfigurationSingleton.getInstance().getCleanUpIntervalInSecs();
             try {
                 Thread.sleep(timeout*1000);

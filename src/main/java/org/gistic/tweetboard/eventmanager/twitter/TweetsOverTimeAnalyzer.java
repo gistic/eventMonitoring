@@ -32,7 +32,7 @@ public class TweetsOverTimeAnalyzer {
         int diffInMinutes;
 
         if (diff < Integer.MIN_VALUE || diff > Integer.MAX_VALUE) {
-            System.out.printf("Tweet is very old, tweet id: %s\n", tweet.getId());
+            //System.out.printf("Tweet is very old, tweet id: %s\n", tweet.getId());
             return;
         }
 

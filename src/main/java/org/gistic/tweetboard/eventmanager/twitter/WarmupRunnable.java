@@ -68,7 +68,7 @@ public class WarmupRunnable implements Runnable {
         try {
             queryResult = twitter.search(query);
             int resultCount = queryResult.getCount();
-            System.out.println("result count is: "+resultCount);
+            //System.out.println("result count is: "+resultCount);
 //            sinceId = queryResult.getSinceId();
             //sinceId =  newId > sinceId ? newId : sinceId;
             if (resultCount < 25) reachedEnd = true;
@@ -147,7 +147,7 @@ public class WarmupRunnable implements Runnable {
 //            sinceId = queryResult.getSinceId();
             int resultCount = queryResult.getCount();
             if (resultCount<25) reachedEnd = true;
-            System.out.println("result count is: "+resultCount);
+            //System.out.println("result count is: "+resultCount);
             tweets = queryResult.getTweets();
             tweetDataLogic.warmupStats(tweets, event);
             index++;
