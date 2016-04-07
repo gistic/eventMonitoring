@@ -77,4 +77,10 @@ public class EventMap {
     public static void delete(String uuid) {
         delete(uuid, null);
     }
+
+    public static void CleanupTopRankings() {
+        for (Map.Entry<String, Event> item : allEvents.entrySet()) {
+            item.getValue().removeBelowTopN();
+        }
+    }
 }

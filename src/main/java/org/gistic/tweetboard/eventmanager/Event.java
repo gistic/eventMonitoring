@@ -166,4 +166,8 @@ public class Event {
     public void postTweetToEvent(InternalStatus iStatus) {
         tweetProcessor.onStatusUpdate(iStatus);
     }
+
+    public void removeBelowTopN() {
+        tweetDataLogic.removeBelowTopN();
+    }
 }
