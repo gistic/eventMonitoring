@@ -43,8 +43,8 @@ public class GetAccessTokenFromRequestToken {
         //twitter.getoau
         //TwitterUtil
         if (accessToken == null) return;
-        System.out.println(accessToken.getToken());
-        System.out.println(accessToken.getTokenSecret());
+        //System.out.println(accessToken.getToken());
+        //System.out.println(accessToken.getTokenSecret());
 
     }
 }

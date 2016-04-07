@@ -1,6 +1,6 @@
 'use strict';
-
 angular.module('trackHashtagApp', [
+    'ngResource',
     'ngSanitize', // AngularjS main dependencies
     'ngCookies',
     'ngAnimate',
@@ -15,6 +15,7 @@ angular.module('trackHashtagApp', [
 
     'StartNewEvent',
     'EventHandlerController',
+    'KeywordsController',
 
     'oitozero.ngSweetAlert',
     'ngFx',
@@ -100,6 +101,25 @@ angular.module('trackHashtagApp', [
         "dashboard.news": {
             url: '/news',
             templateUrl: 'views/views-components/news.html'
+        },
+        "dashboard.facebook": {
+            url: '/facebook',
+            templateUrl: 'views/views-components/facebook.html'
+        },
+        "keywords":{
+            url: '/keywords',
+            templateUrl: 'views/views-components/keywords.html',
+            controller: 'KeywordsController'
+        },
+        "keywords.index":{
+            url: '/index',
+            templateUrl: 'views/views-components/keywords-list.html',
+            controller: 'KeywordsController'
+        },
+        "keywords.create":{
+            url: '/create',
+            templateUrl: 'views/views-components/keywords-create.html',
+            controller: 'KeywordsController'
         }
     };
 

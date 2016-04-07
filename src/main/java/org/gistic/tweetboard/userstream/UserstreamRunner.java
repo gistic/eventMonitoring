@@ -13,7 +13,7 @@ public class UserstreamRunner {
     public static void main(String args[]) throws Exception{
         StatusListener listener = new StatusListener(){
             public void onStatus(Status status) {
-                System.out.println(status.getUser().getName() + " : " + status.getText());
+                //System.out.println(status.getUser().getName() + " : " + status.getText());
             }
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
             public void onTrackLimitationNotice(int numberOfLimitedStatuses) {}

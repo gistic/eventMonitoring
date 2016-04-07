@@ -1,0 +1,23 @@
+<div class="container">
+    <h1>Keyword create</h1><br /><br />
+
+    <form novalidate="novalidate" class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="inputKeyword">Keyword:</label>
+            <div class="controls">
+                <input dir="rtl" type="text" id="inputKeyword" ng-model="keyword.keyword"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputRelatedWords">Related Words:</label>
+            <div class="controls">
+                <textarea dir="rtl" rows="4" cols="50" id="inputRelatedWords" ng-model="keyword.relatedWords"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <a ng-click="saveNewKeyword()" class="btn btn-small btn-primary">Save Keyword</a>
+            </div>
+        </div>
+    </form>
+</div>

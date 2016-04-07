@@ -47,7 +47,8 @@
     "ngFx": "~1.1.0",
     "ngInfiniteScroll": "~1.2.1",
     "nsPopover": "~0.6.7",
-    "sweetalert": "~0.5.0"
+    "sweetalert": "~0.5.0",
+    "angular-resource": "^1.5.3"
   },
   "devDependencies": {
     "modularized-normalize-scss": "~3.0.3"

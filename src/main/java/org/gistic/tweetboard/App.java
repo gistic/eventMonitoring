@@ -8,6 +8,7 @@ import io.dropwizard.auth.AuthFactory;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.gistic.tweetboard.cleanup.CleanTopRankings;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
 import org.gistic.tweetboard.resources.*;
@@ -66,11 +67,17 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(new TwitterUserResource());
         
         e.jersey().register(new LiveNewsBroadcaster());
+        
+        e.jersey().register(new KeywordsBroadcaster());
+        
+        e.jersey().register(new LiveFacebookBroadcaster());
+
 
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
         DelayedJobsManager.initiate();
         //e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");
         //Close threads on JVM exit
+        ExecutorSingleton.getInstance().execute(new CleanTopRankings());
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
                 DelayedJobsManager.destroy();
