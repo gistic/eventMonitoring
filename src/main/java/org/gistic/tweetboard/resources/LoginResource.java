@@ -68,7 +68,7 @@ public class LoginResource {
         authDao.setTempHashtags(requestToken.getToken(), hashtags);
         authDao.setRedirectToHomeFlag(requestToken.getToken(), redirectToHome);
         String authorizationUrl = requestToken.getAuthorizationURL();
-        System.out.println(authorizationUrl);
+        //System.out.println(authorizationUrl);
         return "{\"url\":\""+authorizationUrl+"\"}";
     }
 

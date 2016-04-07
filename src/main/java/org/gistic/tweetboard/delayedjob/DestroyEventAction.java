@@ -14,9 +14,9 @@ public class DestroyEventAction implements Runnable{
     private final String uuid;
     private final String accessToken;
 
-    public DestroyEventAction(String uuid, String accesstoekn) {
+    public DestroyEventAction(String uuid, String accessToken) {
         this.uuid = uuid;
-        this.accessToken = accesstoekn;
+        this.accessToken = accessToken;
     }
 
     @Override

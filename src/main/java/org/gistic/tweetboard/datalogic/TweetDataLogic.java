@@ -134,9 +134,9 @@ public class TweetDataLogic {
             topCountries = ow.writeValueAsString(getTopNCountries(10));
             topHashtags = ow.writeValueAsString(getTopNHashtags(10));
             topLanguages = ow.writeValueAsString(getTopNLanguages(10));
-            topTweets = ow.writeValueAsString(getTopNTweets(10, authToken));
+            topTweets = "need to robustly implement";//ow.writeValueAsString(getTopNTweets(10, authToken));
 
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         BasicStats basicStats = tweetDao.getBasicStats(uuid);
@@ -425,13 +425,15 @@ public class TweetDataLogic {
             this.setNewTweetMeta(tweet);
             Place place = tweet.getPlace();
             if (place != null) {
-                System.out.println("found place:" + place.getCountryCode());
+                //System.out.println("found place:" + place.getCountryCode());
                 incrCountryCounter(place.getCountryCode());
             } else {
                 //try and get country from user location
-                String countryCode = Misc.checkCountryAndGetCode(tweet.getUser().getLocation());
-                if (countryCode != null && !countryCode.isEmpty()) {
-                    this.incrCountryCounter(countryCode);
+                if(tweet.getUser().getLocation() != null) {
+                    String countryCode = Misc.checkCountryAndGetCode(tweet.getUser().getLocation());
+                    if (countryCode != null && !countryCode.isEmpty()) {
+                        this.incrCountryCounter(countryCode);
+                    }
                 }
             }
             String originalSource = tweet.getSource();
@@ -514,5 +516,9 @@ public class TweetDataLogic {
     public void createNewEvent(String[] hashTags, String accessToken) {
         tweetDao.addNewEventToList(uuid);
         tweetDao.setDefaultEventProperties(uuid, hashTags, accessToken);
+    }
+
+    public void removeBelowTopN() {
+        tweetDao.removeBelowTopN(uuid);
     }
 }

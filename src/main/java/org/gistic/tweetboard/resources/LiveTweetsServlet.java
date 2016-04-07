@@ -26,7 +26,7 @@ public class LiveTweetsServlet extends EventSourceServlet {
                     return;
                 }
                 connected = true;
-                System.out.println("Live tweets connection opened");
+                //System.out.println("Live tweets connection opened");
                 while (connected) {
                     try {
                         Event e = EventMap.get(uuid);
@@ -56,7 +56,7 @@ public class LiveTweetsServlet extends EventSourceServlet {
             }
             public void onClose() {
                 connected = false;
-                System.out.println("Live tweets connection closed");
+                //System.out.println("Live tweets connection closed");
             }
         };
     }
