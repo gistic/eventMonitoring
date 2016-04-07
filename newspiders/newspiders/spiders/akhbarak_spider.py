@@ -54,7 +54,7 @@ class AkhbarakSpider(scrapy.Spider):
 		nextPageURL = response.xpath('//a[@class="next_page"]/@href');
 		if nextPageURL:
 			nextPageURL = response.urljoin(nextPageURL.extract()[0])
-			print "Next page url %s" %(nextPageURL)
+			# print "Next page url %s" %(nextPageURL)
 			request = scrapy.Request(nextPageURL, callback = self.parse)
 			yield request
 	

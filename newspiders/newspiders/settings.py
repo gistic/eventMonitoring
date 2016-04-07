@@ -14,7 +14,8 @@ BOT_NAME = 'newspiders'
 SPIDER_MODULES = ['newspiders.spiders']
 NEWSPIDER_MODULE = 'newspiders.spiders'
 ITEM_PIPELINES = {
-	'newspiders.pipelines.NewspidersPipeline': 1
+	'newspiders.pipelines.NewspidersPipeline': 1,
+	'newspiders.pipelines.FacebookPipeline': 2
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

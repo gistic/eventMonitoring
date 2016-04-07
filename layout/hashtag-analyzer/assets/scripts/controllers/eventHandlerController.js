@@ -19,7 +19,7 @@ EventHandlerController.controller('EventMainController',
 
         // 1. Set the initializing values
         $scope.dashboardState = false;
-        if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.news" || $state.current.name == "dashboard.map") {
+        if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.news" || $state.current.name == "dashboard.facebook" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
         }
         // Lightbox for media
@@ -256,13 +256,14 @@ EventHandlerController.controller('EventMainController',
         $scope.lastNewMedia = [];
         $scope.topPeople = [];
         $scope.newsQueue = [];
+        $scope.fbQueue = [];
         $scope.tweet = {};
 
 
         // Close event source if he leave the media or tweet stream stats
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
-                if (!(toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" || toState.name == "dashboard.news" || toState.name == "dashboard.map")) {
+                if (!(toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" || toState.name == "dashboard.news" || toState.name == "dashboard.facebook" || toState.name == "dashboard.map")) {
 
                     CreateEventSource.closeEventSource();
                 }
@@ -527,6 +528,20 @@ EventHandlerController.controller('EventMainController',
                 $scope.$apply(function () {
                     $scope.newsQueue.push(newsItem)
                     $scope.newsQueue.sort(function(a,b){
+                        new_date = new Date(a.date)
+                        old_date = new Date(b.date)
+                        return old_date-new_date
+                    });
+                });
+            });
+
+            // Facebook post
+            source.addEventListener('fb-post', function (response) {
+                var fbPost = JSON.parse(response.data);
+                
+                $scope.$apply(function () {
+                    $scope.fbQueue.push(fbPost)
+                    $scope.fbQueue.sort(function(a,b){
                         new_date = new Date(a.date)
                         old_date = new Date(b.date)
                         return old_date-new_date

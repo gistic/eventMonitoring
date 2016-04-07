@@ -7,6 +7,7 @@ import org.gistic.tweetboard.Util.GmailSender;
 import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
+import org.gistic.tweetboard.datalogic.FacebookDataLogic;
 import org.gistic.tweetboard.datalogic.MetaDataLogic;
 import org.gistic.tweetboard.datalogic.NewsDataLogic;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
@@ -78,6 +79,8 @@ public class EventsResource {
         String uuid = UUID.randomUUID().toString();
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         NewsDataLogic newsDataLogic = new NewsDataLogic(uuid);
+        FacebookDataLogic facebookDataLogic = new FacebookDataLogic(uuid);
+        
         if (user == null) {
             //invalid token tweetboard v2.0
             throw new WebApplicationException(
@@ -123,6 +126,8 @@ public class EventsResource {
 //        	System.out.println("-------------------\n\n\n\n\n\n");
 //        }
         newsDataLogic.callScrapySpiders(hashTags);
+        facebookDataLogic.callScrapySpiders(hashTags);
+        
         return eventUuid;
     }
 
