@@ -31,6 +31,9 @@ public class LiveFacebookBroadcaster {
         		Message msg = new Message(obj.getString("uuid"), Message.Type.FbPost, obj.toString());
         		FacebookDao facebookDao = new FacebookDao();
         		facebookDao.saveNewsToRedis(obj.getString("uuid"), obj);
+
+				facebookDao.incrSourceCounter(obj.getString("uuid"), obj.getString("source"));
+
         		LiveTweetsBroadcasterSingleton.broadcast(msg);
         	}
         	

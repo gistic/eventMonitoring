@@ -12,12 +12,16 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.gistic.tweetboard.dao.FacebookDao;
 import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.representations.GenericArray;
 
 import jersey.repackaged.com.google.common.collect.ImmutableList;
+import org.gistic.tweetboard.representations.TopItem;
+import redis.clients.jedis.Tuple;
 
 public class FacebookDataLogic {
 	private String uuid;
@@ -72,7 +76,13 @@ public class FacebookDataLogic {
 		return this.facebookDao.getSavedNewsFromRedis(this.uuid);
 	}
 
-
+	public GenericArray<TopItem> getTopNSources(Integer count) {
+		Set<Tuple> topSourcesTuple = facebookDao.getTopNSources(uuid, count);
+		TopItem[] topNSourcesArray = topSourcesTuple.stream()
+				.map(source -> new TopItem(source.getElement(), new Double(source.getScore()).intValue()))
+				.collect(Collectors.toList()).toArray(new TopItem[]{});
+		return new GenericArray<TopItem>(topNSourcesArray);
+	}
 }
 
 

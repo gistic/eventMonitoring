@@ -374,6 +374,15 @@ public class EventsResource {
     }
 
     @GET
+    @Path("/{uuid}/topNewsCountries/")
+    public GenericArray<TopItem> getTopNewsCountries(@PathParam("uuid") String uuid,
+                                                 @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        NewsDataLogic newsDataLogic = new NewsDataLogic(uuid);
+        return newsDataLogic.getTopNCountries(count);
+    }
+
+    @GET
     @Path("/{uuid}/topLanguages/")
     public GenericArray<TopItem> getTopLanguages(@PathParam("uuid") String uuid,
                                                  @DefaultValue("10") @QueryParam("count") Integer count) {
@@ -389,6 +398,28 @@ public class EventsResource {
         checkUuid(uuid);
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         return tweetDataLogic.getTopNSources(count);
+    }
+
+    @GET
+    @Path("/{uuid}/topNewsSources/")
+    public GenericArray<TopItem> getTopNewsSources(@PathParam("uuid") String uuid,
+                                               @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        //TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        NewsDataLogic newsDataLogic = new NewsDataLogic(uuid);
+
+        return newsDataLogic.getTopNSources(count);
+    }
+
+    @GET
+    @Path("/{uuid}/topFacebookSources/")
+    public GenericArray<TopItem> getTopFacebookSources(@PathParam("uuid") String uuid,
+                                                   @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        //TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        FacebookDataLogic facebookDataLogic = new FacebookDataLogic(uuid);
+
+        return facebookDataLogic.getTopNSources(count);
     }
 
     @GET

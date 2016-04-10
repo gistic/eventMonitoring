@@ -197,12 +197,14 @@ EventHandlerController.controller('EventMainController',
                 $scope.getLanguagesStats();
                 $scope.drawlanguagesPieChart();
                 $scope.getLocationStats();
+                $scope.getNewsLocationStats();
                 $scope.drawLocationGeoChart();
                 $scope.drawLocationPieChart();
                 $scope.drawNewsLocationGeoChart();
                 $scope.drawNewsLocationPieChart();
                 $scope.getTopHashtags();
                 $scope.getTopSources();
+                $scope.getTopNewsSources();
                 $scope.getEvents();
             } else {
                 $state.transitionTo('home');
@@ -567,10 +569,10 @@ EventHandlerController.controller('EventMainController',
                 var countryUpdated = false;
 
                 $scope.$apply(function () {
-                    if (newsCountryChart.data.length != 0) {
-                        for (var i = 0; i < newsCountryChart.data.length; i++) {
-                            if (newsCountryChart.data[i][0] == $scope.countryName) {
-                                newsCountryChart.data[i][1] = newsCountryChart.data[i][1]+1;
+                    if (newsLocationChart.data.length != 0) {
+                        for (var i = 0; i < newsLocationChart.data.length; i++) {
+                            if (newsLocationChart.data[i][0] == $scope.countryName) {
+                                newsLocationChart.data[i][1] = newsLocationChart.data[i][1]+1;
                                 countryUpdated = true;
                                 break;
                             }
@@ -578,8 +580,8 @@ EventHandlerController.controller('EventMainController',
                     }
 
                     if (!countryUpdated) {
-                        newsCountryChart.data.push([$scope.countryName, $scope.countryCount]);
-                        //$scope.topCountriesLength++; TODO incr top countries news
+                        newsLocationChart.data.push([$scope.countryName, $scope.countryCount]);
+                        $scope.topNewsCountriesLength++;
                     }
 
                 }, false);
@@ -691,14 +693,14 @@ EventHandlerController.controller('EventMainController',
         }
 
         // News location map visualization
-        var newsCountryChart = [];
-        $scope.newsCountryChart = newsCountryChart;
+        var newsLocationChart = [];
+        $scope.newsLocationChart = newsLocationChart;
         $scope.drawNewsLocationGeoChart = function () {
 
-            newsCountryChart.type = "GeoChart";
-            newsCountryChart.data = [['Country', 'News Count: ']];
+            newsLocationChart.type = "GeoChart";
+            newsLocationChart.data = [['Country', 'News Count: ']];
 
-            newsCountryChart.options = {
+            newsLocationChart.options = {
                 tooltip: {
                     textStyle: {
                         color: '#191919'
@@ -719,7 +721,7 @@ EventHandlerController.controller('EventMainController',
         $scope.drawNewsLocationPieChart = function () {
 
             newsLocationPieChart.type = "PieChart";
-            newsLocationPieChart.data = newsCountryChart.data;
+            newsLocationPieChart.data = newsLocationChart.data;
 
             newsLocationPieChart.options = {
                 displayExactValues: true,
@@ -797,6 +799,34 @@ EventHandlerController.controller('EventMainController',
                 })
         }
 
+        // GET : the last stats of top news countries
+        //var newsLocationChart = [];
+        //$scope.newsLocationChart = newsLocationChart;
+        $scope.getNewsLocationStats = function () {
+            $scope.eventDataChunk = "Locations & Countries";
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topNewsCountries';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    // Update Geo map & Pie chart
+                    for (var i = 0; i < response.items.length; i++) {
+                        var countryShortName = response.items[i].code.toString().toUpperCase();
+                        console.log("country code : "+ countryShortName);
+                        if (countryShortName === "KSA" || countryShortName === "SAU" || countryShortName === "") countryShortName = "SA";
+                        if (countryShortName === "UK") countryShortName = "GB";
+                            $scope.newsCountryName = ISO3166.getCountryName(countryShortName);
+                        $scope.newsCountryCount = response.items[i].count;
+
+                        newsLocationChart.data.push([$scope.newsCountryName, $scope.newsCountryCount]);
+                    }
+                    $scope.topNewsCountriesLength = newsLocationChart.data.length - 1
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+
         // GET : the last stats of top languages
         $scope.getLanguagesStats = function () {
             $scope.eventDataChunk = "Languages";
@@ -863,7 +893,20 @@ EventHandlerController.controller('EventMainController',
 
         // TODO GET : Top news sources
         $scope.topNewsSource = [];
-        // implement
+        $scope.getTopNewsSources = function () {
+            $scope.eventDataChunk = "News Sources";
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topNewsSources';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.topNewsSource = response.items;
+                    $scope.drawNewsSourcesChart($scope.topNewsSource);
+                }).error(function () {
+                    console.log("#");
+                })
+        }
 
         // TODO GET : Top facebook sources
         $scope.topFacebookSource = [];
