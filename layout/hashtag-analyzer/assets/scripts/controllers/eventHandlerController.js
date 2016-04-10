@@ -599,7 +599,38 @@ EventHandlerController.controller('EventMainController',
             // Facebook post
             source.addEventListener('fb-post', function (response) {
                 var fbPost = JSON.parse(response.data);
-                
+
+                // Update facebook sources
+                var sourceUpdated = false;
+                if (fbPost.source != null) {
+                    //console.log("got news source!");
+                    var facebookSourceName = fbPost.source;
+                    //console.log(newsItem.source);
+                    for (var i = 0; i < $scope.topFacebookSource.length; i++) {
+                        if ($scope.topFacebookSource[i].code == facebookSourceName) {
+                            $scope.topFacebookSource[i].count++;
+                            sourceUpdated = true;
+                            $scope.topFacebookSource.sort(function (a, b) {
+                                return (b.count) - (a.count);
+                            });
+                            $scope.drawFacebookSourcesChart($scope.topFacebookSource);
+                            break;
+                        }
+                    }
+                    if (!sourceUpdated) {
+                        $scope.topFacebookSource.push({
+                            code: facebookSourceName,
+                            count: 1
+                        });
+                        $scope.topFacebookSource.sort(function (a, b) {
+                            return (b.count) - (a.count);
+                        });
+
+                        $scope.drawFacebookSourcesChart($scope.topFacebookSource);
+                    }
+                }
+
+                // Update facebook posts queue
                 $scope.$apply(function () {
                     $scope.fbQueue.push(fbPost)
                     $scope.fbQueue.sort(function(a,b){
@@ -832,6 +863,10 @@ EventHandlerController.controller('EventMainController',
 
         // TODO GET : Top news sources
         $scope.topNewsSource = [];
+        // implement
+
+        // TODO GET : Top facebook sources
+        $scope.topFacebookSource = [];
         // implement
 
         // Tweet queue logic
@@ -1099,6 +1134,92 @@ EventHandlerController.controller('EventMainController',
             }
 
             drawNewsSourcesChart();
+
+        }
+
+        $scope.drawFacebookSourcesChart = function () {
+
+            var facebookSources = [];
+
+            function drawFacebookSourcesChart(data) {
+
+                for (i = 0; i < $scope.topFacebookSource.length; i++) {
+                    var facebookSourceName = $scope.topFacebookSource[i].code;
+                    var facebookSourceCount = $scope.topFacebookSource[i].count;
+                    facebookSources.push({
+                        name: facebookSourceName,
+                        y: facebookSourceCount
+                    });
+                }
+                var chartSeries = [{
+                    "name": "Facebook source count",
+                    data: facebookSources,
+                    colorByPoint: true,
+                    showInLegend: false,
+                    "id": "facebookChart",
+                    color: "rgb(22, 123, 230)"
+                }];
+                $scope.facebookSourcesChartConfig = {
+                    options: {
+                        chart: {
+                            type: 'column',
+                            animation: {
+                                duration: 1500
+                            },
+                            height: 300,
+                            backgroundColor: 'rgba(255, 255, 255, 0.01)'
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)",
+
+
+                        labels: {
+                            enabled: true,
+                            rotation: -45,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '11px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        plotLines: [{
+                            value: 0,
+                            width: 0,
+                            color: '#ffffff'
+                        }],
+                        title: {
+                            text: ''
+                        },
+                        labels: {
+                            enabled: true,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '10px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        },
+                        tickWidth: 0,
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)"
+                    },
+                    series: chartSeries,
+                    credits: {
+                        enabled: false
+                    },
+                    loading: false,
+                    title: {
+                        text: ''
+                    }
+                };
+                $scope.reflow = function () {
+                    $scope.$broadcast('highchartsng.reflow');
+                };
+            }
+
+            drawFacebookSourcesChart();
 
         }
 
