@@ -7,7 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
 import org.gistic.tweetboard.JedisPoolContainer;
-import org.gistic.tweetboard.Util.Misc;
+import org.gistic.tweetboard.util.Misc;
 import org.gistic.tweetboard.dao.FacebookDao;
 import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.eventmanager.Message;

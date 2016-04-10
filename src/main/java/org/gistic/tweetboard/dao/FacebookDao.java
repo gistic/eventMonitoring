@@ -3,7 +3,7 @@ package org.gistic.tweetboard.dao;
 import java.util.List;
 
 import org.gistic.tweetboard.JedisPoolContainer;
-import org.gistic.tweetboard.Util.Misc;
+import org.gistic.tweetboard.util.Misc;
 import org.gistic.tweetboard.representations.GenericArray;
 import org.json.JSONObject;
 
