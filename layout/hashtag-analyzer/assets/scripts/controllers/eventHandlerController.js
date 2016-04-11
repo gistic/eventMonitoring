@@ -26,9 +26,6 @@ EventHandlerController.controller('EventMainController',
             "qa": "قطر"
         }
 
-        console.log($scope.countryAbbrev);
-        console.log($scope.countryAbbrev["eg"]);
-
         // 1. Set the initializing values
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.news" || $state.current.name == "dashboard.facebook" || $state.current.name == "dashboard.map") {
