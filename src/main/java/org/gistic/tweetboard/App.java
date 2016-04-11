@@ -71,6 +71,8 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(new KeywordsBroadcaster());
         
         e.jersey().register(new LiveFacebookBroadcaster());
+        
+        e.jersey().register(new LiveFacebookPagesBroadcaster());
 
 
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
