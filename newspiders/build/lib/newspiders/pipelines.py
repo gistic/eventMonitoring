@@ -22,6 +22,6 @@ class FacebookPipeline(object):
 
 	def process_item(self, item, spider):
 		if spider.name in ['facebook']: 
-			data={'source': item['source'], 'uuid': item['uuid'], 'text': item['text'], 'url': item['url'], 'date': item['date']}
+			data={'source': item['source'], 'uuid': item['uuid'], 'text': item['text'], 'url': item['url'], 'date': item['date'], 'image_url': item['image_url']}
 			r = requests.post("http://localhost:8080/api/liveFacebook", data=json.dumps(data), headers = {'content-type': 'application/json'})
 		return item
