@@ -10,11 +10,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.gistic.tweetboard.dao.KeywordsDao;
 import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.representations.GenericArray;
+import org.gistic.tweetboard.representations.Keyword;
 
 import jersey.repackaged.com.google.common.collect.ImmutableList;
 
@@ -34,13 +37,17 @@ public class NewsDataLogic {
 			
 			for (String spider : spiders) {
 				
-			
+				ArrayList<String> newKeywords = (new KeywordsDataLogic(new KeywordsDao())).getRelatedWords(keywords); // check if it's registered with a system keyword
+
+				String newKeywordsString = String.join(",", newKeywords).replace("\"", "");
+				
 				HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
 				
 				httpCon.setDoOutput(true);
 				httpCon.setRequestMethod("POST");
 		
-				String urlParameters = "project=newspiders&spider="+spider+"&euuid="+uuid+"&keywords="+String.join(",", keywords);
+				String urlParameters = "project=newspiders&spider="+spider+"&euuid="+uuid+"&keywords="+newKeywordsString;
+				System.out.println(newKeywordsString);
 				
 				// Send post request
 				httpCon.setDoOutput(true);
@@ -76,7 +83,12 @@ public class NewsDataLogic {
 	
 	public static void main(String[] args) {
 		NewsDataLogic ndl = new NewsDataLogic("197a8f76-0ce1-4f8f-8295-080fc8ee0b28");
-		System.out.println(ndl.getSavedNews().toString());
+		String[] k = new String[2];
+		k[0]= "وزارة الحج";
+		k[1]= "lwn";
+		ndl.callScrapySpiders(k);
+		
+//		System.out.println("الوزير".equals("وزارة"));
 }
 
 
