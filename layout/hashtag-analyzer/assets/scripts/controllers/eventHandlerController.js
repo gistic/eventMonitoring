@@ -183,6 +183,32 @@ EventHandlerController.controller('EventMainController',
                 })
         };
 
+        
+        $scope.getSavedFbPosts = function () {
+            // $scope.eventDataChunk = "Warm Up Tweets";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/savedFbPosts';
+            var requestAction = "GET";
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    for (var i = 0; i < response.items.length; i++) {
+                        $scope.$apply(function () {
+                            $scope.fbQueue.push(JSON.parse(response.items[i]))
+                            $scope.fbQueue.sort(function(a,b){
+                                new_date = new Date(a.date)
+                                old_date = new Date(b.date)
+                                return old_date-new_date
+                            });
+                        });
+                    }
+                    $rootScope.loadingEvent = false;
+                }).error(function () {
+                    $rootScope.loadingEvent = false;
+                    console.log("#");
+                })
+        };
+
         // Intialize
 
 
@@ -191,6 +217,7 @@ EventHandlerController.controller('EventMainController',
             if (User.getUserAuth()) {
                 $scope.getWarmupData();
                 $scope.getSavedNews();
+                $scope.getSavedFbPosts();
                 $scope.getViewOptions();
                 $scope.getEventStats();
                 User.getUserData();

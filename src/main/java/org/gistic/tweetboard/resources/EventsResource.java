@@ -541,5 +541,20 @@ public class EventsResource {
         GenericArray<String>  results = newsDataLogic.getSavedNews();
 		return results;
 	}
+	
+	@GET
+	@Path("/{uuid}/savedFbPosts")
+	public GenericArray<String> getSavedFbPosts(@PathParam("uuid") String uuid,
+            @DefaultValue("undefined") @QueryParam("authToken") String authToken,
+            @Auth(required = false) User user) {
+		checkUuid(uuid);
+		if (user==null) {
+			Response.status(HttpURLConnection.HTTP_BAD_REQUEST).entity("{'error':'incorrect token'}").build();
+		}
+		
+        FacebookDataLogic facebookDataLogic = new FacebookDataLogic(uuid);
+        GenericArray<String>  results = facebookDataLogic.getSavedNews();
+		return results;
+	}
 
 }
