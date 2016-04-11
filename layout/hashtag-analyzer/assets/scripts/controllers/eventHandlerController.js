@@ -17,6 +17,18 @@ var EventHandlerController = angular.module('EventHandlerController', [
 EventHandlerController.controller('EventMainController',
     function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, SweetAlertFactory, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, languageCode, User, filterHashtags) {
 
+        $scope.countryAbbrev = {
+            "eg": "مصر",
+            "gb": "بريطانيا",
+            "us": "الولايات المتحدة",
+            "fr": "فرنسا",
+            "sa": "السعودية",
+            "qa": "قطر"
+        }
+
+        console.log($scope.countryAbbrev);
+        console.log($scope.countryAbbrev["eg"]);
+
         // 1. Set the initializing values
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.news" || $state.current.name == "dashboard.facebook" || $state.current.name == "dashboard.map") {
