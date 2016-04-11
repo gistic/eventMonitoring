@@ -16,6 +16,7 @@ angular.module('trackHashtagApp', [
     'StartNewEvent',
     'EventHandlerController',
     'KeywordsController',
+    'FbPagesController',
 
     'oitozero.ngSweetAlert',
     'ngFx',
@@ -120,6 +121,21 @@ angular.module('trackHashtagApp', [
             url: '/create',
             templateUrl: 'views/views-components/keywords-create.html',
             controller: 'KeywordsController'
+        },
+        "fbPages":{
+            url: '/fbPages',
+            templateUrl: 'views/views-components/fb-pages.html',
+            controller: 'FbPagesController'
+        },
+        "fbPages.index":{
+            url: '/index',
+            templateUrl: 'views/views-components/fb-pages-list.html',
+            controller: 'FbPagesController'
+        },
+        "fbPages.create":{
+            url: '/create',
+            templateUrl: 'views/views-components/fb-pages-create.html',
+            controller: 'FbPagesController'
         }
     };
 
