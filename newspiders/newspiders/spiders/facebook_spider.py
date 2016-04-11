@@ -3,6 +3,8 @@ import scrapy
 from newspiders.items import FbPost
 import json
 import datetime
+import requests
+
 
 
 class FacebookSpider(scrapy.Spider):
@@ -30,6 +32,8 @@ class FacebookSpider(scrapy.Spider):
 	def parse(self, response):
 		response_body = json.loads(response.body)
 		last_date = datetime.datetime.now().strftime("%Y-%m-%d")
+		print "------2222"
+		print last_date
 		for post in response_body['data']:
 			if "message" in post:
 				last_date = datetime.datetime.strptime(post["created_time"].split("T")[0], "%Y-%m-%d")
@@ -41,7 +45,13 @@ class FacebookSpider(scrapy.Spider):
 					fb_post["url"] = "http://facebook.com/"+ids[0]+"/posts/"+ids[1]
 					fb_post["text"] = post["message"].encode('utf-8')
 					fb_post["date"] = datetime.datetime.strptime(post["created_time"].split("+")[0], "%Y-%m-%dT%H:%M:%S").strftime('%Y-%m-%d')
-					fb_post["source"] = self.sources_names[ids[0]]
+
+					r = requests.get("https://graph.facebook.com/v2.5/"+ids[0]+"?access_token="+self.facebook_app_id+"|"+self.facebook_app_secret)
+					fb_post["source"] = json.loads(r.text)["name"].encode('utf-8')
+
+					r = requests.get("https://graph.facebook.com/v2.5/"+ids[0]+"/picture?type=normal&access_token="+self.facebook_app_id+"|"+self.facebook_app_secret)
+					fb_post["image_url"] = r.url
+
 					yield fb_post
 
 		if((datetime.datetime.now() - last_date).days < 31):

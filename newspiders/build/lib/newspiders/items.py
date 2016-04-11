@@ -14,5 +14,16 @@ class Article(scrapy.Item):
 	text = scrapy.Field()
 	date = scrapy.Field()
 	image_url = scrapy.Field()
-	fb_score = scrapy.Field()
+	source = scrapy.Field()
+	country = scrapy.Field()
+
+
+class FbPost(scrapy.Item):
+	uuid = scrapy.Field()
+	url = scrapy.Field()
+	text = scrapy.Field()
+	date = scrapy.Field()
+	image_url = scrapy.Field()
+	source = scrapy.Field()
+	country = scrapy.Field()
 
