@@ -10,18 +10,26 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.dao.FacebookDao;
+import org.gistic.tweetboard.dao.FacebookPagesDao;
+import org.gistic.tweetboard.dao.KeywordsDao;
 import org.gistic.tweetboard.dao.NewsDao;
+import org.gistic.tweetboard.representations.FacebookPage;
 import org.gistic.tweetboard.representations.GenericArray;
+import org.gistic.tweetboard.representations.Keyword;
 
 import jersey.repackaged.com.google.common.collect.ImmutableList;
 import org.gistic.tweetboard.representations.TopItem;
 import redis.clients.jedis.Tuple;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.exceptions.JedisException;
 
 public class FacebookDataLogic {
 	private String uuid;
@@ -36,14 +44,35 @@ public class FacebookDataLogic {
 		try{
 			URL url = new URL("http://localhost:6800/schedule.json");
 			
+				FacebookPagesDataLogic fpdl = new FacebookPagesDataLogic( new FacebookPagesDao());
+				FacebookPage[] facebookPages = fpdl.getFacebookPages();
 				
-			
+				String[] pageNames = new String[facebookPages.length];
+				String[] pageIds = new String[facebookPages.length];
+				
+				for (int i = 0; i < facebookPages.length ; i++) {
+					pageNames[i] = facebookPages[i].getName();
+					pageIds[i] = facebookPages[i].getScreenName();
+				}
+				
+				ArrayList<String> newKeywords = (new KeywordsDataLogic(new KeywordsDao())).getRelatedWords(keywords); // check if it's registered with a system keyword
+
+				String newKeywordsString = String.join(",", newKeywords).replace("\"", "");
+
 				HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
 				
 				httpCon.setDoOutput(true);
 				httpCon.setRequestMethod("POST");
 		
-				String urlParameters = "project=newspiders&spider=facebook"+"&euuid="+uuid+"&fb_pages=130459710303842&fb_pages_names=اخبارك&keywords="+String.join(",", keywords);
+				String urlParameters = "project=newspiders&spider=facebook"+"&euuid="+uuid+"&fb_pages="+String.join(",", pageIds)+"&fb_pages_names="+String.join(",", pageNames)+"&keywords="+newKeywordsString;
+				
+				try (Jedis jedis = JedisPoolContainer.getInstance()) {
+		        	
+		            jedis.sadd("events:scrapy_params:"+uuid, urlParameters);
+		        	
+		        }catch(JedisException e){
+		        	e.printStackTrace();
+		        }
 				
 				// Send post request
 				httpCon.setDoOutput(true);

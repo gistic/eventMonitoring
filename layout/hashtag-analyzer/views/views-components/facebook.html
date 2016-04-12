@@ -12,8 +12,8 @@
        
         <div class="media-left">
            	<a ng-href="{{post.url}}" target="_blank" class="pull-left tweet-userName">
-<!--                     <img lazy-src="{{news.image_url}}" on-error-src="{{news.image_url.replace('http://t0','http://t1')}}" class="media-object user-img" />
- -->            </a>
+                <img src="{{post.image_url}}" class="media-object user-img" />
+            </a>
         </div>
         <div class="media-body tweet-content">
            
@@ -29,11 +29,6 @@
             
 			</p>
 			
-            <p>
-                <span>{{post.country==='eg' ? "مصر" : "السعودية"}}</span>
-                <span class="fa fa-map-marker"></span>
-            </p>
-
             <p>
                 <span class="text-muted">{{post.date}}</span>
             </p>

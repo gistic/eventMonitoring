@@ -36,6 +36,12 @@ target/
 *.log
 /layout/logo/
 
+# Python & Scrapy
+*.pyc
+*.jl
+*.egg
+items/*
+newspiders/build/*
 configuration.yml
 /layout/hashtag-analyzer/README.md
 /layout/hashtag-analyzer/package.json

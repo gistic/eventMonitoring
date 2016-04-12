@@ -11,6 +11,12 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -97,5 +103,38 @@ public class Misc {
 
 		return sb.toString();
 		
+	}
+    
+    public static void writeToJsonFile(String fileName, String jsonBody){
+		
+		try {
+
+			File file = new File(fileName);
+
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(jsonBody.toString());
+			bw.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+    public static String readJsonFile(String filename) {
+	    String result = "";
+	    try {
+	        BufferedReader br = new BufferedReader(new FileReader(filename));
+	        StringBuilder sb = new StringBuilder();
+	        String line = br.readLine();
+	        while (line != null) {
+	            sb.append(line);
+	            line = br.readLine();
+	        }
+	        result = sb.toString();
+	    } catch(Exception e) {
+	        e.printStackTrace();
+	    }
+	    return result;
 	}
 }

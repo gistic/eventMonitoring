@@ -1,0 +1,23 @@
+<div class="container">
+    <h1>Facebook Page Create</h1><br /><br />
+
+    <form novalidate="novalidate" class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="inputFbPage">Facebook Page Name:</label>
+            <div class="controls">
+                <input type="text" id="inputFbPage" ng-model="fbPage.name"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputScreenName">Facebook screen name:</label>
+            <div class="controls">
+                <input type="text" id="inputScreenName" ng-model="fbPage.screenName"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <a ng-click="saveNewFbPage()" class="btn btn-small btn-primary">Save Facebook Page</a>
+            </div>
+        </div>
+    </form>
+</div>

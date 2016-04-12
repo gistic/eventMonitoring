@@ -17,6 +17,15 @@ var EventHandlerController = angular.module('EventHandlerController', [
 EventHandlerController.controller('EventMainController',
     function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, SweetAlertFactory, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, languageCode, User, filterHashtags) {
 
+        $scope.countryAbbrev = {
+            "eg": "مصر",
+            "gb": "بريطانيا",
+            "us": "الولايات المتحدة",
+            "fr": "فرنسا",
+            "sa": "السعودية",
+            "qa": "قطر"
+        }
+
         // 1. Set the initializing values
         $scope.dashboardState = false;
         if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.news" || $state.current.name == "dashboard.facebook" || $state.current.name == "dashboard.map") {
@@ -183,6 +192,32 @@ EventHandlerController.controller('EventMainController',
                 })
         };
 
+        
+        $scope.getSavedFbPosts = function () {
+            // $scope.eventDataChunk = "Warm Up Tweets";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/savedFbPosts';
+            var requestAction = "GET";
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    for (var i = 0; i < response.items.length; i++) {
+                        $scope.$apply(function () {
+                            $scope.fbQueue.push(JSON.parse(response.items[i]))
+                            $scope.fbQueue.sort(function(a,b){
+                                new_date = new Date(a.date)
+                                old_date = new Date(b.date)
+                                return old_date-new_date
+                            });
+                        });
+                    }
+                    $rootScope.loadingEvent = false;
+                }).error(function () {
+                    $rootScope.loadingEvent = false;
+                    console.log("#");
+                })
+        };
+
         // Intialize
 
 
@@ -191,6 +226,7 @@ EventHandlerController.controller('EventMainController',
             if (User.getUserAuth()) {
                 $scope.getWarmupData();
                 $scope.getSavedNews();
+                $scope.getSavedFbPosts();
                 $scope.getViewOptions();
                 $scope.getEventStats();
                 User.getUserData();

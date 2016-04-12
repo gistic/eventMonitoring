@@ -8,10 +8,14 @@ KeywordsController.controller('KeywordsController', ['$scope', 'KeywordsFactory'
         // callback for ng-click 'deleteKeyword':
         $scope.deleteKeyword = function (keyword) {
 
-            KeywordFactory.delete({keyword: keyword});
-            
-            $scope.keywords = KeywordsFactory.query();
-            $scope.keywords = KeywordsFactory.query();
+            var result = confirm("Sure to delete?");
+            if (result) {
+
+                KeywordFactory.delete({keyword: keyword});
+                
+                $scope.keywords = KeywordsFactory.query();
+                $scope.keywords = KeywordsFactory.query();
+            }
         };
 
         // callback for ng-click 'createNewKeyword':

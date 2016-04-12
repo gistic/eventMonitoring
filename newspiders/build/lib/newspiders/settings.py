@@ -14,11 +14,14 @@ BOT_NAME = 'newspiders'
 SPIDER_MODULES = ['newspiders.spiders']
 NEWSPIDER_MODULE = 'newspiders.spiders'
 ITEM_PIPELINES = {
-	'newspiders.pipelines.NewspidersPipeline': 1
+	'newspiders.pipelines.NewspidersPipeline': 1,
+	'newspiders.pipelines.FacebookPipeline': 2
 }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'newspiders (+http://www.yourdomain.com)'
+
+USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36"
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS=32
