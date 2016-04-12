@@ -14,12 +14,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.dao.KeywordsDao;
 import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.representations.GenericArray;
 import org.gistic.tweetboard.representations.Keyword;
 
 import jersey.repackaged.com.google.common.collect.ImmutableList;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.exceptions.JedisException;
 
 public class NewsDataLogic {
 	private static final ImmutableList<String> spiders = ImmutableList.copyOf(Arrays.asList("akhbarak", "google_news").iterator());
@@ -47,7 +50,16 @@ public class NewsDataLogic {
 				httpCon.setRequestMethod("POST");
 		
 				String urlParameters = "project=newspiders&spider="+spider+"&euuid="+uuid+"&keywords="+newKeywordsString;
-				System.out.println(newKeywordsString);
+//				System.out.println(newKeywordsString);
+				
+				try (Jedis jedis = JedisPoolContainer.getInstance()) {
+		        	
+		            jedis.sadd("events:scrapy_params:"+uuid, urlParameters);
+		        	
+		        }catch(JedisException e){
+		        	e.printStackTrace();
+		        }
+
 				
 				// Send post request
 				httpCon.setDoOutput(true);

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.dao.FacebookDao;
 import org.gistic.tweetboard.dao.FacebookPagesDao;
 import org.gistic.tweetboard.dao.KeywordsDao;
@@ -23,6 +24,8 @@ import org.gistic.tweetboard.representations.GenericArray;
 import org.gistic.tweetboard.representations.Keyword;
 
 import jersey.repackaged.com.google.common.collect.ImmutableList;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.exceptions.JedisException;
 
 public class FacebookDataLogic {
 	private String uuid;
@@ -58,6 +61,14 @@ public class FacebookDataLogic {
 				httpCon.setRequestMethod("POST");
 		
 				String urlParameters = "project=newspiders&spider=facebook"+"&euuid="+uuid+"&fb_pages="+String.join(",", pageIds)+"&fb_pages_names="+String.join(",", pageNames)+"&keywords="+newKeywordsString;
+				
+				try (Jedis jedis = JedisPoolContainer.getInstance()) {
+		        	
+		            jedis.sadd("events:scrapy_params:"+uuid, urlParameters);
+		        	
+		        }catch(JedisException e){
+		        	e.printStackTrace();
+		        }
 				
 				// Send post request
 				httpCon.setDoOutput(true);
