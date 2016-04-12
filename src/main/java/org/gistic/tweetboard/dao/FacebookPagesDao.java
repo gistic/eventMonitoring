@@ -2,13 +2,12 @@ package org.gistic.tweetboard.dao;
 
 import org.gistic.tweetboard.representations.FacebookPage;
 import org.gistic.tweetboard.representations.Keyword;
+import org.gistic.tweetboard.util.Misc;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import org.gistic.tweetboard.Util.Misc;
 
 public class FacebookPagesDao {
 	

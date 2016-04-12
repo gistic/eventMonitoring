@@ -12,9 +12,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import org.gistic.tweetboard.representations.Keyword;
+import org.gistic.tweetboard.util.Misc;
 import org.json.*;
-
-import org.gistic.tweetboard.Util.Misc;
 
 
 public class KeywordsDao {
