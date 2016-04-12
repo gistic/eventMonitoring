@@ -46,12 +46,21 @@ class FacebookSpider(scrapy.Spider):
 					fb_post["text"] = post["message"].encode('utf-8')
 					fb_post["date"] = datetime.datetime.strptime(post["created_time"].split("+")[0], "%Y-%m-%dT%H:%M:%S").strftime('%Y-%m-%d')
 
-					r = requests.get("https://graph.facebook.com/v2.5/"+ids[0]+"?access_token="+self.facebook_app_id+"|"+self.facebook_app_secret)
-					fb_post["source"] = json.loads(r.text)["name"].encode('utf-8')
+					r = requests.get("https://graph.facebook.com/v2.5/"+ids[0]+"?fields=name,likes,talking_about_count&access_token="+self.facebook_app_id+"|"+self.facebook_app_secret)
+					r =  json.loads(r.text)
+					fb_post["source"] = r["name"].encode('utf-8')
+					fb_post["page_likes"] = r["likes"]
+					fb_post["talking_about"] = r["talking_about_count"]
 
 					r = requests.get("https://graph.facebook.com/v2.5/"+ids[0]+"/picture?type=normal&access_token="+self.facebook_app_id+"|"+self.facebook_app_secret)
 					fb_post["image_url"] = r.url
 
+					r = requests.get("https://graph.facebook.com/v2.5/"+ids[0]+"_"+ids[1]+"?fields=shares,likes.summary(true),comments.summary(true)&access_token="+self.facebook_app_id+"|"+self.facebook_app_secret)
+					r = json.loads(r.text)
+					fb_post["likes_num"] = r["shares"]["count"]
+					fb_post["comments_num"] = r["likes"]["summary"]["total_count"]
+					fb_post["shares_num"] = r["comments"]["summary"]["total_count"]
+					
 					yield fb_post
 		
 		if((datetime.datetime.now() - parse(last_date.split("+")[0])).days < 31):

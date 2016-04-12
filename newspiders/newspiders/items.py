@@ -26,4 +26,10 @@ class FbPost(scrapy.Item):
 	image_url = scrapy.Field()
 	source = scrapy.Field()
 	country = scrapy.Field()
+	likes_num = scrapy.Field()
+	comments_num = scrapy.Field()
+	shares_num = scrapy.Field()
+	page_likes = scrapy.Field()
+	talking_about = scrapy.Field()
+
 
