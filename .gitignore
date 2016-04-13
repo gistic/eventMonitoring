@@ -45,6 +45,7 @@ newspiders/build/*
 configuration.yml
 newspiders/dbs/newspiders.db
 newspiders/project.egg-info/SOURCES.txt
+newspiders/twistd.pid 
 
 /layout/hashtag-analyzer/README.md
 /layout/hashtag-analyzer/package.json
