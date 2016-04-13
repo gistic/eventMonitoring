@@ -234,6 +234,7 @@ EventHandlerController.controller('EventMainController',
                 $scope.drawlanguagesPieChart();
                 $scope.getLocationStats();
                 $scope.getNewsLocationStats();
+                $scope.getTopFacebookSources();
                 $scope.drawLocationGeoChart();
                 $scope.drawLocationPieChart();
                 $scope.drawNewsLocationGeoChart();
@@ -946,7 +947,20 @@ EventHandlerController.controller('EventMainController',
 
         // TODO GET : Top facebook sources
         $scope.topFacebookSource = [];
-        // implement
+        $scope.getTopFacebookSources = function () {
+            $scope.eventDataChunk = "Facebook Sources";
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topFacebookSources';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.topFacebookSource = response.items;
+                    $scope.drawFacebookSourcesChart($scope.topFacebookSource);
+                }).error(function () {
+                    console.log("#");
+                })
+        }
 
         // Tweet queue logic
         $scope.pagesShown = 1;
