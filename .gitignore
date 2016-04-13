@@ -43,7 +43,7 @@ target/
 items/*
 newspiders/build/*
 configuration.yml
-dbs/newspiders.db
+newspiders/dbs/newspiders.db
 newspiders/project.egg-info/SOURCES.txt
 
 /layout/hashtag-analyzer/README.md
