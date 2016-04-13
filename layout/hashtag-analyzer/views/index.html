@@ -38,7 +38,7 @@
       <div class="">
         <ul class="list-inline">
           <li>Trending on Twitter:</li>
-          <li ng-repeat="hashtag in trendingHashtags">
+          <li ng-repeat="hashtag in trendingHashtags  | limitTo : 10">
             <a ng-click="createEventFromTrending(hashtag)">#{{hashtag}}</a>
           </li>
         </ul>

@@ -1,6 +1,6 @@
 'use strict';
-
 angular.module('trackHashtagApp', [
+    'ngResource',
     'ngSanitize', // AngularjS main dependencies
     'ngCookies',
     'ngAnimate',
@@ -15,6 +15,8 @@ angular.module('trackHashtagApp', [
 
     'StartNewEvent',
     'EventHandlerController',
+    'KeywordsController',
+    'FbPagesController',
 
     'oitozero.ngSweetAlert',
     'ngFx',
@@ -100,6 +102,40 @@ angular.module('trackHashtagApp', [
         "dashboard.news": {
             url: '/news',
             templateUrl: 'views/views-components/news.html'
+        },
+        "dashboard.facebook": {
+            url: '/facebook',
+            templateUrl: 'views/views-components/facebook.html'
+        },
+        "keywords":{
+            url: '/keywords',
+            templateUrl: 'views/views-components/keywords.html',
+            controller: 'KeywordsController'
+        },
+        "keywords.index":{
+            url: '/index',
+            templateUrl: 'views/views-components/keywords-list.html',
+            controller: 'KeywordsController'
+        },
+        "keywords.create":{
+            url: '/create',
+            templateUrl: 'views/views-components/keywords-create.html',
+            controller: 'KeywordsController'
+        },
+        "fbPages":{
+            url: '/fbPages',
+            templateUrl: 'views/views-components/fb-pages.html',
+            controller: 'FbPagesController'
+        },
+        "fbPages.index":{
+            url: '/index',
+            templateUrl: 'views/views-components/fb-pages-list.html',
+            controller: 'FbPagesController'
+        },
+        "fbPages.create":{
+            url: '/create',
+            templateUrl: 'views/views-components/fb-pages-create.html',
+            controller: 'FbPagesController'
         }
     };
 
@@ -128,6 +164,103 @@ angular.module('trackHashtagApp', [
 
 angular.module('trackHashtagApp').run(['$templateCache', function($templateCache) {
   'use strict';
+
+  $templateCache.put('views/views-components/facebook.html',
+    "<h2>Facebook</h2>\n" +
+    "\n" +
+    "<aside class=\"col-md-8\">\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/facebook-sources.html'\"></div>\n" +
+    "    </section>\n" +
+    "</aside>\n" +
+    "\n" +
+    "<article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"post in fbQueue\">\n" +
+    "\n" +
+    "\t<div class=\"tweet-content\">\n" +
+    "       \n" +
+    "        <div class=\"media-left\">\n" +
+    "           \t<a ng-href=\"{{post.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
+    "                <img src=\"{{post.image_url}}\" class=\"media-object user-img\" />\n" +
+    "            </a>\n" +
+    "        </div>\n" +
+    "        <div class=\"media-body tweet-content\">\n" +
+    "           \n" +
+    "            <h6 class=\"media-heading tweet-user clearfix\">                \n" +
+    "                    <h4>{{post.source}}</h4>\n" +
+    "            </h6>\n" +
+    "\t\t\t\n" +
+    "            <p>\n" +
+    "\n" +
+    "\t\t\t     \t<a ng-href=\"{{post.url}}\" target=\"_blank\" class=\"\">\n" +
+    "\t                    {{post.text}}\n" +
+    "\t            \t</a>\n" +
+    "            \n" +
+    "\t\t\t</p>\n" +
+    "\t\t\t\n" +
+    "            <p>\n" +
+    "                <span class=\"text-muted\">{{post.date}}</span>\n" +
+    "            </p>\n" +
+    "            \n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "\n" +
+    "</article>\n"
+  );
+
+
+  $templateCache.put('views/views-components/fb-pages-create.html',
+    "<div class=\"container\">\n" +
+    "    <h1>Facebook Page Create</h1><br /><br />\n" +
+    "\n" +
+    "    <form novalidate=\"novalidate\" class=\"form-horizontal\">\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inputFbPage\">Facebook Page Name:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <input type=\"text\" id=\"inputFbPage\" ng-model=\"fbPage.name\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inputScreenName\">Facebook screen name:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <input type=\"text\" id=\"inputScreenName\" ng-model=\"fbPage.screenName\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <div class=\"controls\">\n" +
+    "                <a ng-click=\"saveNewFbPage()\" class=\"btn btn-small btn-primary\">Save Facebook Page</a>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </form>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/views-components/fb-pages-list.html',
+    "<div class=\"span6\">\n" +
+    "    <table class=\"table table-striped table-condensed\">\n" +
+    "        <thead>\n" +
+    "        <tr>\n" +
+    "            <th style=\"min-width: 80px;\">Page's name</th>\n" +
+    "            <th style=\"min-width: 80px;\">Page's screen name</th>\n" +
+    "        </tr>\n" +
+    "        </thead>\n" +
+    "        <tbody>\n" +
+    "        <tr ng-repeat=\"fbPage in fbPages\">\n" +
+    "            <td>{{ fbPage.name }}</td>\n" +
+    "            <td>{{ fbPage.screenName }}</td>\n" +
+    "            <td><a ng-click=\"deleteFbPage(fbPage.name)\" class=\"btn btn-small btn-danger\">delete</a></td>\n" +
+    "        </tr>\n" +
+    "        </tbody>\n" +
+    "    </table>\n" +
+    "    <a ui-sref=\"fbPages.create\" class=\"\">create new facebook page to track!</a>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/views-components/fb-pages.html',
+    "<div ui-view></div>\n"
+  );
+
 
   $templateCache.put('views/views-components/header.html',
     "<!-- HEADER -->\n" +
@@ -177,6 +310,9 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                <li class=\"hvr-underline-from-center\" ng-class=\"{active : isActive('dashboard.news')}\">\n" +
     "                    <a ui-sref=\".news\">News</a>\n" +
     "                </li>\n" +
+    "                <li class=\"hvr-underline-from-center\" ng-class=\"{active : isActive('dashboard.facebook')}\">\n" +
+    "                    <a ui-sref=\".facebook\">Facebook</a>\n" +
+    "                </li>\n" +
     "                <li class=\"hvr-underline-from-center\" ng-class=\"{active : isActive('dashboard.map')}\">\n" +
     "                    <a ui-sref=\".map\">Map</a>\n" +
     "                </li>\n" +
@@ -210,6 +346,60 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "\n" +
     "    </div>\n" +
     "</nav>\n"
+  );
+
+
+  $templateCache.put('views/views-components/keywords-create.html',
+    "<div class=\"container\">\n" +
+    "    <h1>Keyword create</h1><br /><br />\n" +
+    "\n" +
+    "    <form novalidate=\"novalidate\" class=\"form-horizontal\">\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inputKeyword\">Keyword:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <input dir=\"rtl\" type=\"text\" id=\"inputKeyword\" ng-model=\"keyword.keyword\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inputRelatedWords\">Related Words:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <textarea dir=\"rtl\" rows=\"4\" cols=\"50\" id=\"inputRelatedWords\" ng-model=\"keyword.relatedWords\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <div class=\"controls\">\n" +
+    "                <a ng-click=\"saveNewKeyword()\" class=\"btn btn-small btn-primary\">Save Keyword</a>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </form>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/views-components/keywords-list.html',
+    "<div class=\"span6\">\n" +
+    "    <table class=\"table table-striped table-condensed\">\n" +
+    "        <thead>\n" +
+    "        <tr>\n" +
+    "            <th style=\"min-width: 80px;\">Keyword</th>\n" +
+    "            <th style=\"min-width: 80px;\">Related words</th>\n" +
+    "        </tr>\n" +
+    "        </thead>\n" +
+    "        <tbody>\n" +
+    "        <tr ng-repeat=\"keyword in keywords\">\n" +
+    "            <td>{{ keyword.keyword }}</td>\n" +
+    "            <td>{{ keyword.relatedWords }}</td>\n" +
+    "            <td><a ng-click=\"deleteKeyword(keyword.keyword)\" class=\"btn btn-small btn-danger\">delete</a></td>\n" +
+    "        </tr>\n" +
+    "        </tbody>\n" +
+    "    </table>\n" +
+    "    <a ng-click=\"createNewKeyword()\" class=\"\">create new keyword</a>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/views-components/keywords.html',
+    "<div ui-view></div>\n"
   );
 
 
@@ -391,34 +581,44 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
 
   $templateCache.put('views/views-components/news.html',
-    "<h2>NEWS</h2>\n" +
-    "\n" +
-    "<article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"news in newsQueue track by $index\">\n" +
+    "<h2>NEWS new!</h2>\n" +
+    "<aside class=\"col-md-8\">\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/news-sources.html'\"></div>\n" +
+    "    </section>\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/news-location-panel.html'\"></div>\n" +
+    "    </section>\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/news-per-country-panel.html'\"></div>\n" +
+    "    </section>\n" +
+    "</aside>\n" +
+    "<article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"news in newsQueue\">\n" +
     "\n" +
     "\t<div class=\"tweet-content\">\n" +
     "       \n" +
     "        <div class=\"media-left\">\n" +
     "           \t<a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
-    "                    <img lazy-src=\"{{news.image_url}}\" on-error-src=\"{{defultImage}}\" class=\"media-object user-img\" />\n" +
+    "                    <img lazy-src=\"{{news.image_url}}\" on-error-src=\"{{news.image_url.replace('http://t0','http://t1')}}\" class=\"media-object user-img\" />\n" +
     "            </a>\n" +
     "        </div>\n" +
     "        <div class=\"media-body tweet-content\">\n" +
     "           \n" +
     "            <h6 class=\"media-heading tweet-user clearfix\">                \n" +
-    "                    <h4>جريدة مكة</h4>\n" +
+    "                    <h4>{{news.source}}</h4>\n" +
     "            </h6>\n" +
     "\t\t\t\n" +
     "            <p>\n" +
-    "\t\t      \t<span>\n" +
-    "\t\t\t     \t<a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
+    "\n" +
+    "\t\t\t     \t<a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"\">\n" +
     "\t                    {{news.title}}\n" +
     "\t            \t</a>\n" +
-    "                </span>\n" +
     "            \n" +
     "\t\t\t</p>\n" +
     "\t\t\t\n" +
     "            <p>\n" +
-    "                <span class=\"fa fa-map-marker\">السعودية</span>\n" +
+    "                <span>{{countryAbbrev[news.country]}}</span>\n" +
+    "                <span class=\"fa fa-map-marker\"></span>\n" +
     "            </p>\n" +
     "\n" +
     "            <p>\n" +

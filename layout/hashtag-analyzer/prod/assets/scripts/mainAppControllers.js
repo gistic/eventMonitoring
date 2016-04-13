@@ -17,9 +17,18 @@ var EventHandlerController = angular.module('EventHandlerController', [
 EventHandlerController.controller('EventMainController',
     ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', 'RequestData', 'CreateEventSource', '$timeout', 'SweetAlert', 'SweetAlertFactory', 'ISO3166', 'Lightbox', '$modal', '$sce', '$cookies', '$cookieStore', 'languageCode', 'User', 'filterHashtags', function ($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, RequestData, CreateEventSource, $timeout, SweetAlert, SweetAlertFactory, ISO3166, Lightbox, $modal, $sce, $cookies, $cookieStore, languageCode, User, filterHashtags) {
 
+        $scope.countryAbbrev = {
+            "eg": "مصر",
+            "gb": "بريطانيا",
+            "us": "الولايات المتحدة",
+            "fr": "فرنسا",
+            "sa": "السعودية",
+            "qa": "قطر"
+        }
+
         // 1. Set the initializing values
         $scope.dashboardState = false;
-        if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.news" || $state.current.name == "dashboard.map") {
+        if ($state.current.name == "dashboard.liveStreaming" || $state.current.name == "dashboard.media" || $state.current.name == "dashboard.news" || $state.current.name == "dashboard.facebook" || $state.current.name == "dashboard.map") {
             $scope.dashboardState = true;
         }
         // Lightbox for media
@@ -158,6 +167,57 @@ EventHandlerController.controller('EventMainController',
                 })
         };
 
+        $scope.getSavedNews = function () {
+            // $scope.eventDataChunk = "Warm Up Tweets";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/savedNews';
+            var requestAction = "GET";
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    for (var i = 0; i < response.items.length; i++) {
+                        $scope.$apply(function () {
+                            $scope.newsQueue.push(JSON.parse(response.items[i]))
+                            $scope.newsQueue.sort(function(a,b){
+                                new_date = new Date(a.date)
+                                old_date = new Date(b.date)
+                                return old_date-new_date
+                            });
+                        });
+                    }
+                    $rootScope.loadingEvent = false;
+                }).error(function () {
+                    $rootScope.loadingEvent = false;
+                    console.log("#");
+                })
+        };
+
+        
+        $scope.getSavedFbPosts = function () {
+            // $scope.eventDataChunk = "Warm Up Tweets";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/savedFbPosts';
+            var requestAction = "GET";
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    for (var i = 0; i < response.items.length; i++) {
+                        $scope.$apply(function () {
+                            $scope.fbQueue.push(JSON.parse(response.items[i]))
+                            $scope.fbQueue.sort(function(a,b){
+                                new_date = new Date(a.date)
+                                old_date = new Date(b.date)
+                                return old_date-new_date
+                            });
+                        });
+                    }
+                    $rootScope.loadingEvent = false;
+                }).error(function () {
+                    $rootScope.loadingEvent = false;
+                    console.log("#");
+                })
+        };
+
         // Intialize
 
 
@@ -165,16 +225,22 @@ EventHandlerController.controller('EventMainController',
             User.setUserAuth();
             if (User.getUserAuth()) {
                 $scope.getWarmupData();
+                $scope.getSavedNews();
+                $scope.getSavedFbPosts();
                 $scope.getViewOptions();
                 $scope.getEventStats();
                 User.getUserData();
                 $scope.getLanguagesStats();
                 $scope.drawlanguagesPieChart();
                 $scope.getLocationStats();
+                $scope.getNewsLocationStats();
                 $scope.drawLocationGeoChart();
                 $scope.drawLocationPieChart();
+                $scope.drawNewsLocationGeoChart();
+                $scope.drawNewsLocationPieChart();
                 $scope.getTopHashtags();
                 $scope.getTopSources();
+                $scope.getTopNewsSources();
                 $scope.getEvents();
             } else {
                 $state.transitionTo('home');
@@ -230,13 +296,14 @@ EventHandlerController.controller('EventMainController',
         $scope.lastNewMedia = [];
         $scope.topPeople = [];
         $scope.newsQueue = [];
+        $scope.fbQueue = [];
         $scope.tweet = {};
 
 
         // Close event source if he leave the media or tweet stream stats
         $rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
-                if (!(toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" || toState.name == "dashboard.news" || toState.name == "dashboard.map")) {
+                if (!(toState.name == "dashboard.liveStreaming" || toState.name == "dashboard.media" || toState.name == "dashboard.news" || toState.name == "dashboard.facebook" || toState.name == "dashboard.map")) {
 
                     CreateEventSource.closeEventSource();
                 }
@@ -496,12 +563,120 @@ EventHandlerController.controller('EventMainController',
 
             // News Item
             source.addEventListener('news-item', function (response) {
+                console.log("got news item");
                 var newsItem = JSON.parse(response.data);
-                
-                $scope.$apply(function () {
 
-                    $scope.newsQueue.push(newsItem)
+                // Update tweets sources
+                var sourceUpdated = false;
+                if (newsItem.source != null) {
+                    console.log("got news source!");
+                    var newsSourceName = newsItem.source;
+                    console.log(newsItem.source);
+                    for (var i = 0; i < $scope.topNewsSource.length; i++) {
+                        if ($scope.topNewsSource[i].code == newsSourceName) {
+                            $scope.topNewsSource[i].count++;
+                            sourceUpdated = true;
+                            $scope.topNewsSource.sort(function (a, b) {
+                                return (b.count) - (a.count);
+                            });
+                            $scope.drawNewsSourcesChart($scope.topNewsSource);
+                            break;
+                        }
+                    }
+                    if (!sourceUpdated) {
+                        $scope.topNewsSource.push({
+                            code: newsSourceName,
+                            count: 1
+                        });
+                        $scope.topNewsSource.sort(function (a, b) {
+                            return (b.count) - (a.count);
+                        });
+
+                        $scope.drawNewsSourcesChart($scope.topNewsSource);
+                    }
+                }
+
+                //Update country
+
+                $scope.newsTopCountry = newsItem.country.toUpperCase();
+
+                $scope.countryName = ISO3166.getCountryName($scope.newsTopCountry);
+                $scope.countryCount = 1;//$scope.topCountrey.count;
+                var countryUpdated = false;
+
+                $scope.$apply(function () {
+                    if (newsLocationChart.data.length != 0) {
+                        for (var i = 0; i < newsLocationChart.data.length; i++) {
+                            if (newsLocationChart.data[i][0] == $scope.countryName) {
+                                newsLocationChart.data[i][1] = newsLocationChart.data[i][1]+1;
+                                countryUpdated = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!countryUpdated) {
+                        newsLocationChart.data.push([$scope.countryName, $scope.countryCount]);
+                        $scope.topNewsCountriesLength++;
+                    }
+
                 }, false);
+
+
+                // Update news queue
+                $scope.$apply(function () {
+                    $scope.newsQueue.push(newsItem)
+                    $scope.newsQueue.sort(function(a,b){
+                        new_date = new Date(a.date)
+                        old_date = new Date(b.date)
+                        return old_date-new_date
+                    });
+                });
+            });
+
+            // Facebook post
+            source.addEventListener('fb-post', function (response) {
+                var fbPost = JSON.parse(response.data);
+
+                // Update facebook sources
+                var sourceUpdated = false;
+                if (fbPost.source != null) {
+                    //console.log("got news source!");
+                    var facebookSourceName = fbPost.source;
+                    //console.log(newsItem.source);
+                    for (var i = 0; i < $scope.topFacebookSource.length; i++) {
+                        if ($scope.topFacebookSource[i].code == facebookSourceName) {
+                            $scope.topFacebookSource[i].count++;
+                            sourceUpdated = true;
+                            $scope.topFacebookSource.sort(function (a, b) {
+                                return (b.count) - (a.count);
+                            });
+                            $scope.drawFacebookSourcesChart($scope.topFacebookSource);
+                            break;
+                        }
+                    }
+                    if (!sourceUpdated) {
+                        $scope.topFacebookSource.push({
+                            code: facebookSourceName,
+                            count: 1
+                        });
+                        $scope.topFacebookSource.sort(function (a, b) {
+                            return (b.count) - (a.count);
+                        });
+
+                        $scope.drawFacebookSourcesChart($scope.topFacebookSource);
+                    }
+                }
+
+                // Update facebook posts queue
+                $scope.$apply(function () {
+                    $scope.fbQueue.push(fbPost)
+                    $scope.fbQueue.sort(function(a,b){
+                        new_date = new Date(a.date)
+                        old_date = new Date(b.date)
+                        return old_date-new_date
+                    });
+                });
             });
 
             // Top country
@@ -542,6 +717,49 @@ EventHandlerController.controller('EventMainController',
             languagesPieChart.data = [['Language', 'Count']];
 
             languagesPieChart.options = {
+                displayExactValues: true,
+                is3D: true,
+                chartArea: {
+                    left: 10,
+                    top: 0,
+                    width: '100%',
+                    height: '100%'
+                }
+            };
+        }
+
+        // News location map visualization
+        var newsLocationChart = [];
+        $scope.newsLocationChart = newsLocationChart;
+        $scope.drawNewsLocationGeoChart = function () {
+
+            newsLocationChart.type = "GeoChart";
+            newsLocationChart.data = [['Country', 'News Count: ']];
+
+            newsLocationChart.options = {
+                tooltip: {
+                    textStyle: {
+                        color: '#191919'
+                    },
+                    showColorCode: true
+                },
+                height: 250,
+                colorAxis: {
+                    colors: ['#deebf7', '#9ecae1', '#3182bd']
+                },
+                displayMode: 'regions'
+            };
+
+        }
+
+        var newsLocationPieChart = [];
+        $scope.newsLocationPieChart = newsLocationPieChart;
+        $scope.drawNewsLocationPieChart = function () {
+
+            newsLocationPieChart.type = "PieChart";
+            newsLocationPieChart.data = newsLocationChart.data;
+
+            newsLocationPieChart.options = {
                 displayExactValues: true,
                 is3D: true,
                 chartArea: {
@@ -617,6 +835,34 @@ EventHandlerController.controller('EventMainController',
                 })
         }
 
+        // GET : the last stats of top news countries
+        //var newsLocationChart = [];
+        //$scope.newsLocationChart = newsLocationChart;
+        $scope.getNewsLocationStats = function () {
+            $scope.eventDataChunk = "Locations & Countries";
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topNewsCountries';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    // Update Geo map & Pie chart
+                    for (var i = 0; i < response.items.length; i++) {
+                        var countryShortName = response.items[i].code.toString().toUpperCase();
+                        console.log("country code : "+ countryShortName);
+                        if (countryShortName === "KSA" || countryShortName === "SAU" || countryShortName === "") countryShortName = "SA";
+                        if (countryShortName === "UK") countryShortName = "GB";
+                            $scope.newsCountryName = ISO3166.getCountryName(countryShortName);
+                        $scope.newsCountryCount = response.items[i].count;
+
+                        newsLocationChart.data.push([$scope.newsCountryName, $scope.newsCountryCount]);
+                    }
+                    $scope.topNewsCountriesLength = newsLocationChart.data.length - 1
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+
         // GET : the last stats of top languages
         $scope.getLanguagesStats = function () {
             $scope.eventDataChunk = "Languages";
@@ -680,6 +926,27 @@ EventHandlerController.controller('EventMainController',
                     console.log("#");
                 })
         }
+
+        // TODO GET : Top news sources
+        $scope.topNewsSource = [];
+        $scope.getTopNewsSources = function () {
+            $scope.eventDataChunk = "News Sources";
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topNewsSources';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.topNewsSource = response.items;
+                    $scope.drawNewsSourcesChart($scope.topNewsSource);
+                }).error(function () {
+                    console.log("#");
+                })
+        }
+
+        // TODO GET : Top facebook sources
+        $scope.topFacebookSource = [];
+        // implement
 
         // Tweet queue logic
         $scope.pagesShown = 1;
@@ -776,14 +1043,14 @@ EventHandlerController.controller('EventMainController',
                         y: $scope.tweetsSourceCount
                     });
                 }
-                $scope.chartSeries = [{
+                var chartSeries = [{
                     "name": "Tweets count",
                     data: $scope.tweetsSources,
                     colorByPoint: true,
                     showInLegend: false,
                     "id": "tweetsChart",
                     color: "rgb(22, 123, 230)"
-    }];
+                }];
                 $scope.tweetsSourcesChartConfig = {
                     options: {
                         chart: {
@@ -830,7 +1097,7 @@ EventHandlerController.controller('EventMainController',
                         gridLineWidth: 1,
                         gridLineColor: "rgb(245, 245, 245)"
                     },
-                    series: $scope.chartSeries,
+                    series: chartSeries,
                     credits: {
                         enabled: false
                     },
@@ -845,6 +1112,193 @@ EventHandlerController.controller('EventMainController',
             }
 
             drawTweetsSourcesChart();
+
+        }
+
+        // Draw news sources chart
+        $scope.newsSourcesChartConfig = {
+            options: {
+                chart: {
+                    type: 'column',
+                    height: 250,
+                    backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                },
+                title: {
+                    text: ''
+                }
+
+            },
+        };
+
+        $scope.drawNewsSourcesChart = function () {
+
+            var newsSources = [];
+
+            function drawNewsSourcesChart(data) {
+
+                for (i = 0; i < $scope.topNewsSource.length; i++) {
+                    var newsSourceName = $scope.topNewsSource[i].code;
+                    var newsSourceCount = $scope.topNewsSource[i].count;
+                    newsSources.push({
+                        name: newsSourceName,
+                        y: newsSourceCount
+                    });
+                }
+                var chartSeries = [{
+                    "name": "News count",
+                    data: newsSources,
+                    colorByPoint: true,
+                    showInLegend: false,
+                    "id": "newsChart",
+                    color: "rgb(22, 123, 230)"
+                }];
+                $scope.newsSourcesChartConfig = {
+                    options: {
+                        chart: {
+                            type: 'column',
+                            animation: {
+                                duration: 1500
+                            },
+                            height: 300,
+                            backgroundColor: 'rgba(255, 255, 255, 0.01)'
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)",
+
+
+                        labels: {
+                            enabled: true,
+                            rotation: -45,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '11px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        plotLines: [{
+                            value: 0,
+                            width: 0,
+                            color: '#ffffff'
+                        }],
+                        title: {
+                            text: ''
+                        },
+                        labels: {
+                            enabled: true,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '10px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        },
+                        tickWidth: 0,
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)"
+                    },
+                    series: chartSeries,
+                    credits: {
+                        enabled: false
+                    },
+                    loading: false,
+                    title: {
+                        text: ''
+                    }
+                };
+                $scope.reflow = function () {
+                    $scope.$broadcast('highchartsng.reflow');
+                };
+            }
+
+            drawNewsSourcesChart();
+
+        }
+
+        $scope.drawFacebookSourcesChart = function () {
+
+            var facebookSources = [];
+
+            function drawFacebookSourcesChart(data) {
+
+                for (i = 0; i < $scope.topFacebookSource.length; i++) {
+                    var facebookSourceName = $scope.topFacebookSource[i].code;
+                    var facebookSourceCount = $scope.topFacebookSource[i].count;
+                    facebookSources.push({
+                        name: facebookSourceName,
+                        y: facebookSourceCount
+                    });
+                }
+                var chartSeries = [{
+                    "name": "Facebook source count",
+                    data: facebookSources,
+                    colorByPoint: true,
+                    showInLegend: false,
+                    "id": "facebookChart",
+                    color: "rgb(22, 123, 230)"
+                }];
+                $scope.facebookSourcesChartConfig = {
+                    options: {
+                        chart: {
+                            type: 'column',
+                            animation: {
+                                duration: 1500
+                            },
+                            height: 300,
+                            backgroundColor: 'rgba(255, 255, 255, 0.01)'
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)",
+
+
+                        labels: {
+                            enabled: true,
+                            rotation: -45,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '11px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        }
+                    },
+                    yAxis: {
+                        plotLines: [{
+                            value: 0,
+                            width: 0,
+                            color: '#ffffff'
+                        }],
+                        title: {
+                            text: ''
+                        },
+                        labels: {
+                            enabled: true,
+                            style: {
+                                color: '#d5d5d5',
+                                font: '10px Trebuchet MS, Verdana, sans-serif'
+                            }
+                        },
+                        tickWidth: 0,
+                        gridLineWidth: 1,
+                        gridLineColor: "rgb(245, 245, 245)"
+                    },
+                    series: chartSeries,
+                    credits: {
+                        enabled: false
+                    },
+                    loading: false,
+                    title: {
+                        text: ''
+                    }
+                };
+                $scope.reflow = function () {
+                    $scope.$broadcast('highchartsng.reflow');
+                };
+            }
+
+            drawFacebookSourcesChart();
 
         }
 
@@ -882,7 +1336,7 @@ EventHandlerController.controller('EventMainController',
                     tweetsTimeArray[i] = formatedTime;
                 }
 
-                $scope.chartSeries = [{
+                var chartSeries = [{
                     "name": "Tweets count",
                     "data": tweetsCountArray,
                     showInLegend: false,
@@ -948,7 +1402,7 @@ EventHandlerController.controller('EventMainController',
                         gridLineWidth: 1,
                         gridLineColor: "rgb(245, 245, 245)"
                     },
-                    series: $scope.chartSeries,
+                    series: chartSeries,
                     credits: {
                         enabled: false
                     },
@@ -974,6 +1428,74 @@ EventHandlerController.controller('EventMainController',
 
     }]);
 
+var FbPagesController = angular.module('FbPagesController', []);
+
+
+FbPagesController.controller('FbPagesController', ['$scope', '$state', 'FbPagesFactory', 'FbPageFactory', '$location',
+    function ($scope, $state, FbPagesFactory, FbPageFactory, $location) {
+
+
+        // callback for ng-click 'deleteFbPage':
+        $scope.deleteFbPage = function (fbPage) {
+
+            var result = confirm("Sure to delete?");
+            if (result) {
+                    //Logic to delete the item
+                FbPageFactory.delete({fb_page: fbPage});
+                
+                $scope.fbPages = FbPagesFactory.query();
+                $scope.fbPages = FbPagesFactory.query();
+            }
+
+        };
+
+        // callback for ng-click 'createNewFbPage':
+        $scope.createNewFbPage = function () {
+            $location.path('/fb_pages/create');
+        };
+
+        // callback for ng-click 'saveNewFbPage':
+        $scope.saveNewFbPage = function () {
+            FbPagesFactory.create($scope.fbPage);
+            // $location.path('/fb_pages/index');
+            $state.go('fbPages.index');
+        }
+
+        $scope.fbPages = FbPagesFactory.query();
+    }]);
+var KeywordsController = angular.module('KeywordsController', []);
+
+
+KeywordsController.controller('KeywordsController', ['$scope', 'KeywordsFactory', 'KeywordFactory', '$location',
+    function ($scope, KeywordsFactory, KeywordFactory, $location) {
+
+
+        // callback for ng-click 'deleteKeyword':
+        $scope.deleteKeyword = function (keyword) {
+
+            var result = confirm("Sure to delete?");
+            if (result) {
+
+                KeywordFactory.delete({keyword: keyword});
+                
+                $scope.keywords = KeywordsFactory.query();
+                $scope.keywords = KeywordsFactory.query();
+            }
+        };
+
+        // callback for ng-click 'createNewKeyword':
+        $scope.createNewKeyword = function () {
+            $location.path('/keywords/create');
+        };
+
+        // callback for ng-click 'createNewKeyword':
+        $scope.saveNewKeyword = function () {
+            KeywordsFactory.create($scope.keyword);
+            $location.path('/keywords/index');
+        }
+
+        $scope.keywords = KeywordsFactory.query();
+    }]);
 var StartNewEvent = angular.module('StartNewEvent', ['trackHashtagApp.services']);
 
 /* Controller : Homepage controller */
