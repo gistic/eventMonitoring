@@ -4,14 +4,14 @@
 $header-font: 'Montserrat', sans-serif, Arial;
 $content-font: 'Lato', sans-serif, Arial;
 
-// Colors
-$white:#ffffff;
-$green:#409a6c;
-$green-hued: #13cb0e;
-$dark-green: #26CA9F;
-$red:#ff0000;
-$black:#000000;
-$orange-light:#fff7e4;
+// Colors - Hajj green theme
+$white: #ffffff;
+$green: #409a6c;
+$black: #333333;
+$brown: #a17c43;
+
+$red: #ff0000;
+$blue: #2677FF;
 
 $gray-super-light: #fafafa;
 $gray-light: #cdd2d4;
@@ -24,7 +24,7 @@ $orange: #f64728;
 
 // Descriptive COLORS
 $button-bg: $green;
-$button-save-bg: $green-hued;
+$button-save-bg: $green;
 $layout-black: $black;
 $layout-turquoise: $turquoise;
 $layout-blue: $blue;

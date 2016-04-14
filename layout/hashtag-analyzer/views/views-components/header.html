@@ -4,8 +4,12 @@
     <div class="container">
 
         <a class="navbar-logo pull-left" ui-sref="home">
-            <span class="icon-hash"></span>
-            <span ng-hide="dashboardState" class="header-title">Hashtails</span>
+
+            <img  ng-show="dashboardState" src="assets/images/ministry-of-hajj-logo.png" alt="" width="30px" height="30px">
+            <img  ng-hide="dashboardState" src="assets/images/ministry-of-hajj-logo.png" alt="" width="75px" height="75px">
+
+            <span ng-hide="dashboardState" class="icon-hash"></span>
+            <span ng-hide="dashboardState" class="header-title">Hajj</span>
         </a>
 
         <div class="navs pull-left clearfix">

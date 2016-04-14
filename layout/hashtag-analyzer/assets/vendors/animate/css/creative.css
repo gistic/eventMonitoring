@@ -1,4 +1,4 @@
-hr {
+/*hr {
     max-width: 50px;
     border-color: #55acee;
     border-width: 3px;
@@ -24,10 +24,6 @@ hr.light {
 section.homepage-section {
     padding: 100px 0;
 }
-
-/*aside {*/
-    /*padding: 50px 0;*/
-/*}*/
 
 .no-padding {
     padding: 0;
@@ -427,3 +423,4 @@ img::-moz-selection {
 body {
     webkit-tap-highlight-color: #222;
 }
+*/

@@ -745,7 +745,7 @@ EventHandlerController.controller('EventMainController',
                 },
                 height: 250,
                 colorAxis: {
-                    colors: ['#deebf7', '#9ecae1', '#3182bd']
+                    colors: ['#5FE5A1', '#409A6C', '#1A402D']
                 },
                 displayMode: 'regions'
             };
@@ -788,7 +788,7 @@ EventHandlerController.controller('EventMainController',
                 },
                 height: 250,
                 colorAxis: {
-                    colors: ['#deebf7', '#9ecae1', '#3182bd']
+                    colors: ['#5FE5A1', '#409A6C', '#1A402D']
                 },
                 displayMode: 'regions'
             };
@@ -887,7 +887,7 @@ EventHandlerController.controller('EventMainController',
 
         // GET : Top Hashtags
         $scope.topHashtags = [];
-        $scope.tagCloudColors = ['rgb(49,130,189)', 'rgb(20,100,255)', 'rgb(158,202,225)'];
+        $scope.tagCloudColors = ['rgb(26,64,45)', 'rgb(64,154,108)', 'rgb(95,229,161)'];
 
         $scope.getTopHashtags = function () {
             $scope.eventDataChunk = "Top Related Hashtags";
@@ -1049,7 +1049,7 @@ EventHandlerController.controller('EventMainController',
                     colorByPoint: true,
                     showInLegend: false,
                     "id": "tweetsChart",
-                    color: "rgb(22, 123, 230)"
+                    color: "rgb(64, 154, 108)"
                 }];
                 $scope.tweetsSourcesChartConfig = {
                     options: {
@@ -1059,6 +1059,7 @@ EventHandlerController.controller('EventMainController',
                                 duration: 1500
                             },
                             height: 300,
+
                             backgroundColor: 'rgba(255, 255, 255, 0.01)'
                         }
                     },
@@ -1066,8 +1067,6 @@ EventHandlerController.controller('EventMainController',
                         type: 'category',
                         gridLineWidth: 1,
                         gridLineColor: "rgb(245, 245, 245)",
-
-
                         labels: {
                             enabled: true,
                             rotation: -45,
@@ -1341,7 +1340,7 @@ EventHandlerController.controller('EventMainController',
                     "data": tweetsCountArray,
                     showInLegend: false,
                     "id": "tweetsChart",
-                    color: "rgb(22, 123, 230)"
+                    color: "rgb(64, 154, 108)"
     }];
                 $scope.chartConfig = {
                     options: {

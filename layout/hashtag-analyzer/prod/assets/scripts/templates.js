@@ -3,44 +3,35 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
   $templateCache.put('views/views-components/facebook.html',
     "<h2>Facebook</h2>\n" +
-    "\n" +
     "<aside class=\"col-md-8\">\n" +
     "    <section>\n" +
     "        <div ng-include=\"'views/views-panels/facebook-sources.html'\"></div>\n" +
     "    </section>\n" +
     "</aside>\n" +
-    "\n" +
-    "<article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"post in fbQueue\">\n" +
-    "\n" +
-    "\t<div class=\"tweet-content\">\n" +
-    "       \n" +
-    "        <div class=\"media-left\">\n" +
-    "           \t<a ng-href=\"{{post.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
-    "                <img src=\"{{post.image_url}}\" class=\"media-object user-img\" />\n" +
-    "            </a>\n" +
-    "        </div>\n" +
-    "        <div class=\"media-body tweet-content\">\n" +
-    "           \n" +
-    "            <h6 class=\"media-heading tweet-user clearfix\">                \n" +
+    "<section class=\"col-md-16\">\n" +
+    "    <article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"post in fbQueue\">\n" +
+    "        <div class=\"tweet-content\">\n" +
+    "            <div class=\"media-left\">\n" +
+    "                <a ng-href=\"{{post.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
+    "                    <img src=\"{{post.image_url}}\" class=\"media-object user-img\" />\n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body tweet-content\">\n" +
+    "                <h6 class=\"media-heading tweet-user clearfix\">                \n" +
     "                    <h4>{{post.source}}</h4>\n" +
     "            </h6>\n" +
-    "\t\t\t\n" +
-    "            <p>\n" +
-    "\n" +
-    "\t\t\t     \t<a ng-href=\"{{post.url}}\" target=\"_blank\" class=\"\">\n" +
-    "\t                    {{post.text}}\n" +
-    "\t            \t</a>\n" +
-    "            \n" +
-    "\t\t\t</p>\n" +
-    "\t\t\t\n" +
-    "            <p>\n" +
-    "                <span class=\"text-muted\">{{post.date}}</span>\n" +
-    "            </p>\n" +
-    "            \n" +
+    "                <p>\n" +
+    "                    <a ng-href=\"{{post.url}}\" target=\"_blank\" class=\"\">\n" +
+    "                        {{post.text}}\n" +
+    "                    </a>\n" +
+    "                </p>\n" +
+    "                <p>\n" +
+    "                    <span class=\"text-muted\">{{post.date}}</span>\n" +
+    "                </p>\n" +
+    "            </div>\n" +
     "        </div>\n" +
-    "    </div>\n" +
-    "\n" +
-    "</article>\n"
+    "    </article>\n" +
+    "</section>\n"
   );
 
 
@@ -105,8 +96,12 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "    <div class=\"container\">\n" +
     "\n" +
     "        <a class=\"navbar-logo pull-left\" ui-sref=\"home\">\n" +
-    "            <span class=\"icon-hash\"></span>\n" +
-    "            <span ng-hide=\"dashboardState\" class=\"header-title\">Hashtails</span>\n" +
+    "\n" +
+    "            <img  ng-show=\"dashboardState\" src=\"assets/images/ministry-of-hajj-logo.png\" alt=\"\" width=\"30px\" height=\"30px\">\n" +
+    "            <img  ng-hide=\"dashboardState\" src=\"assets/images/ministry-of-hajj-logo.png\" alt=\"\" width=\"75px\" height=\"75px\">\n" +
+    "\n" +
+    "            <span ng-hide=\"dashboardState\" class=\"icon-hash\"></span>\n" +
+    "            <span ng-hide=\"dashboardState\" class=\"header-title\">Hajj</span>\n" +
     "        </a>\n" +
     "\n" +
     "        <div class=\"navs pull-left clearfix\">\n" +
@@ -333,7 +328,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "\n" +
     "    <aside class=\"tweets-queue-options clearfix\">\n" +
     "\n" +
-    "        <div class=\"segmented-control pull-left\" style=\"color: #066CB2\" ng-init=\"tab = 1\">\n" +
+    "        <div class=\"segmented-control pull-left\" style=\"color: #333333\" ng-init=\"tab = 1\">\n" +
     "            <input type=\"radio\" name=\"sc-1-1\" id=\"allTweets\" ng-click=\"showLoadMoreButton()\" ng-class=\"{active:tab===1}\" checked>\n" +
     "            <input type=\"radio\" name=\"sc-1-1\" id=\"mostPopular\" ng-click=\"loadMostPopular()\" ng-class=\"{active:tab===2}\">\n" +
     "            <label for=\"allTweets\" data-value=\"All tweets\" ng-click=\"tab = 1\">All tweets</label>\n" +
@@ -429,42 +424,34 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "        <div ng-include=\"'views/views-panels/news-per-country-panel.html'\"></div>\n" +
     "    </section>\n" +
     "</aside>\n" +
-    "<article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"news in newsQueue\">\n" +
-    "\n" +
-    "\t<div class=\"tweet-content\">\n" +
-    "       \n" +
-    "        <div class=\"media-left\">\n" +
-    "           \t<a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
+    "<section class=\"col-md-16\">\n" +
+    "    <article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"news in newsQueue\">\n" +
+    "        <div class=\"tweet-content\">\n" +
+    "            <div class=\"media-left\">\n" +
+    "                <a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
     "                    <img lazy-src=\"{{news.image_url}}\" on-error-src=\"{{news.image_url.replace('http://t0','http://t1')}}\" class=\"media-object user-img\" />\n" +
-    "            </a>\n" +
-    "        </div>\n" +
-    "        <div class=\"media-body tweet-content\">\n" +
-    "           \n" +
-    "            <h6 class=\"media-heading tweet-user clearfix\">                \n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body tweet-content\">\n" +
+    "                <h6 class=\"media-heading tweet-user clearfix\">                \n" +
     "                    <h4>{{news.source}}</h4>\n" +
     "            </h6>\n" +
-    "\t\t\t\n" +
-    "            <p>\n" +
-    "\n" +
-    "\t\t\t     \t<a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"\">\n" +
-    "\t                    {{news.title}}\n" +
-    "\t            \t</a>\n" +
-    "            \n" +
-    "\t\t\t</p>\n" +
-    "\t\t\t\n" +
-    "            <p>\n" +
-    "                <span>{{countryAbbrev[news.country]}}</span>\n" +
-    "                <span class=\"fa fa-map-marker\"></span>\n" +
-    "            </p>\n" +
-    "\n" +
-    "            <p>\n" +
-    "                <span class=\"text-muted\">{{news.date}}</span>\n" +
-    "            </p>\n" +
-    "            \n" +
+    "                <p>\n" +
+    "                    <a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"\">\n" +
+    "                        {{news.title}}\n" +
+    "                    </a>\n" +
+    "                </p>\n" +
+    "                <p>\n" +
+    "                    <span>{{countryAbbrev[news.country]}}</span>\n" +
+    "                    <span class=\"fa fa-map-marker\"></span>\n" +
+    "                </p>\n" +
+    "                <p>\n" +
+    "                    <span class=\"text-muted\">{{news.date}}</span>\n" +
+    "                </p>\n" +
+    "            </div>\n" +
     "        </div>\n" +
-    "    </div>\n" +
-    "\n" +
-    "</article>\n"
+    "    </article>\n" +
+    "</section>\n"
   );
 
 
@@ -566,13 +553,13 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "    </div>\n" +
     "    \n" +
     "    <aside class=\"tweet-actions btn-group-vertical\">\n" +
-    "        <a class=\"btn hvr-rectangle-out btn-info\" ng-href=\"{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Reply\">\n" +
+    "        <a class=\"btn hvr-rectangle-out\" ng-href=\"{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Reply\">\n" +
     "            <span class=\"fa fa-reply\"></span>\n" +
     "        </a>\n" +
-    "        <a class=\"btn hvr-rectangle-out btn-info\" ng-href=\"{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Retweet\">\n" +
+    "        <a class=\"btn hvr-rectangle-out\" ng-href=\"{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Retweet\">\n" +
     "            <span class=\"fa fa-retweet\"></span>\n" +
     "        </a>\n" +
-    "        <a class=\"btn hvr-rectangle-out btn-info\" ng-href=\"{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Favorite\">\n" +
+    "        <a class=\"btn hvr-rectangle-out\" ng-href=\"{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Favorite\">\n" +
     "            <span class=\"fa fa-star\"></span>\n" +
     "        </a>\n" +
     "    </aside>\n" +

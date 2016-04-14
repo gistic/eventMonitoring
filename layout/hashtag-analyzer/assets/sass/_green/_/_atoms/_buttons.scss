@@ -1,0 +1,72 @@
+.btn {
+    border: none;
+    padding: $button-padding;
+    color: $white;
+    &:hover, &:focus, &:active:focus, &:active.focus {
+        color: $white;
+        outline: 0;
+    }
+    &.hvr-rectangle-out {
+        &:hover {
+            border: 1px solid $green;
+        }
+    }
+    &.btn-event {
+        background: $button-bg;
+    }
+    &.btn-search {
+        background: $gray-light;
+        padding: $padding - 8 $padding;
+    }
+    &.btn-load-more {
+        padding: $padding / 2 $padding;
+        background: $green;
+        position: fixed;
+        z-index: 9;
+        right: 30px;
+        bottom: 25px;
+        @include border-radius(50px);
+        @include box-shadow(rgba(darken($green, 50%), 0.2) 0 0 15px);
+        strong {
+            @include size(20px);
+            @include border-radius(50%);
+            background: darken($green, 20%);
+            display: inline-block;
+            i {
+                @include font-size($font-tiny);
+            }
+        }
+    }
+    &.btn-load-history {
+        margin: $margin 0 0;
+        background: $gray-light;
+        padding: $padding 0;
+        color: $gray;
+    }
+    &.btn-social {
+        &.btn-twitter {
+            padding: $padding / 3 $padding * 3;
+            color: $white;
+            background: none;
+            @include border-radius(5px);
+        }
+        >:first-child {
+            width: 38px;
+            line-height: 28px;
+            border-right: none;
+        }
+    }
+    &.btn-rounded {
+      background: none;
+      border: 1px solid $white;
+      @include border-radius(5px);
+    }
+    &.btn-show-search {
+      padding: $padding $padding * 5;
+      display: inline-block;
+    }
+}
+
+.btn-group-vertical > .btn:first-child:not(:last-child) {
+    border-top-right-radius : 0;
+}

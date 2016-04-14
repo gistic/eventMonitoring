@@ -1,7 +1,8 @@
 a {
-    color: $blue;
-    &:hover, &:focus {
-        color: darken($blue, 20%);
+    color: $green;
+    &:hover,
+    &:focus {
+        color: lighten($green, 20%);
         outline: 0;
         text-decoration: none;
     }
@@ -12,7 +13,8 @@ a[ng-click] {
 }
 
 .form-control {
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         outline: 0;
         border-color: transparent;
         box-shadow: none;
@@ -30,6 +32,6 @@ img {
         }
     }
     &.img-responsive {
-      margin: 0 auto;
+        margin: 0 auto;
     }
 }

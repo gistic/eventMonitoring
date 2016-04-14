@@ -1,0 +1,27 @@
+.lightbox-nav {
+    position: relative;
+    margin-bottom: 12px;
+    /* the font-size of .btn-xs */
+    
+    text-align: center;
+    font-size: 0;
+    /* prevent the otherwise inherited font-size and line-height from adding extra space to the bottom of this div */
+    
+    .btn-group {
+        vertical-align: top;
+    }
+    .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}
+
+.lightbox-image-container {
+    position: relative;
+    text-align: center;
+    /* center the image */
+    img {
+        display: inline-block;
+    }
+}
