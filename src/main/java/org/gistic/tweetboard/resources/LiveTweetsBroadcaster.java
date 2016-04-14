@@ -92,6 +92,14 @@ public class LiveTweetsBroadcaster {
                         .build();
                 doBroadcast(uuid, event);
                 break;
+            case Message.Type.TopFacebookPages:
+                event = eventBuilder
+                        .name("top-fb-page")
+                        .mediaType(MediaType.TEXT_PLAIN_TYPE)
+                        .data(String.class, message.replace("_normal", ""))
+                        .build();
+                doBroadcast(uuid, event);
+                break;
         }
         return "{\"msg\":\"Message has been broadcasted.\"}";
     }

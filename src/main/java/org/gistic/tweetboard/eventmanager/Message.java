@@ -53,5 +53,7 @@ public class Message {
 		public static final String NewsItem = "newsItem";
 		public static final String FbPost = "fbPost";
 
+        public static final String TopFacebookPages = "topFbPages";
+
     }
 }

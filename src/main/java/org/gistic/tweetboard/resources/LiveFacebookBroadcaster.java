@@ -7,6 +7,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 
 import org.gistic.tweetboard.JedisPoolContainer;
+import org.gistic.tweetboard.datalogic.FacebookDataLogic;
 import org.gistic.tweetboard.util.Misc;
 import org.gistic.tweetboard.dao.FacebookDao;
 import org.gistic.tweetboard.dao.NewsDao;
@@ -25,15 +26,16 @@ public class LiveFacebookBroadcaster {
 		JSONObject obj = new JSONObject(FbPost);
 		
 		try (Jedis jedis = JedisPoolContainer.getInstance()) {
-			
-        	if(jedis.hget(obj.getString("uuid")+":fb", Misc.MD5Encode(obj.getString("url"))) == null ){
+			String uuid = obj.getString("uuid");
+        	if(jedis.hget(uuid+":fb", Misc.MD5Encode(obj.getString("url"))) == null ){
         		
-        		Message msg = new Message(obj.getString("uuid"), Message.Type.FbPost, obj.toString());
+        		Message msg = new Message(uuid, Message.Type.FbPost, obj.toString());
         		FacebookDao facebookDao = new FacebookDao();
-        		facebookDao.saveNewsToRedis(obj.getString("uuid"), obj);
+        		facebookDao.saveNewsToRedis(uuid, obj);
 
-				facebookDao.incrSourceCounter(obj.getString("uuid"), obj.getString("source"));
-
+				facebookDao.incrSourceCounter(uuid, obj.getString("source"));
+				FacebookDataLogic fbDataLogic = new FacebookDataLogic(uuid);
+				fbDataLogic.incrementPageScore(obj);
         		LiveTweetsBroadcasterSingleton.broadcast(msg);
         	}
         	

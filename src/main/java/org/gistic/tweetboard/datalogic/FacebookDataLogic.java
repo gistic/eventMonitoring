@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.gistic.tweetboard.JedisPoolContainer;
@@ -27,6 +29,7 @@ import org.gistic.tweetboard.representations.Keyword;
 
 import jersey.repackaged.com.google.common.collect.ImmutableList;
 import org.gistic.tweetboard.representations.TopItem;
+import org.json.JSONObject;
 import redis.clients.jedis.Tuple;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisException;
@@ -34,6 +37,9 @@ import redis.clients.jedis.exceptions.JedisException;
 public class FacebookDataLogic {
 	private String uuid;
 	private FacebookDao facebookDao;
+	private double commentScoreMultiplier = 1.0;
+	private double shareScoreMultiplier = 1.0;
+	private double likeScoreMultiplier = 1.0;
 	
 	public FacebookDataLogic(String uuid){
 		this.uuid = uuid;
@@ -112,6 +118,39 @@ public class FacebookDataLogic {
 				.collect(Collectors.toList()).toArray(new TopItem[]{});
 		return new GenericArray<TopItem>(topNSourcesArray);
 	}
+
+	public void incrementPageScore(JSONObject obj) {
+
+		JSONObject pageJson = new JSONObject();
+		String url = obj.getString("url");
+		Matcher m = Pattern.compile("http://facebook\\.com\\/[\\w]+\\/").matcher(url);
+		System.out.println("test");
+		String pageUrl;
+		if(m.find())
+		{
+			pageUrl = m.group(0);
+		} else {
+			//TODO throw exception
+			return; // fail
+		}
+		facebookDao.setPageDetails(obj.getString("uuid"), pageUrl, obj);
+		String pageDetails = facebookDao.getPageDetails(obj.getString("uuid"), pageUrl);
+		long shareScore = (long)(obj.getLong("shares_num")*shareScoreMultiplier);
+		long commentsScore = (long)(obj.getLong("comments_num")*commentScoreMultiplier);
+		long likesScore = (long)(obj.getLong("likes_num")*likeScoreMultiplier);
+		long score = shareScore+commentsScore+likesScore;
+		facebookDao.incrPageScore(obj.getString("uuid"), pageUrl, score);
+
+	}
+
+	public GenericArray<TopItem> getTopNPages(int count) {
+		Set<Tuple> topSourcesTuple = facebookDao.getTopNPages(uuid, count);
+		TopItem[] topNPagesArray = topSourcesTuple.stream()
+				.map(source -> new TopItem(facebookDao.getPageDetails(uuid, source.getElement()), new Double(source.getScore()).intValue()))
+				.collect(Collectors.toList()).toArray(new TopItem[]{});
+		return new GenericArray<TopItem>(topNPagesArray);
+	}
+
 }
 
 

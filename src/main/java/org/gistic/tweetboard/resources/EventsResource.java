@@ -413,14 +413,25 @@ public class EventsResource {
     }
 
     @GET
-    @Path("/{uuid}/topFacebookSources/")
-    public GenericArray<TopItem> getTopFacebookSources(@PathParam("uuid") String uuid,
-                                                   @DefaultValue("10") @QueryParam("count") Integer count) {
+     @Path("/{uuid}/topFacebookSources/")
+     public GenericArray<TopItem> getTopFacebookSources(@PathParam("uuid") String uuid,
+                                                        @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
         //TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
         FacebookDataLogic facebookDataLogic = new FacebookDataLogic(uuid);
 
         return facebookDataLogic.getTopNSources(count);
+    }
+
+    @GET
+    @Path("/{uuid}/topFacebookPages/")
+    public GenericArray<TopItem> getTopFacebookPages(@PathParam("uuid") String uuid,
+                                                       @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        //TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        FacebookDataLogic facebookDataLogic = new FacebookDataLogic(uuid);
+
+        return facebookDataLogic.getTopNPages(count);
     }
 
     @GET

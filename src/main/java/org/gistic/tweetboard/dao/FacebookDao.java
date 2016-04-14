@@ -59,4 +59,54 @@ public class FacebookDao {
 	}
 
 
+	public void setPageDetails(String uuid, String pageUrl, JSONObject obj) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			jedis.hset(uuid + ":fbPageDetails:" + pageUrl, "page_likes", Long.toString(obj.getLong("page_likes")));
+			jedis.hset(uuid + ":fbPageDetails:" + pageUrl, "talking_about", Long.toString(obj.getLong("talking_about")));
+			jedis.hset(uuid + ":fbPageDetails:" + pageUrl, "image_url", obj.getString("image_url"));
+			jedis.hset(uuid + ":fbPageDetails:" + pageUrl, "source", obj.getString("source"));
+			//jedis.hset(uuid + ":fbPageDetails:" + pageUrl, "page_url", pageUrl);
+		} catch (JedisException jE) {
+			jE.printStackTrace();
+		}
+	}
+
+	public void incrPageScore(String uuid, String pageUrl, long score) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			jedis.zincrby(uuid+":facebook:stats:pageScore", score, pageUrl);
+		}catch(JedisException e){
+			e.printStackTrace();
+		}
+	}
+
+	public Set<Tuple> getTopNPages(String uuid, int count) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			return jedis.zrevrangeByScoreWithScores(uuid+":facebook:stats:pageScore", "+inf", "-inf", 0, count);
+		} catch (JedisException jE) {
+			jE.printStackTrace();
+		}
+		//TODO: error module
+		return null;
+	}
+
+	public String getPageDetails(String uuid, String pageUrl) {
+		JSONObject pageDetails = new JSONObject();
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			String pageLikes = jedis.hget(uuid + ":fbPageDetails:" + pageUrl, "page_likes");
+			String talkingAbout = jedis.hget(uuid + ":fbPageDetails:" + pageUrl, "talking_about");
+			String imageUrl = jedis.hget(uuid + ":fbPageDetails:" + pageUrl, "image_url");
+			String pageName = jedis.hget(uuid + ":fbPageDetails:" + pageUrl, "source");
+			//String pageUrl = jedis.hget(uuid + ":fbPageDetails:" + pageUrl, "page_url");
+			pageDetails.put("page_likes", pageLikes);
+			pageDetails.put("talking_about", talkingAbout);
+			pageDetails.put("image_url", imageUrl);
+			pageDetails.put("source", pageName);
+			pageDetails.put("page_url", pageUrl);
+			return pageDetails.toString();
+		} catch (JedisException jE) {
+			jE.printStackTrace();
+		}
+		//TODO: error module
+		return null;
+	}
 }

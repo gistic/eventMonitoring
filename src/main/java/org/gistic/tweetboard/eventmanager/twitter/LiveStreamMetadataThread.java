@@ -3,6 +3,7 @@ package org.gistic.tweetboard.eventmanager.twitter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gistic.tweetboard.DelayedJobsManager;
+import org.gistic.tweetboard.datalogic.FacebookDataLogic;
 import org.gistic.tweetboard.eventmanager.Event;
 import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.resources.EventsResource;
@@ -62,6 +63,17 @@ public class LiveStreamMetadataThread implements Runnable {
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
+
+            //broadcast top facebook pages
+            try {
+                FacebookDataLogic fbDataLogic = new FacebookDataLogic(event.getUuid());
+                String topPages = new ObjectMapper().writeValueAsString(eventResource.getTopFacebookPages(event.getUuid(), 10));
+                msg = new Message(event.getUuid(), Message.Type.TopFacebookPages, topPages);
+                LiveTweetsBroadcasterSingleton.broadcast(msg);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            //broadcast top news sources
 
             //interval between each broadcast
             try {
