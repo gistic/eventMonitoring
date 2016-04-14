@@ -562,6 +562,21 @@ EventHandlerController.controller('EventMainController',
                 }, false);
             });
 
+            // Top active pages
+            source.addEventListener('top-fb-page', function (response) {
+                var data = JSON.parse(response.data).items;
+                console.log("data is: ");
+                console.log(data);
+                var items = [];
+                for (var i = 0; i < data.length; i++) {
+                    items.push({"details": JSON.parse(data[i].code), "score": data[i].count});
+
+                }
+                $scope.$apply(function () {
+                    $scope.topFbPages = items;
+                }, false);
+            });
+
             // News Item
             source.addEventListener('news-item', function (response) {
                 console.log("got news item");
