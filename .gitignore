@@ -47,6 +47,7 @@ newspiders/dbs/newspiders.db
 newspiders/project.egg-info/SOURCES.txt
 newspiders/twistd.pid 
 dbs/newspiders.db
+ENV/*
 
 #Minified html
 layout/hashtag-analyzer/prod/*
