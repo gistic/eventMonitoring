@@ -23,6 +23,7 @@
         word-wrap: break-word;
     }
     .tweet-userName {
+        color: $green;
         font-weight: 100;
     }
     .tweet-screenName {
@@ -37,6 +38,7 @@
     }
     .follow-user {
         margin-left: $margin;
+        color: $green;
         @include transition-property(all);
         @include transition-duration(0.5s);
         @include transition-delay(0.05s);

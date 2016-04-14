@@ -1,18 +1,53 @@
-<div class="span6">
-    <table class="table table-striped table-condensed">
-        <thead>
-        <tr>
-            <th style="min-width: 80px;">Keyword</th>
-            <th style="min-width: 80px;">Related words</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="keyword in keywords">
-            <td>{{ keyword.keyword }}</td>
-            <td>{{ keyword.relatedWords }}</td>
-            <td><a ng-click="deleteKeyword(keyword.keyword)" class="btn btn-small btn-danger">delete</a></td>
-        </tr>
-        </tbody>
-    </table>
-    <a ng-click="createNewKeyword()" class="">create new keyword</a>
+<div class="wrapper">
+    <!-- Header -->
+    <div ng-include="'views/views-components/header.html'"></div>
+    
+    <main class="container dashboard">
+    
+        <h3 class="clearfix">
+            Manage keywords lists
+            <div class="pull-right">
+                <a ng-click="createNewKeyword()" class="btn btn-info">Create new keyword</a>
+            </div>
+        </h3>
+        <hr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Keyword</th>
+                    <th>Related words</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="keyword in keywords">
+                    <td>{{ keyword.keyword }}</td>
+                    <td>{{ keyword.relatedWords }}</td>
+                    <td><a ng-click="deleteKeyword(keyword.keyword)" class="btn btn-small btn-danger">Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </main>
 </div>
+<!-- Footer -->
+<footer class="navbar-fixed-bottom">
+    <div class="container clearfix">
+        <div class="media footer-copyright pull-left">
+            <div class="media-left media-middle">
+                <a href="#">
+                    <img alt="" src="assets/images/hashtails-homepage-grids-gallery.png" srcset="assets/images/gistic-footer-logo.png 1x, assets/images/gistic-footer-logo@2x.png 2x">
+                </a>
+            </div>
+            <div class="media-body">
+                <span>Hashtails ™ (1.3) for KACST GIS Technology Innovation Center at Umm Al-Qura University</span>
+            </div>
+        </div>
+        <div class="pull-right">
+            <p>
+                For custom soultions and feedback:
+                <a href="hashtails@gistic.org">hashtails@gistic.org</a>
+            </p>
+        </div>
+    </div>
+</footer>
+<!-- END OF / Footer -->

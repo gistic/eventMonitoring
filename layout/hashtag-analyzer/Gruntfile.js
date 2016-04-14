@@ -151,10 +151,8 @@ module.exports = function(grunt) {
         grunt.task.run([target ? ('serve:' + target) : 'serve']);
     });
 
-    grunt.registerTask('default', [
-        'newer:eslint',
-        'test',
-        'build'
-    ]);
+    grunt.registerTask('default', []);
+
+    grunt.registerTask('build', ['ngtemplates', 'ngAnnotate', 'uglify', 'htmlmin:dist']);
 
 };

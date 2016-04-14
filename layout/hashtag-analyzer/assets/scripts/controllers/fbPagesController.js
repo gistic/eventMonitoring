@@ -10,7 +10,8 @@ FbPagesController.controller('FbPagesController', ['$scope', '$state', 'FbPagesF
 
             var result = confirm("Sure to delete?");
             if (result) {
-                    //Logic to delete the item
+                
+                //Logic to delete the item
                 FbPageFactory.delete({fb_page: fbPage});
                 
                 $scope.fbPages = FbPagesFactory.query();

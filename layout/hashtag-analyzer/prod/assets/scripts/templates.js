@@ -2,7 +2,6 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
   'use strict';
 
   $templateCache.put('views/views-components/facebook.html',
-    "<h2>Facebook</h2>\n" +
     "<aside class=\"col-md-8\">\n" +
     "    <section>\n" +
     "        <div ng-include=\"'views/views-panels/facebook-sources.html'\"></div>\n" +
@@ -63,24 +62,59 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
 
   $templateCache.put('views/views-components/fb-pages-list.html',
-    "<div class=\"span6\">\n" +
-    "    <table class=\"table table-striped table-condensed\">\n" +
-    "        <thead>\n" +
-    "        <tr>\n" +
-    "            <th style=\"min-width: 80px;\">Page's name</th>\n" +
-    "            <th style=\"min-width: 80px;\">Page's screen name</th>\n" +
-    "        </tr>\n" +
-    "        </thead>\n" +
-    "        <tbody>\n" +
-    "        <tr ng-repeat=\"fbPage in fbPages\">\n" +
-    "            <td>{{ fbPage.name }}</td>\n" +
-    "            <td>{{ fbPage.screenName }}</td>\n" +
-    "            <td><a ng-click=\"deleteFbPage(fbPage.name)\" class=\"btn btn-small btn-danger\">delete</a></td>\n" +
-    "        </tr>\n" +
-    "        </tbody>\n" +
-    "    </table>\n" +
-    "    <a ui-sref=\"fbPages.create\" class=\"\">create new facebook page to track!</a>\n" +
-    "</div>"
+    "<div class=\"wrapper\">\n" +
+    "    <!-- Header -->\n" +
+    "    <div ng-include=\"'views/views-components/header.html'\"></div>\n" +
+    "    \n" +
+    "    <main class=\"container dashboard\">\n" +
+    "    \n" +
+    "        <h3 class=\"clearfix\">\n" +
+    "            Manage Facebook pages\n" +
+    "            <div class=\"pull-right\">\n" +
+    "                <a ui-sref=\"fbPages.create\" class=\"btn btn-info\">Add Facebook page</a>\n" +
+    "            </div>\n" +
+    "        </h3>\n" +
+    "        <hr>\n" +
+    "        <table class=\"table table-striped\">\n" +
+    "            <thead>\n" +
+    "                <tr>\n" +
+    "                    <th>Page name</th>\n" +
+    "                    <th>Page screen name</th>\n" +
+    "                </tr>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "                <tr ng-repeat=\"fbPage in fbPages\">\n" +
+    "                    <td>{{ fbPage.name }}</td>\n" +
+    "                    <td>{{ fbPage.screenName }}</td>\n" +
+    "                    <td><a ng-click=\"deleteFbPage(fbPage.name)\" class=\"btn btn-small btn-danger\">Delete</a></td>\n" +
+    "                </tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "        \n" +
+    "    </main>\n" +
+    "</div>\n" +
+    "<!-- Footer -->\n" +
+    "<footer class=\"navbar-fixed-bottom\">\n" +
+    "    <div class=\"container clearfix\">\n" +
+    "        <div class=\"media footer-copyright pull-left\">\n" +
+    "            <div class=\"media-left media-middle\">\n" +
+    "                <a href=\"#\">\n" +
+    "                    <img alt=\"\" src=\"assets/images/hashtails-homepage-grids-gallery.png\" srcset=\"assets/images/gistic-footer-logo.png 1x, assets/images/gistic-footer-logo@2x.png 2x\">\n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body\">\n" +
+    "                <span>Hashtails ™ (1.3) for KACST GIS Technology Innovation Center at Umm Al-Qura University</span>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"pull-right\">\n" +
+    "            <p>\n" +
+    "                For custom soultions and feedback:\n" +
+    "                <a href=\"hashtails@gistic.org\">hashtails@gistic.org</a>\n" +
+    "            </p>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</footer>\n" +
+    "<!-- END OF / Footer -->\n"
   );
 
 
@@ -91,15 +125,14 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
   $templateCache.put('views/views-components/header.html',
     "<!-- HEADER -->\n" +
-    "<nav class=\"navbar navbar-inverse navbar-fixed-top clearfix\" ng-class=\"{'header-dashboard' : dashboardState}\">\n" +
+    "<link rel=\"stylesheet\" ng-href=\"assets/stylesheets/themes/{{ colorChoice.className }}/screen.css\">\n" +
+    "\n" +
+    "<nav class=\"navbar navbar-inverse navbar-fixed-top clearfix\" ng-class=\"{ 'header-dashboard' : dashboardState }\">\n" +
     "\n" +
     "    <div class=\"container\">\n" +
     "\n" +
     "        <a class=\"navbar-logo pull-left\" ui-sref=\"home\">\n" +
-    "\n" +
-    "            <img  ng-show=\"dashboardState\" src=\"assets/images/ministry-of-hajj-logo.png\" alt=\"\" width=\"30px\" height=\"30px\">\n" +
-    "            <img  ng-hide=\"dashboardState\" src=\"assets/images/ministry-of-hajj-logo.png\" alt=\"\" width=\"75px\" height=\"75px\">\n" +
-    "\n" +
+    "            <img src=\"assets/images/ministry-of-hajj-logo.png\" alt=\"\" width=\"30px\" height=\"30px\">\n" +
     "            <span ng-hide=\"dashboardState\" class=\"icon-hash\"></span>\n" +
     "            <span ng-hide=\"dashboardState\" class=\"header-title\">Hajj</span>\n" +
     "        </a>\n" +
@@ -108,10 +141,10 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "\n" +
     "            <ul class=\"list-inline homepage-nav pull-left\" ng-hide=\"dashboardState\">\n" +
     "                <li class=\"hvr-underline-from-center\">\n" +
-    "                    <a ui-sref=\"home.features\">Features</a>\n" +
+    "                    <a ui-sref=\"fbPages.index\">Facebook pages</a>\n" +
     "                </li>\n" +
     "                <li class=\"hvr-underline-from-center\">\n" +
-    "                    <a ui-sref=\"home.realTime\">Real Time</a>\n" +
+    "                    <a ui-sref=\"keywords.index\">Keyword lists</a>\n" +
     "                </li>\n" +
     "            </ul>\n" +
     "\n" +
@@ -165,6 +198,10 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                    </ul>\n" +
     "                </li>\n" +
     "\n" +
+    "                <li ng-show=\"logedInUser\">\n" +
+    "                    <palette-picker choices=\"colorChoices\" choice=\"colorChoice\"></palette-picker>\n" +
+    "                </li>\n" +
+    "\n" +
     "                <li>\n" +
     "                    <a ng-click=\"twitterLogIn()\" ng-hide=\"logedInUser\" class=\"btn btn-block btn-social btn-twitter btn-rounded\">\n" +
     "                        <i class=\"icon-twitter\"></i> Sign in with Twitter\n" +
@@ -208,24 +245,59 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
 
   $templateCache.put('views/views-components/keywords-list.html',
-    "<div class=\"span6\">\n" +
-    "    <table class=\"table table-striped table-condensed\">\n" +
-    "        <thead>\n" +
-    "        <tr>\n" +
-    "            <th style=\"min-width: 80px;\">Keyword</th>\n" +
-    "            <th style=\"min-width: 80px;\">Related words</th>\n" +
-    "        </tr>\n" +
-    "        </thead>\n" +
-    "        <tbody>\n" +
-    "        <tr ng-repeat=\"keyword in keywords\">\n" +
-    "            <td>{{ keyword.keyword }}</td>\n" +
-    "            <td>{{ keyword.relatedWords }}</td>\n" +
-    "            <td><a ng-click=\"deleteKeyword(keyword.keyword)\" class=\"btn btn-small btn-danger\">delete</a></td>\n" +
-    "        </tr>\n" +
-    "        </tbody>\n" +
-    "    </table>\n" +
-    "    <a ng-click=\"createNewKeyword()\" class=\"\">create new keyword</a>\n" +
-    "</div>"
+    "<div class=\"wrapper\">\n" +
+    "    <!-- Header -->\n" +
+    "    <div ng-include=\"'views/views-components/header.html'\"></div>\n" +
+    "    \n" +
+    "    <main class=\"container dashboard\">\n" +
+    "    \n" +
+    "        <h3 class=\"clearfix\">\n" +
+    "            Manage keywords lists\n" +
+    "            <div class=\"pull-right\">\n" +
+    "                <a ng-click=\"createNewKeyword()\" class=\"btn btn-info\">Create new keyword</a>\n" +
+    "            </div>\n" +
+    "        </h3>\n" +
+    "        <hr>\n" +
+    "        <table class=\"table table-striped\">\n" +
+    "            <thead>\n" +
+    "                <tr>\n" +
+    "                    <th>Keyword</th>\n" +
+    "                    <th>Related words</th>\n" +
+    "                </tr>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "                <tr ng-repeat=\"keyword in keywords\">\n" +
+    "                    <td>{{ keyword.keyword }}</td>\n" +
+    "                    <td>{{ keyword.relatedWords }}</td>\n" +
+    "                    <td><a ng-click=\"deleteKeyword(keyword.keyword)\" class=\"btn btn-small btn-danger\">Delete</a></td>\n" +
+    "                </tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "        \n" +
+    "    </main>\n" +
+    "</div>\n" +
+    "<!-- Footer -->\n" +
+    "<footer class=\"navbar-fixed-bottom\">\n" +
+    "    <div class=\"container clearfix\">\n" +
+    "        <div class=\"media footer-copyright pull-left\">\n" +
+    "            <div class=\"media-left media-middle\">\n" +
+    "                <a href=\"#\">\n" +
+    "                    <img alt=\"\" src=\"assets/images/hashtails-homepage-grids-gallery.png\" srcset=\"assets/images/gistic-footer-logo.png 1x, assets/images/gistic-footer-logo@2x.png 2x\">\n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body\">\n" +
+    "                <span>Hashtails ™ (1.3) for KACST GIS Technology Innovation Center at Umm Al-Qura University</span>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"pull-right\">\n" +
+    "            <p>\n" +
+    "                For custom soultions and feedback:\n" +
+    "                <a href=\"hashtails@gistic.org\">hashtails@gistic.org</a>\n" +
+    "            </p>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</footer>\n" +
+    "<!-- END OF / Footer -->\n"
   );
 
 
@@ -412,7 +484,6 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
 
   $templateCache.put('views/views-components/news.html',
-    "<h2>NEWS new!</h2>\n" +
     "<aside class=\"col-md-8\">\n" +
     "    <section>\n" +
     "        <div ng-include=\"'views/views-panels/news-sources.html'\"></div>\n" +
