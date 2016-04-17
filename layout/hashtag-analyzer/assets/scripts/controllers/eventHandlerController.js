@@ -175,17 +175,18 @@ EventHandlerController.controller('EventMainController',
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function(response) {
-                    for (var i = 0; i < response.items.length; i++) {
-                        $scope.$apply(function() {
-                            $scope.newsQueue.push(JSON.parse(response.items[i]))
-                            $scope.newsQueue.sort(function(a, b) {
-                                new_date = new Date(a.date)
-                                old_date = new Date(b.date)
-                                return old_date - new_date
-                            });
-                        });
-                    }
-                    $rootScope.loadingEvent = false;
+                    $scope.$apply(function() {
+                        for (var i = 0; i < response.items.length; i++) {
+                            
+                                $scope.newsQueue.push(JSON.parse(response.items[i]))
+                                $scope.newsQueue.sort(function(a, b) {
+                                    new_date = new Date(a.date)
+                                    old_date = new Date(b.date)
+                                    return old_date - new_date
+                                });
+                        }
+                        $rootScope.loadingEvent = false;
+                    });
                 }).error(function() {
                     $rootScope.loadingEvent = false;
                     console.log("#");
@@ -201,17 +202,19 @@ EventHandlerController.controller('EventMainController',
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function(response) {
-                    for (var i = 0; i < response.items.length; i++) {
-                        $scope.$apply(function() {
-                            $scope.fbQueue.push(JSON.parse(response.items[i]))
-                            $scope.fbQueue.sort(function(a, b) {
-                                new_date = new Date(a.date)
-                                old_date = new Date(b.date)
-                                return old_date - new_date
-                            });
-                        });
-                    }
-                    $rootScope.loadingEvent = false;
+                    $scope.$apply(function() {
+                        for (var i = 0; i < response.items.length; i++) {
+                            
+                                $scope.fbQueue.push(JSON.parse(response.items[i]))
+                                $scope.fbQueue.sort(function(a, b) {
+                                    new_date = new Date(a.date)
+                                    old_date = new Date(b.date)
+                                    return old_date - new_date
+                                });
+                            
+                        }
+                        $rootScope.loadingEvent = false;
+                    });
                 }).error(function() {
                     $rootScope.loadingEvent = false;
                     console.log("#");
