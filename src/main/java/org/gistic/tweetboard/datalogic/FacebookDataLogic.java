@@ -114,7 +114,7 @@ public class FacebookDataLogic {
 	public GenericArray<TopItem> getTopNSources(Integer count) {
 		Set<Tuple> topSourcesTuple = facebookDao.getTopNSources(uuid, count);
 		TopItem[] topNSourcesArray = topSourcesTuple.stream()
-				.map(source -> new TopItem(source.getElement(), new Double(source.getScore()).intValue()))
+				.map(source -> new TopItem(facebookDao.getPageDetails(uuid, source.getElement()), new Double(source.getScore()).intValue()))
 				.collect(Collectors.toList()).toArray(new TopItem[]{});
 		return new GenericArray<TopItem>(topNSourcesArray);
 	}
@@ -144,6 +144,25 @@ public class FacebookDataLogic {
 		facebookDao.incrPageCommentCount(obj.getString("uuid"), pageUrl, commentsScore);
 		facebookDao.incrPageLikes(obj.getString("uuid"), pageUrl, likesScore);
 
+	}
+
+	public void incrementPageSource(JSONObject obj) {
+
+		JSONObject pageJson = new JSONObject();
+		String url = obj.getString("url");
+		Matcher m = Pattern.compile("http://facebook\\.com\\/[\\w]+\\/").matcher(url);
+		System.out.println("test");
+		String pageUrl;
+		if(m.find())
+		{
+			pageUrl = m.group(0);
+		} else {
+			//TODO throw exception
+			return; // fail
+		}
+		facebookDao.setPageDetails(obj.getString("uuid"), pageUrl, obj);
+		String pageDetails = facebookDao.getPageDetails(obj.getString("uuid"), pageUrl);
+		facebookDao.incrSourceCounter(uuid, pageUrl);
 	}
 
 	public GenericArray<TopItem> getTopNPages(int count) {

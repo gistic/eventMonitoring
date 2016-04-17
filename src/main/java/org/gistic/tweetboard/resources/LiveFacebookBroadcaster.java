@@ -33,8 +33,12 @@ public class LiveFacebookBroadcaster {
         		FacebookDao facebookDao = new FacebookDao();
         		facebookDao.saveNewsToRedis(uuid, obj);
 
-				facebookDao.incrSourceCounter(uuid, obj.getString("source"));
+				//facebookDao.incrSourceCounter(uuid, obj.getString("url"));
+
 				FacebookDataLogic fbDataLogic = new FacebookDataLogic(uuid);
+
+				fbDataLogic.incrementPageSource(obj);
+
 				fbDataLogic.incrementPageScore(obj);
         		LiveTweetsBroadcasterSingleton.broadcast(msg);
         	}

@@ -40,9 +40,9 @@ public class FacebookDao {
 	}
 
 
-	public void incrSourceCounter(String uuid, String source) {
+	public void incrSourceCounter(String uuid, String url) {
 		try (Jedis jedis = JedisPoolContainer.getInstance()) {
-			jedis.zincrby(uuid+":facebook:stats:source", 1, source);
+			jedis.zincrby(uuid+":facebook:stats:source", 1, url);
 		}catch(JedisException e){
 			e.printStackTrace();
 		}

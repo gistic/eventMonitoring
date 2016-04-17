@@ -101,6 +101,15 @@ public class LiveStreamMetadataThread implements Runnable {
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
+            //broadcast top facebook pages by shares
+            try {
+                FacebookDataLogic fbDataLogic = new FacebookDataLogic(event.getUuid());
+                String topPages = new ObjectMapper().writeValueAsString(eventResource.getTopFacebookSources(event.getUuid(), 10));
+                msg = new Message(event.getUuid(), Message.Type.TopFacebookPagesByPosts, topPages);
+                LiveTweetsBroadcasterSingleton.broadcast(msg);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             //broadcast top facebook pages by comments
 
             //broadcast top facebook pages by likes

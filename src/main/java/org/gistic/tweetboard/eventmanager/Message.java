@@ -61,5 +61,7 @@ public class Message {
 
         public static final String TopFacebookPagesByLikes = "topFbPagesByLikes";
 
+        public static final String TopFacebookPagesByPosts = "topFbPagesByPosts";
+
     }
 }
