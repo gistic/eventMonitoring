@@ -8,11 +8,12 @@
 @import "_/_configs/vars";
 
 //bower_components
-@import "../../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
+@import "../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";
 @import "../../bower_components/modularized-normalize-scss/normalize";
 @import "../../bower_components/sweetalert/lib/sweet-alert";
 @import "../../bower_components/Hover/scss/hover";
 @import "../../bower_components/bootstrap-social/bootstrap-social.scss";
+@import "../../assets/vendors/animate/css/creative.css";
 
 //vendors
 @import "_/_vendor/_fa/_font-awesome.scss";
@@ -28,6 +29,7 @@
 @import "_/_atoms/hover";
 @import "_/_atoms/forms";
 @import "_/_atoms/typography";
+@import "_/_atoms/color-themes";
 @import "_/_atoms/icons";
 @import "_/_atoms/modal";
 @import "_/_atoms/panel";

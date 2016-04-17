@@ -1,21 +1,24 @@
 <!-- HEADER -->
-<nav class="navbar navbar-inverse navbar-fixed-top clearfix" ng-class="{'header-dashboard' : dashboardState}">
+<link rel="stylesheet" ng-href="assets/stylesheets/themes/{{ colorChoice.className }}/screen.css">
+
+<nav class="navbar navbar-inverse navbar-fixed-top clearfix" ng-class="{ 'header-dashboard' : dashboardState }">
 
     <div class="container">
 
         <a class="navbar-logo pull-left" ui-sref="home">
-            <span class="icon-hash"></span>
-            <span ng-hide="dashboardState" class="header-title">Hashtails</span>
+            <img src="assets/images/ministry-of-hajj-logo.png" alt="" width="30px" height="30px">
+            <span ng-hide="dashboardState" class="icon-hash"></span>
+            <span ng-hide="dashboardState" class="header-title">Hajj</span>
         </a>
 
         <div class="navs pull-left clearfix">
 
             <ul class="list-inline homepage-nav pull-left" ng-hide="dashboardState">
                 <li class="hvr-underline-from-center">
-                    <a ui-sref="home.features">Features</a>
+                    <a ui-sref="fbPages.index">Facebook pages</a>
                 </li>
                 <li class="hvr-underline-from-center">
-                    <a ui-sref="home.realTime">Real Time</a>
+                    <a ui-sref="keywords.index">Keyword lists</a>
                 </li>
             </ul>
 
@@ -67,6 +70,10 @@
                             <a ng-click="logOutUser()">Logout</a>
                         </li>
                     </ul>
+                </li>
+
+                <li ng-show="logedInUser">
+                    <palette-picker choices="colorChoices" choice="colorChoice"></palette-picker>
                 </li>
 
                 <li>

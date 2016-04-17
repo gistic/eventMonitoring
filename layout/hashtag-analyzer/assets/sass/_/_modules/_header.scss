@@ -176,3 +176,33 @@
     z-index: 99;
   }
 }
+
+
+@media(min-width:768px) {
+    .header-content {
+        position: absolute;
+        top: 50%;
+        padding: 0 50px;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+    .header-content.header-content-bottom {
+        top: 93%;
+        padding: 0;
+        text-align: left;
+        left: 3%;
+        width: auto;
+    }
+    .header-content-inner {
+        margin-right: auto;
+        margin-left: auto;
+        max-width: 1000px;
+    }
+    .header-content-inner p {
+        margin-right: auto;
+        margin-left: auto;
+        max-width: 80%;
+        font-size: 16px;
+    }
+}

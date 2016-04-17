@@ -1,4 +1,3 @@
-<h2>NEWS new!</h2>
 <aside class="col-md-8">
     <section>
         <div ng-include="'views/views-panels/news-sources.html'"></div>
@@ -10,39 +9,31 @@
         <div ng-include="'views/views-panels/news-per-country-panel.html'"></div>
     </section>
 </aside>
-<article class="media clearfix tweet fx-fade fx-speed-2000" ng-repeat="news in newsQueue">
-
-	<div class="tweet-content">
-       
-        <div class="media-left">
-           	<a ng-href="{{news.url}}" target="_blank" class="pull-left tweet-userName">
+<section class="col-md-16">
+    <article class="media clearfix tweet fx-fade fx-speed-2000" ng-repeat="news in newsQueue">
+        <div class="tweet-content">
+            <div class="media-left">
+                <a ng-href="{{news.url}}" target="_blank" class="pull-left tweet-userName">
                     <img lazy-src="{{news.image_url}}" on-error-src="{{news.image_url.replace('http://t0','http://t1')}}" class="media-object user-img" />
-            </a>
-        </div>
-        <div class="media-body tweet-content">
-           
-            <h6 class="media-heading tweet-user clearfix">                
+                </a>
+            </div>
+            <div class="media-body tweet-content">
+                <h6 class="media-heading tweet-user clearfix">                
                     <h4>{{news.source}}</h4>
             </h6>
-			
-            <p>
-
-			     	<a ng-href="{{news.url}}" target="_blank" class="">
-	                    {{news.title}}
-	            	</a>
-            
-			</p>
-			
-            <p>
-                <span>{{countryAbbrev[news.country]}}</span>
-                <span class="fa fa-map-marker"></span>
-            </p>
-
-            <p>
-                <span class="text-muted">{{news.date}}</span>
-            </p>
-            
+                <p>
+                    <a ng-href="{{news.url}}" target="_blank" class="">
+                        {{news.title}}
+                    </a>
+                </p>
+                <p>
+                    <span>{{countryAbbrev[news.country]}}</span>
+                    <span class="fa fa-map-marker"></span>
+                </p>
+                <p>
+                    <span class="text-muted">{{news.date}}</span>
+                </p>
+            </div>
         </div>
-    </div>
-
-</article>
+    </article>
+</section>

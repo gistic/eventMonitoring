@@ -1,0 +1,37 @@
+a {
+    color: $green;
+    &:hover,
+    &:focus {
+        color: lighten($green, 20%);
+        outline: 0;
+        text-decoration: none;
+    }
+}
+
+a[ng-click] {
+    cursor: pointer;
+}
+
+.form-control {
+    &:hover,
+    &:focus {
+        outline: 0;
+        border-color: transparent;
+        box-shadow: none;
+    }
+}
+
+img {
+    &.hover-zoom {
+        -webkit-transition: all .6s;
+        transition: all .6s;
+        &:hover {
+            -webkit-transform: scale(1.15);
+            -ms-transform: scale(1.15);
+            transform: scale(1.15);
+        }
+    }
+    &.img-responsive {
+        margin: 0 auto;
+    }
+}
