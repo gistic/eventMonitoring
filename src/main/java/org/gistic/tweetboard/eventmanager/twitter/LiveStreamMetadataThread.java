@@ -64,6 +64,7 @@ public class LiveStreamMetadataThread implements Runnable {
                 e.printStackTrace();
             }
 
+            //
             //broadcast top facebook pages
             try {
                 FacebookDataLogic fbDataLogic = new FacebookDataLogic(event.getUuid());
@@ -73,6 +74,37 @@ public class LiveStreamMetadataThread implements Runnable {
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
+            //broadcast top facebook pages by shares
+            try {
+                FacebookDataLogic fbDataLogic = new FacebookDataLogic(event.getUuid());
+                String topPages = new ObjectMapper().writeValueAsString(eventResource.getTopFacebookPagesByShares(event.getUuid(), 10));
+                msg = new Message(event.getUuid(), Message.Type.TopFacebookPagesByShares, topPages);
+                LiveTweetsBroadcasterSingleton.broadcast(msg);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            //broadcast top facebook pages by comments
+            try {
+                FacebookDataLogic fbDataLogic = new FacebookDataLogic(event.getUuid());
+                String topPages = new ObjectMapper().writeValueAsString(eventResource.getTopFacebookPagesByComments(event.getUuid(), 10));
+                msg = new Message(event.getUuid(), Message.Type.TopFacebookPagesByComments, topPages);
+                LiveTweetsBroadcasterSingleton.broadcast(msg);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            //broadcast top facebook pages by shares
+            try {
+                FacebookDataLogic fbDataLogic = new FacebookDataLogic(event.getUuid());
+                String topPages = new ObjectMapper().writeValueAsString(eventResource.getTopFacebookPagesByLikes(event.getUuid(), 10));
+                msg = new Message(event.getUuid(), Message.Type.TopFacebookPagesByLikes, topPages);
+                LiveTweetsBroadcasterSingleton.broadcast(msg);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            //broadcast top facebook pages by comments
+
+            //broadcast top facebook pages by likes
+
             //broadcast top news sources
 
             //interval between each broadcast

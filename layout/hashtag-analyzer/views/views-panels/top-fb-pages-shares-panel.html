@@ -1,10 +1,10 @@
 <div class="panel panel-default panel-top-people">
     <div class="panel-heading">
-        <strong class="text-left">Most engaged</strong>
-        <span class="text-muted pull-right">{{topFbPages.length}} pages</span>
+        <strong class="text-left">Top Pages by Shares</strong>
+        <span class="text-muted pull-right">{{topFbPagesByShares.length}} pages</span>
     </div>
     <div class="panel-body">
-        <div class="top-user-container" ng-repeat="user in topFbPages | limitTo : 10">
+        <div class="top-user-container" ng-repeat="user in topFbPagesByShares | limitTo : 10">
 
             <img ng-src="{{user.details.image_url}}" on-error-src="{{defultImage}}" ns-popover ns-popover-template="popover" ns-popover-theme="ns-popover-custom-theme" ns-popover-trigger="mouseenter" ns-popover-placement="top" ns-popover-timeout=-1/>
 
@@ -22,7 +22,7 @@
                             <a href="{{user.details.page_url}}" target="_blank">{{user.details.source}}</a>
                         </div>
                         <div class="profile-user-count">
-                            Page score: {{user.score}}
+                            Page post shares: {{user.score}}
                         </div>
                     </div>
                 </div>

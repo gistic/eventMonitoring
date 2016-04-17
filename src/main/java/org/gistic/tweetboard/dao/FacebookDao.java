@@ -79,9 +79,61 @@ public class FacebookDao {
 		}
 	}
 
+	public void incrPageSharedCount(String uuid, String pageUrl, long score) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			jedis.zincrby(uuid+":facebook:stats:shares", score, pageUrl);
+		}catch(JedisException e){
+			e.printStackTrace();
+		}
+	}
+
+	public void incrPageCommentCount(String uuid, String pageUrl, long score) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			jedis.zincrby(uuid+":facebook:stats:comments", score, pageUrl);
+		}catch(JedisException e){
+			e.printStackTrace();
+		}
+	}
+
+	public void incrPageLikes(String uuid, String pageUrl, long score) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			jedis.zincrby(uuid+":facebook:stats:likes", score, pageUrl);
+		}catch(JedisException e){
+			e.printStackTrace();
+		}
+	}
+
 	public Set<Tuple> getTopNPages(String uuid, int count) {
 		try (Jedis jedis = JedisPoolContainer.getInstance()) {
 			return jedis.zrevrangeByScoreWithScores(uuid+":facebook:stats:pageScore", "+inf", "-inf", 0, count);
+		} catch (JedisException jE) {
+			jE.printStackTrace();
+		}
+		//TODO: error module
+		return null;
+	}
+
+	public Set<Tuple> getTopNPagesByShares(String uuid, int count) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			return jedis.zrevrangeByScoreWithScores(uuid+":facebook:stats:shares", "+inf", "-inf", 0, count);
+		} catch (JedisException jE) {
+			jE.printStackTrace();
+		}
+		//TODO: error module
+		return null;
+	}
+	public Set<Tuple> getTopNPagesByComments(String uuid, int count) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			return jedis.zrevrangeByScoreWithScores(uuid+":facebook:stats:comments", "+inf", "-inf", 0, count);
+		} catch (JedisException jE) {
+			jE.printStackTrace();
+		}
+		//TODO: error module
+		return null;
+	}
+	public Set<Tuple> getTopNPagesByLikes(String uuid, int count) {
+		try (Jedis jedis = JedisPoolContainer.getInstance()) {
+			return jedis.zrevrangeByScoreWithScores(uuid+":facebook:stats:likes", "+inf", "-inf", 0, count);
 		} catch (JedisException jE) {
 			jE.printStackTrace();
 		}

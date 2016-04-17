@@ -140,6 +140,9 @@ public class FacebookDataLogic {
 		long likesScore = (long)(obj.getLong("likes_num")*likeScoreMultiplier);
 		long score = shareScore+commentsScore+likesScore;
 		facebookDao.incrPageScore(obj.getString("uuid"), pageUrl, score);
+		facebookDao.incrPageSharedCount(obj.getString("uuid"), pageUrl, shareScore);
+		facebookDao.incrPageCommentCount(obj.getString("uuid"), pageUrl, commentsScore);
+		facebookDao.incrPageLikes(obj.getString("uuid"), pageUrl, likesScore);
 
 	}
 
@@ -150,6 +153,31 @@ public class FacebookDataLogic {
 				.collect(Collectors.toList()).toArray(new TopItem[]{});
 		return new GenericArray<TopItem>(topNPagesArray);
 	}
+
+	public GenericArray<TopItem> getTopNPagesByShares(int count) {
+		Set<Tuple> topSourcesTuple = facebookDao.getTopNPagesByShares(uuid, count);
+		TopItem[] topNPagesArray = topSourcesTuple.stream()
+				.map(source -> new TopItem(facebookDao.getPageDetails(uuid, source.getElement()), new Double(source.getScore()).intValue()))
+				.collect(Collectors.toList()).toArray(new TopItem[]{});
+		return new GenericArray<TopItem>(topNPagesArray);
+	}
+
+	public GenericArray<TopItem> getTopNPagesByComments(int count) {
+		Set<Tuple> topSourcesTuple = facebookDao.getTopNPagesByComments(uuid, count);
+		TopItem[] topNPagesArray = topSourcesTuple.stream()
+				.map(source -> new TopItem(facebookDao.getPageDetails(uuid, source.getElement()), new Double(source.getScore()).intValue()))
+				.collect(Collectors.toList()).toArray(new TopItem[]{});
+		return new GenericArray<TopItem>(topNPagesArray);
+	}
+
+	public GenericArray<TopItem> getTopNPagesByLikes(int count) {
+		Set<Tuple> topSourcesTuple = facebookDao.getTopNPagesByLikes(uuid, count);
+		TopItem[] topNPagesArray = topSourcesTuple.stream()
+				.map(source -> new TopItem(facebookDao.getPageDetails(uuid, source.getElement()), new Double(source.getScore()).intValue()))
+				.collect(Collectors.toList()).toArray(new TopItem[]{});
+		return new GenericArray<TopItem>(topNPagesArray);
+	}
+
 
 }
 

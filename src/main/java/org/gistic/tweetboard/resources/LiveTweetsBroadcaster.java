@@ -100,6 +100,30 @@ public class LiveTweetsBroadcaster {
                         .build();
                 doBroadcast(uuid, event);
                 break;
+            case Message.Type.TopFacebookPagesByShares:
+                event = eventBuilder
+                        .name("top-fb-page-shares")
+                        .mediaType(MediaType.TEXT_PLAIN_TYPE)
+                        .data(String.class, message.replace("_normal", ""))
+                        .build();
+                doBroadcast(uuid, event);
+                break;
+            case Message.Type.TopFacebookPagesByComments:
+                event = eventBuilder
+                        .name("top-fb-page-comments")
+                        .mediaType(MediaType.TEXT_PLAIN_TYPE)
+                        .data(String.class, message.replace("_normal", ""))
+                        .build();
+                doBroadcast(uuid, event);
+                break;
+            case Message.Type.TopFacebookPagesByLikes:
+                event = eventBuilder
+                        .name("top-fb-page-likes")
+                        .mediaType(MediaType.TEXT_PLAIN_TYPE)
+                        .data(String.class, message.replace("_normal", ""))
+                        .build();
+                doBroadcast(uuid, event);
+                break;
         }
         return "{\"msg\":\"Message has been broadcasted.\"}";
     }

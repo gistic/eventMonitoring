@@ -565,8 +565,6 @@ EventHandlerController.controller('EventMainController',
             // Top active pages
             source.addEventListener('top-fb-page', function (response) {
                 var data = JSON.parse(response.data).items;
-                console.log("data is: ");
-                console.log(data);
                 var items = [];
                 for (var i = 0; i < data.length; i++) {
                     items.push({"details": JSON.parse(data[i].code), "score": data[i].count});
@@ -574,6 +572,45 @@ EventHandlerController.controller('EventMainController',
                 }
                 $scope.$apply(function () {
                     $scope.topFbPages = items;
+                }, false);
+            });
+
+            // Top active pages by shares
+            source.addEventListener('top-fb-page-shares', function (response) {
+                var data = JSON.parse(response.data).items;
+                var items = [];
+                for (var i = 0; i < data.length; i++) {
+                    items.push({"details": JSON.parse(data[i].code), "score": data[i].count});
+
+                }
+                $scope.$apply(function () {
+                    $scope.topFbPagesByShares = items;
+                }, false);
+            });
+
+            // Top active pages by comments
+            source.addEventListener('top-fb-page-comments', function (response) {
+                var data = JSON.parse(response.data).items;
+                var items = [];
+                for (var i = 0; i < data.length; i++) {
+                    items.push({"details": JSON.parse(data[i].code), "score": data[i].count});
+
+                }
+                $scope.$apply(function () {
+                    $scope.topFbPagesByComments = items;
+                }, false);
+            });
+
+            // Top active pages by likes
+            source.addEventListener('top-fb-page-likes', function (response) {
+                var data = JSON.parse(response.data).items;
+                var items = [];
+                for (var i = 0; i < data.length; i++) {
+                    items.push({"details": JSON.parse(data[i].code), "score": data[i].count});
+
+                }
+                $scope.$apply(function () {
+                    $scope.topFbPagesByLikes = items;
                 }, false);
             });
 
@@ -963,7 +1000,7 @@ EventHandlerController.controller('EventMainController',
         // TODO GET : Top facebook sources
         $scope.topFacebookSource = [];
         $scope.getTopFacebookSources = function () {
-            $scope.eventDataChunk = "Facebook Sources";
+            $scope.eventDataChunk = "Relevant pages";
             var requestAction = "GET";
             var apiUrl = '/api/events/' + $rootScope.eventID + '/topFacebookSources';
             var requestData = "";

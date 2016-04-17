@@ -435,6 +435,39 @@ public class EventsResource {
     }
 
     @GET
+    @Path("/{uuid}/topFacebookPagesByShares/")
+    public GenericArray<TopItem> getTopFacebookPagesByShares(@PathParam("uuid") String uuid,
+                                                     @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        //TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        FacebookDataLogic facebookDataLogic = new FacebookDataLogic(uuid);
+
+        return facebookDataLogic.getTopNPagesByShares(count);
+    }
+
+    @GET
+    @Path("/{uuid}/topFacebookPagesByComments/")
+    public GenericArray<TopItem> getTopFacebookPagesByComments(@PathParam("uuid") String uuid,
+                                                     @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        //TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        FacebookDataLogic facebookDataLogic = new FacebookDataLogic(uuid);
+
+        return facebookDataLogic.getTopNPagesByComments(count);
+    }
+
+    @GET
+    @Path("/{uuid}/topFacebookPagesByLikes/")
+    public GenericArray<TopItem> getTopFacebookPagesByLikes(@PathParam("uuid") String uuid,
+                                                     @DefaultValue("10") @QueryParam("count") Integer count) {
+        checkUuid(uuid);
+        //TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        FacebookDataLogic facebookDataLogic = new FacebookDataLogic(uuid);
+
+        return facebookDataLogic.getTopNPagesByLikes(count);
+    }
+
+    @GET
     @Path("/{uuid}/topHashtags/")
     public GenericArray<TopItem> getTopHashtags(@PathParam("uuid") String uuid,
                                                  @DefaultValue("10") @QueryParam("count") Integer count) {
