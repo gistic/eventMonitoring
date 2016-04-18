@@ -1,7 +1,7 @@
 <h2>Facebook!</h2>
 <aside class="col-md-8">
     <!--<section>-->
-        <!--<div ng-include="'views/views-panels/facebook-sources.html'"></div>-->
+    <!--<div ng-include="'views/views-panels/facebook-sources.html'"></div>-->
     <!--</section>-->
     <section>
         <div ng-include="'views/views-panels/top-fb-pages-panel.html'"></div>
@@ -20,20 +20,20 @@
     </section>
 </aside>
 <section class="col-md-16" style="float: right">
-<article class="media clearfix tweet fx-fade fx-speed-2000" ng-repeat="post in fbQueue">
+    <article class="media clearfix tweet fx-fade fx-speed-2000" ng-repeat="post in fbQueue">
 
-	<div class="tweet-content">
-       
-        <div class="media-left">
-           	<a ng-href="{{post.url}}" target="_blank" class="pull-left tweet-userName">
-                <img src="{{post.image_url}}" class="media-object user-img" />
-            </a>
-        </div>
-        <div class="media-body tweet-content">
-           
-            <h6 class="media-heading tweet-user clearfix">
+        <div class="tweet-content">
+
+            <div class="media-left">
+                <a ng-href="{{post.url}}" target="_blank" class="pull-left tweet-userName">
+                    <img src="{{post.image_url}}" class="media-object user-img" />
+                </a>
+            </div>
+            <div class="media-body tweet-content">
+
+                <h6 class="media-heading tweet-user clearfix">
                     <h4>{{post.source}}</h4>
-            </h6>
+                </h6>
                 <p>
                     <a ng-href="{{post.url}}" target="_blank" class="">
                         {{post.text}}
@@ -44,7 +44,7 @@
                 </p>
             </div>
         </div>
-    </div>
+        </div>
 
-</article>
+    </article>
 </section>

@@ -6,9 +6,9 @@
     <div class="panel-body">
         <div class="top-user-container" ng-repeat="user in topPeople | limitTo : 10">
 
-            <img ng-src="{{user.profileImageUrl}}" on-error-src="{{defultImage}}" ns-popover ns-popover-template="popover" ns-popover-theme="ns-popover-custom-theme" ns-popover-trigger="mouseenter" ns-popover-placement="top" ns-popover-timeout=-1/>
+            <img ng-src="{{user.profileImageUrl}}" on-error-src="{{defultImage}}" ns-popover ns-popover-template="top-people-popover" ns-popover-theme="ns-popover-custom-theme" ns-popover-trigger="mouseenter" ns-popover-placement="top" ns-popover-timeout=-1/>
 
-            <script type="text/ng-template" id="popover">
+            <script type="text/ng-template" id="top-people-popover">
 
                 <div class="profile-sidebar" class="text-center">
                     <!-- SIDEBAR USERPIC -->

@@ -124,7 +124,7 @@ module.exports = function(grunt) {
                 files: ['Gruntfile.js']
             },
             angularFiles: {
-            	files: ['views/views-components/{,*/}*.html', '<%= config.app %>/{,*/}*.html', 'assets/scripts/{,*/}*.js'],
+            	files: ['views/views-components/{,*/}*.html', 'views/views-panels/{,*/}*.html', '<%= config.app %>/{,*/}*.html', 'assets/scripts/{,*/}*.js'],
             	tasks: ['ngtemplates', 'ngAnnotate', 'uglify', 'htmlmin:dist']
             },
             stylesheets: {
