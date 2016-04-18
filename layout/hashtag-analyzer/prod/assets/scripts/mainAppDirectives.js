@@ -66,3 +66,44 @@ angular.module('trackHashtagApp.directives', [])
     }
   };
 }])
+
+// Directive : Change themes
+.directive("palettePicker", ["$document", function ($document) {
+    return {
+        restrict: "E",
+        scope: {
+            choices: '=',
+            choice: '='
+        },
+        templateUrl: "views/views-directives/palette-picker.html",
+        link: function (scope, element) {
+            scope.pickerVisible = false;
+
+            scope.togglePicker = function () {
+                scope.pickerVisible = !scope.pickerVisible;
+            }
+
+            scope.choosePalette = function (item) {
+                scope.choice = item;
+            }
+
+        var elementMatchesAnyInArray = function(element, elementArray) {
+            for (var i=0; i < elementArray.length; i++) {
+                if (element == elementArray[i]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        $document.bind('click', function(){
+            if (elementMatchesAnyInArray(event.target, element.find(event.target.tagName))) {
+                return;
+            }
+
+            scope.pickerVisible = false;
+            scope.$apply();
+        });
+        }
+    }
+}]);

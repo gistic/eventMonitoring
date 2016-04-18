@@ -1,0 +1,54 @@
+@import "compass";
+
+// Google Fonts
+$header-font: 'Montserrat', sans-serif, Arial;
+$content-font: 'Lato', sans-serif, Arial;
+
+// Colors - Hajj green theme
+$white: #ffffff;
+$green: #618f81;
+$black: #333333;
+$brown: #a17c43;
+
+$red: #ff0000;
+$blue: #2677FF;
+
+$gray-super-light: #fafafa;
+$gray-light: #cdd2d4;
+$turquoise: #24dfcc;
+$blue: #2493de;
+$violet: #7524df;
+$pink: #dd2452;
+$orange: #f64728;
+
+// Descriptive COLORS
+$button-bg: $green;
+$button-save-bg: $green;
+$layout-black: $black;
+$layout-turquoise: $turquoise;
+$layout-blue: $blue;
+$layout-violet: $violet;
+$layout-pink: $pink;
+$layout-green: $green;
+$layout-orange: $orange;
+
+// Grids
+$container-width: 960px;
+$grid-columns: 24;
+$grid-gutter-width: 20px;
+
+$button-padding: 7px 10px;
+
+// Spaces, Gaps and Dimensions
+$margin:10px;
+$padding:15px;
+
+// Fonts
+
+$fa-font-path: "../../../fonts/fa";
+$font-massive: 48;
+$font-huge: 32;
+$font-large: 21;
+$font-normal: 16;
+$font-small: 14;
+$font-tiny: 11;

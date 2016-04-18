@@ -1,48 +1,29 @@
-module.exports = function (grunt) {
-    // 3. Where we tell Grunt we plan to use this plug-in.
-    // load all grunt tasks matching the ['grunt-*', '@*/grunt-*'] patterns
-    require('load-grunt-tasks')(grunt);
+// Generated on 2016-04-13
+'use strict';
 
-    // 1. All configuration goes here
+module.exports = function(grunt) {
+
+    // Time how long tasks take. Can help when optimizing build times
+    require('time-grunt')(grunt);
+
+    // Automatically load required grunt tasks
+    require('jit-grunt')(grunt, {
+        useminPrepare: 'grunt-usemin',
+        ngtemplates: 'grunt-angular-templates'
+    });
+
+    // Configurable paths
+    var config = {
+        app: 'app',
+        dist: 'dist',
+        pkg: grunt.file.readJSON('package.json')
+    };
+
+    // Define the configuration for all the tasks
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
 
-        concat: {
-            // 2. Configuration for concatinating files goes here.
-            option: {
-                separator: ';',
-            },
-            files: {
-                src: ['prod/assets/scripts/templates.js'],
-                dest: ['assets/scripts/mainApp.js']
-            }
-        },
-
-        ngtemplates: {
-            options: {
-            module: 'trackHashtagApp'
-            },
-            app: {
-                src: 'views/views-components/*.html',
-                dest: 'prod/assets/scripts/templates.js'
-            }
-        },
-
-        uglify: {
-            options: {
-                banner: '/* <%= pkg.name %> - <%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
-                report: 'min'
-            },
-            build: {
-                files: {
-                    'prod/assets/scripts/min/mainApp.min.js': ['prod/assets/scripts/mainApp.js'],
-                    'prod/assets/scripts/min/mainAppServices.min.js': ['prod/assets/scripts/mainAppServices.js'],
-                    'prod/assets/scripts/min/mainAppControllers.min.js': ['prod/assets/scripts/mainAppControllers.js'],
-                    'prod/assets/scripts/min/mainAppDirectives.min.js': ['prod/assets/scripts/mainAppDirectives.js'],
-                    'prod/assets/scripts/min/mainAppFilters.min.js': ['prod/assets/scripts/mainAppFilters.js']
-                }
-            }
-        },
+        // Project settings
+        config: config,
 
         htmlmin: {
             dist: {
@@ -53,7 +34,7 @@ module.exports = function (grunt) {
                     removeEmptyAttributes: true
                 },
                 files: {
-                    'index.html': 'dev/index.html'
+                    'index.html': 'app/index.html'
                 }
 
             }
@@ -74,75 +55,104 @@ module.exports = function (grunt) {
             },
         },
 
-
-        imagemin: {
-            dynamic: {
-                files: [{
-                    expand: true,
-                    cwd: 'images/',
-                    src: ['**/*.{png,jpg,gif}'],
-                    dest: 'prod/img'
-                }]
-            }
-        },
-
-        sass: {
-            dis: {
-                options: {
-                    style: 'compressed',
-                    compass: true
-                },
-                files: {
-                    'stylesheets/screen.css': 'sass/screen.scss'
-                }
-            }
-        },
-
-        jshint: {
+        uglify: {
             options: {
-                reporter: require('jshint-stylish')
+                banner: '/* <%= config.pkg.name %> - <%= config.pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                report: 'min'
             },
-            files: {
-                src: ['assets/scripts/*.js']
-            },
-        },
-        watch: {
-            scripts: {
-                files: ['assets/scripts/**/*.js', ],
-                tasks: ['ngAnnotate', 'uglify', 'ngtemplates'],
-                option: {
-                    spawn: false,
-                },
-            },
-            images: {
-                files: ['images/*.{png,jpg,gif}'],
-                tasks: ['imagemin'],
-                option: {
-                    spawn: false,
-                }
-            },
-            css: {
-                files: ['sass/*.scss'],
-                tasks: ['sass'],
-                option: {
-                    spawn: false,
-                }
-            },
-            html: {
-                files: ['dev/*.html','views/*.html'],
-                tasks: ['htmlmin'],
-                options: {
-                    spawn: false,
+            build: {
+                files: {
+                    'prod/assets/scripts/min/mainApp.min.js': ['prod/assets/scripts/mainApp.js'],
+                    'prod/assets/scripts/min/mainAppServices.min.js': ['prod/assets/scripts/mainAppServices.js'],
+                    'prod/assets/scripts/min/mainAppControllers.min.js': ['prod/assets/scripts/mainAppControllers.js'],
+                    'prod/assets/scripts/min/mainAppDirectives.min.js': ['prod/assets/scripts/mainAppDirectives.js'],
+                    'prod/assets/scripts/min/mainAppFilters.min.js': ['prod/assets/scripts/mainAppFilters.js']
                 }
             }
-        }
+        },
 
+        ngtemplates: {
+            options: {
+                module: 'trackHashtagApp'
+            },
+            app: {
+                src: 'views/views-components/*.html',
+                dest: 'prod/assets/scripts/templates.js'
+            }
+        },
+
+        browserSync: {
+            options: {
+                notify: false,
+                background: true,
+                watchOptions: {
+                    ignored: ''
+                }
+            },
+            livereload: {
+                options: {
+                    files: [
+                        '<%= config.app %>/{,*/}*.html',
+                        '.tmp/styles/{,*/}*.css',
+                        '<%= config.app %>/images/{,*/}*',
+                        '.tmp/scripts/{,*/}*.js'
+                    ],
+                    port: 9000,
+                    server: {
+                        baseDir: ['.tmp', config.app],
+                        routes: {
+                            '/bower_components': './bower_components'
+                        }
+                    }
+                }
+            },
+            dist: {
+                options: {
+                    background: false,
+                    server: '<%= config.dist %>'
+                }
+            }
+        },
+
+        // Run some tasks in parallel to speed up build process
+        concurrent: {
+            server: []
+        },
+        // Watches files for changes and runs tasks based on the changed files
+        watch: {
+            gruntfile: {
+                files: ['Gruntfile.js']
+            },
+            angularFiles: {
+            	files: ['views/views-components/{,*/}*.html', '<%= config.app %>/{,*/}*.html', 'assets/scripts/{,*/}*.js'],
+            	tasks: ['ngtemplates', 'ngAnnotate', 'uglify', 'htmlmin:dist']
+            },
+            stylesheets: {
+                files: ['assets/stylesheets/screen.css']
+            }
+        },
     });
 
-    // 4. Where we tell Grunt what to do when we type "grunt" into the terminal.
-    grunt.registerTask('default', ['concat', 'uglify']);
-    grunt.registerTask('htmlmini', ['htmlmin']);
-    grunt.registerTask('angular', ['ngAnnotate', 'uglify', 'ngtemplates']);
-    grunt.registerTask('dev', ['watch']);
+    grunt.registerTask('serve', 'start the server and preview your app', function(target) {
+
+        if (target === 'dist') {
+            return grunt.task.run(['build', 'browserSync:dist']);
+        }
+
+        grunt.task.run([
+            'watch',
+            'browserSync:livereload',
+            'concurrent:server'
+        ]);
+    });
+
+    grunt.registerTask('server', function(target) {
+        grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
+        grunt.task.run([target ? ('serve:' + target) : 'serve']);
+    });
+
+    grunt.registerTask('default', []);
+
+    grunt.registerTask('build', ['ngtemplates', 'ngAnnotate', 'uglify', 'htmlmin:dist']);
 
 };

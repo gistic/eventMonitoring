@@ -1,5 +1,4 @@
 <h2>Facebook!</h2>
-
 <aside class="col-md-8">
     <!--<section>-->
         <!--<div ng-include="'views/views-panels/facebook-sources.html'"></div>-->
@@ -19,7 +18,6 @@
     <section>
         <div ng-include="'views/views-panels/top-fb-pages-comments-panel.html'"></div>
     </section>
-
 </aside>
 <section class="col-md-16" style="float: right">
 <article class="media clearfix tweet fx-fade fx-speed-2000" ng-repeat="post in fbQueue">
@@ -33,22 +31,18 @@
         </div>
         <div class="media-body tweet-content">
            
-            <h6 class="media-heading tweet-user clearfix">                
+            <h6 class="media-heading tweet-user clearfix">
                     <h4>{{post.source}}</h4>
             </h6>
-			
-            <p>
-
-			     	<a ng-href="{{post.url}}" target="_blank" class="">
-	                    {{post.text}}
-	            	</a>
-            
-			</p>
-			
-            <p>
-                <span class="text-muted">{{post.date}}</span>
-            </p>
-            
+                <p>
+                    <a ng-href="{{post.url}}" target="_blank" class="">
+                        {{post.text}}
+                    </a>
+                </p>
+                <p>
+                    <span class="text-muted">{{post.date}}</span>
+                </p>
+            </div>
         </div>
     </div>
 

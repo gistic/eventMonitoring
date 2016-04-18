@@ -17,6 +17,7 @@ angular.module('trackHashtagApp', [
     'EventHandlerController',
     'KeywordsController',
     'FbPagesController',
+    'HashHajjController',
 
     'oitozero.ngSweetAlert',
     'ngFx',

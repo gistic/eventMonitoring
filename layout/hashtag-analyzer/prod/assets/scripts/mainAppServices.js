@@ -142,6 +142,30 @@ angular.module('trackHashtagApp.services')
     }
 
 }])
+angular.module('trackHashtagApp.services').factory('FbPagesFactory', ['$resource', function ($resource) {
+ 	return $resource('/api/fb_pages', {}, {
+        query: { method: 'GET', isArray: true },
+        create: { method: 'POST' }
+    })
+}]);
+
+angular.module('trackHashtagApp.services').factory('FbPageFactory', ['$resource', function ($resource) {
+   return $resource('/api/fb_pages/:fb_page', {}, {
+        delete: { method: 'DELETE', params: {fb_page: '@fb_page'} }
+    })
+}]);
+angular.module('trackHashtagApp.services').factory('KeywordsFactory', ['$resource', function ($resource) {
+ 	return $resource('/api/keywords', {}, {
+        query: { method: 'GET', isArray: true },
+        create: { method: 'POST' }
+    })
+}]);
+
+angular.module('trackHashtagApp.services').factory('KeywordFactory', ['$resource', function ($resource) {
+   return $resource('/api/keywords/:keyword', {}, {
+        delete: { method: 'DELETE', params: {keyword: '@keyword'} }
+    })
+}]);
 'use strict';
 
 angular.module('trackHashtagApp.services')

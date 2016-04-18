@@ -31,9 +31,7 @@
     "angular-ui-router": "~0.2.14",
     "angularjs-nvd3-directives": "~0.0.7",
     "angularytics": "~0.4.0",
-    "bootstrap-sass": "~3.3.4",
     "bootstrap-social": "~4.9.1",
-    "bower": "*",
     "css-spinners": "~2.0.2",
     "d3": "~3.5.5",
     "gsap": "~1.17.0",
@@ -48,7 +46,8 @@
     "ngInfiniteScroll": "~1.2.1",
     "nsPopover": "~0.6.7",
     "sweetalert": "~0.5.0",
-    "angular-resource": "^1.5.3"
+    "angular-resource": "^1.5.3",
+    "bootstrap-sass": "~3.3.6"
   },
   "devDependencies": {
     "modularized-normalize-scss": "~3.0.3"

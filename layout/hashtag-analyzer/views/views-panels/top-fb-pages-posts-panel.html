@@ -1,0 +1,33 @@
+<div class="panel panel-default panel-top-people">
+    <div class="panel-heading">
+        <strong class="text-left">Most Relevant Pages</strong>
+        <span class="text-muted pull-right">{{topFbPagesByComments.length}} pages</span>
+    </div>
+    <div class="panel-body">
+        <div class="top-user-container" ng-repeat="user in topFbPagesByPosts | limitTo : 10">
+
+            <img ng-src="{{user.details.image_url}}" on-error-src="{{defultImage}}" ns-popover ns-popover-template="popover" ns-popover-theme="ns-popover-custom-theme" ns-popover-trigger="mouseenter" ns-popover-placement="top" ns-popover-timeout=-1/>
+
+            <script type="text/ng-template" id="popover">
+
+                <div class="profile-sidebar" class="text-center">
+                    <!-- SIDEBAR USERPIC -->
+                    <div class="profile-userpic">
+                        <img lazy-load ll-src="{{user.details.image_url}}" on-error-src="{{defultImage}}" class="img-responsive" alt="">
+                    </div>
+                    <!-- END SIDEBAR USERPIC -->
+                    <!-- SIDEBAR USER TITLE -->
+                    <div class="profile-usertitle">
+                        <div class="profile-usertitle-name">
+                            <a href="{{user.details.page_url}}" target="_blank">{{user.details.source}}</a>
+                        </div>
+                        <div class="profile-user-count">
+                            Posts count: {{user.score}}
+                        </div>
+                    </div>
+                </div>
+            </script>
+        </div>
+    </div>
+
+</div>

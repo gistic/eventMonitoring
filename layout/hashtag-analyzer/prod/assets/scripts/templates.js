@@ -1,25 +1,150 @@
 angular.module('trackHashtagApp').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('views/views-components/facebook.html',
+    "<aside class=\"col-md-8\">\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/facebook-sources.html'\"></div>\n" +
+    "    </section>\n" +
+    "</aside>\n" +
+    "<section class=\"col-md-16\">\n" +
+    "    <article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"post in fbQueue\">\n" +
+    "        <div class=\"tweet-content\">\n" +
+    "            <div class=\"media-left\">\n" +
+    "                <a ng-href=\"{{post.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
+    "                    <img src=\"{{post.image_url}}\" class=\"media-object user-img\" />\n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body tweet-content\">\n" +
+    "                <h6 class=\"media-heading tweet-user clearfix\">                \n" +
+    "                    <h4>{{post.source}}</h4>\n" +
+    "            </h6>\n" +
+    "                <p>\n" +
+    "                    <a ng-href=\"{{post.url}}\" target=\"_blank\" class=\"\">\n" +
+    "                        {{post.text}}\n" +
+    "                    </a>\n" +
+    "                </p>\n" +
+    "                <p>\n" +
+    "                    <span class=\"text-muted\">{{post.date}}</span>\n" +
+    "                </p>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </article>\n" +
+    "</section>\n"
+  );
+
+
+  $templateCache.put('views/views-components/fb-pages-create.html',
+    "<div class=\"container\">\n" +
+    "    <h1>Facebook Page Create</h1><br /><br />\n" +
+    "\n" +
+    "    <form novalidate=\"novalidate\" class=\"form-horizontal\">\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inputFbPage\">Facebook Page Name:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <input type=\"text\" id=\"inputFbPage\" ng-model=\"fbPage.name\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inputScreenName\">Facebook screen name:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <input type=\"text\" id=\"inputScreenName\" ng-model=\"fbPage.screenName\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <div class=\"controls\">\n" +
+    "                <a ng-click=\"saveNewFbPage()\" class=\"btn btn-small btn-primary\">Save Facebook Page</a>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </form>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/views-components/fb-pages-list.html',
+    "<div class=\"wrapper\">\n" +
+    "    <!-- Header -->\n" +
+    "    <div ng-include=\"'views/views-components/header.html'\"></div>\n" +
+    "    \n" +
+    "    <main class=\"container dashboard\">\n" +
+    "    \n" +
+    "        <h3 class=\"clearfix\">\n" +
+    "            Manage Facebook pages\n" +
+    "            <div class=\"pull-right\">\n" +
+    "                <a ui-sref=\"fbPages.create\" class=\"btn btn-info\">Add Facebook page</a>\n" +
+    "            </div>\n" +
+    "        </h3>\n" +
+    "        <hr>\n" +
+    "        <table class=\"table table-striped\">\n" +
+    "            <thead>\n" +
+    "                <tr>\n" +
+    "                    <th>Page name</th>\n" +
+    "                    <th>Page screen name</th>\n" +
+    "                </tr>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "                <tr ng-repeat=\"fbPage in fbPages\">\n" +
+    "                    <td>{{ fbPage.name }}</td>\n" +
+    "                    <td>{{ fbPage.screenName }}</td>\n" +
+    "                    <td><a ng-click=\"deleteFbPage(fbPage.name)\" class=\"btn btn-small btn-danger\">Delete</a></td>\n" +
+    "                </tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "        \n" +
+    "    </main>\n" +
+    "</div>\n" +
+    "<!-- Footer -->\n" +
+    "<footer class=\"navbar-fixed-bottom\">\n" +
+    "    <div class=\"container clearfix\">\n" +
+    "        <div class=\"media footer-copyright pull-left\">\n" +
+    "            <div class=\"media-left media-middle\">\n" +
+    "                <a href=\"#\">\n" +
+    "                    <img alt=\"\" src=\"assets/images/hashtails-homepage-grids-gallery.png\" srcset=\"assets/images/gistic-footer-logo.png 1x, assets/images/gistic-footer-logo@2x.png 2x\">\n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body\">\n" +
+    "                <span>Hashtails ™ (1.3) for KACST GIS Technology Innovation Center at Umm Al-Qura University</span>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"pull-right\">\n" +
+    "            <p>\n" +
+    "                For custom soultions and feedback:\n" +
+    "                <a href=\"hashtails@gistic.org\">hashtails@gistic.org</a>\n" +
+    "            </p>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</footer>\n" +
+    "<!-- END OF / Footer -->\n"
+  );
+
+
+  $templateCache.put('views/views-components/fb-pages.html',
+    "<div ui-view></div>\n"
+  );
+
+
   $templateCache.put('views/views-components/header.html',
     "<!-- HEADER -->\n" +
-    "<nav class=\"navbar navbar-inverse navbar-fixed-top clearfix\" ng-class=\"{'header-dashboard' : dashboardState}\">\n" +
+    "<link rel=\"stylesheet\" ng-href=\"assets/stylesheets/themes/{{ colorChoice.className }}/screen.css\">\n" +
+    "\n" +
+    "<nav class=\"navbar navbar-inverse navbar-fixed-top clearfix\" ng-class=\"{ 'header-dashboard' : dashboardState }\">\n" +
     "\n" +
     "    <div class=\"container\">\n" +
     "\n" +
     "        <a class=\"navbar-logo pull-left\" ui-sref=\"home\">\n" +
-    "            <span class=\"icon-hash\"></span>\n" +
-    "            <span ng-hide=\"dashboardState\" class=\"header-title\">Hashtails</span>\n" +
+    "            <img src=\"assets/images/ministry-of-hajj-logo.png\" alt=\"\" width=\"30px\" height=\"30px\">\n" +
+    "            <span ng-hide=\"dashboardState\" class=\"icon-hash\"></span>\n" +
+    "            <span ng-hide=\"dashboardState\" class=\"header-title\">Hajj</span>\n" +
     "        </a>\n" +
     "\n" +
     "        <div class=\"navs pull-left clearfix\">\n" +
     "\n" +
     "            <ul class=\"list-inline homepage-nav pull-left\" ng-hide=\"dashboardState\">\n" +
     "                <li class=\"hvr-underline-from-center\">\n" +
-    "                    <a ui-sref=\"home.features\">Features</a>\n" +
+    "                    <a ui-sref=\"fbPages.index\">Facebook pages</a>\n" +
     "                </li>\n" +
     "                <li class=\"hvr-underline-from-center\">\n" +
-    "                    <a ui-sref=\"home.realTime\">Real Time</a>\n" +
+    "                    <a ui-sref=\"keywords.index\">Keyword lists</a>\n" +
     "                </li>\n" +
     "            </ul>\n" +
     "\n" +
@@ -49,6 +174,9 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                <li class=\"hvr-underline-from-center\" ng-class=\"{active : isActive('dashboard.news')}\">\n" +
     "                    <a ui-sref=\".news\">News</a>\n" +
     "                </li>\n" +
+    "                <li class=\"hvr-underline-from-center\" ng-class=\"{active : isActive('dashboard.facebook')}\">\n" +
+    "                    <a ui-sref=\".facebook\">Facebook</a>\n" +
+    "                </li>\n" +
     "                <li class=\"hvr-underline-from-center\" ng-class=\"{active : isActive('dashboard.map')}\">\n" +
     "                    <a ui-sref=\".map\">Map</a>\n" +
     "                </li>\n" +
@@ -70,6 +198,10 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                    </ul>\n" +
     "                </li>\n" +
     "\n" +
+    "                <li ng-show=\"logedInUser\">\n" +
+    "                    <palette-picker choices=\"colorChoices\" choice=\"colorChoice\"></palette-picker>\n" +
+    "                </li>\n" +
+    "\n" +
     "                <li>\n" +
     "                    <a ng-click=\"twitterLogIn()\" ng-hide=\"logedInUser\" class=\"btn btn-block btn-social btn-twitter btn-rounded\">\n" +
     "                        <i class=\"icon-twitter\"></i> Sign in with Twitter\n" +
@@ -82,6 +214,95 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "\n" +
     "    </div>\n" +
     "</nav>\n"
+  );
+
+
+  $templateCache.put('views/views-components/keywords-create.html',
+    "<div class=\"container\">\n" +
+    "    <h1>Keyword create</h1><br /><br />\n" +
+    "\n" +
+    "    <form novalidate=\"novalidate\" class=\"form-horizontal\">\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inputKeyword\">Keyword:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <input dir=\"rtl\" type=\"text\" id=\"inputKeyword\" ng-model=\"keyword.keyword\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inputRelatedWords\">Related Words:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <textarea dir=\"rtl\" rows=\"4\" cols=\"50\" id=\"inputRelatedWords\" ng-model=\"keyword.relatedWords\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <div class=\"controls\">\n" +
+    "                <a ng-click=\"saveNewKeyword()\" class=\"btn btn-small btn-primary\">Save Keyword</a>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </form>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/views-components/keywords-list.html',
+    "<div class=\"wrapper\">\n" +
+    "    <!-- Header -->\n" +
+    "    <div ng-include=\"'views/views-components/header.html'\"></div>\n" +
+    "    \n" +
+    "    <main class=\"container dashboard\">\n" +
+    "    \n" +
+    "        <h3 class=\"clearfix\">\n" +
+    "            Manage keywords lists\n" +
+    "            <div class=\"pull-right\">\n" +
+    "                <a ng-click=\"createNewKeyword()\" class=\"btn btn-info\">Create new keyword</a>\n" +
+    "            </div>\n" +
+    "        </h3>\n" +
+    "        <hr>\n" +
+    "        <table class=\"table table-striped\">\n" +
+    "            <thead>\n" +
+    "                <tr>\n" +
+    "                    <th>Keyword</th>\n" +
+    "                    <th>Related words</th>\n" +
+    "                </tr>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "                <tr ng-repeat=\"keyword in keywords\">\n" +
+    "                    <td>{{ keyword.keyword }}</td>\n" +
+    "                    <td>{{ keyword.relatedWords }}</td>\n" +
+    "                    <td><a ng-click=\"deleteKeyword(keyword.keyword)\" class=\"btn btn-small btn-danger\">Delete</a></td>\n" +
+    "                </tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "        \n" +
+    "    </main>\n" +
+    "</div>\n" +
+    "<!-- Footer -->\n" +
+    "<footer class=\"navbar-fixed-bottom\">\n" +
+    "    <div class=\"container clearfix\">\n" +
+    "        <div class=\"media footer-copyright pull-left\">\n" +
+    "            <div class=\"media-left media-middle\">\n" +
+    "                <a href=\"#\">\n" +
+    "                    <img alt=\"\" src=\"assets/images/hashtails-homepage-grids-gallery.png\" srcset=\"assets/images/gistic-footer-logo.png 1x, assets/images/gistic-footer-logo@2x.png 2x\">\n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body\">\n" +
+    "                <span>Hashtails ™ (1.3) for KACST GIS Technology Innovation Center at Umm Al-Qura University</span>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"pull-right\">\n" +
+    "            <p>\n" +
+    "                For custom soultions and feedback:\n" +
+    "                <a href=\"hashtails@gistic.org\">hashtails@gistic.org</a>\n" +
+    "            </p>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</footer>\n" +
+    "<!-- END OF / Footer -->\n"
+  );
+
+
+  $templateCache.put('views/views-components/keywords.html',
+    "<div ui-view></div>\n"
   );
 
 
@@ -179,7 +400,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "\n" +
     "    <aside class=\"tweets-queue-options clearfix\">\n" +
     "\n" +
-    "        <div class=\"segmented-control pull-left\" style=\"color: #066CB2\" ng-init=\"tab = 1\">\n" +
+    "        <div class=\"segmented-control pull-left\" style=\"color: #333333\" ng-init=\"tab = 1\">\n" +
     "            <input type=\"radio\" name=\"sc-1-1\" id=\"allTweets\" ng-click=\"showLoadMoreButton()\" ng-class=\"{active:tab===1}\" checked>\n" +
     "            <input type=\"radio\" name=\"sc-1-1\" id=\"mostPopular\" ng-click=\"loadMostPopular()\" ng-class=\"{active:tab===2}\">\n" +
     "            <label for=\"allTweets\" data-value=\"All tweets\" ng-click=\"tab = 1\">All tweets</label>\n" +
@@ -263,44 +484,45 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
 
   $templateCache.put('views/views-components/news.html',
-    "<h2>NEWS</h2>\n" +
-    "\n" +
-    "<article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"news in newsQueue track by $index\">\n" +
-    "\n" +
-    "\t<div class=\"tweet-content\">\n" +
-    "       \n" +
-    "        <div class=\"media-left\">\n" +
-    "           \t<a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
-    "                    <img lazy-src=\"{{news.image_url}}\" on-error-src=\"{{defultImage}}\" class=\"media-object user-img\" />\n" +
-    "            </a>\n" +
-    "        </div>\n" +
-    "        <div class=\"media-body tweet-content\">\n" +
-    "           \n" +
-    "            <h6 class=\"media-heading tweet-user clearfix\">                \n" +
-    "                    <h4>جريدة مكة</h4>\n" +
+    "<aside class=\"col-md-8\">\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/news-sources.html'\"></div>\n" +
+    "    </section>\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/news-location-panel.html'\"></div>\n" +
+    "    </section>\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/news-per-country-panel.html'\"></div>\n" +
+    "    </section>\n" +
+    "</aside>\n" +
+    "<section class=\"col-md-16\">\n" +
+    "    <article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"news in newsQueue\">\n" +
+    "        <div class=\"tweet-content\">\n" +
+    "            <div class=\"media-left\">\n" +
+    "                <a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
+    "                    <img lazy-src=\"{{news.image_url}}\" on-error-src=\"{{news.image_url.replace('http://t0','http://t1')}}\" class=\"media-object user-img\" />\n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body tweet-content\">\n" +
+    "                <h6 class=\"media-heading tweet-user clearfix\">                \n" +
+    "                    <h4>{{news.source}}</h4>\n" +
     "            </h6>\n" +
-    "\t\t\t\n" +
-    "            <p>\n" +
-    "\t\t      \t<span>\n" +
-    "\t\t\t     \t<a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
-    "\t                    {{news.title}}\n" +
-    "\t            \t</a>\n" +
-    "                </span>\n" +
-    "            \n" +
-    "\t\t\t</p>\n" +
-    "\t\t\t\n" +
-    "            <p>\n" +
-    "                <span class=\"fa fa-map-marker\">السعودية</span>\n" +
-    "            </p>\n" +
-    "\n" +
-    "            <p>\n" +
-    "                <span class=\"text-muted\">{{news.date}}</span>\n" +
-    "            </p>\n" +
-    "            \n" +
+    "                <p>\n" +
+    "                    <a ng-href=\"{{news.url}}\" target=\"_blank\" class=\"\">\n" +
+    "                        {{news.title}}\n" +
+    "                    </a>\n" +
+    "                </p>\n" +
+    "                <p>\n" +
+    "                    <span>{{countryAbbrev[news.country]}}</span>\n" +
+    "                    <span class=\"fa fa-map-marker\"></span>\n" +
+    "                </p>\n" +
+    "                <p>\n" +
+    "                    <span class=\"text-muted\">{{news.date}}</span>\n" +
+    "                </p>\n" +
+    "            </div>\n" +
     "        </div>\n" +
-    "    </div>\n" +
-    "\n" +
-    "</article>\n"
+    "    </article>\n" +
+    "</section>\n"
   );
 
 
@@ -402,13 +624,13 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "    </div>\n" +
     "    \n" +
     "    <aside class=\"tweet-actions btn-group-vertical\">\n" +
-    "        <a class=\"btn hvr-rectangle-out btn-info\" ng-href=\"{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Reply\">\n" +
+    "        <a class=\"btn hvr-rectangle-out\" ng-href=\"{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Reply\">\n" +
     "            <span class=\"fa fa-reply\"></span>\n" +
     "        </a>\n" +
-    "        <a class=\"btn hvr-rectangle-out btn-info\" ng-href=\"{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Retweet\">\n" +
+    "        <a class=\"btn hvr-rectangle-out\" ng-href=\"{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Retweet\">\n" +
     "            <span class=\"fa fa-retweet\"></span>\n" +
     "        </a>\n" +
-    "        <a class=\"btn hvr-rectangle-out btn-info\" ng-href=\"{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Favorite\">\n" +
+    "        <a class=\"btn hvr-rectangle-out\" ng-href=\"{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id_str}}\" tooltip-placement=\"left\" tooltip=\"Favorite\">\n" +
     "            <span class=\"fa fa-star\"></span>\n" +
     "        </a>\n" +
     "    </aside>\n" +

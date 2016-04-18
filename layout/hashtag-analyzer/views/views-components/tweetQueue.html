@@ -40,13 +40,13 @@
     </div>
     
     <aside class="tweet-actions btn-group-vertical">
-        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id_str}}" tooltip-placement="left" tooltip="Reply">
+        <a class="btn hvr-rectangle-out" ng-href="{{twitterBaseUrl}}intent/tweet?in_reply_to={{tweet.id_str}}" tooltip-placement="left" tooltip="Reply">
             <span class="fa fa-reply"></span>
         </a>
-        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id_str}}" tooltip-placement="left" tooltip="Retweet">
+        <a class="btn hvr-rectangle-out" ng-href="{{twitterBaseUrl}}intent/retweet?tweet_id={{tweet.id_str}}" tooltip-placement="left" tooltip="Retweet">
             <span class="fa fa-retweet"></span>
         </a>
-        <a class="btn hvr-rectangle-out btn-info" ng-href="{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id_str}}" tooltip-placement="left" tooltip="Favorite">
+        <a class="btn hvr-rectangle-out" ng-href="{{twitterBaseUrl}}intent/favorite?tweet_id={{tweet.id_str}}" tooltip-placement="left" tooltip="Favorite">
             <span class="fa fa-star"></span>
         </a>
     </aside>

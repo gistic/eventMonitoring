@@ -1,0 +1,22 @@
+.ns-popover-custom-theme {
+    .profile-sidebar {
+        @include border-radius(5px);
+        border: 1px solid $gray-light;
+        padding: $padding $padding * 2;
+        background: $white;
+        text-align: center;
+    }
+    .profile-userpic  {
+        display: inline-block;
+        img {
+            @include size(72px);
+            @include border-radius(50%);
+        }
+    }
+    .profile-user-count {
+        @include font-size($font-tiny);
+    }
+    .profile-usertitle-name {
+        @include font-size($font-small);
+    }
+}
