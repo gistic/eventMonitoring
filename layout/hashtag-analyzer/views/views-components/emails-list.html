@@ -1,0 +1,31 @@
+<div class="wrapper">
+    <!-- Header -->
+    <div ng-include="'views/views-components/header.html'"></div>
+    
+    <main class="container dashboard">
+    
+        <h3 class="clearfix">
+            Manage Emails
+            <div class="pull-right">
+                <a ui-sref="emails.create" class="btn btn-info">Create new Email</a>
+            </div>
+        </h3>
+        <hr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>FUll Name</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="email in emails">
+                    <td>{{ email.firstName }} {{ email.lastName }}</td>
+                    <td>{{ email.email }}</td>
+                    <td><a ng-click="deleteEmail(email.email_id)" class="btn btn-small btn-danger">Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </main>
+</div>

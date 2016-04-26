@@ -17,6 +17,7 @@ angular.module('trackHashtagApp', [
     'EventHandlerController',
     'KeywordsController',
     'FbPagesController',
+    'EmailsController',
     'HashHajjController',
 
     'oitozero.ngSweetAlert',
@@ -137,7 +138,22 @@ angular.module('trackHashtagApp', [
             url: '/create',
             templateUrl: 'views/views-components/fb-pages-create.html',
             controller: 'FbPagesController'
-        }
+        },
+        "emails":{
+            url: '/emails',
+            templateUrl: 'views/views-components/emails.html',
+            controller: 'EmailsController'
+        },
+        "emails.index":{
+            url: '/index',
+            templateUrl: 'views/views-components/emails-list.html',
+            controller: 'EmailsController'
+        },
+        "emails.create":{
+            url: '/create',
+            templateUrl: 'views/views-components/emails-create.html',
+            controller: 'EmailsController'
+        },
     };
 
     for (var path in window.routes) {
