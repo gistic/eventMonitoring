@@ -1,6 +1,4 @@
 <!-- HEADER -->
-<link rel="stylesheet" ng-href="assets/stylesheets/themes/{{ colorChoice.className }}/screen.css">
-
 <nav class="navbar navbar-inverse navbar-fixed-top clearfix" ng-class="{ 'header-dashboard' : dashboardState }">
 
     <div class="container">
@@ -66,15 +64,18 @@
                         <li>
                             <a ng-href="https://twitter.com/intent/user?user_id={{authoUserID}}" target="_blank">Go to profile</a>
                         </li>
+
+                        <li><a target="_blank" href="http://212.107.125.141/app/" lang="en"><i class="icon-twitter"></i> Taghreed</a></li>
+
                         <li>
                             <a ng-click="logOutUser()">Logout</a>
                         </li>
                     </ul>
                 </li>
 
-                <li ng-show="logedInUser">
+                <!-- <li ng-show="logedInUser">
                     <palette-picker choices="colorChoices" choice="colorChoice"></palette-picker>
-                </li>
+                </li> -->
 
                 <li>
                     <a ng-click="twitterLogIn()" ng-hide="logedInUser" class="btn btn-block btn-social btn-twitter btn-rounded">

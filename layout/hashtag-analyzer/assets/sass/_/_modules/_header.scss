@@ -94,7 +94,8 @@
     li {
       a {
         color: $gray;
-        padding: $padding / 2 $padding / 3;
+        padding: $padding - 5;
+        display: block;
         &:hover,
         &:focus {
           background: #015fb7;
@@ -153,7 +154,7 @@
   width: 100%;
   min-height: auto;
   text-align: center;
-  background-image: url("../images/header-bg-1.jpg");
+  background-image: url("../images/hashtails-hajj-hd-2@2x.png");
   background-position: center;
   -webkit-background-size: cover;
   -moz-background-size: cover;

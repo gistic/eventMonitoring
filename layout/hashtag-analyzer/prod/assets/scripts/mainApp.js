@@ -290,8 +290,6 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
   $templateCache.put('views/views-components/header.html',
     "<!-- HEADER -->\n" +
-    "<link rel=\"stylesheet\" ng-href=\"assets/stylesheets/themes/{{ colorChoice.className }}/screen.css\">\n" +
-    "\n" +
     "<nav class=\"navbar navbar-inverse navbar-fixed-top clearfix\" ng-class=\"{ 'header-dashboard' : dashboardState }\">\n" +
     "\n" +
     "    <div class=\"container\">\n" +
@@ -357,15 +355,18 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                        <li>\n" +
     "                            <a ng-href=\"https://twitter.com/intent/user?user_id={{authoUserID}}\" target=\"_blank\">Go to profile</a>\n" +
     "                        </li>\n" +
+    "\n" +
+    "                        <li><a target=\"_blank\" href=\"http://212.107.125.141/app/\" lang=\"en\"><i class=\"icon-twitter\"></i> Taghreed</a></li>\n" +
+    "\n" +
     "                        <li>\n" +
     "                            <a ng-click=\"logOutUser()\">Logout</a>\n" +
     "                        </li>\n" +
     "                    </ul>\n" +
     "                </li>\n" +
     "\n" +
-    "                <li ng-show=\"logedInUser\">\n" +
+    "                <!-- <li ng-show=\"logedInUser\">\n" +
     "                    <palette-picker choices=\"colorChoices\" choice=\"colorChoice\"></palette-picker>\n" +
-    "                </li>\n" +
+    "                </li> -->\n" +
     "\n" +
     "                <li>\n" +
     "                    <a ng-click=\"twitterLogIn()\" ng-hide=\"logedInUser\" class=\"btn btn-block btn-social btn-twitter btn-rounded\">\n" +
