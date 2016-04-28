@@ -1,0 +1,29 @@
+<div class="container">
+    <h1>Email Create</h1><br /><br />
+
+    <form novalidate="novalidate" class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" for="inputFirstName">First Name:</label>
+            <div class="controls">
+                <input type="text" id="inputFirstName" ng-model="email.firstName"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputLastName">Last name:</label>
+            <div class="controls">
+                <input type="text" id="inputLastName" ng-model="email.lastName"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inpurtEmail">Email:</label>
+            <div class="controls">
+                <input type="text" id="inpurtEmail" ng-model="email.email"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <a ng-click="saveEmail()" class="btn btn-small btn-primary">Save Email</a>
+            </div>
+        </div>
+    </form>
+</div>

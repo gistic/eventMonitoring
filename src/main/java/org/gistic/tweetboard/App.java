@@ -2,20 +2,31 @@ package org.gistic.tweetboard;
 
 
 import com.bendb.dropwizard.redis.JedisBundle;
+
+
 import com.bendb.dropwizard.redis.JedisFactory;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthFactory;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.db.DataSourceFactory;
+import io.dropwizard.migrations.MigrationsBundle;
+import io.dropwizard.jdbi.DBIFactory;
+
+
 import org.gistic.tweetboard.cleanup.CleanTopRankings;
+import org.gistic.tweetboard.dao.EmailDao;
+import org.gistic.tweetboard.dao.JdbiSingleton;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
+import org.gistic.tweetboard.representations.Email;
 import org.gistic.tweetboard.resources.*;
 import org.gistic.tweetboard.security.TwitterAuthFactory;
 import org.gistic.tweetboard.security.TwitterAuthenticator;
 import org.gistic.tweetboard.security.User;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisPool;
@@ -46,11 +57,22 @@ public class App extends Application<TweetBoardConfiguration> {
                 return configuration.getJedisFactory();
             }
         });
+        b.addBundle(new MigrationsBundle<TweetBoardConfiguration>() {
+            @Override
+            public DataSourceFactory getDataSourceFactory(TweetBoardConfiguration configuration) {
+                return configuration.getDataSourceFactory();
+            }
+        });
     }
 
     @Override
     public void run(TweetBoardConfiguration c, Environment e) throws Exception {
         LOGGER.info("Method App#run() called");
+        
+        final DBIFactory factory = new DBIFactory();
+        final DBI jdbi = factory.build(e, c.getDataSourceFactory(), "postgresql");
+        JdbiSingleton.setInstance(jdbi);
+		  
         ConfigurationSingleton.setInstance(c);
         JedisPool pool = ConfigurationSingleton.getInstance().getJedisFactory().build(e);
         JedisPoolContainer.setInstance(pool);
@@ -73,6 +95,8 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(new LiveFacebookBroadcaster());
         
         e.jersey().register(new LiveFacebookPagesBroadcaster());
+
+        e.jersey().register(new LiveEmailBroadcaster());
 
 
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");

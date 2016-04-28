@@ -38,7 +38,7 @@ class FacebookSpider(scrapy.Spider):
 			if "message" in post:
 				last_date = post["created_time"]
 
-				if any(keyword in post['message'].encode('utf-8') for keyword in self.keywords):
+				if any(" "+keyword+" " in post['message'].encode('utf-8') for keyword in self.keywords):
 					fb_post = FbPost()
 					fb_post["uuid"] = self.uuid
 					ids = post["id"].split("_")
@@ -63,6 +63,6 @@ class FacebookSpider(scrapy.Spider):
 					
 					yield fb_post
 		
-		if((datetime.datetime.now() - parse(last_date.split("+")[0])).days < 31):
+		if((datetime.datetime.now() - parse(last_date.split("+")[0])).days < 31*3):
 			yield scrapy.Request(response_body["paging"]["next"], callback=self.parse)
 

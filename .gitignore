@@ -46,7 +46,12 @@ configuration.yml
 newspiders/dbs/newspiders.db
 newspiders/project.egg-info/SOURCES.txt
 newspiders/twistd.pid 
+dbs/newspiders.db
+ENV/*
 
+#Minified html
+layout/hashtag-analyzer/prod/*
+layout/hashtag-analyzer/index.html
 /layout/hashtag-analyzer/README.md
 /layout/hashtag-analyzer/package.json
 /layout/hashtag-analyzer/Gruntfile.js
