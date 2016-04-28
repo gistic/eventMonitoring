@@ -17,6 +17,7 @@ angular.module('trackHashtagApp', [
     'EventHandlerController',
     'KeywordsController',
     'FbPagesController',
+    'EmailsController',
     'HashHajjController',
 
     'oitozero.ngSweetAlert',
@@ -137,7 +138,22 @@ angular.module('trackHashtagApp', [
             url: '/create',
             templateUrl: 'views/views-components/fb-pages-create.html',
             controller: 'FbPagesController'
-        }
+        },
+        "emails":{
+            url: '/emails',
+            templateUrl: 'views/views-components/emails.html',
+            controller: 'EmailsController'
+        },
+        "emails.index":{
+            url: '/index',
+            templateUrl: 'views/views-components/emails-list.html',
+            controller: 'EmailsController'
+        },
+        "emails.create":{
+            url: '/create',
+            templateUrl: 'views/views-components/emails-create.html',
+            controller: 'EmailsController'
+        },
     };
 
     for (var path in window.routes) {
@@ -165,6 +181,112 @@ angular.module('trackHashtagApp', [
 
 angular.module('trackHashtagApp').run(['$templateCache', function($templateCache) {
   'use strict';
+
+  $templateCache.put('views/views-components/emails-create.html',
+    "<div class=\"wrapper\">\n" +
+    "    <!-- Header -->\n" +
+    "    <div ng-include=\"'views/views-components/header.html'\"></div>\n" +
+    "    <main class=\"container dashboard\">\n" +
+    "        <h3 class=\"clearfix\">\n" +
+    "            Add Email\n" +
+    "            <div class=\"pull-right\">\n" +
+    "                <a ui-sref=\"fbPages.create\" class=\"btn btn-link\">Back to all list</a>\n" +
+    "            </div>\n" +
+    "        </h3>\n" +
+    "        <hr>\n" +
+    "        <div class=\"container\">\n" +
+    "            <form novalidate=\"novalidate\" class=\"form-horizontal\">\n" +
+    "                <div class=\"form-group control-group\">\n" +
+    "                    <label class=\"control-label\" for=\"inputFirstName\">First Name:</label>\n" +
+    "                    <div class=\"controls\">\n" +
+    "                        <input type=\"text\" id=\"inputFirstName\" ng-model=\"email.firstName\" />\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group control-group\">\n" +
+    "                    <label class=\"control-label\" for=\"inputLastName\">Last name:</label>\n" +
+    "                    <div class=\"controls\">\n" +
+    "                        <input type=\"text\" id=\"inputLastName\" ng-model=\"email.lastName\" />\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group control-group\">\n" +
+    "                    <label class=\"control-label\" for=\"inpurtEmail\">Email:</label>\n" +
+    "                    <div class=\"controls\">\n" +
+    "                        <input type=\"text\" id=\"inpurtEmail\" ng-model=\"email.email\" />\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group control-group\">\n" +
+    "                    <div class=\"controls\">\n" +
+    "                        <a ng-click=\"saveEmail()\" class=\"btn btn-small btn-primary\">Save Email</a>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </form>\n" +
+    "        </div>\n" +
+    "    </main>\n" +
+    "</div>\n" +
+    "<!-- Footer -->\n" +
+    "<footer class=\"navbar-fixed-bottom\">\n" +
+    "    <div class=\"container clearfix\">\n" +
+    "        <div class=\"media footer-copyright pull-left\">\n" +
+    "            <div class=\"media-left media-middle\">\n" +
+    "                <a href=\"#\">\n" +
+    "                    <img alt=\"\" src=\"assets/images/hashtails-homepage-grids-gallery.png\" srcset=\"assets/images/gistic-footer-logo.png 1x, assets/images/gistic-footer-logo@2x.png 2x\">\n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body\">\n" +
+    "                <span>Hashtails ™ (1.3) for KACST GIS Technology Innovation Center at Umm Al-Qura University</span>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"pull-right\">\n" +
+    "            <p>\n" +
+    "                For custom soultions and feedback:\n" +
+    "                <a href=\"hashtails@gistic.org\">hashtails@gistic.org</a>\n" +
+    "            </p>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</footer>\n" +
+    "<!-- END OF / Footer -->\n"
+  );
+
+
+  $templateCache.put('views/views-components/emails-list.html',
+    "<div class=\"wrapper\">\n" +
+    "    <!-- Header -->\n" +
+    "    <div ng-include=\"'views/views-components/header.html'\"></div>\n" +
+    "    \n" +
+    "    <main class=\"container dashboard\">\n" +
+    "    \n" +
+    "        <h3 class=\"clearfix\">\n" +
+    "            Manage Emails\n" +
+    "            <div class=\"pull-right\">\n" +
+    "                <a ui-sref=\"emails.create\" class=\"btn btn-info\">Create new Email</a>\n" +
+    "            </div>\n" +
+    "        </h3>\n" +
+    "        <hr>\n" +
+    "        <table class=\"table table-striped\">\n" +
+    "            <thead>\n" +
+    "                <tr>\n" +
+    "                    <th>FUll Name</th>\n" +
+    "                    <th>Email</th>\n" +
+    "                </tr>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "                <tr ng-repeat=\"email in emails\">\n" +
+    "                    <td>{{ email.firstName }} {{ email.lastName }}</td>\n" +
+    "                    <td>{{ email.email }}</td>\n" +
+    "                    <td><a ng-click=\"deleteEmail(email.email_id)\" class=\"btn btn-small btn-danger\">Delete</a></td>\n" +
+    "                </tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "        \n" +
+    "    </main>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/views-components/emails.html',
+    "<div ui-view></div>"
+  );
+
 
   $templateCache.put('views/views-components/facebook.html',
     "<aside class=\"col-md-8\">\n" +
@@ -200,29 +322,65 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
 
   $templateCache.put('views/views-components/fb-pages-create.html',
-    "<div class=\"container\">\n" +
-    "    <h1>Facebook Page Create</h1><br /><br />\n" +
+    "<div class=\"wrapper\">\n" +
+    "    <!-- Header -->\n" +
+    "    <div ng-include=\"'views/views-components/header.html'\"></div>\n" +
+    "    <main class=\"container dashboard\">\n" +
+    "        <h3 class=\"clearfix\">\n" +
+    "            Add Facebook Page\n" +
+    "            <div class=\"pull-right\">\n" +
+    "                <a ui-sref=\"fbPages.create\" class=\"btn btn-link\">Back to all list</a>\n" +
+    "            </div>\n" +
+    "        </h3>\n" +
+    "        \n" +
+    "        <hr>\n" +
     "\n" +
-    "    <form novalidate=\"novalidate\" class=\"form-horizontal\">\n" +
-    "        <div class=\"control-group\">\n" +
-    "            <label class=\"control-label\" for=\"inputFbPage\">Facebook Page Name:</label>\n" +
-    "            <div class=\"controls\">\n" +
-    "                <input type=\"text\" id=\"inputFbPage\" ng-model=\"fbPage.name\"/>\n" +
+    "        <div class=\"container\">\n" +
+    "            <form novalidate=\"novalidate\" class=\"form-horizontal\">\n" +
+    "                <div class=\"form-group control-group\">\n" +
+    "                    <label class=\"control-label\" for=\"inputFbPage\">Facebook Page Name:</label>\n" +
+    "                    <div class=\"controls\">\n" +
+    "                        <input type=\"text\" id=\"inputFbPage\" ng-model=\"fbPage.name\" class=\"form-control\" />\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group control-group\">\n" +
+    "                    <label class=\"control-label\" for=\"inputScreenName\">Facebook screen name:</label>\n" +
+    "                    <div class=\"controls\">\n" +
+    "                        <input type=\"text\" id=\"inputScreenName\" ng-model=\"fbPage.screenName\" class=\"form-control\" />\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group control-group\">\n" +
+    "                    <div class=\"controls\">\n" +
+    "                        <a ng-click=\"saveNewFbPage()\" class=\"btn btn-small btn-primary\">Save Facebook Page</a>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </form>\n" +
+    "        </div>\n" +
+    "\n" +
+    "    </main>\n" +
+    "</div>\n" +
+    "<!-- Footer -->\n" +
+    "<footer class=\"navbar-fixed-bottom\">\n" +
+    "    <div class=\"container clearfix\">\n" +
+    "        <div class=\"media footer-copyright pull-left\">\n" +
+    "            <div class=\"media-left media-middle\">\n" +
+    "                <a href=\"#\">\n" +
+    "                    <img alt=\"\" src=\"assets/images/hashtails-homepage-grids-gallery.png\" srcset=\"assets/images/gistic-footer-logo.png 1x, assets/images/gistic-footer-logo@2x.png 2x\">\n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body\">\n" +
+    "                <span>Hashtails ™ (1.3) for KACST GIS Technology Innovation Center at Umm Al-Qura University</span>\n" +
     "            </div>\n" +
     "        </div>\n" +
-    "        <div class=\"control-group\">\n" +
-    "            <label class=\"control-label\" for=\"inputScreenName\">Facebook screen name:</label>\n" +
-    "            <div class=\"controls\">\n" +
-    "                <input type=\"text\" id=\"inputScreenName\" ng-model=\"fbPage.screenName\"/>\n" +
-    "            </div>\n" +
+    "        <div class=\"pull-right\">\n" +
+    "            <p>\n" +
+    "                For custom soultions and feedback:\n" +
+    "                <a href=\"hashtails@gistic.org\">hashtails@gistic.org</a>\n" +
+    "            </p>\n" +
     "        </div>\n" +
-    "        <div class=\"control-group\">\n" +
-    "            <div class=\"controls\">\n" +
-    "                <a ng-click=\"saveNewFbPage()\" class=\"btn btn-small btn-primary\">Save Facebook Page</a>\n" +
-    "            </div>\n" +
-    "        </div>\n" +
-    "    </form>\n" +
-    "</div>"
+    "    </div>\n" +
+    "</footer>\n" +
+    "<!-- END OF / Footer -->\n"
   );
 
 
@@ -258,6 +416,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "        \n" +
     "    </main>\n" +
     "</div>\n" +
+    "\n" +
     "<!-- Footer -->\n" +
     "<footer class=\"navbar-fixed-bottom\">\n" +
     "    <div class=\"container clearfix\">\n" +
@@ -307,7 +466,10 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                    <a ui-sref=\"fbPages.index\">Facebook pages</a>\n" +
     "                </li>\n" +
     "                <li class=\"hvr-underline-from-center\">\n" +
-    "                    <a ui-sref=\"keywords.index\">Keyword lists</a>\n" +
+    "                    <a ui-sref=\"keywords.index\">Keywords</a>\n" +
+    "                </li>\n" +
+    "                <li class=\"hvr-underline-from-center\">\n" +
+    "                    <a ui-sref=\"emails.index\">Emails</a>\n" +
     "                </li>\n" +
     "            </ul>\n" +
     "\n" +
@@ -364,10 +526,6 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                    </ul>\n" +
     "                </li>\n" +
     "\n" +
-    "                <!-- <li ng-show=\"logedInUser\">\n" +
-    "                    <palette-picker choices=\"colorChoices\" choice=\"colorChoice\"></palette-picker>\n" +
-    "                </li> -->\n" +
-    "\n" +
     "                <li>\n" +
     "                    <a ng-click=\"twitterLogIn()\" ng-hide=\"logedInUser\" class=\"btn btn-block btn-social btn-twitter btn-rounded\">\n" +
     "                        <i class=\"icon-twitter\"></i> Sign in with Twitter\n" +
@@ -384,29 +542,62 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
 
   $templateCache.put('views/views-components/keywords-create.html',
-    "<div class=\"container\">\n" +
-    "    <h1>Keyword create</h1><br /><br />\n" +
-    "\n" +
-    "    <form novalidate=\"novalidate\" class=\"form-horizontal\">\n" +
-    "        <div class=\"control-group\">\n" +
-    "            <label class=\"control-label\" for=\"inputKeyword\">Keyword:</label>\n" +
-    "            <div class=\"controls\">\n" +
-    "                <input dir=\"rtl\" type=\"text\" id=\"inputKeyword\" ng-model=\"keyword.keyword\"/>\n" +
+    "<div class=\"wrapper\">\n" +
+    "    <!-- Header -->\n" +
+    "    <div ng-include=\"'views/views-components/header.html'\"></div>\n" +
+    "    <main class=\"container dashboard\">\n" +
+    "        <h3 class=\"clearfix\">\n" +
+    "            Add Keyword\n" +
+    "            <div class=\"pull-right\">\n" +
+    "                <a ui-sref=\"fbPages.create\" class=\"btn btn-link\">Back to all list</a>\n" +
+    "            </div>\n" +
+    "        </h3>\n" +
+    "        <hr>\n" +
+    "        <div class=\"container\">\n" +
+    "            <form novalidate=\"novalidate\" class=\"form-horizontal\">\n" +
+    "                <div class=\"form-group control-group\">\n" +
+    "                    <label class=\"control-label\" for=\"inputRelatedWords\">Related Words:</label>\n" +
+    "                    <div class=\"controls\">\n" +
+    "                        <textarea dir=\"rtl\" rows=\"4\" cols=\"50\" id=\"inputRelatedWords\" ng-model=\"keyword.relatedWords\" class=\"form-control\" />\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group control-group\">\n" +
+    "                    <label class=\"control-label\" for=\"inputKeyword\">Keyword:</label>\n" +
+    "                    <div class=\"controls\">\n" +
+    "                        <input dir=\"rtl\" type=\"text\" id=\"inputKeyword\" ng-model=\"keyword.keyword\" class=\"form-control\" />\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "                <div class=\"form-group control-group\">\n" +
+    "                    <div class=\"controls\">\n" +
+    "                        <a ng-click=\"saveNewKeyword()\" class=\"btn btn-small btn-primary\">Save Keyword</a>\n" +
+    "                    </div>\n" +
+    "                </div>\n" +
+    "            </form>\n" +
+    "        </div>\n" +
+    "    </main>\n" +
+    "</div>\n" +
+    "<!-- Footer -->\n" +
+    "<footer class=\"navbar-fixed-bottom\">\n" +
+    "    <div class=\"container clearfix\">\n" +
+    "        <div class=\"media footer-copyright pull-left\">\n" +
+    "            <div class=\"media-left media-middle\">\n" +
+    "                <a href=\"#\">\n" +
+    "                    <img alt=\"\" src=\"assets/images/hashtails-homepage-grids-gallery.png\" srcset=\"assets/images/gistic-footer-logo.png 1x, assets/images/gistic-footer-logo@2x.png 2x\">\n" +
+    "                </a>\n" +
+    "            </div>\n" +
+    "            <div class=\"media-body\">\n" +
+    "                <span>Hashtails ™ (1.3) for KACST GIS Technology Innovation Center at Umm Al-Qura University</span>\n" +
     "            </div>\n" +
     "        </div>\n" +
-    "        <div class=\"control-group\">\n" +
-    "            <label class=\"control-label\" for=\"inputRelatedWords\">Related Words:</label>\n" +
-    "            <div class=\"controls\">\n" +
-    "                <textarea dir=\"rtl\" rows=\"4\" cols=\"50\" id=\"inputRelatedWords\" ng-model=\"keyword.relatedWords\"/>\n" +
-    "            </div>\n" +
+    "        <div class=\"pull-right\">\n" +
+    "            <p>\n" +
+    "                For custom soultions and feedback:\n" +
+    "                <a href=\"hashtails@gistic.org\">hashtails@gistic.org</a>\n" +
+    "            </p>\n" +
     "        </div>\n" +
-    "        <div class=\"control-group\">\n" +
-    "            <div class=\"controls\">\n" +
-    "                <a ng-click=\"saveNewKeyword()\" class=\"btn btn-small btn-primary\">Save Keyword</a>\n" +
-    "            </div>\n" +
-    "        </div>\n" +
-    "    </form>\n" +
-    "</div>"
+    "    </div>\n" +
+    "</footer>\n" +
+    "<!-- END OF / Footer -->\n"
   );
 
 

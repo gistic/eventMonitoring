@@ -17,6 +17,42 @@ HashHajjController.controller('HashHajjController', ['$rootScope', '$scope', fun
 
 }]);
 
+var EmailsController = angular.module('EmailsController', []);
+
+
+EmailsController.controller('EmailsController', ['$scope', '$state', 'EmailsFactory', 'EmailFactory', '$location',
+    function ($scope, $state, EmailsFactory, EmailFactory, $location) {
+
+
+        // callback for ng-click 'deleteFbPage':
+        $scope.deleteEmail = function (email_id) {
+
+            var result = confirm("Are you sure?");
+            if (result) {
+                
+                //Logic to delete the item
+                EmailFactory.delete({email_id: email_id});
+                
+                $scope.emails = EmailsFactory.query();
+                $scope.emails = EmailsFactory.query();
+            }
+
+        };
+
+        $scope.createNewEmails = function () {
+            $location.path('/emails/create');
+        };
+
+        $scope.saveEmail = function () {
+            EmailsFactory.create($scope.email);
+
+            $scope.emails = EmailsFactory.query();
+            $state.go('emails.index');
+
+        }
+
+        $scope.emails = EmailsFactory.query();
+    }]); 
 var EventHandlerController = angular.module('EventHandlerController', [
     'highcharts-ng',
     'iso-3166-country-codes',
@@ -1455,39 +1491,40 @@ EventHandlerController.controller('EventMainController',
 var FbPagesController = angular.module('FbPagesController', []);
 
 
-FbPagesController.controller('FbPagesController', ['$scope', '$state', 'FbPagesFactory', 'FbPageFactory', '$location',
-    function ($scope, $state, FbPagesFactory, FbPageFactory, $location) {
+FbPagesController.controller('FbPagesController', ['$scope', '$state', 'FbPagesFactory', 'FbPageFactory', '$location', function($scope, $state, FbPagesFactory, FbPageFactory, $location) {
 
 
-        // callback for ng-click 'deleteFbPage':
-        $scope.deleteFbPage = function (fbPage) {
+    // callback for ng-click 'deleteFbPage':
+    $scope.deleteFbPage = function(fbPage) {
 
-            var result = confirm("Sure to delete?");
-            if (result) {
-                
-                //Logic to delete the item
-                FbPageFactory.delete({fb_page: fbPage});
-                
-                $scope.fbPages = FbPagesFactory.query();
-                $scope.fbPages = FbPagesFactory.query();
-            }
+        var result = confirm("Sure to delete?");
+        if (result) {
 
-        };
+            //Logic to delete the item
+            FbPageFactory.delete({ fb_page: fbPage });
 
-        // callback for ng-click 'createNewFbPage':
-        $scope.createNewFbPage = function () {
-            $location.path('/fb_pages/create');
-        };
-
-        // callback for ng-click 'saveNewFbPage':
-        $scope.saveNewFbPage = function () {
-            FbPagesFactory.create($scope.fbPage);
-            // $location.path('/fb_pages/index');
-            $state.go('fbPages.index');
+            $scope.fbPages = FbPagesFactory.query();
+            $scope.fbPages = FbPagesFactory.query();
         }
 
-        $scope.fbPages = FbPagesFactory.query();
-    }]);
+    };
+
+    // callback for ng-click 'createNewFbPage':
+    $scope.createNewFbPage = function() {
+        $location.path('/fb_pages/create');
+    };
+
+    // callback for ng-click 'saveNewFbPage':
+    $scope.saveNewFbPage = function() {
+        FbPagesFactory.create($scope.fbPage);
+        // $location.path('/fb_pages/index');
+        $state.go('fbPages.index');
+    }
+
+    $scope.fbPages = FbPagesFactory.query();
+
+}]);
+
 var KeywordsController = angular.module('KeywordsController', []);
 
 
