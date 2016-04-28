@@ -199,19 +199,19 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                <div class=\"form-group control-group\">\n" +
     "                    <label class=\"control-label\" for=\"inputFirstName\">First Name:</label>\n" +
     "                    <div class=\"controls\">\n" +
-    "                        <input type=\"text\" id=\"inputFirstName\" ng-model=\"email.firstName\" />\n" +
+    "                        <input type=\"text\" id=\"inputFirstName\" ng-model=\"email.firstName\" class=\"form-control\" />\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "                <div class=\"form-group control-group\">\n" +
     "                    <label class=\"control-label\" for=\"inputLastName\">Last name:</label>\n" +
     "                    <div class=\"controls\">\n" +
-    "                        <input type=\"text\" id=\"inputLastName\" ng-model=\"email.lastName\" />\n" +
+    "                        <input type=\"text\" id=\"inputLastName\" ng-model=\"email.lastName\" class=\"form-control\" />\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "                <div class=\"form-group control-group\">\n" +
     "                    <label class=\"control-label\" for=\"inpurtEmail\">Email:</label>\n" +
     "                    <div class=\"controls\">\n" +
-    "                        <input type=\"text\" id=\"inpurtEmail\" ng-model=\"email.email\" />\n" +
+    "                        <input type=\"text\" id=\"inpurtEmail\" ng-model=\"email.email\" class=\"form-control\" />\n" +
     "                    </div>\n" +
     "                </div>\n" +
     "                <div class=\"form-group control-group\">\n" +
