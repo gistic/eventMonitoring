@@ -2,6 +2,7 @@ package org.gistic.tweetboard.dao;
 
 import java.util.List;
 
+
 import org.gistic.tweetboard.mappers.EmailMapper;
 import org.gistic.tweetboard.representations.Email;
 

@@ -1,9 +1,8 @@
 var KeywordsController = angular.module('KeywordsController', []);
 
 
-KeywordsController.controller('KeywordsController', ['$scope', 'KeywordsFactory', 'KeywordFactory', '$location',
-    function ($scope, KeywordsFactory, KeywordFactory, $location) {
-
+KeywordsController.controller('KeywordsController', ['$scope','$state', 'KeywordsFactory', 'KeywordFactory', 'EmailsFactory', '$location',
+    function ($scope, $state, KeywordsFactory, KeywordFactory, EmailsFactory, $location) {
 
         // callback for ng-click 'deleteKeyword':
         $scope.deleteKeyword = function (keyword) {
@@ -27,6 +26,11 @@ KeywordsController.controller('KeywordsController', ['$scope', 'KeywordsFactory'
         $scope.saveNewKeyword = function () {
             KeywordsFactory.create($scope.keyword);
             $location.path('/keywords/index');
+        }
+
+        $scope.configureKeywords = function (keyword_id) {
+            console.log(keyword_id);
+            $state.go('keywords.configure', {'keyword_id': keyword_id });
         }
 
         $scope.keywords = KeywordsFactory.query();

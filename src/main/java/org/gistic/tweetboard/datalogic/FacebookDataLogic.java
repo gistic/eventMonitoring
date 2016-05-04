@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import org.gistic.tweetboard.JedisPoolContainer;
 import org.gistic.tweetboard.dao.FacebookDao;
 import org.gistic.tweetboard.dao.FacebookPagesDao;
+import org.gistic.tweetboard.dao.JdbiSingleton;
 import org.gistic.tweetboard.dao.KeywordsDao;
 import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.representations.FacebookPage;
@@ -55,7 +56,7 @@ public class FacebookDataLogic {
 					pageIds[i] = facebookPages[i].getScreenName();
 				}
 				
-				ArrayList<String> newKeywords = (new KeywordsDataLogic(new KeywordsDao())).getRelatedWords(keywords); // check if it's registered with a system keyword
+				ArrayList<String> newKeywords = (new KeywordsDataLogic().getRelatedWords(keywords)); // check if it's registered with a system keyword
 
 				String newKeywordsString = String.join(",", newKeywords).replace("\"", "");
 

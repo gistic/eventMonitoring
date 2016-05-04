@@ -18,9 +18,11 @@ import io.dropwizard.jdbi.DBIFactory;
 import org.gistic.tweetboard.cleanup.CleanTopRankings;
 import org.gistic.tweetboard.dao.EmailDao;
 import org.gistic.tweetboard.dao.JdbiSingleton;
+import org.gistic.tweetboard.datalogic.KeywordsDataLogic;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
 import org.gistic.tweetboard.representations.Email;
+import org.gistic.tweetboard.representations.Keyword;
 import org.gistic.tweetboard.resources.*;
 import org.gistic.tweetboard.security.TwitterAuthFactory;
 import org.gistic.tweetboard.security.TwitterAuthenticator;
@@ -31,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisPool;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -72,6 +75,19 @@ public class App extends Application<TweetBoardConfiguration> {
         final DBIFactory factory = new DBIFactory();
         final DBI jdbi = factory.build(e, c.getDataSourceFactory(), "postgresql");
         JdbiSingleton.setInstance(jdbi);
+        
+        KeywordsDataLogic kdl = new KeywordsDataLogic();
+        String[] arr = new String[3];
+        
+		List<Integer> l = kdl.getKeywordEmails(1);
+		for (Integer keyword : l) {
+			System.out.println(keyword);
+		}
+		
+		
+			System.out.println(kdl.getKeywordPeriod(1));
+		
+		System.out.println("123--------\n\n\n\n");
 		  
         ConfigurationSingleton.setInstance(c);
         JedisPool pool = ConfigurationSingleton.getInstance().getJedisFactory().build(e);

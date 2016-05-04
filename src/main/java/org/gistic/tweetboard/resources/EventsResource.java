@@ -8,6 +8,7 @@ import org.gistic.tweetboard.dao.NewsDao;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.FacebookDataLogic;
+import org.gistic.tweetboard.datalogic.KeywordsDataLogic;
 import org.gistic.tweetboard.datalogic.MetaDataLogic;
 import org.gistic.tweetboard.datalogic.NewsDataLogic;
 import org.gistic.tweetboard.datalogic.TweetDataLogic;
@@ -128,6 +129,17 @@ public class EventsResource {
         newsDataLogic.callScrapySpiders(hashTags);
         facebookDataLogic.callScrapySpiders(hashTags);
         
+        KeywordsDataLogic kdl = new KeywordsDataLogic();
+        List<Keyword> systemKeywords = kdl.getKeywords();
+        for (String hashTag : hashTags) {
+        	for (Keyword defienedKeyword : systemKeywords) {
+				if(hashTag.equals(defienedKeyword.getKeyword())){
+					kdl.createEventKeyword(defienedKeyword.getKeywordId(), uuid); // link keyword with event_id to send emails
+				}
+				
+			}
+		}
+        
         return eventUuid;
     }
 
@@ -158,6 +170,10 @@ public class EventsResource {
             EventMap.delete(uuid, authToken);
         }
         DelayedJobsManager.deleteEventDestroyJob(uuid, authToken);
+        
+        KeywordsDataLogic kdl = new KeywordsDataLogic();
+        kdl.deleteEventKeyword(uuid); // remove from linking with keywords
+        
 //       TODO: needs to be refactored 
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
         	
