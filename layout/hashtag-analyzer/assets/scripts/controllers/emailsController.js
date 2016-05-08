@@ -4,6 +4,7 @@ var EmailsController = angular.module('EmailsController', []);
 EmailsController.controller('EmailsController', ['$scope', '$state', 'EmailsFactory', 'EmailFactory', '$location',
     function ($scope, $state, EmailsFactory, EmailFactory, $location) {
 
+        $scope.emails = EmailsFactory.query();
 
         // callback for ng-click 'deleteFbPage':
         $scope.deleteEmail = function (email_id) {

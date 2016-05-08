@@ -22,8 +22,8 @@
                 <tr ng-repeat="keyword in keywords">
                     <td>{{ keyword.keyword }}</td>
                     <td>{{ keyword.relatedWords }}</td>
-                    <td><a ng-click="deleteKeyword(keyword.keyword_id)" class="btn btn-small btn-danger">Delete</a></td>
-                    <td><a ng-click="configureKeywords(keyword.keyword_id)" class="btn btn-small btn-info">Configure</a></td>
+                    <td><a ng-click="deleteKeyword(keyword.keywordId)" class="btn btn-small btn-danger">Delete</a></td>
+                    <td><a ng-click="configureKeywords(keyword.keywordId)" class="btn btn-small btn-info">Configure</a></td>
                 </tr>
             </tbody>
         </table>
