@@ -358,6 +358,18 @@ public class TweetDataLogic {
         tweetDao.addNewTweetString(uuid, tweet.getInternalStatus(), tweet.getStatusString(), false);
         tweetDao.addToArrived(uuid, tweet.getInternalStatus(), tweet.getStatusString());
         tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
+
+        long length = tweetDao.getArrivedTweetsListLength(uuid);
+
+        //check arrived tweets
+        if(length > 5L) {
+            // and remove oldest if at threshold
+            String tweetId = tweetDao.removeOldestFromArrived(uuid);
+
+            if (tweetId!=null) tweetDao.deleteTweetJson(uuid, tweetId);
+        }
+
+
     }
 
     public void addToCache(InternalStatus status) {

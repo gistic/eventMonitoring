@@ -91,10 +91,20 @@ public class TweetDaoImpl implements TweetDao {
     public void addToArrived(String uuid, Status tweet, String statusString) {
         String id = String.valueOf(tweet.getId());
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.lpush(getArrivedNotSentListKey(uuid), id);
+            jedis.rpush(getArrivedNotSentListKey(uuid), id);
         }  catch (JedisException jE) {
             jE.printStackTrace();
         }
+    }
+
+    @Override
+    public long getArrivedTweetsListLength(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.llen(getArrivedNotSentListKey(uuid));
+        }  catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return 0;
     }
 
     @Override
@@ -139,6 +149,16 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
+    }
+
+    @Override
+    public String removeOldestFromArrived(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.lpop(getArrivedNotSentListKey(uuid));
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -875,6 +895,8 @@ public class TweetDaoImpl implements TweetDao {
             jedis.zremrangeByRank(getUsersRankSetKey(uuid), 0, -51);
         }
     }
+
+
 
 
     private String getHistoricUserEventIdsListKey(String authToken) {
