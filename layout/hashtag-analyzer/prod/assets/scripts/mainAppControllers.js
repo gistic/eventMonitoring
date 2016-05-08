@@ -253,6 +253,7 @@ EventHandlerController.controller('EventMainController',
                 $scope.drawlanguagesPieChart();
                 $scope.getLocationStats();
                 $scope.getNewsLocationStats();
+                //$scope.getTopFacebookSources();
                 $scope.drawLocationGeoChart();
                 $scope.drawLocationPieChart();
                 $scope.drawNewsLocationGeoChart();
@@ -580,6 +581,71 @@ EventHandlerController.controller('EventMainController',
                 }, false);
             });
 
+            // Top active pages
+            source.addEventListener('top-fb-page', function (response) {
+                var data = JSON.parse(response.data).items;
+                var items = [];
+                for (var i = 0; i < data.length; i++) {
+                    items.push({"details": JSON.parse(data[i].code), "score": data[i].count});
+
+                }
+                $scope.$apply(function () {
+                    $scope.topFbPages = items;
+                }, false);
+            });
+
+            // Top active pages by shares
+            source.addEventListener('top-fb-page-shares', function (response) {
+                var data = JSON.parse(response.data).items;
+                var items = [];
+                for (var i = 0; i < data.length; i++) {
+                    items.push({"details": JSON.parse(data[i].code), "score": data[i].count});
+
+                }
+                $scope.$apply(function () {
+                    $scope.topFbPagesByShares = items;
+                }, false);
+            });
+
+            // Top active pages by comments
+            source.addEventListener('top-fb-page-comments', function (response) {
+                var data = JSON.parse(response.data).items;
+                var items = [];
+                for (var i = 0; i < data.length; i++) {
+                    items.push({"details": JSON.parse(data[i].code), "score": data[i].count});
+
+                }
+                $scope.$apply(function () {
+                    $scope.topFbPagesByComments = items;
+                }, false);
+            });
+
+            // Top active pages by likes
+            source.addEventListener('top-fb-page-likes', function (response) {
+                var data = JSON.parse(response.data).items;
+                var items = [];
+                for (var i = 0; i < data.length; i++) {
+                    items.push({"details": JSON.parse(data[i].code), "score": data[i].count});
+
+                }
+                $scope.$apply(function () {
+                    $scope.topFbPagesByLikes = items;
+                }, false);
+            });
+
+            // Top active pages by posts count
+            source.addEventListener('top-fb-page-posts', function (response) {
+                var data = JSON.parse(response.data).items;
+                var items = [];
+                for (var i = 0; i < data.length; i++) {
+                    items.push({"details": JSON.parse(data[i].code), "score": data[i].count});
+
+                }
+                $scope.$apply(function () {
+                    $scope.topFbPagesByPosts = items;
+                }, false);
+            });
+
             // News Item
             source.addEventListener('news-item', function(response) {
                 console.log("got news item");
@@ -588,9 +654,8 @@ EventHandlerController.controller('EventMainController',
                 // Update tweets sources
                 var sourceUpdated = false;
                 if (newsItem.source != null) {
-                    console.log("got news source!");
                     var newsSourceName = newsItem.source;
-                    console.log(newsItem.source);
+
                     for (var i = 0; i < $scope.topNewsSource.length; i++) {
                         if ($scope.topNewsSource[i].code == newsSourceName) {
                             $scope.topNewsSource[i].count++;
@@ -874,7 +939,6 @@ EventHandlerController.controller('EventMainController',
                     // Update Geo map & Pie chart
                     for (var i = 0; i < response.items.length; i++) {
                         var countryShortName = response.items[i].code.toString().toUpperCase();
-                        console.log("country code : " + countryShortName);
                         if (countryShortName === "KSA" || countryShortName === "SAU" || countryShortName === "") countryShortName = "SA";
                         if (countryShortName === "UK") countryShortName = "GB";
                         $scope.newsCountryName = ISO3166.getCountryName(countryShortName);
@@ -971,7 +1035,20 @@ EventHandlerController.controller('EventMainController',
 
         // TODO GET : Top facebook sources
         $scope.topFacebookSource = [];
-        // implement
+        $scope.getTopFacebookSources = function () {
+            $scope.eventDataChunk = "Relevant pages";
+            var requestAction = "GET";
+            var apiUrl = '/api/events/' + $rootScope.eventID + '/topFacebookSources';
+            var requestData = "";
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function (response) {
+                    $scope.topFacebookSource = response.items;
+                    $scope.drawFacebookSourcesChart($scope.topFacebookSource);
+                }).error(function () {
+                    console.log("#");
+                })
+        }
 
         // Tweet queue logic
         $scope.pagesShown = 1;

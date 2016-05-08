@@ -2,23 +2,42 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
   'use strict';
 
   $templateCache.put('views/views-components/facebook.html',
+    "<h2>Facebook!</h2>\n" +
     "<aside class=\"col-md-8\">\n" +
+    "    <!--<section>-->\n" +
+    "    <!--<div ng-include=\"'views/views-panels/facebook-sources.html'\"></div>-->\n" +
+    "    <!--</section>-->\n" +
     "    <section>\n" +
-    "        <div ng-include=\"'views/views-panels/facebook-sources.html'\"></div>\n" +
+    "        <div ng-include=\"'views/views-panels/top-fb-pages-panel.html'\"></div>\n" +
+    "    </section>\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/top-fb-pages-posts-panel.html'\"></div>\n" +
+    "    </section>\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/top-fb-pages-shares-panel.html'\"></div>\n" +
+    "    </section>\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/top-fb-pages-likes-panel.html'\"></div>\n" +
+    "    </section>\n" +
+    "    <section>\n" +
+    "        <div ng-include=\"'views/views-panels/top-fb-pages-comments-panel.html'\"></div>\n" +
     "    </section>\n" +
     "</aside>\n" +
-    "<section class=\"col-md-16\">\n" +
+    "<section class=\"col-md-16\" style=\"float: right\">\n" +
     "    <article class=\"media clearfix tweet fx-fade fx-speed-2000\" ng-repeat=\"post in fbQueue\">\n" +
+    "\n" +
     "        <div class=\"tweet-content\">\n" +
+    "\n" +
     "            <div class=\"media-left\">\n" +
     "                <a ng-href=\"{{post.url}}\" target=\"_blank\" class=\"pull-left tweet-userName\">\n" +
     "                    <img src=\"{{post.image_url}}\" class=\"media-object user-img\" />\n" +
     "                </a>\n" +
     "            </div>\n" +
     "            <div class=\"media-body tweet-content\">\n" +
-    "                <h6 class=\"media-heading tweet-user clearfix\">                \n" +
+    "\n" +
+    "                <h6 class=\"media-heading tweet-user clearfix\">\n" +
     "                    <h4>{{post.source}}</h4>\n" +
-    "            </h6>\n" +
+    "                </h6>\n" +
     "                <p>\n" +
     "                    <a ng-href=\"{{post.url}}\" target=\"_blank\" class=\"\">\n" +
     "                        {{post.text}}\n" +
@@ -29,6 +48,8 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                </p>\n" +
     "            </div>\n" +
     "        </div>\n" +
+    "        </div>\n" +
+    "\n" +
     "    </article>\n" +
     "</section>\n"
   );
@@ -484,6 +505,7 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
 
 
   $templateCache.put('views/views-components/news.html',
+    "<h2>NEWS</h2>\n" +
     "<aside class=\"col-md-8\">\n" +
     "    <section>\n" +
     "        <div ng-include=\"'views/views-panels/news-sources.html'\"></div>\n" +
@@ -521,7 +543,9 @@ angular.module('trackHashtagApp').run(['$templateCache', function($templateCache
     "                </p>\n" +
     "            </div>\n" +
     "        </div>\n" +
-    "    </article>\n" +
+    "    </div>\n" +
+    "\n" +
+    "</article>\n" +
     "</section>\n"
   );
 
