@@ -211,7 +211,7 @@ public class TweetDaoImpl implements TweetDao {
         }
     }
 
-    @Override
+    @Override //todo check
     public void addToUserTweetsSet(String uuid, Status tweet) {
         String screenName = String.valueOf(tweet.getUser().getScreenName());
         String userId = String.valueOf(tweet.getUser().getId());
@@ -473,7 +473,7 @@ public class TweetDaoImpl implements TweetDao {
         }
     }
 
-    @Override
+    @Override //todo check
     public void setNewTweetMeta(String uuid, InternalStatus status) {
         Status tweet = status.getInternalStatus();
         User user = tweet.getUser();
@@ -580,7 +580,8 @@ public class TweetDaoImpl implements TweetDao {
             try {
                 date = Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY));
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                //TODO log exception as info instead of print stack trace
+                //e.printStackTrace();
             }
             String retweetsStr = jedis.hget(key, TWEET_META_RETWEETS_COUNT_KEY);
             long retweetsCount = 0l;

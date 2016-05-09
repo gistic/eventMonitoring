@@ -357,7 +357,7 @@ public class TweetDataLogic {
     public void newArrived(InternalStatus tweet) {
         tweetDao.addNewTweetString(uuid, tweet.getInternalStatus(), tweet.getStatusString(), false);
         tweetDao.addToArrived(uuid, tweet.getInternalStatus(), tweet.getStatusString());
-        tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
+        //might be already added tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
 
         long length = tweetDao.getArrivedTweetsListLength(uuid);
 

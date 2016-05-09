@@ -1,10 +1,7 @@
 package org.gistic.tweetboard.eventmanager.twitter;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +10,7 @@ import twitter4j.Status;
 public class TweetsOverTimeAnalyzer {
     Calendar start = Calendar.getInstance();
     Calendar tweetTime = Calendar.getInstance();
-    ArrayList<Integer> tweetsCounterPerMinute = new ArrayList<Integer>();
+    Map<Integer, Integer> tweetsCounterPerMinute = new HashMap<Integer, Integer>();
 
     public TweetsOverTimeAnalyzer() {
         Date date = new Date();
@@ -37,15 +34,18 @@ public class TweetsOverTimeAnalyzer {
         }
 
         diffInMinutes = (int) diff;
-        if (diffInMinutes < 0)
+        //if (diffInMinutes < 0) {
+            int count = tweetsCounterPerMinute.containsKey(diffInMinutes) ? tweetsCounterPerMinute.get(diffInMinutes) : 0;
+            tweetsCounterPerMinute.put(diffInMinutes, count + 1);
             return;
+        //}
 
-        if (diffInMinutes >= tweetsCounterPerMinute.size()) {
-            for (int i = tweetsCounterPerMinute.size(); i <= diffInMinutes; i++) {
-                tweetsCounterPerMinute.add(0);
-            }
-        }
-        tweetsCounterPerMinute.set(diffInMinutes, tweetsCounterPerMinute.get(diffInMinutes) + 1);
+//        if (diffInMinutes >= tweetsCounterPerMinute.size()) {
+//            for (int i = tweetsCounterPerMinute.size(); i <= diffInMinutes; i++) {
+//                tweetsCounterPerMinute.add(0);
+//            }
+//        }
+//        tweetsCounterPerMinute.set(diffInMinutes, tweetsCounterPerMinute.get(diffInMinutes) + 1);
     }
 
     public class TweetsCountPerTime {
@@ -72,25 +72,34 @@ public class TweetsOverTimeAnalyzer {
     }
 
     public List<TweetsCountPerTime> getTweetsPerTime(int sampleRate, int period) {
-        int startFrom;
-        if (period == -1 || period > tweetsCounterPerMinute.size()) {
-            startFrom = 0;
-        } else {
-            startFrom = tweetsCounterPerMinute.size() - period;
-        }
-
         List<TweetsCountPerTime> result = new ArrayList<TweetsCountPerTime>();
-        for (int i = startFrom; i < tweetsCounterPerMinute.size();) {
-            int counter = 0;
-            for (int j = 0; j < sampleRate && i < tweetsCounterPerMinute.size(); j++) {
-                counter += tweetsCounterPerMinute.get(i);
-                i++;
-            }
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(start.getTime());
-            cal.add(Calendar.MINUTE, i);
-            result.add(new TweetsCountPerTime(cal.getTime(), counter));
-        }
+        tweetsCounterPerMinute.keySet().stream().sorted((t1, t2) -> Integer.compare(t1, t2))
+                .forEach((Integer t) -> {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(start.getTime());
+                    cal.add(Calendar.MINUTE, t);
+                    result.add(new TweetsCountPerTime(cal.getTime(), tweetsCounterPerMinute.get(t)));
+                });
         return result;
+//        int startFrom;
+//        if (period == -1 || period > tweetsCounterPerMinute.size()) {
+//            startFrom = 0;
+//        } else {
+//            startFrom = tweetsCounterPerMinute.size() - period;
+//        }
+//
+//        List<TweetsCountPerTime> result = new ArrayList<TweetsCountPerTime>();
+//        for (int i = startFrom; i < tweetsCounterPerMinute.size();) {
+//            int counter = 0;
+//            for (int j = 0; j < sampleRate && i < tweetsCounterPerMinute.size(); j++) {
+//                counter += tweetsCounterPerMinute.get(i);
+//                i++;
+//            }
+//            Calendar cal = Calendar.getInstance();
+//            cal.setTime(start.getTime());
+//            cal.add(Calendar.MINUTE, i);
+//            result.add(new TweetsCountPerTime(cal.getTime(), counter));
+//        }
+//        return result;
     }
 }
