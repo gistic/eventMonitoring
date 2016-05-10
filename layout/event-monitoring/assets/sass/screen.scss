@@ -10,6 +10,7 @@
 @import "_/_vendor/_bootstrap/_bootstrap.scss";
 @import "_/_vendor/_fa/_font-awesome.scss";
 @import "_/_vendor/_hover/_hover.scss";
+@import "_/_vendor/tagsInput";
 
 //node added [_configs]
 @import "_/_configs/mixins";
@@ -19,6 +20,7 @@
 //node added [_atoms]
 @import "_/_atoms/buttons";
 @import "_/_atoms/switch";
+@import "_/_atoms/animation";
 @import "_/_atoms/forms";
 @import "_/_atoms/typography";
 @import "_/_atoms/icons";
@@ -35,6 +37,5 @@
 @import "_/_modules/homepage";
 @import "_/_modules/notifications";
 @import "_/_modules/tags-input";
-
 @import "_/_modules/live-view";
 //node added [_modules] EOF

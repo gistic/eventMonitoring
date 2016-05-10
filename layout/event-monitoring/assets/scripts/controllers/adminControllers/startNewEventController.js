@@ -4,6 +4,8 @@ var startNewEventController = angular.module('startNewEventController', []);
 startNewEventController.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', 'filterHashtags', function($rootScope, $scope, $http, $state, RequestData, filterHashtags) {
 
     $scope.showSearchInput = false;
+    $scope.loading = false;
+
     $scope.showSearchInput = function() {
         $scope.showSearchInput = !$scope.showSearchInput;
     }
@@ -22,12 +24,12 @@ startNewEventController.controller('StartNewEventController', ['$rootScope', '$s
         }
     }
 
-    $scope.startNewEvent = function(action) {
+    $scope.startNewEvent = function() {
 
         var hashtags = $scope.eventHashtag;
+
         hashtags.forEach(function(hashtag, i) {
             var eventHashtag = hashtag.text;
-            // $rootScope.keywords.push(eventHashtag);
             $scope.validHashtag = filterHashtags.preventBadHashtags(eventHashtag);
         });
 
@@ -36,6 +38,9 @@ startNewEventController.controller('StartNewEventController', ['$rootScope', '$s
 
             RequestData.startEvent($rootScope.keywords)
                 .success(function(response) {
+
+                    $scope.loading = true;
+                    
                     $rootScope.eventID = response.uuid;
                     $state.transitionTo('admin', {
                         uuid: $scope.eventID

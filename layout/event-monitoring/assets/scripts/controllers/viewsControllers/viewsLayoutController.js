@@ -26,7 +26,7 @@ viewsLayoutController.controller('layoutCtrl', function ($rootScope, $scope, $ti
 
         RequestData.fetchData(requestAction, apiUrl, requestData)
             .success(function (response) {
-                console.log(response)
+                
                 $rootScope.userColor = response.backgroundColor;
                 $rootScope.userSize = response.size;
                 $rootScope.pagesTimeout = response.screenTimes;

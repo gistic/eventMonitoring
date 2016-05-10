@@ -2,7 +2,7 @@ var tweetsOverTimeController = angular.module('tweetsOverTimeController', []);
 
 
 // Controller : Get tweets over time stats
-tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$rootScope', '$http', '$timeout', 'RequestData', function ($scope, $rootScope, $http, $timeout, RequestData) {
+tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$rootScope', '$http', '$timeout', 'RequestData', function($scope, $rootScope, $http, $timeout, RequestData) {
     $scope.chartConfig = {
         options: {
             chart: {
@@ -19,7 +19,7 @@ tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$roo
     $scope.tweetsTime = [];
     $scope.tweetsCount = [];
 
-    $scope.fetchData = function () {
+    $scope.fetchData = function() {
 
         var requestAction = "GET";
         var apiUrl = '/api/events/' + $rootScope.eventID + '/overTime';
@@ -34,9 +34,9 @@ tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$roo
             'sampleRate': tweetsTimeRate,
             'period': tweetsOverSpecificTime
         };
-        
+
         function colorNameToRGB(color) {
-        
+
             var chartColorsArray = {
                 "black": "rgb(90, 90, 90)",
                 "turquoise": "rgb(22, 153, 140)",
@@ -49,35 +49,46 @@ tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$roo
 
             return chartColorsArray[color.toLowerCase()];
         }
-        
+
         var chartBgColor = colorNameToRGB($scope.userColor);
-        
+
 
         RequestData.fetchData(requestAction, apiUrl, requestData)
-            .then(function (response) {
+            .then(function(response) {
                 $scope.data = response.data;
                 $scope.tweetsTime = response.data.time;
-                $scope.tweetsCount = response.data.tweets_count;
-            ;
+                $scope.tweetsCount = response.data.tweets_count;;
+
                 function drawTweetsOverTimeChart() {
                     var arrayLength = $scope.data.length;
-                    var tweetsCountArray = [];
-                    var tweetsTimeArray = [];
+
+                    var tweetsCountArray = [],
+                        tweetsTimeArray = [];
                     $scope.totalTweets = 0;
                     for (var i = 0; i < arrayLength; i++) {
                         tweetsCountArray[i] = $scope.data[i].tweets_count;
                         $scope.totalTweets += $scope.data[i].tweets_count;
-                        tweetsTimeArray[i] = $scope.data[i].time;
+
+                        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+                        var date = new Date($scope.data[i].time);
+                        var day = date.getDate();
+                        var monthIndex = date.getMonth();
+                        var year = date.getFullYear();
+                        var hour = date.getHours();
+                        var minutes = date.getMinutes();
+
+                        tweetsTimeArray[i] = hour + ':' + minutes + ' ' + day + ' ' + monthNames[monthIndex];
                     }
 
                     $scope.chartSeries = [{
-                        "name": "",
+                        "name": "Tweets over time",
                         "data": tweetsCountArray,
                         connectNulls: true,
                         showInLegend: false,
                         "id": "tweetsChart",
                         color: chartBgColor
-    }];
+                    }];
                     $scope.chartConfig = {
                         options: {
                             chart: {
@@ -103,11 +114,9 @@ tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$roo
                                 hour: '%H:%M',
                             },
                             type: 'datetime',
-
                             lineWidth: 3,
-                            //						tickPixelInterval: 150,
                             labels: {
-                                enabled: false,
+                                enabled: true,
                                 style: {
                                     color: '#fff',
                                     font: '11px Trebuchet MS, Verdana, sans-serif'
@@ -119,7 +128,7 @@ tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$roo
                                 value: 0,
                                 width: 1,
                                 color: '#ffffff'
-                }],
+                            }],
                             title: {
                                 text: 'Number Of Tweets',
                                 style: {
@@ -146,7 +155,7 @@ tweetsOverTimeController.controller('TweetsOverTimeController', ['$scope', '$roo
                             text: ''
                         }
                     };
-                    $scope.reflow = function () {
+                    $scope.reflow = function() {
                         $scope.$broadcast('highchartsng.reflow');
                     };
                 }

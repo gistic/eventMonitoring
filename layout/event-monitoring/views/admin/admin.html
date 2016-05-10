@@ -35,7 +35,6 @@
         </article>
     </section>
 </aside>
-
 <main class="container keywords-tags">
     <div class="row">
         <form class="form-inline">
@@ -46,15 +45,14 @@
         </form>
     </div>
 </main>
-
 <main class="container">
     <!-- UI Customization -->
     <section class="panel panel-default admin-customization">
+        
         <h3 class="panel-heading text-center clearfix">UI Customization
+            <a aria-controls="panelBody" ng-click="preventDefault($event)" id="collapse-btn" aria-expanded="true" class="btn btn-sm" data-toggle="collapse" href="#panelBody" role="button">collapse</a>
+        </h3>
 
-      <a aria-controls="panelBody" ng-click="preventDefault($event)" id="collapse-btn" aria-expanded="true" class="btn btn-sm" data-toggle="collapse" href="#panelBody" role="button">collapse</a>
-
-    </h3>
         <div class="panel-body collapse" id="panelBody">
             <div class="row first-row">
                 <article class="col-md-12 custom-option">
@@ -153,6 +151,7 @@
             </div>
         </div>
     </section>
+
     <section class="container admin-moderation">
         <div class="row clearfix moderation-header">
             <h3 class="text-center clearfix">Moderation
@@ -185,7 +184,6 @@
                                 <ul class="users-list">
                                     <li class="clearfix" ng-repeat="user in trustedUsers">
                                         <strong>
-<!-- <img ng-src="logo.png" err-SRC="http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png" /> -->
                       <a ng-href="{{twitterBaseUrl}}{{user}}" target="_blank">
                         {{user}}
                       </a>
@@ -218,7 +216,6 @@
                                 <ul class="users-list">
                                     <li class="clearfix" ng-repeat="user in blockedUsers">
                                         <strong>
-<!-- <img ng-src="logo.png" err-SRC="http://a0.twimg.com/sticky/default_profile_images/default_profile_4.png" /> -->
                       <a ng-href="{{twitterBaseUrl}}{{user}}" target="_blank">
                         {{user}}
                       </a>
@@ -238,12 +235,12 @@
         <section class="tweets-queue" id="toApproveDiv">
             <button class="btn btn-load-more" ng-click="loadMoreTweets()" ng-show="loadMoreButton()" type="button">
                 <strong>
-          <i class="fa fa-arrow-up"></i>
-        </strong> {{remainingTweetsCount}} New Tweets
+                    <i class="fa fa-arrow-up"></i>
+                </strong> {{remainingTweetsCount}} New Tweets
             </button>
-            <article class="media clearfix tweet" data-user-id="{{tweet.user.id_str}}" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit()">
+            <article class="media clearfix tweet" data-user-id="{{tweet.user.id_str}}" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit() track by $index">
                 <div class="pull-left">
-                    <img class="media-object" lazy-load ll-src="{{tweet.user.original_profile_image_urlhttps}}" on-error-src="{{defultImage}}" />
+                    <img class="media-object" lazy-load ng-src="{{tweet.user.original_profile_image_urlhttps}}" on-error-src="{{defultImage}}" />
                 </div>
                 <div class="tweet-content pull-left">
                     <h6 class="tweet-user">
@@ -288,4 +285,5 @@
             </article>
         </section>
     </section>
+
 </main>

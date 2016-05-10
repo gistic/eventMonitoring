@@ -25,9 +25,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                     $scope.showRetweets = response.retweetEnabled;
                     $scope.enableModeration = response.moderated;
 
-                }).error(function() {
-                    console.log("#");
-                })
+                }).error(function() {})
         }
         $rootScope.getViewOptions();
 
@@ -43,9 +41,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function(response) {}).error(function() {
-                    console.log("#");
-                })
+                .success(function(response) {}).error(function() {})
         };
 
         $scope.retweetsStatus = function() {
@@ -59,9 +55,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             var requestData = "";
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function(response) {}).error(function() {
-                    console.log("#");
-                })
+                .success(function(response) {}).error(function() {})
         };
 
         $rootScope.getEventStats = function() {
@@ -78,9 +72,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                     $scope.startTime = response.startTime;
                     var myDate = new Date($scope.startTime);
                     $scope.startTimeMilliseconds = myDate.getTime();
-                }).error(function() {
-                    console.log("#");
-                })
+                }).error(function() {})
         }
         $rootScope.getEventStats();
 
@@ -105,11 +97,12 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
         $rootScope.userSize = RequestViewsLayoutData.userSize();
 
         // Start New Event Handler
-        $scope.eventStarted = false;
-        $rootScope.timerRunning = false;
-        $scope.tweetsQueue = [];
-        $scope.tweet = {};
-        $scope.tweetsCount = 0;
+        $scope.eventStarted = false,
+            $rootScope.timerRunning = false,
+            $scope.tweetsQueue = [],
+            $scope.onHoldTweets = [],
+            $scope.tweet = {},
+            $scope.tweetsCount = 0;
 
 
         // Listen to new message
@@ -122,22 +115,26 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
                 $scope.tweet = JSON.parse(response.data);
 
-
                 $scope.$apply(function() {
-                    $scope.tweetsQueue.push($scope.tweet);
-                    $scope.tweetsCount = $rootScope.totalTweetsFromServer + $scope.tweetsQueue.length;
+
+                    if ($scope.tweetsQueue.length < 20) {
+                        $scope.tweetsQueue.push($scope.tweet);
+                        $scope.tweetsCount = $rootScope.totalTweetsFromServer + $scope.tweetsQueue.length;
+                    } else {
+                        $scope.onHoldTweets.unshift($scope.tweet);
+                        $scope.tweetsCount = $rootScope.totalTweetsFromServer + $scope.onHoldTweets.length + $scope.tweetsQueue.length;
+                    }
+
                 }, false);
             });
 
 
             source.addEventListener('new-admin-opened', function(response) {
-                console.log(response);
                 source.close();
             });
         }
 
         $scope.startEventSource();
-
         $scope.pagesShown = 1;
         $scope.pageSize = 20;
 
@@ -151,12 +148,18 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             return $scope.pagesShown < ($scope.tweetsCount / $scope.pageSize);
         }
 
-        // Load more tweets handler
         $scope.loadMoreTweets = function() {
-            $scope.pagesShown = $scope.pagesShown + 1;
+
+            for (var i = 0; i < $scope.pageSize; i++) {
+                $scope.tweetsQueue.unshift($scope.onHoldTweets[i]);
+                $scope.pagesShown++;
+            }
+
             $location.hash('toApproveDiv');
             $anchorScroll();
+
         };
+
 
         // Remove Tweet From List
         $scope.removedTweetsCount = 0;
@@ -175,9 +178,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                 .success(function(response) {
                     $scope.tweetsQueue.splice(tweetIndex, 1);
                     $scope.removedTweetsCount++;
-                }).error(function() {
-                    console.log("#");
-                })
+                }).error(function() {})
         }
 
         // Approve Tweet
@@ -197,11 +198,8 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                 .success(function(response) {
                     $scope.tweetsQueue.splice(tweetIndex, 1);
                     $scope.approvedTweetsCount++;
-                }).error(function (error) {
-                    console.log(error);
-                })
+                }).error(function (error) {})
         }
-
 
         // Approve Tweet As Starred
         $scope.approveStarred = function(e, $index) {
@@ -218,9 +216,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                 .success(function(response) {
                     $scope.tweetsQueue.splice(tweetIndex, 1);
                     $scope.approvedTweetsCount++;
-                }).error(function() {
-                    console.log("#");
-                })
+                }).error(function() {})
         }
 
         // Approve all tweets
@@ -234,9 +230,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function(response) {
                     $scope.tweetsQueue = [];
-                }).error(function() {
-                    console.log("#");
-                })
+                }).error(function() {})
         }
 
         // Update Config
@@ -289,7 +283,6 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
                     });
                     $scope.tweetsQueue = tweetQueueWithoutBlocked;
                 })
-
         }
 
         $scope.updateTrustedUsers = function(e, screenName, userPicture, userID) {
@@ -319,7 +312,6 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
                     $scope.tweetsQueue = $scope.tweetQueueWithoutTrusted;
                 })
-
         }
 
         // Stop Event Handler

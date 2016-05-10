@@ -109,9 +109,8 @@ header {
             }
         }
         .btn.btn-search {
-            // background: darken($dark-green, 15%);
             @include border-right-radius(5px);
-            line-height: 42px;
+            line-height: 40px;
         }
     }
 }

@@ -17413,6 +17413,12 @@ button.close {
   height: 25px;
 }
 
+/* line 1, ../sass/_/_vendor/_tagsInput.scss */
+tags-input.ng-invalid .tags {
+  border: none;
+  box-shadow: none;
+}
+
 /* line 2, ../sass/_/_configs/_utilities.scss */
 body.event-views {
   overflow: hidden;
@@ -17626,6 +17632,104 @@ a:hover, a:focus {
   color: #cdd2d4;
 }
 
+/* line 1, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  position: absolute;
+  right: 2px;
+  top: 7%;
+}
+
+/* line 10, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid .sk-cube {
+  width: 33%;
+  height: 33%;
+  background-color: rgba(51, 51, 51, 0.75);
+  float: left;
+  -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+  animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+}
+
+/* line 19, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid .sk-cube1 {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+
+/* line 24, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid .sk-cube2 {
+  -webkit-animation-delay: 0.3s;
+  animation-delay: 0.3s;
+}
+
+/* line 29, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid .sk-cube3 {
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+
+/* line 34, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid .sk-cube4 {
+  -webkit-animation-delay: 0.1s;
+  animation-delay: 0.1s;
+}
+
+/* line 39, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid .sk-cube5 {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+
+/* line 44, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid .sk-cube6 {
+  -webkit-animation-delay: 0.3s;
+  animation-delay: 0.3s;
+}
+
+/* line 49, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid .sk-cube7 {
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+}
+
+/* line 54, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid .sk-cube8 {
+  -webkit-animation-delay: 0.1s;
+  animation-delay: 0.1s;
+}
+
+/* line 59, ../sass/_/_atoms/_animation.scss */
+.sk-cube-grid .sk-cube9 {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+
+@-webkit-keyframes sk-cubeGridScaleDelay {
+  0%,
+    70%,
+    100% {
+    -webkit-transform: scale3D(1, 1, 1);
+    transform: scale3D(1, 1, 1);
+  }
+  35% {
+    -webkit-transform: scale3D(0, 0, 1);
+    transform: scale3D(0, 0, 1);
+  }
+}
+@keyframes sk-cubeGridScaleDelay {
+  0%,
+    70%,
+    100% {
+    -webkit-transform: scale3D(1, 1, 1);
+    transform: scale3D(1, 1, 1);
+  }
+  35% {
+    -webkit-transform: scale3D(0, 0, 1);
+    transform: scale3D(0, 0, 1);
+  }
+}
 /* line 1, ../sass/_/_atoms/_forms.scss */
 input,
 .form-control {
@@ -17917,7 +18021,7 @@ header .logo a:hover, header .logo a:focus {
 .header-homepage .start-event .btn.btn-search {
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
-  line-height: 42px;
+  line-height: 40px;
 }
 
 /* line 1, ../sass/_/_modules/_admin-stats.scss */
