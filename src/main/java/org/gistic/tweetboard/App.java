@@ -67,7 +67,7 @@ public class App extends Application<TweetBoardConfiguration> {
         e.jersey().register(AuthFactory.binder(new TwitterAuthFactory<User>(new TwitterAuthenticator(),
                 User.class)));
         e.jersey().register(MultiPartFeature.class);
-        e.jersey().register(new EventsResource());
+        e.jersey().register(new EventsResource(jdbi.onDemand(AuthDbDao.class)));
         LiveTweetsBroadcaster broadcaster = new LiveTweetsBroadcaster();
         LiveTweetsBroadcasterSingleton.set( broadcaster );
         e.jersey().register(broadcaster);

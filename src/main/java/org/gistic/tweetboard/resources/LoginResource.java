@@ -129,7 +129,7 @@ public class LoginResource {
         String userId = null;
         if (eventyzerFlag) {
 
-            //TODO: get user ID from eventyzer auth DB table
+            //DO: get user ID from eventyzer auth DB table
             int result = authDbDao.isTwitterIdRegistered(userIdFromTwitter);
             if (result != 0) {
                 firstTime = true;
@@ -163,6 +163,7 @@ public class LoginResource {
             //TODO: redirect to signup page
         } else {
             //TODO: create new event for eventyzer with auth
+
         }
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);

@@ -31,4 +31,12 @@ public interface AuthDbDao {
 
     @SqlUpdate("UPDATE public.user SET active = TRUE WHERE email = :email")
     void activateAccount(@Bind("email") String email);
+
+    @SqlUpdate("INSERT INTO public.user_events(twitter_user_id, uuid) VALUES(:twitter_user_id, :uuid)")
+    static void addToUserEventsList(@Bind("uuid") String uuid, @Bind("twitter_user_id") String twitterUserID) {
+    }
+
+    @SqlUpdate("DELETE FROM public.user_events WHERE uuid = :uuid AND twitter_user_id = :twitter_user_id")
+    static void removeFromUserEventsList(@Bind("uuid") String uuid, @Bind("twitter_user_id") String twitterUserID) {
+    }
 }

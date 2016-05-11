@@ -2,6 +2,7 @@ package org.gistic.tweetboard.resources;
 
 import io.dropwizard.auth.Auth;
 import org.gistic.tweetboard.DelayedJobsManager;
+import org.gistic.tweetboard.dao.AuthDbDao;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.dao.TweetDaoImpl;
 import org.gistic.tweetboard.datalogic.MetaDataLogic;
@@ -12,15 +13,12 @@ import org.gistic.tweetboard.eventmanager.twitter.WarmupRunnable;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.representations.Event;
 import org.gistic.tweetboard.security.User;
-import org.gistic.tweetboard.util.GmailSender;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.ws.rs.Path;
 import javax.ws.rs.Consumes;
@@ -53,6 +51,12 @@ import java.util.UUID;
 @Consumes(MediaType.APPLICATION_JSON)
 public class EventsResource {
 
+    private final AuthDbDao authDbDao;
+
+    public EventsResource(AuthDbDao authDbDao) {
+        this.authDbDao = authDbDao;
+    }
+
     private org.gistic.tweetboard.eventmanager.Event checkUuid(@PathParam("uuid") String uuid) {
         org.gistic.tweetboard.eventmanager.Event event = EventMap.get(uuid);
         if (event == null) throw new WebApplicationException(
@@ -67,10 +71,11 @@ public class EventsResource {
     public EventUuid createEvent(@Valid Event event, @DefaultValue("undefined") @QueryParam("email") String email,
                                  @Context Jedis jedis,
                                  @DefaultValue("undefined") @QueryParam("authToken") String authToken,
-                                 @Auth(required = false) User user) {
+                                 @Auth(required = true) User user,
+                                 @DefaultValue("false") @QueryParam("eventyzerFlag") String eventyzerFlag) {
         String[] hashTags = event.getHashTags();
         String uuid = UUID.randomUUID().toString();
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         if (user == null) {
             //invalid token tweetboard v2.0
             throw new WebApplicationException(
@@ -78,9 +83,11 @@ public class EventsResource {
                             .entity("{'error':'incorrect token'}")
                             .build()
             );
-        } else if (user.isNoUser()) {
+        //} else if (user.isNoUser()) {
+        } else if (eventyzerFlag.equals("true")) {
             //for tweetboard v1.0
-            EventMap.put(hashTags, tweetDataLogic, uuid);
+
+            EventMap.put(hashTags, tweetDataLogic, uuid, authToken);
             //invalid token
         }
         else {
@@ -105,7 +112,8 @@ public class EventsResource {
     @Path("/{uuid}")
     public Response deleteEvent(@PathParam("uuid") String uuid,
                                 @DefaultValue("undefined") @QueryParam("authToken") String authToken,
-                                @Auth(required = false) User user) {
+                                @Auth(required = false) User user,
+                                @DefaultValue("false") @QueryParam("eventyzerFlag") String eventyzerFlag) {
 
         checkUuid(uuid);
         MetaDataLogic metaDataLogic = new MetaDataLogic(new TweetDaoImpl());
@@ -118,12 +126,13 @@ public class EventsResource {
                             .entity("{'error':'incorrect token'}")
                             .build()
             );
-        } else if (user.isNoUser()) {
+        //} else if (user.isNoUser()) {
+        } else if (eventyzerFlag.equals("true")) {
             //for tweetboard v1.0
-            EventMap.delete(uuid);
+            EventMap.deleteEventyzer(uuid, authToken);
         } else {
             //valid token tweetboard v2.0
-            TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+            TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
             tweetDataLogic.deleteEventFromUserEvents(authToken);
             EventMap.delete(uuid, authToken);
         }
@@ -139,7 +148,7 @@ public class EventsResource {
     @Path("/{uuid}/config")
     public EventConfig getEventConfig(@PathParam("uuid") String uuid) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
 //        DelayedJobsManager.refreshEventDestroyJob(uuid);
         EventConfig config = tweetDataLogic.getEventConfig(uuid);
         config.setModerated(event.isModeration());
@@ -152,7 +161,7 @@ public class EventsResource {
     public Response updateEventConfig(
             @PathParam("uuid") String uuid, EventConfig eventConfig, @Context Jedis jedis) {
         checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         tweetDataLogic.updateEventConfig(eventConfig);
 //        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response
@@ -166,7 +175,7 @@ public class EventsResource {
             @PathParam("uuid") String uuid, @Context Jedis jedis) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.setModeration(false);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         tweetDataLogic.approveAllTweets();
         return Response
                 .ok("")
@@ -213,7 +222,7 @@ public class EventsResource {
                                  @DefaultValue("false") @QueryParam("starred") String star) {
         checkUuid(uuid);
         boolean starred = Boolean.parseBoolean(star);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         tweetDataLogic.addToApproved(tweetId, starred);
 //        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
@@ -223,7 +232,7 @@ public class EventsResource {
     @Path("/{uuid}/approvedTweets/all")
     public Response approveAllTweet(@PathParam("uuid") String uuid) {
         checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         tweetDataLogic.approveAllTweets();
 //        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
@@ -233,7 +242,7 @@ public class EventsResource {
     @Path("/{uuid}/blockedTweets/{tweetId}")
     public Response blockTweet(@PathParam("uuid") String uuid, @PathParam("tweetId") String tweetId) {
         checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         tweetDataLogic.addToBlocked(tweetId);
 //        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
@@ -245,7 +254,7 @@ public class EventsResource {
     public Response addTrustedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.addTrustedUser(screenName);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         tweetDataLogic.approveAllExistingTweetsByUser(screenName);
 //        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
@@ -296,7 +305,7 @@ public class EventsResource {
     public Response addBlockedUser(@PathParam("uuid") String uuid, @PathParam("screenName") String screenName) {
         org.gistic.tweetboard.eventmanager.Event event = checkUuid(uuid);
         event.addBlockedUser(screenName);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         tweetDataLogic.blockAllExistingTweetsByUser(screenName);
 //        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return Response.ok("").build();
@@ -316,7 +325,7 @@ public class EventsResource {
     public TopUsers getTopUsers(@PathParam("uuid") String uuid,
                                 @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         // TopUser arraylist to array ... TODO: refactor
         List<TopUser> topUserList = tweetDataLogic.getTopTenNUsers(count);
         TopUser[] topUsers = new TopUser[topUserList.size()];
@@ -330,7 +339,7 @@ public class EventsResource {
     public GenericArray<TopItem> getTopCountries(@PathParam("uuid") String uuid,
                                 @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         return tweetDataLogic.getTopNCountries(count);
     }
 
@@ -339,7 +348,7 @@ public class EventsResource {
     public GenericArray<TopItem> getTopLanguages(@PathParam("uuid") String uuid,
                                                  @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         return tweetDataLogic.getTopNLanguages(count);
     }
 
@@ -348,7 +357,7 @@ public class EventsResource {
     public GenericArray<TopItem> getTopSources(@PathParam("uuid") String uuid,
                                                  @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         return tweetDataLogic.getTopNSources(count);
     }
 
@@ -357,7 +366,7 @@ public class EventsResource {
     public GenericArray<TopItem> getTopHashtags(@PathParam("uuid") String uuid,
                                                  @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         return tweetDataLogic.getTopNHashtags(count);
     }
 
@@ -367,7 +376,7 @@ public class EventsResource {
     public GenericArray<TopItem> getTopWords(@PathParam("uuid") String uuid,
                                                 @DefaultValue("10") @QueryParam("count") Integer count) {
         checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         return tweetDataLogic.getTopNWords(count);
     }
 
@@ -383,7 +392,7 @@ public class EventsResource {
                     .entity("{'error':'incorrect token'}")
                     .build();
         }
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         DelayedJobsManager.refreshEventDestroyJob(uuid, authToken);
         return tweetDataLogic.getTopNTweets(count, authToken);
     }
@@ -426,7 +435,7 @@ public class EventsResource {
     @Path("/{uuid}/basicStats")
     public BasicStats getbasicStats(@PathParam("uuid") String uuid) {
         checkUuid(uuid);
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
 //        DelayedJobsManager.refreshEventDestroyJob(uuid);
         return tweetDataLogic.getBasicStats(uuid);
     }
@@ -484,7 +493,7 @@ public class EventsResource {
                     .entity("{'error':'incorrect token'}")
                     .build();
         }
-        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid);
+        TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         return tweetDataLogic.getCachedTweets();
     }
 
