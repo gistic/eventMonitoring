@@ -17,6 +17,18 @@ public interface AuthDbDao {
     @SqlUpdate("INSERT INTO public.user(\"twitterId\", \"twitterHandle\", \"email\", \"firstName\", \"lastName\") VALUES(:twitterId, :twitterHandle, :email, :firstName, :lastName)")
     void addNewUser(@BindBean UserSignupDetails userSignupDetails);
 
-    @SqlQuery("SELECT COUNT(*) FROM public.user WHERE \"twitterId\" = ':userIdFromTwitter'")
-    int isTwitterIdRegistered(@Bind String userIdFromTwitter);
+    @SqlQuery("SELECT COUNT(*) FROM public.user WHERE \"twitterId\" = :userIdFromTwitter")
+    int isTwitterIdRegistered(@Bind("userIdFromTwitter") String userIdFromTwitter);
+
+    @SqlQuery("SELECT COUNT(*) FROM public.email_activation WHERE email = :email AND code = :code")
+    int checkEmailActivationCode(@Bind("email") String email, @Bind("code") String code);
+
+    @SqlUpdate("DELETE FROM public.email_activation WHERE email = :email")
+    void deleteAllActivationCodes(@Bind("email") String email);
+
+    @SqlUpdate("INSERT INTO public.email_activation(email, code) VALUES(:email, :code)")
+    void storeEmailActivationCode(@Bind("email") String email, @Bind("code") String code);
+
+    @SqlUpdate("UPDATE public.user SET active = TRUE WHERE email = :email")
+    void activateAccount(@Bind("email") String email);
 }

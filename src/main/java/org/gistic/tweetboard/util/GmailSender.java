@@ -47,7 +47,8 @@ public class GmailSender {
         //generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("test2@crunchify.com"));
         generateMailMessage.setSubject(subject);
         //String emailBody = "Your event has been created. \n\n You can access the admin page at "+URL+"/admin#/admin?uuid="+uuid;
-        String emailBody = "Activate your account my clicking on this link "+URL+"/activate/"+activationId;
+        String emailBody = "Activate your account my clicking on this link "+URL+
+                "/api/events/signup/emailActivation/?code="+activationId+"&email="+address;
         generateMailMessage.setContent(emailBody, "text/html");
         logger.info("Mail Session has been created successfully..");
 

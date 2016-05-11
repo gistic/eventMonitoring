@@ -7,6 +7,7 @@ import org.gistic.tweetboard.representations.Event;
 import org.gistic.tweetboard.representations.EventMeta;
 import org.gistic.tweetboard.representations.EventUuid;
 import org.gistic.tweetboard.representations.UserSignupDetails;
+import org.gistic.tweetboard.security.EmailCode;
 import org.gistic.tweetboard.util.GmailSender;
 import org.json.JSONArray;
 import org.postgresql.util.PSQLException;
@@ -36,6 +37,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.List;
+import javax.ws.rs.core.Response;
 
 /**
  * Created by osama-hussain on 5/10/16.
@@ -63,9 +65,16 @@ public class SignupResource {
         try {
             authDbDao.addNewUser(userSignupDetails);
             String email = userSignupDetails.getEmail();
+            System.out.println("email :"+email);
             if(!email.equalsIgnoreCase("undefined")) {
+
+                //TODO: generate email code and store
+                String code = EmailCode.getToken(5);
+                authDbDao.deleteAllActivationCodes(email);
+                authDbDao.storeEmailActivationCode(email, code);
+                System.out.println("sending activation to: "+email+" with code: "+ code);
                 try {
-                    GmailSender.send(email, "testActivationId");
+                    GmailSender.send(email, code);
                 } catch (MessagingException e) {
                     e.printStackTrace();
                     LoggerFactory.getLogger(this.getClass()).error("Failed to send email to: " + email + " for address: " + email);
@@ -75,10 +84,48 @@ public class SignupResource {
             if (ex.getCause() instanceof  PSQLException) {
                 PSQLException e = (PSQLException) ex.getCause();
                 return "{\"errors\":[\""+e.getMessage().replace('"', '\'')+"\"]}";
+            } else {
+                ex.printStackTrace();
             }
         }
         return "";
 
+
+    }
+
+    @GET
+    @Path("/signup/emailActivation")
+    public  Response emailActivation(@QueryParam("email") String email,
+                                     @QueryParam("code") String code) {
+
+        URI uri = UriBuilder.fromUri(
+                "http://" + baseDomain + "/hashtag-analyzer/"
+                          + "success/"
+//                        + "?authToken=" + accessToken
+//                        + "&userId=" + userId
+//                        + "&screenName=" + screenName
+        ).build();
+
+        int result = authDbDao.checkEmailActivationCode(email, code);
+
+        if (result == 1) {
+            //TODO set account active in DB
+            authDbDao.activateAccount(email);
+            //TODO delete code from DB
+            authDbDao.deleteAllActivationCodes(email);
+            //TODO redirect to activation success
+            return Response.seeOther(uri).build();
+        }
+
+        uri = UriBuilder.fromUri(
+                "http://" + baseDomain + "/hashtag-analyzer/"
+                        + "fail/"
+//                        + "?authToken=" + accessToken
+//                        + "&userId=" + userId
+//                        + "&screenName=" + screenName
+        ).build();
+
+        return Response.seeOther(uri).build();
 
     }
 
