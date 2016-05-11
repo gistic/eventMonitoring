@@ -1,14 +1,26 @@
 package org.gistic.tweetboard.representations;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * Created by osama-hussain on 5/10/16.
  */
 public class UserSignupDetails {
+
+    @NotEmpty
     private String firstName;
+
     private String lastName;
-    private String twitterUserId;
+
+    @NotEmpty
+    private String twitterId;
+
+    @NotEmpty
     private String twitterHandle;
-    private String emailAddress;
+
+    @Email
+    private String email;
 
     public String getFirstName() {
         return firstName;
@@ -26,12 +38,12 @@ public class UserSignupDetails {
         this.lastName = lastName;
     }
 
-    public String getTwitterUserId() {
-        return twitterUserId;
+    public String getTwitterId() {
+        return twitterId;
     }
 
-    public void setTwitterUserId(String twitterUserId) {
-        this.twitterUserId = twitterUserId;
+    public void setTwitterId(String twitterId) {
+        this.twitterId = twitterId;
     }
 
     public String getTwitterHandle() {
@@ -42,11 +54,11 @@ public class UserSignupDetails {
         this.twitterHandle = twitterHandle;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

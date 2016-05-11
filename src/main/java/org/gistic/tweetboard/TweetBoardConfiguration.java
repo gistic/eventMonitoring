@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
 import io.dropwizard.bundles.assets.AssetsBundleConfiguration;
 import io.dropwizard.bundles.assets.AssetsConfiguration;
+import io.dropwizard.db.DataSourceFactory;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
@@ -91,4 +92,14 @@ public class TweetBoardConfiguration extends Configuration implements AssetsBund
     private boolean v2;
 
     public boolean isV2() { return v2; }
+
+    @Valid
+    @NotNull
+    @JsonProperty("database")
+    private DataSourceFactory database = new DataSourceFactory();
+
+    public DataSourceFactory getDataSourceFactory() {
+        return database;
+    }
+
 }

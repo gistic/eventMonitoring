@@ -22,14 +22,17 @@ public class GmailSender {
     static MimeMessage generateMailMessage;
     static final String URL = "http://127.0.0.1:8080";
 
-    public static void send(String uuid, String address) throws AddressException, MessagingException {
-        generateAndSendEmail(uuid, address);
-        System.out.println("\n\n ===> Your Java Program has just sent an Email successfully. Check your email..");
+    static final String subject = "Congratulations! new event created at TweetBoard";
+
+    public static void send(String address, String activationId) throws AddressException, MessagingException {
+        generateAndSendEmail(address, activationId);
+        //log sedning email
+        //System.out.println("\n\n ===> Your Java Program has just sent an Email successfully. Check your email..");
     }
 
-    public static void generateAndSendEmail(String uuid, String address) throws AddressException, MessagingException {
+    public static void generateAndSendEmail(String address, String activationId) throws AddressException, MessagingException {
         Logger logger = LoggerFactory.getLogger(GmailSender.class);
-        logger.info("sending email for event: "+uuid+" to address: "+address);
+        //logger.info("sending email for event: "+uuid+" to address: "+address);
 //Step1
         mailServerProperties = System.getProperties();
         mailServerProperties.put("mail.smtp.port", "587");
@@ -42,8 +45,9 @@ public class GmailSender {
         generateMailMessage = new MimeMessage(getMailSession);
         generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(address));
         //generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("test2@crunchify.com"));
-        generateMailMessage.setSubject("Congratulations! new event created at TweetBoard");
-        String emailBody = "Your event has been created. \n\n You can access the admin page at "+URL+"/admin#/admin?uuid="+uuid;
+        generateMailMessage.setSubject(subject);
+        //String emailBody = "Your event has been created. \n\n You can access the admin page at "+URL+"/admin#/admin?uuid="+uuid;
+        String emailBody = "Activate your account my clicking on this link "+URL+"/activate/"+activationId;
         generateMailMessage.setContent(emailBody, "text/html");
         logger.info("Mail Session has been created successfully..");
 

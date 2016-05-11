@@ -6,9 +6,12 @@ import com.bendb.dropwizard.redis.JedisFactory;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthFactory;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
+import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.gistic.tweetboard.cleanup.CleanTopRankings;
+import org.gistic.tweetboard.dao.AuthDbDao;
+import org.gistic.tweetboard.dao.JdbiSingleton;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
 import org.gistic.tweetboard.resources.*;
@@ -16,6 +19,7 @@ import org.gistic.tweetboard.security.TwitterAuthFactory;
 import org.gistic.tweetboard.security.TwitterAuthenticator;
 import org.gistic.tweetboard.security.User;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisPool;
@@ -52,6 +56,11 @@ public class App extends Application<TweetBoardConfiguration> {
     public void run(TweetBoardConfiguration c, Environment e) throws Exception {
         LOGGER.info("Method App#run() called");
         ConfigurationSingleton.setInstance(c);
+
+        final DBIFactory factory = new DBIFactory();
+        final DBI jdbi = factory.build(e, c.getDataSourceFactory(), "postgresql");
+        JdbiSingleton.setInstance(jdbi);
+
         JedisPool pool = ConfigurationSingleton.getInstance().getJedisFactory().build(e);
         JedisPoolContainer.setInstance(pool);
         EventMap.setTwitterConfiguration(c.getTwitterConfiguration());
@@ -63,7 +72,9 @@ public class App extends Application<TweetBoardConfiguration> {
         LiveTweetsBroadcasterSingleton.set( broadcaster );
         e.jersey().register(broadcaster);
         e.jersey().register(new AdminEventSource());
-        e.jersey().register(new LoginResource());
+        //e.jersey().register(new LoginResource(authDbDao));
+        e.jersey().register(new LoginResource(jdbi.onDemand(AuthDbDao.class)));
+        e.jersey().register(new SignupResource(jdbi.onDemand(AuthDbDao.class)));
         e.jersey().register(new TwitterUserResource());
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
         DelayedJobsManager.initiate();

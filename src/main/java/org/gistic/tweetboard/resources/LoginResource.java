@@ -2,14 +2,10 @@ package org.gistic.tweetboard.resources;
 
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
-import org.gistic.tweetboard.dao.AuthDao;
-import org.gistic.tweetboard.dao.AuthDaoImpl;
-import org.gistic.tweetboard.dao.TweetDao;
-import org.gistic.tweetboard.dao.TweetDaoImpl;
+import org.gistic.tweetboard.dao.*;
 import org.gistic.tweetboard.representations.Event;
 import org.gistic.tweetboard.representations.EventMeta;
 import org.gistic.tweetboard.representations.EventUuid;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Twitter;
@@ -30,7 +26,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -42,6 +37,12 @@ import java.util.List;
 public class LoginResource {
 
     private final String baseDomain = ConfigurationSingleton.getInstance().getBaseDomain();
+
+    private final AuthDbDao authDbDao;
+
+    public LoginResource(AuthDbDao authDbDao) {
+        this.authDbDao = authDbDao;
+    }
 
     @GET
     @Path("/login/twitter")
@@ -119,29 +120,32 @@ public class LoginResource {
         authDao.deleteEventyzerFlag(oauthToken);
         boolean eventyzerFlag = Boolean.parseBoolean(eventyzerFlagString);
 
-        //get user id from DB
-        String userId = null;
-        if (eventyzerFlag) {
-            //TODO: get user ID from eventyzer auth DB table
-        } else {
-            userId = authDao.getUserId(accessToken);
-        }
-
-
         String screenName  = accessTokenObject.getScreenName();
         String userIdFromTwitter = String.valueOf( accessTokenObject.getUserId() );
 
         boolean firstTime = false;
 
-        //check if user id existed in our system
-        if (userId == null) {
-            firstTime = true;
-            //store user id in DB
-            if (eventyzerFlag) {
-                //userid is stored in eventyzer DB during signup, not login
+        //get user id from DB
+        String userId = null;
+        if (eventyzerFlag) {
+
+            //TODO: get user ID from eventyzer auth DB table
+            int result = authDbDao.isTwitterIdRegistered(userIdFromTwitter);
+            if (result != 0) {
+                firstTime = true;
             } else {
                 authDao.setUserId(accessToken, userIdFromTwitter);
             }
+        } else {
+            userId = authDao.getUserId(accessToken);
+        }
+
+
+
+        //check if user id existed in our system
+        if (userId == null) {
+            firstTime = true;
+            authDao.setUserId(accessToken, userIdFromTwitter);
         } else {
             //sanity check, should always be true unless twitter server mess up or our DB is broken
             if (!userId.equals(userIdFromTwitter)) return Response.serverError().build();

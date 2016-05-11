@@ -90,13 +90,13 @@ public class EventsResource {
         }
         EventUuid eventUuid = new EventUuid();
         eventUuid.setUuid(uuid);
-        if(!email.equalsIgnoreCase("undefined")) {
-            try {
-                GmailSender.send(uuid, email);
-            } catch (MessagingException e) {
-                LoggerFactory.getLogger(this.getClass()).error("Failed to send email to: " + email + " for event: " + uuid);
-            }
-        }
+//        if(!email.equalsIgnoreCase("undefined")) {
+//            try {
+//                GmailSender.send(uuid, email);
+//            } catch (MessagingException e) {
+//                LoggerFactory.getLogger(this.getClass()).error("Failed to send email to: " + email + " for event: " + uuid);
+//            }
+//        }
         DelayedJobsManager.createEventDestroyJob(uuid, authToken);
         return eventUuid;
     }
