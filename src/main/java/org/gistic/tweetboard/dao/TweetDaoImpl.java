@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Created by sohussain on 4/12/15.
  */
-public class TweetDaoImpl implements TweetDao {
+public class TweetDaoImpl extends TweetDaoConstants implements TweetDao {
     private static final int DEFAULT_TOP_TWEETS_CACHE_DURATION = 60;
     public static final String TWEET_META_DATE_KEY = "CreationDate";
     public static final String TWEET_META_RETWEETS_COUNT_KEY = "RetweetsCount";
@@ -41,18 +41,13 @@ public class TweetDaoImpl implements TweetDao {
     public static final String HISTORIC_META_AUTHTOKEN = "authtoken";
     public static final String EVENT_ACCESS_TOKEN = "eventAccessToken";
     public static final String HISTORIC_META_MEDIA_URL = "mediaURL";
-    //private Jedis jedis;
-    final String All_EVENTS_KEY = "event";
-    final String BG_COLOR_KEY = "banckGroundColor";
-    final String BG_COLOR_DEFAULT = "blue";
-    final String SIZE_KEY = "size";
-    final String SIZE_DEAFULT = "normal";
-    final String SCREENS_KEY = "screens";
-    final String SCREENS_DEFAULT = "[/live, /top, /overtime]";
-    final String START_TIME_KEY = "startTime";
-    final String HASHTAGS_KEY = "hashTags";
-    final String SCREENTIMES_KEY = "screensTime";
-    final String SCREENTIMES_DEFAULT = "[45000, 10000, 8000]";
+    public static final String START_TIME_KEY = "startTime";
+    public static final String HASHTAGS_KEY = "hashTags";
+    public static final String SCREENTIMES_KEY = "screensTime";
+    public static final String SCREENS_KEY = "screens";
+    public static final String SIZE_KEY = "size";
+    public static final String All_EVENTS_KEY = "event";
+    public static final String BG_COLOR_KEY = "banckGroundColor";
 
     public TweetDaoImpl() {
         //this.jedis = jedis;
@@ -324,8 +319,7 @@ public class TweetDaoImpl implements TweetDao {
             String[] screensArray = getStringArray(screens);
             eventConfig.setScreens(screensArray);
             String screenTimesStr = jedis.hget(uuid, SCREENTIMES_KEY);
-            int[] screenTimes = Arrays.stream(screenTimesStr.substring(1, screenTimesStr.length()-1).split(","))
-                    .map(String::trim).mapToInt(Integer::parseInt).toArray();
+            int[] screenTimes = getIntsArray(screenTimesStr);
             eventConfig.setScreenTimes(screenTimes);
             String hashtagsString = jedis.hget(uuid, HASHTAGS_KEY);
             String[] hashtagsArray = getStringArray(hashtagsString);
@@ -334,6 +328,11 @@ public class TweetDaoImpl implements TweetDao {
             jE.printStackTrace();
         }
         return eventConfig;
+    }
+
+    private int[] getIntsArray(String screenTimesStr) {
+        return Arrays.stream(screenTimesStr.substring(1, screenTimesStr.length()-1).split(","))
+                .map(String::trim).mapToInt(Integer::parseInt).toArray();
     }
 
     private String[] getStringArray(String arrayAsString) {
