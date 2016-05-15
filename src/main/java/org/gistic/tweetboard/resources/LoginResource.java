@@ -46,7 +46,7 @@ public class LoginResource {
 
     @GET
     @Path("/login/twitter")
-    public String getTwitterLoginUrl(@QueryParam("hashtags") String hashtags,
+    public String getTwitterLoginUrl(@DefaultValue("") @QueryParam("hashtags") String hashtags,
                                  @DefaultValue("false") @QueryParam("redirectToHome") String redirectToHome,
                                  @DefaultValue("false") @QueryParam("eventyzer") String eventyzerFlagString) {
         boolean eventyzerFlag = Boolean.parseBoolean(eventyzerFlagString);

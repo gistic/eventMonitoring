@@ -57,7 +57,7 @@ public class TwitterAuthFactory<T> extends AuthFactory<TwitterCredentials, T> {
     public T provide() {
         if (request != null) {
             final String token = request.getParameter("authToken");
-            String eventyzerFlagString = request.getParameter("eventyzerFlag");
+            String eventyzerFlagString = request.getParameter("eventyzer");
             boolean eventyzeFlag = Boolean.parseBoolean(eventyzerFlagString);
             //if (token != null && !token.isEmpty()) {
                 final TwitterCredentials credentials = new TwitterCredentials(token, eventyzeFlag);

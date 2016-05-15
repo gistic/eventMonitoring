@@ -3,6 +3,8 @@ package org.gistic.tweetboard.eventmanager.twitter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gistic.tweetboard.DelayedJobsManager;
+import org.gistic.tweetboard.dao.AuthDbDao;
+import org.gistic.tweetboard.dao.JdbiSingleton;
 import org.gistic.tweetboard.eventmanager.Event;
 import org.gistic.tweetboard.eventmanager.Message;
 import org.gistic.tweetboard.resources.EventsResource;
@@ -27,9 +29,10 @@ public class LiveStreamMetadataThread implements Runnable {
 
     Event event;
 
+
     public LiveStreamMetadataThread(Event event) {
         this.event = event;
-        this.eventResource = new EventsResource();
+        this.eventResource = new EventsResource(JdbiSingleton.getInstance().onDemand(AuthDbDao.class));
     }
 
     @Override

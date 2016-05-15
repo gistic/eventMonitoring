@@ -72,7 +72,7 @@ public class EventsResource {
                                  @Context Jedis jedis,
                                  @DefaultValue("undefined") @QueryParam("authToken") String authToken,
                                  @Auth(required = true) User user,
-                                 @DefaultValue("false") @QueryParam("eventyzerFlag") String eventyzerFlag) {
+                                 @DefaultValue("false") @QueryParam("eventyzer") String eventyzerFlag) {
         String[] hashTags = event.getHashTags();
         String uuid = UUID.randomUUID().toString();
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
@@ -110,7 +110,7 @@ public class EventsResource {
     public Response deleteEvent(@PathParam("uuid") String uuid,
                                 @DefaultValue("undefined") @QueryParam("authToken") String authToken,
                                 @Auth(required = false) User user,
-                                @DefaultValue("false") @QueryParam("eventyzerFlag") String eventyzerFlag) {
+                                @DefaultValue("false") @QueryParam("eventyzer") String eventyzerFlag) {
 
         checkUuid(uuid);
         MetaDataLogic metaDataLogic = new MetaDataLogic(new TweetDaoImpl());
