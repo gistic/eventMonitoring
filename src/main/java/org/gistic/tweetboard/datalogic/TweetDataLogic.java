@@ -537,7 +537,7 @@ public class TweetDataLogic {
             JSONObject userJson = new JSONObject(userProfileStr);
             long authCodeLong = userJson.getLong("id");
             authCode = String.valueOf(authCodeLong);
-            AuthDbDao.addToUserEventsList(uuid, Long.toString(authCodeLong));
+            authDbDao.addToUserEventsList(uuid, Long.toString(authCodeLong));
         } catch (TwitterException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -553,7 +553,7 @@ public class TweetDataLogic {
             JSONObject userJson = new JSONObject(userProfileStr);
             long authCodeLong = userJson.getLong("id");
             authCode = String.valueOf(authCodeLong);
-            AuthDbDao.removeFromUserEventsList(uuid, Long.toString(authCodeLong));
+            authDbDao.removeFromUserEventsList(uuid, Long.toString(authCodeLong));
         } catch (TwitterException e) {
             e.printStackTrace();
         } catch (JSONException e) {

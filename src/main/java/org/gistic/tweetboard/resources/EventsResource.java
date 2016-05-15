@@ -77,20 +77,17 @@ public class EventsResource {
         String uuid = UUID.randomUUID().toString();
         TweetDataLogic tweetDataLogic = new TweetDataLogic(new TweetDaoImpl(), uuid, authDbDao);
         if (user == null) {
-            //invalid token tweetboard v2.0
+            //invalid token
             throw new WebApplicationException(
                     Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
                             .entity("{'error':'incorrect token'}")
                             .build()
             );
         //} else if (user.isNoUser()) {
-        } else if (eventyzerFlag.equals("true")) {
+        } else if (eventyzerFlag.equals("true") && user.getEventyzerFlag()) {
             //for tweetboard v1.0
-
             EventMap.put(hashTags, tweetDataLogic, uuid, authToken);
-            //invalid token
-        }
-        else {
+        } else {
             //valid token tweetboard v2.0
             EventMap.putV2(hashTags, tweetDataLogic, uuid, authToken);
             ExecutorSingleton.getInstance().submit(new WarmupRunnable(checkUuid(uuid), tweetDataLogic, hashTags, authToken));
@@ -127,7 +124,7 @@ public class EventsResource {
                             .build()
             );
         //} else if (user.isNoUser()) {
-        } else if (eventyzerFlag.equals("true")) {
+        } else if (eventyzerFlag.equals("true") && user.getEventyzerFlag()) {
             //for tweetboard v1.0
             EventMap.deleteEventyzer(uuid, authToken);
         } else {

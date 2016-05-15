@@ -26,7 +26,7 @@ public class TwitterAuthenticator implements Authenticator<TwitterCredentials, U
         String accessTokenSecret = authDao.getAccessTokenSecret(accessToken);
         if (accessTokenSecret == null || accessTokenSecret.isEmpty()) return Optional.absent();
 
-        User user = new User(accessToken, accessTokenSecret);
+        User user = new User(accessToken, accessTokenSecret, credentials.getEventyzerFlag());
         if (checkUser(user)) return Optional.fromNullable(user);
 //        if (accessTokenSecret != null && !accessTokenSecret.isEmpty()) return Optional.fromNullable();
         return Optional.absent();

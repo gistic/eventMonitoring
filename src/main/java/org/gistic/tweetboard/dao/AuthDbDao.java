@@ -40,14 +40,18 @@ public interface AuthDbDao {
     @SqlUpdate("DELETE FROM public.user_events WHERE uuid = :uuid AND twitter_user_id = :twitter_user_id")
     void removeFromUserEventsList(@Bind("uuid") String uuid, @Bind("twitter_user_id") String twitterUserID);
 
-    @SqlQuery("select bg_colour, screens_j_array, screen_time_j_array, screen_size, hashtags_j_array, moderated from user_event_defaults where uuid = :uuid limit 1")
+//    @SqlQuery("select bg_colour, screens_j_array, screen_time_j_array, screen_size, hashtags_j_array, moderated from user_event_defaults where uuid = :uuid limit 1")
+//    @Mapper(EventConfigMapper.class)
+//    EventConfig getEventConfig(@Bind("uuid") String uuid);
+
+    @SqlQuery("select bg_colour, screens_j_array, screen_time_j_array, screen_size, moderated from user_event_defaults where twitter_id = :twitter_id limit 1")
     @Mapper(EventConfigMapper.class)
-    EventConfig getEventConfig(@Bind("uuid") String uuid);
+    EventConfig getUserEventConfigDefault(@Bind("twitter_id") String twitterId);
 
-    @SqlUpdate("INSERT INTO public.user_event_defaults(bg_colour, screens_j_array, screen_time_j_array, screen_size, hashtags_j_array, moderated, uuid) VALUES(:bg_colour, :screens_j_array, :screen_time_j_array, :screen_size, :hashtags_j_array, :moderated, :uuid)")
-    void addToEventConfig(@Bind("bg_colour") String bgColour, @Bind("screens_j_array") String screensJArray, @Bind("screen_size") String sceenSize, @Bind("hashtags_j_array") String hashtagsJArray, @Bind("moderated") boolean moderated, @Bind("uuid") String uuid);
+    @SqlUpdate("INSERT INTO public.user_event_defaults(bg_colour, screens_j_array, screen_time_j_array, screen_size, hashtags_j_array, moderated, twitter_id) VALUES(:bg_colour, :screens_j_array, :screen_time_j_array, :screen_size, :moderated, :twitter_id)")
+    void addToEventConfigDefault(@Bind("bg_colour") String bgColour, @Bind("screens_j_array") String screensJArray, @Bind("screen_time_j_array") String screensTimeJarray, @Bind("screen_size") String sceenSize, @Bind("moderated") boolean moderated, @Bind("twitter_id") String twitterId);
 
-    @SqlUpdate("UPDATE public.user_event_defaults SET (bg_colour, screens_j_array, screen_time_j_array, screen_size, hashtags_j_array, moderated) VALUES(:bg_colour, :screens_j_array, :screen_time_j_array, :screen_size, :hashtags_j_array, :moderated) WHERE uuid = :uuid")
-    void updateEventConfig(@Bind("bg_colour") String bgColour, @Bind("screens_j_array") String screensJArray, @Bind("screen_size") String sceenSize, @Bind("hashtags_j_array") String hashtagsJArray, @Bind("moderated") boolean moderated, @Bind("uuid") String uuid);
+    @SqlUpdate("UPDATE public.user_event_defaults SET (bg_colour, screens_j_array, screen_time_j_array, screen_size, hashtags_j_array, moderated) VALUES(:bg_colour, :screens_j_array, :screen_time_j_array, :screen_size, :moderated) WHERE twitter_id = :twitter_id")
+    void updateEventConfigDefault(@Bind("bg_colour") String bgColour, @Bind("screens_j_array") String screensJArray, @Bind("screen_time_j_array") String screensTimeJarray, @Bind("screen_size") String sceenSize, @Bind("moderated") boolean moderated, @Bind("twitter_id") String twitterId);
 
 }

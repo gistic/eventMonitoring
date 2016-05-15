@@ -63,7 +63,12 @@ public class SignupResource {
             @DefaultValue("false") @QueryParam("redirectToHome") String redirectToHome,
             @DefaultValue("false") @QueryParam("eventyzer") String eventyzerFlagString) {
         try {
+
+            //
             authDbDao.addNewUser(userSignupDetails);
+            //set user event config defaults
+            authDbDao.addToEventConfigDefault(TweetDaoConstants.BG_COLOR_DEFAULT, TweetDaoConstants.SCREENS_DEFAULT, TweetDaoConstants.SCREENTIMES_DEFAULT, TweetDaoConstants.SIZE_DEAFULT, /*moderated*/ true, userSignupDetails.getTwitterId());
+
             String email = userSignupDetails.getEmail();
             System.out.println("email :"+email);
             if(!email.equalsIgnoreCase("undefined")) {

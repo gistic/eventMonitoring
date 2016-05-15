@@ -125,32 +125,6 @@ public class LoginResource {
 
         boolean firstTime = false;
 
-        //get user id from DB
-        String userId = null;
-        if (eventyzerFlag) {
-
-            //DO: get user ID from eventyzer auth DB table
-            int result = authDbDao.isTwitterIdRegistered(userIdFromTwitter);
-            if (result != 0) {
-                firstTime = true;
-            } else {
-                authDao.setUserId(accessToken, userIdFromTwitter);
-            }
-        } else {
-            userId = authDao.getUserId(accessToken);
-        }
-
-
-
-        //check if user id existed in our system
-        if (userId == null) {
-            firstTime = true;
-            authDao.setUserId(accessToken, userIdFromTwitter);
-        } else {
-            //sanity check, should always be true unless twitter server mess up or our DB is broken
-            if (!userId.equals(userIdFromTwitter)) return Response.serverError().build();
-        }
-
         //String screenName = accessTokenObject.getScreenName();
         String hashtags = authDao.getTempHashtags(oauthToken);
         authDao.deleteTempHashTags(oauthToken);
@@ -159,15 +133,57 @@ public class LoginResource {
         authDao.deleteRedirectToHomeFlag(oauthToken);
         boolean redirectToHomeFlag = Boolean.valueOf(redirectToHome);
 
-        if (eventyzerFlag && firstTime) {
-            //TODO: redirect to signup page
-        } else {
-            //TODO: create new event for eventyzer with auth
+        authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
 
+        URI uri  = null;
+
+        //get user id from DB
+        String userIdFromDb = null;
+        if (eventyzerFlag) {
+
+            //DO: get user ID from eventyzer auth DB table
+            int result = authDbDao.isTwitterIdRegistered(userIdFromTwitter);
+            if (result == 0) {
+                firstTime = true;
+            }
+
+            authDao.setUserId(accessToken, userIdFromTwitter);
+
+            if (firstTime) {
+                //TODO: redirect to signup page
+
+                uri = UriBuilder.fromUri(
+                        "http://" + baseDomain + "/event-monitoring/sign-up/"
+                                + "?authToken=" + accessToken
+                                + "&userId=" + userIdFromDb
+                                + "&screenName=" + screenName
+                ).build();
+            } else {
+                //TODO: redirect to home page logged in      //create new event for eventyzer with auth
+
+                uri = UriBuilder.fromUri(
+                        "http://" + baseDomain + "/event-monitoring/"
+                                + "?authToken=" + accessToken
+                                + "&userId=" + userIdFromDb
+                                + "&screenName=" + screenName
+                ).build();
+            }
+
+            return Response.seeOther(uri).build();
+
+        } else {
+            userIdFromDb = authDao.getUserId(accessToken);
         }
 
-        authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
-        URI uri  = null;
+        if (userIdFromDb == null) { //path for HT auth
+            //check if user id existed in our system
+            firstTime = true;
+            authDao.setUserId(accessToken, userIdFromTwitter);
+        } else {
+            //sanity check, should always be true unless twitter server mess up or our DB is broken
+            if (!userIdFromDb.equals(userIdFromTwitter)) return Response.serverError().build();
+        }
+
         if (!redirectToHomeFlag) {
             String uuid = null;
             boolean eventExists = false;
@@ -208,7 +224,7 @@ public class LoginResource {
             uri = UriBuilder.fromUri(
                     "http://" + baseDomain + "/hashtag-analyzer/"
                             + "?authToken=" + accessToken
-                            + "&userId=" + userId
+                            + "&userId=" + userIdFromDb
                             + "&screenName=" + screenName
             ).build();
         }
@@ -224,4 +240,6 @@ public class LoginResource {
         return Response.seeOther(uri).build();
 //        return Response.serverError().build();
     }
+
+
 }
