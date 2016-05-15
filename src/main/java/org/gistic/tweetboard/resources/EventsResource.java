@@ -494,5 +494,24 @@ public class EventsResource {
         return tweetDataLogic.getCachedTweets();
     }
 
-
+    @POST
+    @Path("/{uuid}/logo2")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadFile2(
+            @PathParam("uuid") String uuid,
+            @FormDataParam("file") InputStream uploadedInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail
+    ) throws IOException {
+        System.out.println(fileDetail.getSize());
+        //todo refactor
+        String uploadedFileLocation = "./layout/event-monitoring/assets/images2/"+uuid+"/";// + fileDetail.getFileName();
+        String fileName =fileDetail.getFileName();
+        System.out.println(fileName);
+        String fileType = fileName.substring(fileName.lastIndexOf("."));
+        writeToFile(uploadedInputStream, uploadedFileLocation, fileType);
+        String output = "File uploaded to : " + uploadedFileLocation;
+        uploadedInputStream.close();
+//        DelayedJobsManager.refreshEventDestroyJob(uuid);
+        return Response.ok(output).build();
+    }
 }
