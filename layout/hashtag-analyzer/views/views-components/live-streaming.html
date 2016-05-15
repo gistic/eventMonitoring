@@ -45,6 +45,8 @@
             <label for="allTweets" data-value="All tweets" ng-click="tab = 1">All tweets</label>
             <label for="mostPopular" data-value="Most popular" ng-click="tab = 2">Most popular</label>
         </div>
+        <!-- This is temp button to test POC implemenation for downaloding current view as pdf -->
+        <button class="btn btn-info" data-ng-click="downloadPdfReport()">Temp button: Download PDF Report</button>
 
 
         <div ng-show="loading" class="loading pull-left">

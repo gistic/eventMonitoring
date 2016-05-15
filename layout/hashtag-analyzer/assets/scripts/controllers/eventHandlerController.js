@@ -205,6 +205,64 @@ EventHandlerController.controller('EventMainController',
                 })
         };
 
+        $scope.downloadPdfReport = function () {
+
+            var doc = new jsPDF(/*'landscape'*/), 
+                      marginLeft = 60, 
+                      marginTop = 60, 
+                      imgeType = 'jpeg'
+                      panelIds = ['tweets-per-country-panel' ,'tweets-overtime-panel', 'tweets-sources-panel', 'media-panel',   'tweets-location-panel', 'top-people-panel', 'languages-panel', 'hashtags-cloud-panel'],
+                      reportName = 'Hashtag-analyzer Report.pdf',
+                      callCount = 0,                             
+                      canvas = document.createElement('canvas'),
+                      ctx = canvas.getContext('2d');
+
+            // Report first page.
+            doc.text(marginLeft, marginTop, 'First Page Report Title Text goes here.\nPrepaed by: Muhammad Yousaf.\nSupervised by: Dr. Sohaib Ghani.');
+
+            angular.forEach(panelIds, function(value, index) {
+
+                // Cloning fails when getting an element by class.
+                var node = document.getElementById(value); 
+
+                if (node != null) {
+
+                    // Track how many async calls have been started. 
+                    callCount += 1;         
+
+                    domtoimage.toPng(node)
+                        .then(function (dataUrl) {
+
+                            var img = new Image();
+                            img.src = dataUrl;
+                            //document.body.appendChild(img);
+
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+
+                            ctx.drawImage(img, 0, 0, img.width, img.height);
+                            var imgDataUrl = canvas.toDataURL("image/jpeg");
+
+                            // Each image on new page.
+
+                            doc.addPage();
+                            doc.addImage(imgDataUrl, imgeType, marginLeft, marginTop);
+
+                            // Track how many async calls have been completed. 
+                            callCount -= 1;
+
+                            // Last image rendered async.
+                            if (callCount <= 0) {
+                                doc.save(reportName);
+                            }                            
+                        })
+                        .catch(function (error) {
+                            console.error('ERROR: PDF conversion failed!', error);
+                        });
+                }
+            });
+        };
+
         $scope.showLoadMore = true;
         $scope.showLoadMoreButton = function () {
             $scope.showLoadMore = true;
