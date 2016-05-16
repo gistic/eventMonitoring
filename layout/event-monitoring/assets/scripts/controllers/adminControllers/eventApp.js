@@ -252,9 +252,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
             };
             RequestData.fetchData(requestAction, apiUrl, requestData)
-                .then(function(response) {
-                    console.log("Options Updated");
-                })
+                .then(function(response) {})
         }
 
         $scope.updateBlockedUsers = function(e, screenName, userPicture, userID) {

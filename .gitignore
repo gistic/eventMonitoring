@@ -31,6 +31,7 @@ target/
 
 # JS
 **/dump.rdb
+*.rdb
 
 # Images
 *.log
