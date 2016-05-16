@@ -74,8 +74,11 @@ public class Event {
         }
 
 
-
-        tweetDataLogic.createNewEvent(hashTags, accessToken);
+        if (v2) {
+            tweetDataLogic.createNewEvent(hashTags, accessToken);
+        } else {
+            tweetDataLogic.createNewEventV1(hashTags, accessToken);
+        }
         if (v2) tweetDataLogic.addToUserEvents(uuid, authCode);
     }
 

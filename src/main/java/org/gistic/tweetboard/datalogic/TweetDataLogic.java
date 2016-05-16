@@ -17,6 +17,8 @@ import org.gistic.tweetboard.eventmanager.twitter.SendApprovedTweets;
 import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcasterSingleton;
 import org.gistic.tweetboard.resources.TwitterUserResource;
+import org.gistic.tweetboard.security.*;
+import org.gistic.tweetboard.security.User;
 import org.gistic.tweetboard.util.Misc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -523,7 +525,32 @@ public class TweetDataLogic {
 
     public void createNewEvent(String[] hashTags, String accessToken) {
         tweetDao.addNewEventToList(uuid);
+
+        TwitterUserDataLogic userDataLogic = new TwitterUserDataLogic();
+        String userId = null;
         tweetDao.setDefaultEventProperties(uuid, hashTags, accessToken);
+    }
+
+    public void createNewEventV1(String[] hashTags, String accessToken) {
+        tweetDao.addNewEventToList(uuid);
+
+        TwitterUserDataLogic userDataLogic = new TwitterUserDataLogic();
+        String userId = null;
+        try {
+            String userProfileString = userDataLogic.getUserProfile(new User(accessToken, new AuthDaoImpl().getAccessTokenSecret(accessToken)));
+            userId = String.valueOf( new JSONObject( userProfileString ).getLong("id") );
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //get default parameters
+        EventConfig userEventConfig = authDbDao.getUserEventConfigDefault(userId);
+        //tweetDao.setDefaultEventProperties(uuid, hashTags, accessToken);
+        tweetDao.setDefaultEventProperties(uuid, hashTags, accessToken, userEventConfig);
+
+
     }
 
     public void removeBelowTopN() {

@@ -103,6 +103,24 @@ public class TweetDaoImpl extends TweetDaoConstants implements TweetDao {
     }
 
     @Override
+    public void setDefaultEventProperties(String uuid, String[] hashTags, String accessToken, EventConfig userEventConfig) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.hset(uuid, BG_COLOR_KEY, userEventConfig.getBackgroundColor());
+            jedis.hset(uuid, SIZE_KEY, userEventConfig.getSize());
+            jedis.hset(uuid, SCREENS_KEY, "[" + StringUtils.join(userEventConfig.getScreens(), ",") + "]");
+            if (accessToken == null) accessToken = "";
+            jedis.hset(uuid, EVENT_ACCESS_TOKEN, accessToken);
+            Date d =new Date();
+            String time = d.toGMTString();
+            jedis.hset(uuid, START_TIME_KEY, time);
+            jedis.hset(uuid, HASHTAGS_KEY, "[" + StringUtils.join(hashTags, ",") + "]");
+            jedis.hset(uuid, SCREENTIMES_KEY, "[" + StringUtils.join(userEventConfig.getScreenTimes(), ",") + "]");
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
     public void addNewTweetString(String uuid, Status tweet, String statusString, boolean newArrival) {
         String id = String.valueOf(tweet.getId());
         if (statusString == null || statusString.isEmpty() || id.isEmpty()) {

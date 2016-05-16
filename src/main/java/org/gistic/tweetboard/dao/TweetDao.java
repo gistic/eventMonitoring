@@ -169,4 +169,6 @@ public interface TweetDao {
     void removeBelowTopN(String uuid);
 
     long getArrivedTweetsListLength(String uuid);
+
+    void setDefaultEventProperties(String uuid, String[] hashTags, String accessToken, EventConfig userEventConfig);
 }
