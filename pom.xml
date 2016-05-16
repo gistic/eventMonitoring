@@ -143,18 +143,14 @@
         </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
-            <artifactId>dropwizard-migrations</artifactId>
+            <artifactId>dropwizard-jdbi</artifactId>
             <version>${dropwizard.version}</version>
         </dependency>
+        <!-- JDBC drivers -->
         <dependency>
-        	<groupId>org.postgresql</groupId>
-        	<artifactId>postgresql</artifactId>
-        	<version>${postgresql.version}</version>
-        </dependency>
-        <dependency>
-        	<groupId>io.dropwizard</groupId>
-        	<artifactId>dropwizard-jdbi</artifactId>
-        	<version>${dropwizard.version}</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
         </dependency>
     </dependencies>
     <build>

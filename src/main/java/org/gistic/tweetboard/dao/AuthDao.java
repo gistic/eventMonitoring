@@ -34,4 +34,10 @@ public interface AuthDao {
     String getRedirectToHomeFlag(String oauthToken);
 
     void deleteRedirectToHomeFlag(String oauthToken);
+
+    void setEventyzerFlag(String token, String eventyzerFlagString);
+
+    String getEventyzerFlag(String oauthToken);
+
+    void deleteEventyzerFlag(String oauthToken);
 }

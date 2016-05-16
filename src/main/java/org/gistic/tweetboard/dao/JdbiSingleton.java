@@ -1,9 +1,10 @@
 package org.gistic.tweetboard.dao;
 
 import org.skife.jdbi.v2.DBI;
-
+/**
+ * Created by osama-hussain on 5/11/16.
+ */
 public class JdbiSingleton {
-
     private static DBI instance = null;
     protected JdbiSingleton() {
         // Exists only to defeat instantiation.
@@ -17,5 +18,4 @@ public class JdbiSingleton {
         }
         JdbiSingleton.instance = instance;
     }
-
 }

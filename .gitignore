@@ -60,3 +60,6 @@ layout/hashtag-analyzer/index.html
 /dump.rdb
 /tweet-board-1.0-SNAPSHOT.jar
 /layout/event-monitoring/Gruntfile.js
+
+layout/hashtag-analyzer/bower_components/
+newspiders/

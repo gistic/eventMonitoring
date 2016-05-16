@@ -216,6 +216,43 @@ public class AuthDaoImpl implements AuthDao {
         }
     }
 
+    @Override
+    public void setEventyzerFlag(String token, String eventyzerFlagString) {
+        try {
+            jedis = JedisPoolContainer.getInstance();
+            jedis.set("eventyzerFlagString:"+token, eventyzerFlagString);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        } finally {
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+        }
+    }
+
+    @Override
+    public String getEventyzerFlag(String oauthToken) {
+        try {
+            jedis = JedisPoolContainer.getInstance();
+            return jedis.get("eventyzerFlagString:"+oauthToken);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        } finally {
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteEventyzerFlag(String oauthToken) {
+        try {
+            jedis = JedisPoolContainer.getInstance();
+            jedis.del("eventyzerFlagString:"+oauthToken);
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        } finally {
+            if(jedis != null) try{jedis.close();} catch (JedisException jx){}
+        }
+    }
+
     private String getTwitteruserIdKey(String accessToken) {
         return TWITTER_USER_ID_KEY_STUB+accessToken;
     }

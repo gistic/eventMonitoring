@@ -5,12 +5,23 @@ package org.gistic.tweetboard.security;
  */
 public class TwitterCredentials {
     private final String accessToken;
+    private final boolean eventyzerFlag;
 
     public TwitterCredentials(String accessToken) {
+        this.eventyzerFlag = false;
         this.accessToken = accessToken;
+    }
+
+    public TwitterCredentials(String accessToken, boolean eventyzerFlag) {
+        this.accessToken = accessToken;
+        this.eventyzerFlag = eventyzerFlag;
     }
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public boolean getEventyzerFlag() {
+        return eventyzerFlag;
     }
 }

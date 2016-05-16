@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
-import org.gistic.tweetboard.util.Misc;
 import org.gistic.tweetboard.dao.AuthDao;
 import org.gistic.tweetboard.dao.AuthDaoImpl;
+import org.gistic.tweetboard.dao.AuthDbDao;
 import org.gistic.tweetboard.dao.TweetDao;
 import org.gistic.tweetboard.eventmanager.*;
 import org.gistic.tweetboard.eventmanager.Event;
@@ -18,21 +18,17 @@ import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.resources.LiveTweetsBroadcasterSingleton;
 import org.gistic.tweetboard.resources.TwitterUserResource;
 import org.gistic.tweetboard.security.*;
+import org.gistic.tweetboard.security.User;
+import org.gistic.tweetboard.util.Misc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Tuple;
 import twitter4j.*;
 import twitter4j.JSONException;
 import twitter4j.JSONObject;
-import twitter4j.User;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,10 +39,12 @@ import java.util.stream.Collectors;
  */
 public class TweetDataLogic {
     private final Logger logger;
+    private final AuthDbDao authDbDao;
     private TweetDao tweetDao;
     String uuid;
 
-    public TweetDataLogic(TweetDao tweetDao, String uuid) {
+    public TweetDataLogic(TweetDao tweetDao, String uuid, AuthDbDao authDbDao) {
+        this.authDbDao = authDbDao;
         this.tweetDao = tweetDao;
         this.uuid = uuid;
         this.logger = LoggerFactory.getLogger(this.getClass());
@@ -357,7 +355,19 @@ public class TweetDataLogic {
     public void newArrived(InternalStatus tweet) {
         tweetDao.addNewTweetString(uuid, tweet.getInternalStatus(), tweet.getStatusString(), false);
         tweetDao.addToArrived(uuid, tweet.getInternalStatus(), tweet.getStatusString());
-        tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
+        //might be already added tweetDao.addToUserTweetsSet(uuid, tweet.getInternalStatus());
+
+        long length = tweetDao.getArrivedTweetsListLength(uuid);
+
+        //check arrived tweets
+        if(length > 5L) {
+            // and remove oldest if at threshold
+            String tweetId = tweetDao.removeOldestFromArrived(uuid);
+
+            if (tweetId!=null) tweetDao.deleteTweetJson(uuid, tweetId);
+        }
+
+
     }
 
     public void addToCache(InternalStatus status) {
@@ -515,10 +525,67 @@ public class TweetDataLogic {
 
     public void createNewEvent(String[] hashTags, String accessToken) {
         tweetDao.addNewEventToList(uuid);
+
+        TwitterUserDataLogic userDataLogic = new TwitterUserDataLogic();
+        String userId = null;
         tweetDao.setDefaultEventProperties(uuid, hashTags, accessToken);
+    }
+
+    public void createNewEventV1(String[] hashTags, String accessToken) {
+        tweetDao.addNewEventToList(uuid);
+
+        TwitterUserDataLogic userDataLogic = new TwitterUserDataLogic();
+        String userId = null;
+        try {
+            String userProfileString = userDataLogic.getUserProfile(new User(accessToken, new AuthDaoImpl().getAccessTokenSecret(accessToken)));
+            userId = String.valueOf( new JSONObject( userProfileString ).getLong("id") );
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //get default parameters
+        EventConfig userEventConfig = authDbDao.getUserEventConfigDefault(userId);
+        //tweetDao.setDefaultEventProperties(uuid, hashTags, accessToken);
+        tweetDao.setDefaultEventProperties(uuid, hashTags, accessToken, userEventConfig);
+
+
     }
 
     public void removeBelowTopN() {
         tweetDao.removeBelowTopN(uuid);
+    }
+
+    public void addToUserEventsEventyzer(String uuid, String authCode) {
+        org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(authCode, new AuthDaoImpl().getAccessTokenSecret(authCode));
+        try {
+            String userProfileStr = new TwitterUserDataLogic().getUserProfile(user);
+            JSONObject userJson = new JSONObject(userProfileStr);
+            long authCodeLong = userJson.getLong("id");
+            authCode = String.valueOf(authCodeLong);
+            authDbDao.addToUserEventsList(uuid, Long.toString(authCodeLong));
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void removeFromUserEventsEventyzer(String uuid, String authCode) {
+        org.gistic.tweetboard.security.User user = new org.gistic.tweetboard.security.User(authCode, new AuthDaoImpl().getAccessTokenSecret(authCode));
+        try {
+            String userProfileStr = new TwitterUserDataLogic().getUserProfile(user);
+            JSONObject userJson = new JSONObject(userProfileStr);
+            long authCodeLong = userJson.getLong("id");
+            authCode = String.valueOf(authCodeLong);
+            authDbDao.removeFromUserEventsList(uuid, Long.toString(authCodeLong));
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 }

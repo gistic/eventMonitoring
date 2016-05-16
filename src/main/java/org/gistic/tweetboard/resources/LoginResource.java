@@ -2,14 +2,10 @@ package org.gistic.tweetboard.resources;
 
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
-import org.gistic.tweetboard.dao.AuthDao;
-import org.gistic.tweetboard.dao.AuthDaoImpl;
-import org.gistic.tweetboard.dao.TweetDao;
-import org.gistic.tweetboard.dao.TweetDaoImpl;
+import org.gistic.tweetboard.dao.*;
 import org.gistic.tweetboard.representations.Event;
 import org.gistic.tweetboard.representations.EventMeta;
 import org.gistic.tweetboard.representations.EventUuid;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Twitter;
@@ -30,7 +26,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -43,10 +38,18 @@ public class LoginResource {
 
     private final String baseDomain = ConfigurationSingleton.getInstance().getBaseDomain();
 
+    private final AuthDbDao authDbDao;
+
+    public LoginResource(AuthDbDao authDbDao) {
+        this.authDbDao = authDbDao;
+    }
+
     @GET
     @Path("/login/twitter")
-    public String getTwitterLogicUrl(@QueryParam("hashtags") String hashtags,
-                                 @DefaultValue("false") @QueryParam("redirectToHome") String redirectToHome) {
+    public String getTwitterLoginUrl(@DefaultValue("") @QueryParam("hashtags") String hashtags,
+                                 @DefaultValue("false") @QueryParam("redirectToHome") String redirectToHome,
+                                 @DefaultValue("false") @QueryParam("eventyzer") String eventyzerFlagString) {
+        boolean eventyzerFlag = Boolean.parseBoolean(eventyzerFlagString);
         TwitterConfiguration config = ConfigurationSingleton.getInstance().getTwitterConfiguration();
         ConfigurationBuilder builder = new ConfigurationBuilder();
         builder.setDebugEnabled(true);
@@ -66,6 +69,7 @@ public class LoginResource {
         AuthDao authDao = new AuthDaoImpl();
         authDao.setRequestToken(requestToken.getToken(), requestToken.getTokenSecret());
         authDao.setTempHashtags(requestToken.getToken(), hashtags);
+        authDao.setEventyzerFlag(requestToken.getToken(), eventyzerFlagString);
         authDao.setRedirectToHomeFlag(requestToken.getToken(), redirectToHome);
         String authorizationUrl = requestToken.getAuthorizationURL();
         //System.out.println(authorizationUrl);
@@ -111,17 +115,15 @@ public class LoginResource {
         String accessToken = accessTokenObject.getToken();
         String accessTokenSecret =  accessTokenObject.getTokenSecret();
         logger.info("got oauth access token: " + accessToken);
-        String userId = authDao.getUserId(accessToken);
+
+        String eventyzerFlagString = authDao.getEventyzerFlag(oauthToken);
+        authDao.deleteEventyzerFlag(oauthToken);
+        boolean eventyzerFlag = Boolean.parseBoolean(eventyzerFlagString);
+
         String screenName  = accessTokenObject.getScreenName();
         String userIdFromTwitter = String.valueOf( accessTokenObject.getUserId() );
+
         boolean firstTime = false;
-        if (userId == null) {
-            firstTime = true;
-            authDao.setUserId(accessToken, userIdFromTwitter);
-        } else {
-            //sanity check, should always be true unless twitter server mess up or our DB is broken
-            if (!userId.equals(userIdFromTwitter)) return Response.serverError().build();
-        }
 
         //String screenName = accessTokenObject.getScreenName();
         String hashtags = authDao.getTempHashtags(oauthToken);
@@ -129,11 +131,59 @@ public class LoginResource {
 
         String redirectToHome = authDao.getRedirectToHomeFlag(oauthToken);
         authDao.deleteRedirectToHomeFlag(oauthToken);
-
         boolean redirectToHomeFlag = Boolean.valueOf(redirectToHome);
 
         authDao.setAccessTokenSecret(accessToken, accessTokenSecret);
+
         URI uri  = null;
+
+        //get user id from DB
+        String userIdFromDb = null;
+        if (eventyzerFlag) {
+
+            //DO: get user ID from eventyzer auth DB table
+            int result = authDbDao.isTwitterIdRegistered(userIdFromTwitter);
+            if (result == 0) {
+                firstTime = true;
+            }
+
+            authDao.setUserId(accessToken, userIdFromTwitter);
+
+            if (firstTime) {
+                //TODO: redirect to signup page
+
+                uri = UriBuilder.fromUri(
+                        "http://" + baseDomain + "/event-monitoring/sign-up/"
+                                + "?authToken=" + accessToken
+                                + "&userId=" + userIdFromDb
+                                + "&screenName=" + screenName
+                ).build();
+            } else {
+                //TODO: redirect to home page logged in      //create new event for eventyzer with auth
+
+                uri = UriBuilder.fromUri(
+                        "http://" + baseDomain + "/event-monitoring/"
+                                + "?authToken=" + accessToken
+                                + "&userId=" + userIdFromDb
+                                + "&screenName=" + screenName
+                ).build();
+            }
+
+            return Response.seeOther(uri).build();
+
+        } else {
+            userIdFromDb = authDao.getUserId(accessToken);
+        }
+
+        if (userIdFromDb == null) { //path for HT auth
+            //check if user id existed in our system
+            firstTime = true;
+            authDao.setUserId(accessToken, userIdFromTwitter);
+        } else {
+            //sanity check, should always be true unless twitter server mess up or our DB is broken
+            if (!userIdFromDb.equals(userIdFromTwitter)) return Response.serverError().build();
+        }
+
         if (!redirectToHomeFlag) {
             String uuid = null;
             boolean eventExists = false;
@@ -168,11 +218,13 @@ public class LoginResource {
 
                     //+"&profileImageUrl="+profileImageUrl
             ).build();
+
+            //else redirect to home with auth details
         } else {
             uri = UriBuilder.fromUri(
                     "http://" + baseDomain + "/hashtag-analyzer/"
                             + "?authToken=" + accessToken
-                            + "&userId=" + userId
+                            + "&userId=" + userIdFromDb
                             + "&screenName=" + screenName
             ).build();
         }
@@ -188,4 +240,6 @@ public class LoginResource {
         return Response.seeOther(uri).build();
 //        return Response.serverError().build();
     }
+
+
 }

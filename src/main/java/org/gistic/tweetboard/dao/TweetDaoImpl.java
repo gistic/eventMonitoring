@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 /**
  * Created by sohussain on 4/12/15.
  */
-public class TweetDaoImpl implements TweetDao {
+public class TweetDaoImpl extends TweetDaoConstants implements TweetDao {
     private static final int DEFAULT_TOP_TWEETS_CACHE_DURATION = 60;
     public static final String TWEET_META_DATE_KEY = "CreationDate";
     public static final String TWEET_META_RETWEETS_COUNT_KEY = "RetweetsCount";
@@ -41,18 +41,13 @@ public class TweetDaoImpl implements TweetDao {
     public static final String HISTORIC_META_AUTHTOKEN = "authtoken";
     public static final String EVENT_ACCESS_TOKEN = "eventAccessToken";
     public static final String HISTORIC_META_MEDIA_URL = "mediaURL";
-    //private Jedis jedis;
-    final String All_EVENTS_KEY = "event";
-    final String BG_COLOR_KEY = "banckGroundColor";
-    final String BG_COLOR_DEFAULT = "blue";
-    final String SIZE_KEY = "size";
-    final String SIZE_DEAFULT = "normal";
-    final String SCREENS_KEY = "screens";
-    final String SCREENS_DEFAULT = "[/live, /top, /overtime]";
-    final String START_TIME_KEY = "startTime";
-    final String HASHTAGS_KEY = "hashTags";
-    final String SCREENTIMES_KEY = "screensTime";
-    final String SCREENTIMES_DEFAULT = "[45000, 10000, 8000]";
+    public static final String START_TIME_KEY = "startTime";
+    public static final String HASHTAGS_KEY = "hashTags";
+    public static final String SCREENTIMES_KEY = "screensTime";
+    public static final String SCREENS_KEY = "screens";
+    public static final String SIZE_KEY = "size";
+    public static final String All_EVENTS_KEY = "event";
+    public static final String BG_COLOR_KEY = "banckGroundColor";
 
     public TweetDaoImpl() {
         //this.jedis = jedis;
@@ -91,8 +86,36 @@ public class TweetDaoImpl implements TweetDao {
     public void addToArrived(String uuid, Status tweet, String statusString) {
         String id = String.valueOf(tweet.getId());
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
-            jedis.lpush(getArrivedNotSentListKey(uuid), id);
+            jedis.rpush(getArrivedNotSentListKey(uuid), id);
         }  catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+    }
+
+    @Override
+    public long getArrivedTweetsListLength(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.llen(getArrivedNotSentListKey(uuid));
+        }  catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public void setDefaultEventProperties(String uuid, String[] hashTags, String accessToken, EventConfig userEventConfig) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            jedis.hset(uuid, BG_COLOR_KEY, userEventConfig.getBackgroundColor());
+            jedis.hset(uuid, SIZE_KEY, userEventConfig.getSize());
+            jedis.hset(uuid, SCREENS_KEY, "[" + StringUtils.join(userEventConfig.getScreens(), ",") + "]");
+            if (accessToken == null) accessToken = "";
+            jedis.hset(uuid, EVENT_ACCESS_TOKEN, accessToken);
+            Date d =new Date();
+            String time = d.toGMTString();
+            jedis.hset(uuid, START_TIME_KEY, time);
+            jedis.hset(uuid, HASHTAGS_KEY, "[" + StringUtils.join(hashTags, ",") + "]");
+            jedis.hset(uuid, SCREENTIMES_KEY, "[" + StringUtils.join(userEventConfig.getScreenTimes(), ",") + "]");
+        } catch (JedisException jE) {
             jE.printStackTrace();
         }
     }
@@ -139,6 +162,16 @@ public class TweetDaoImpl implements TweetDao {
         } catch (JedisException jE) {
             jE.printStackTrace();
         }
+    }
+
+    @Override
+    public String removeOldestFromArrived(String uuid) {
+        try (Jedis jedis = JedisPoolContainer.getInstance()) {
+            return jedis.lpop(getArrivedNotSentListKey(uuid));
+        } catch (JedisException jE) {
+            jE.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -191,7 +224,7 @@ public class TweetDaoImpl implements TweetDao {
         }
     }
 
-    @Override
+    @Override //todo check
     public void addToUserTweetsSet(String uuid, Status tweet) {
         String screenName = String.valueOf(tweet.getUser().getScreenName());
         String userId = String.valueOf(tweet.getUser().getId());
@@ -304,8 +337,7 @@ public class TweetDaoImpl implements TweetDao {
             String[] screensArray = getStringArray(screens);
             eventConfig.setScreens(screensArray);
             String screenTimesStr = jedis.hget(uuid, SCREENTIMES_KEY);
-            int[] screenTimes = Arrays.stream(screenTimesStr.substring(1, screenTimesStr.length()-1).split(","))
-                    .map(String::trim).mapToInt(Integer::parseInt).toArray();
+            int[] screenTimes = getIntsArray(screenTimesStr);
             eventConfig.setScreenTimes(screenTimes);
             String hashtagsString = jedis.hget(uuid, HASHTAGS_KEY);
             String[] hashtagsArray = getStringArray(hashtagsString);
@@ -314,6 +346,11 @@ public class TweetDaoImpl implements TweetDao {
             jE.printStackTrace();
         }
         return eventConfig;
+    }
+
+    private int[] getIntsArray(String screenTimesStr) {
+        return Arrays.stream(screenTimesStr.substring(1, screenTimesStr.length()-1).split(","))
+                .map(String::trim).mapToInt(Integer::parseInt).toArray();
     }
 
     private String[] getStringArray(String arrayAsString) {
@@ -453,7 +490,7 @@ public class TweetDaoImpl implements TweetDao {
         }
     }
 
-    @Override
+    @Override //todo check
     public void setNewTweetMeta(String uuid, InternalStatus status) {
         Status tweet = status.getInternalStatus();
         User user = tweet.getUser();
@@ -560,7 +597,8 @@ public class TweetDaoImpl implements TweetDao {
             try {
                 date = Long.parseLong(jedis.hget(key, TWEET_META_DATE_KEY));
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                //TODO log exception as info instead of print stack trace
+                //e.printStackTrace();
             }
             String retweetsStr = jedis.hget(key, TWEET_META_RETWEETS_COUNT_KEY);
             long retweetsCount = 0l;
@@ -875,6 +913,8 @@ public class TweetDaoImpl implements TweetDao {
             jedis.zremrangeByRank(getUsersRankSetKey(uuid), 0, -51);
         }
     }
+
+
 
 
     private String getHistoricUserEventIdsListKey(String authToken) {

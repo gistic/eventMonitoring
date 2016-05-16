@@ -22,9 +22,16 @@ public class EventMap {
     public static void setTwitterConfiguration(TwitterConfiguration tC) {
         twitterConfiguration = tC;
     }
-    public static void put(String[] hashTags, TweetDataLogic tweetDataLogic, String uuid) {
-        Event event = new Event(uuid, hashTags, tweetDataLogic);
+    public static void put(String[] hashTags, TweetDataLogic tweetDataLogic, String uuid, String accessToken) {
+
+        //TODO check this user's running events (auhtorization)
+
+        Event event = new Event(uuid, hashTags, tweetDataLogic, accessToken);
+
+        //add this event to this user's list of events
+        tweetDataLogic.addToUserEventsEventyzer(uuid, accessToken);
         allEvents.put(uuid, event);
+
         ExecutorSingleton.getInstance().submit(new LiveStreamMetadataThread(event));
     }
 
@@ -74,8 +81,9 @@ public class EventMap {
         e.delete(authToken);
     }
 
-    public static void delete(String uuid) {
-        delete(uuid, null);
+    public static void deleteEventyzer(String uuid, String authCode) {
+        //tweetDataLogic.addToUserEventsEventyzer(uuid, accessToken);
+        delete(uuid, authCode);
     }
 
     public static void CleanupTopRankings() {

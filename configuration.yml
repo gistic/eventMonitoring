@@ -64,13 +64,13 @@ database:
   driverClass: org.postgresql.Driver
 
   # the username
-  user: hashtails
+  user: eventyzeruser
 
   # the password
-  password: p@ssw0rd@ipmo
+  password: eventyzerpassword
 
   # the JDBC URL
-  url: jdbc:postgresql://localhost:5432/hashtails
+  url: jdbc:postgresql://localhost:5432/eventyzerdb
 
   # any properties specific to your JDBC driver:
   properties:
@@ -99,4 +99,3 @@ database:
 
   # the minimum amount of time an connection must sit idle in the pool before it is eligible for eviction
   minIdleTime: 2 minutes
-

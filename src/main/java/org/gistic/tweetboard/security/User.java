@@ -11,7 +11,16 @@ public class User {
 
     private String accessTokenSecret;
 
-    public User() {
+    private boolean eventyzerFlag;
+
+    public boolean getEventyzerFlag() {
+        return eventyzerFlag;
+    }
+
+    public User(String accessToken, String accessTokenSecret, boolean eventyzerFlag) {
+        this(accessToken, accessTokenSecret);
+
+        this.eventyzerFlag = eventyzerFlag;
     }
     public User(boolean noUser) {
         this.noUser = noUser;

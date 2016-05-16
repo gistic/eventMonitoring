@@ -74,13 +74,16 @@ public class Event {
         }
 
 
-
-        tweetDataLogic.createNewEvent(hashTags, accessToken);
+        if (v2) {
+            tweetDataLogic.createNewEvent(hashTags, accessToken);
+        } else {
+            tweetDataLogic.createNewEventV1(hashTags, accessToken);
+        }
         if (v2) tweetDataLogic.addToUserEvents(uuid, authCode);
     }
 
-    public Event(String uuid, String[] hashTags, TweetDataLogic tweetDataLogic) {
-        this(uuid, hashTags, tweetDataLogic, false, null, null, null); //v2 flag set to false by default for eventmonitoring v1
+    public Event(String uuid, String[] hashTags, TweetDataLogic tweetDataLogic, String accessToken) {
+        this(uuid, hashTags, tweetDataLogic, false, accessToken, null, null); //v2 flag set to false by default for eventmonitoring v1
     }
 
     public void delete(String authToken) {
@@ -89,6 +92,8 @@ public class Event {
             if (v2) {
                 twitterServiceManagerV2.stop(accesstoken);
             } else {
+                //remove from user_events DB table
+                tweetDataLogic.removeFromUserEventsEventyzer(uuid, authToken);
                 TwitterServiceManager.stop(uuid);
             }
             tweetProcessor.stop();

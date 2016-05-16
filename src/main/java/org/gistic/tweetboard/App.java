@@ -2,25 +2,18 @@ package org.gistic.tweetboard;
 
 
 import com.bendb.dropwizard.redis.JedisBundle;
-
-
 import com.bendb.dropwizard.redis.JedisFactory;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthFactory;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
+import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import io.dropwizard.db.DataSourceFactory;
-import io.dropwizard.migrations.MigrationsBundle;
-import io.dropwizard.jdbi.DBIFactory;
-
-
 import org.gistic.tweetboard.cleanup.CleanTopRankings;
-import org.gistic.tweetboard.dao.EmailDao;
+import org.gistic.tweetboard.dao.AuthDbDao;
 import org.gistic.tweetboard.dao.JdbiSingleton;
 import org.gistic.tweetboard.eventmanager.EventMap;
 import org.gistic.tweetboard.eventmanager.ExecutorSingleton;
-import org.gistic.tweetboard.representations.Email;
 import org.gistic.tweetboard.resources.*;
 import org.gistic.tweetboard.security.TwitterAuthFactory;
 import org.gistic.tweetboard.security.TwitterAuthenticator;
@@ -57,48 +50,32 @@ public class App extends Application<TweetBoardConfiguration> {
                 return configuration.getJedisFactory();
             }
         });
-        b.addBundle(new MigrationsBundle<TweetBoardConfiguration>() {
-            @Override
-            public DataSourceFactory getDataSourceFactory(TweetBoardConfiguration configuration) {
-                return configuration.getDataSourceFactory();
-            }
-        });
     }
 
     @Override
     public void run(TweetBoardConfiguration c, Environment e) throws Exception {
         LOGGER.info("Method App#run() called");
-        
+        ConfigurationSingleton.setInstance(c);
+
         final DBIFactory factory = new DBIFactory();
         final DBI jdbi = factory.build(e, c.getDataSourceFactory(), "postgresql");
         JdbiSingleton.setInstance(jdbi);
-		  
-        ConfigurationSingleton.setInstance(c);
+
         JedisPool pool = ConfigurationSingleton.getInstance().getJedisFactory().build(e);
         JedisPoolContainer.setInstance(pool);
         EventMap.setTwitterConfiguration(c.getTwitterConfiguration());
         e.jersey().register(AuthFactory.binder(new TwitterAuthFactory<User>(new TwitterAuthenticator(),
                 User.class)));
         e.jersey().register(MultiPartFeature.class);
-        e.jersey().register(new EventsResource());
+        e.jersey().register(new EventsResource(jdbi.onDemand(AuthDbDao.class)));
         LiveTweetsBroadcaster broadcaster = new LiveTweetsBroadcaster();
         LiveTweetsBroadcasterSingleton.set( broadcaster );
         e.jersey().register(broadcaster);
         e.jersey().register(new AdminEventSource());
-        e.jersey().register(new LoginResource());
+        //e.jersey().register(new LoginResource(authDbDao));
+        e.jersey().register(new LoginResource(jdbi.onDemand(AuthDbDao.class)));
+        e.jersey().register(new SignupResource(jdbi.onDemand(AuthDbDao.class)));
         e.jersey().register(new TwitterUserResource());
-        
-        e.jersey().register(new LiveNewsBroadcaster());
-        
-        e.jersey().register(new KeywordsBroadcaster());
-        
-        e.jersey().register(new LiveFacebookBroadcaster());
-        
-        e.jersey().register(new LiveFacebookPagesBroadcaster());
-
-        e.jersey().register(new LiveEmailBroadcaster());
-
-
         e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.SseResource", "/api/adminLiveTweets");
         DelayedJobsManager.initiate();
         //e.getApplicationContext().addServlet("org.gistic.tweetboard.resources.LiveTweetsServlet", "/api/liveTweets");

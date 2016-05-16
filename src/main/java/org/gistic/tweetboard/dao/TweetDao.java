@@ -35,6 +35,8 @@ public interface TweetDao {
 
     void removeFromArrived(String uuid, String id);
 
+    String removeOldestFromArrived(String uuid);
+
     void addToSentForApproval(String uuid, String id);
 
     JSONObject getOldestTweetNotSentForApproval(String uuid) throws TwitterException;
@@ -165,4 +167,8 @@ public interface TweetDao {
     HistoricUserEvent getHistoricUserEvent(String historicUserEventId);
 
     void removeBelowTopN(String uuid);
+
+    long getArrivedTweetsListLength(String uuid);
+
+    void setDefaultEventProperties(String uuid, String[] hashTags, String accessToken, EventConfig userEventConfig);
 }
