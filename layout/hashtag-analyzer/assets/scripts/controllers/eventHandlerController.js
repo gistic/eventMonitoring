@@ -240,16 +240,30 @@ EventHandlerController.controller('EventMainController',
             doc.text(marginLeft + logoWidth + padding, (marginTop += lineHeight), 'Keywords included: ' + keywordsIncluded);
             doc.text(marginLeft + logoWidth + padding, (marginTop += lineHeight), 'Receipents: ' + reportEmails);
 
-            // Report first page.
             doc.line(marginLeft, (marginTop += lineHeight), pageWidth, marginTop); // horizontal line
-
- 
             doc.text(marginLeft, (marginTop += lineHeight), 'TWEETS Statistics');
 
-            angular.forEach(panelIds, function(value, index) {
+            // var tweetsContainerId = 'tweetsContainer';
+            // var tweetsContainer = document.getElementById(tweetsContainerId);
+            // if (tweetsContainer) {
+            //     tweetsContainer.parentNode.removeChild(tweetsContainer);
+            // }
+
+            // tweetsContainer = document.createElement('div');
+            // tweetsContainer.id = tweetsContainerId;
+
+            // var tweetElemetns = $('#keywordTopTweets').children();
+            // for (var i = 0; i < Math.min(tweetElemetns.length, 5); i++){
+            //     tweetsContainer.appendChild($('#keywordTopTweets').children()[0]);
+            // }
+        
+            var childElements = $('#keywordTopTweets').children();
+            var childCount = Math.min(childElements.length, 5);
+
+            for ( i = 0; i <= childCount; i++) {
 
                 // Cloning fails when getting an element by class.
-                var element = document.getElementById(value); 
+                var element = i < childCount ?  childElements[i] : document.getElementById('media-panel'); 
 
                 if (element != null) {
 
@@ -261,55 +275,83 @@ EventHandlerController.controller('EventMainController',
 
                             var img = new Image();
                             img.src = dataUrl;
+                            document.body.appendChild(img);
 
                             var imgSize = {
-                                width: 320,
-                                height: 200,
+                                width: 710,
+                                height: 97,
                             };
 
                             canvas.width = imgSize.width;
                             canvas.height = imgSize.height;
 
-                            ctx.drawImage(img, 0, 0, imgSize.width, imgSize.height);
-
-                            document.body.appendChild(canvas);                            
-                            doc.addImage(canvas.toDataURL("image/jpeg"), imgeType, marginLeft + pageWidth*0.53, marginTop+2);
-                            marginTop += 49;
+                            ctx.drawImage(img, 0, 0, imgSize.width, imgSize.height);                   
+                            doc.addImage(canvas.toDataURL("image/png"), imgeType, marginLeft, marginTop+2);
+                            marginTop += 24;
 
                             console.log(padding);
 
                             // Track how many async calls have been completed. 
                             callCount -= 1;
 
-                            // Last image rendered async.
                             if (callCount <= 0) {
                                 doc.save(reportName);
+                                //addPanels();
                             }                            
                         })
                         .catch(function (error) {
                             console.error('ERROR: PDF conversion failed!', error);
                         });
                 }
-            });
+            };
 
-            // function addImages(doc, images, x, y) {
-            //     for (var i = 0; i < images.length; i++) {
-            //         marginTop += 100 + padding;
-            //         doc.addImage(images[i], imgeType, x, marginTop);
-            //     }
-            //     doc.save(reportName);
-            // }
+            function addPanels() {
+                angular.forEach(panelIds, function(value, index) {
 
-            // function getTopElement(element, topLimit) {
-            //     var element = angular.element(element).copy();
-            //     element.content = '';
-            //     var children = [];
+                    // Cloning fails when getting an element by class.
+                    var element = document.getElementById(value); 
 
-            //     for (var i = 0; i < Math.min(element.children().length, topLimit); i++) {
-            //         children.push(element.children()[i]);
-            //     }
-            //     element.content = children;
-            // }
+                    if (element != null) {
+
+                        // Track how many async calls have been started. 
+                        callCount += 1;         
+
+                        domtoimage.toPng(element)
+                            .then(function (dataUrl) {
+
+                                var img = new Image();
+                                img.src = dataUrl;
+
+                                var imgSize = {
+                                    width: 320,
+                                    height: 200,
+                                };
+
+                                canvas.width = imgSize.width;
+                                canvas.height = imgSize.height;
+
+                                ctx.drawImage(img, 0, 0, imgSize.width, imgSize.height);
+
+                                document.body.appendChild(canvas);                            
+                                doc.addImage(canvas.toDataURL("image/jpeg"), imgeType, marginLeft + pageWidth*0.53, marginTop+2);
+                                marginTop += 49;
+
+                                console.log(padding);
+
+                                // Track how many async calls have been completed. 
+                                callCount -= 1;
+
+                                // Last image rendered async.
+                                if (callCount <= 0) {
+                                    doc.save(reportName);
+                                }                            
+                            })
+                            .catch(function (error) {
+                                console.error('ERROR: PDF conversion failed!', error);
+                            });
+                    }
+                });
+            }
         };
 
         $scope.showLoadMore = true;

@@ -1,3 +1,4 @@
+<div id='keywordTopTweets'>
 <article class="media clearfix tweet fx-fade fx-speed-2000" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue track by $index" data-user-id="{{tweet.user.id_str}}">
 
     <div class="tweet-content">
@@ -52,6 +53,7 @@
     </aside>
 
 </article>
+</div>
 
 <div class="text-center">
     <a class="btn btn-link btn-block btn-load-history" ng-show="loadMoreButtonFromHistory()" ng-click="loadMoreTweetsFromHistory()">Load More</a>
