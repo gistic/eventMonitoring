@@ -243,67 +243,67 @@ EventHandlerController.controller('EventMainController',
             doc.line(marginLeft, (marginTop += lineHeight), pageWidth, marginTop); // horizontal line
             doc.text(marginLeft, (marginTop += lineHeight), 'TWEETS Statistics');
 
-            // var tweetsContainerId = 'tweetsContainer';
-            // var tweetsContainer = document.getElementById(tweetsContainerId);
-            // if (tweetsContainer) {
-            //     tweetsContainer.parentNode.removeChild(tweetsContainer);
-            // }
-
-            // tweetsContainer = document.createElement('div');
-            // tweetsContainer.id = tweetsContainerId;
-
-            // var tweetElemetns = $('#keywordTopTweets').children();
-            // for (var i = 0; i < Math.min(tweetElemetns.length, 5); i++){
-            //     tweetsContainer.appendChild($('#keywordTopTweets').children()[0]);
-            // }
-        
+       
             var childElements = $('#keywordTopTweets').children();
-            var childCount = Math.min(childElements.length, 5);
+            var childCount = Math.min(childElements.length, 5), 
+                imgSize = {}, isTweet = true;
 
-            for ( i = 0; i <= childCount; i++) {
+            for (var i = 0; i <= childCount; i++) {
+
+                isTweet = i < childCount ? true : false;
 
                 // Cloning fails when getting an element by class.
-                var element = i < childCount ?  childElements[i] : document.getElementById('media-panel'); 
+                var element = isTweet ?  childElements[i] : document.getElementById('media-panel'); 
 
                 if (element != null) {
 
-                    // Track how many async calls have been started. 
-                    callCount += 1;         
+                    if (isTweet) {
+                        imgSize = {
+                            width: 710,
+                            height: 97
+                        }
 
-                    domtoimage.toPng(element)
+                        if (i > 0) {
+                            marginTop += 24;
+                        }
+
+                    } else {
+                        imgSize = {
+                            width: 410,
+                            height: 450
+                        }
+                        if (i > 0) {
+                            marginTop += 26;
+                        }
+                    }
+
+                    addImage(element, imgSize, isTweet ? marginLeft : marginLeft + 45, marginTop, (i >= childCount));                            
+                }
+            };
+
+            function addImage(element, imgSize, marginLeft, marginTop, saveReport) {
+                    domtoimage
+                        .toPng(element)
                         .then(function (dataUrl) {
 
                             var img = new Image();
                             img.src = dataUrl;
                             document.body.appendChild(img);
 
-                            var imgSize = {
-                                width: 710,
-                                height: 97,
-                            };
-
                             canvas.width = imgSize.width;
                             canvas.height = imgSize.height;
 
                             ctx.drawImage(img, 0, 0, imgSize.width, imgSize.height);                   
-                            doc.addImage(canvas.toDataURL("image/png"), imgeType, marginLeft, marginTop+2);
-                            marginTop += 24;
+                            doc.addImage(canvas.toDataURL("image/jpeg"), imgeType, marginLeft, marginTop+2);
 
-                            console.log(padding);
-
-                            // Track how many async calls have been completed. 
-                            callCount -= 1;
-
-                            if (callCount <= 0) {
+                            if (saveReport) {
                                 doc.save(reportName);
-                                //addPanels();
                             }                            
                         })
                         .catch(function (error) {
                             console.error('ERROR: PDF conversion failed!', error);
                         });
-                }
-            };
+            }
 
             function addPanels() {
                 angular.forEach(panelIds, function(value, index) {
