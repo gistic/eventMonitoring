@@ -4,7 +4,7 @@ var myAppServices = angular.module('myAppServices', []);
 
 
 // Factory : Request data factory for : Start event & Any other request
-myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$window', function($rootScope, $http, $location, $window) {
+myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$window', '$cookies', function($rootScope, $http, $location, $window, $cookies) {
 
     return {
 
@@ -41,7 +41,7 @@ myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$wind
 
         startEvent: function(eventHashtag) {
 
-            var requestUrl = $rootScope.baseUrl + '/api/events?eventyzer=true' ;
+            var requestUrl = $rootScope.baseUrl + '/api/events?eventyzer=true' + '&authToken=' + $cookies.userAuthentication;
 
             return $http({
                 method: 'POST',
