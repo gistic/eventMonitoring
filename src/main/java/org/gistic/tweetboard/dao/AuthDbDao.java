@@ -48,10 +48,10 @@ public interface AuthDbDao {
     @Mapper(EventConfigMapper.class)
     EventConfig getUserEventConfigDefault(@Bind("twitter_id") String twitterId);
 
-    @SqlUpdate("INSERT INTO public.user_event_defaults(bg_colour, screens_j_array, screen_time_j_array, screen_size, hashtags_j_array, moderated, twitter_id) VALUES(:bg_colour, :screens_j_array, :screen_time_j_array, :screen_size, :moderated, :twitter_id)")
+    @SqlUpdate("INSERT INTO public.user_event_defaults(bg_colour, screens_j_array, screen_time_j_array, screen_size, moderated, twitter_id) VALUES(:bg_colour, :screens_j_array, :screen_time_j_array, :screen_size, :moderated, :twitter_id)")
     void addToEventConfigDefault(@Bind("bg_colour") String bgColour, @Bind("screens_j_array") String screensJArray, @Bind("screen_time_j_array") String screensTimeJarray, @Bind("screen_size") String sceenSize, @Bind("moderated") boolean moderated, @Bind("twitter_id") String twitterId);
 
-    @SqlUpdate("UPDATE public.user_event_defaults SET (bg_colour, screens_j_array, screen_time_j_array, screen_size, hashtags_j_array, moderated) VALUES(:bg_colour, :screens_j_array, :screen_time_j_array, :screen_size, :moderated) WHERE twitter_id = :twitter_id")
+    @SqlUpdate("UPDATE public.user_event_defaults SET (bg_colour, screens_j_array, screen_time_j_array, screen_size, moderated) VALUES(:bg_colour, :screens_j_array, :screen_time_j_array, :screen_size, :moderated) WHERE twitter_id = :twitter_id")
     void updateEventConfigDefault(@Bind("bg_colour") String bgColour, @Bind("screens_j_array") String screensJArray, @Bind("screen_time_j_array") String screensTimeJarray, @Bind("screen_size") String sceenSize, @Bind("moderated") boolean moderated, @Bind("twitter_id") String twitterId);
 
 }
