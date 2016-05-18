@@ -41,7 +41,7 @@ myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$wind
 
         startEvent: function(eventHashtag) {
 
-            var requestUrl = $rootScope.baseUrl + '/api/events';
+            var requestUrl = $rootScope.baseUrl + '/api/events?eventyzer=true' ;
 
             return $http({
                 method: 'POST',

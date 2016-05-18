@@ -3,6 +3,18 @@ var startNewEventController = angular.module('startNewEventController', []);
 /* Controller : Start new event */
 startNewEventController.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', 'filterHashtags', 'User', function($rootScope, $scope, $http, $state, RequestData, filterHashtags, User) {
 
+
+    $scope.initHomepage = function() {
+        User.setUserAuth();
+        if ($rootScope.logedInUser) {
+            User.getUserData();
+        }
+    }
+
+    $scope.logOutUser = function() {
+        User.userSignOut();
+    };
+
     $scope.showSearchInput = false;
     $scope.loading = false;
 
@@ -44,7 +56,7 @@ startNewEventController.controller('StartNewEventController', ['$rootScope', '$s
                 .success(function(response) {
 
                     $scope.loading = true;
-                    
+
                     $rootScope.eventID = response.uuid;
                     $state.transitionTo('admin', {
                         uuid: $scope.eventID
