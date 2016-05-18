@@ -1,7 +1,7 @@
 var startNewEventController = angular.module('startNewEventController', []);
 
 /* Controller : Start new event */
-startNewEventController.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', 'filterHashtags', function($rootScope, $scope, $http, $state, RequestData, filterHashtags) {
+startNewEventController.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', 'filterHashtags', 'User', function($rootScope, $scope, $http, $state, RequestData, filterHashtags, User) {
 
     $scope.showSearchInput = false;
     $scope.loading = false;
@@ -22,6 +22,10 @@ startNewEventController.controller('StartNewEventController', ['$rootScope', '$s
         if (index !== -1) {
             $rootScope.keywords.splice(index, 1);
         }
+    }
+
+    $scope.twitterLogIn = function() {
+        User.getTwitterAuth(true);
     }
 
     $scope.startNewEvent = function() {

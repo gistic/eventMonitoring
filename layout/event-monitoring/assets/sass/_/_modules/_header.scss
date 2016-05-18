@@ -5,6 +5,12 @@ body {
 .navbar {
     background-color: rgba(34, 34, 34, 0.3);
     border: none;
+    padding: $padding - 5 0;
+    .navbar-brand {
+        padding: 0;
+        height: auto;
+        line-height: 30px;
+    }
 }
 
 header {
@@ -111,6 +117,39 @@ header {
         .btn.btn-search {
             @include border-right-radius(5px);
             line-height: 40px;
+        }
+    }
+}
+
+.nav-user {
+    margin-left: $margin * 5;
+    a {
+        &:hover,
+        &:focus {
+            text-decoration: none;
+        }
+    }
+    img {
+        @include size(28px);
+        @include border-radius(50%);
+    }
+    .dropdown-menu {
+        background: rgba(253, 253, 253, 0.9);
+        @include box-shadow(none);
+        border: none;
+        top: 103%;
+        padding: 0;
+        li {
+            a {
+                color: $gray;
+                padding: $padding / 2 $padding / 3;
+                &:hover,
+                &:focus {
+                    background: #015fb7;
+                    color: $white;
+                    display: block;
+                }
+            }
         }
     }
 }

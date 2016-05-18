@@ -1,6 +1,7 @@
 'use strict';
 
 var eventAdminApp = angular.module('eventAdminApp', [
+    'ngCookies',
     'ui.bootstrap',
     'ngTagsInput',
     'timer',
@@ -13,6 +14,7 @@ var eventAdminApp = angular.module('eventAdminApp', [
     'trustedUsersController',
     'blockedUsersController',
     'superAdminController',
+    'UserSignUpController',
     'uploadLogoApp',
     'startNewEventController',
     'eventApp'
@@ -49,6 +51,11 @@ eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {
             url: '/superAdmin',
             templateUrl: 'views/admin/super-admin.html',
             controller: 'SuperAdminCtrl'
+        },
+        "signUp": {
+            url: '/signUp',
+            templateUrl: 'views/admin/sign-up.html',
+            controller: 'UserSignUpController'
         }
     };
 
