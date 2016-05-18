@@ -4,27 +4,27 @@ var myAppServices = angular.module('myAppServices', []);
 
 
 // Factory : Request data factory for : Start event & Any other request
-myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$window', function ($rootScope, $http, $location, $window) {
+myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$window', function($rootScope, $http, $location, $window) {
 
     return {
 
-        setEventHashTag: function (eventHashtag) {
+        setEventHashTag: function(eventHashtag) {
             $rootScope.eventHashtag = eventHashtag;
         },
 
-        getEventHashTag: function () {
+        getEventHashTag: function() {
             return $rootScope.eventHashtag;
         },
 
-        setEventID: function (eventID) {
+        setEventID: function(eventID) {
             $rootScope.eventID = eventID;
         },
 
-        getEventID: function () {
+        getEventID: function() {
             return $rootScope.eventID;
         },
 
-        fetchData: function (requestAction, apiUrl, requestData) {
+        fetchData: function(requestAction, apiUrl, requestData) {
 
             var requestUrl = $rootScope.baseUrl + apiUrl;
 
@@ -32,17 +32,15 @@ myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$wind
                 method: requestAction,
                 url: requestUrl,
                 data: requestData
-            }).success(function (response) {
+            }).success(function(response) {
                 return response.data;
-            }).error(function (error) {
+            }).error(function(error) {
                 console.log(error);
             });
         },
 
-        startEvent: function (eventHashtag) {
+        startEvent: function(eventHashtag) {
 
-            // var eventHashtag = $('#eventHashtag').val();
-            
             var requestUrl = $rootScope.baseUrl + '/api/events';
 
             return $http({
@@ -51,11 +49,11 @@ myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$wind
                 data: {
                     "hashTags": eventHashtag
                 }
-            }).success(function (response) {
+            }).success(function(response) {
                 $rootScope.eventHashtag = eventHashtag;
                 $rootScope.eventID = response.uuid;
                 return response.uuid;
-            }).error(function (error) {
+            }).error(function(error) {
                 console.log(error);
             });
         }
@@ -65,64 +63,60 @@ myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$wind
 
 
 // Factory : Get views layout data for : Colors - Sizes - Screens
-myAppServices.factory('RequestViewsLayoutData', ['$rootScope', '$location', '$window', 'filterFilter', 'RequestData', function ($rootScope, $location, $window, filterFilter, RequestData) {
+myAppServices.factory('RequestViewsLayoutData', ['$rootScope', '$location', '$window', 'filterFilter', 'RequestData', function($rootScope, $location, $window, filterFilter, RequestData) {
 
     // LAYOUT : Colors
     $rootScope.layoutColors = ['black', 'turquoise', 'blue', 'violet', 'pink', 'green', 'orange'];
-    $rootScope.layoutColor = function ($index) {
+    $rootScope.layoutColor = function($index) {
         $rootScope.userColor = $rootScope.layoutColors[$index];
     }
 
     // LAYOUT : Sizes
     $rootScope.layoutSizes = ['small', 'normal', 'large'];
-    $rootScope.layoutSize = function ($index) {
+    $rootScope.layoutSize = function($index) {
         $rootScope.userSize = $rootScope.layoutSizes[$index];
     }
 
     // LAYOUT : Screens
-    $rootScope.layoutScreens = [
-        {
-            name: 'Live Tweets',
-            value: 'live',
-            selected: true
-        },
-        {
-            name: 'Top People',
-            value: 'top',
-            selected: true
-        },
-        {
-            name: 'Tweets Over Time',
-            value: 'overtime',
-            selected: true
-        }
-    ];
+    $rootScope.layoutScreens = [{
+        name: 'Live Tweets',
+        value: 'live',
+        selected: true
+    }, {
+        name: 'Top People',
+        value: 'top',
+        selected: true
+    }, {
+        name: 'Tweets Over Time',
+        value: 'overtime',
+        selected: true
+    }];
 
     return {
-        userColor: function () {
+        userColor: function() {
             return $rootScope.userColor;
         },
-        userSize: function () {
+        userSize: function() {
             return $rootScope.userSize;
         },
-        userScreen: function () {
+        userScreen: function() {
             return $rootScope.userScreens;
         },
-        showRetweets: function () {
+        showRetweets: function() {
             return $rootScope.showRetweets;
         }
-        
+
     };
 }]);
 
 // Factory : Create event source which is listen to new coming tweets and views layout cusomization changes
-myAppServices.factory('CreateEventSource', ['$rootScope', '$location', 'RequestData', function ($rootScope, $location, RequestData) {
+myAppServices.factory('CreateEventSource', ['$rootScope', '$location', 'RequestData', function($rootScope, $location, RequestData) {
 
     this.eventSourceObject;
     this.closed;
 
     return {
-        createSource: function () {
+        createSource: function() {
             var apiUrl = "/api/liveTweets?uuid=" + $rootScope.eventID;
             var requestUrl = $rootScope.baseUrl + apiUrl;
             $rootScope.liveTweetsUrl = requestUrl;
@@ -130,10 +124,10 @@ myAppServices.factory('CreateEventSource', ['$rootScope', '$location', 'RequestD
             this.closed = false;
             return this.eventSourceObject;
         },
-        getSourceObject: function () {
+        getSourceObject: function() {
             return this.eventSourceObject || this.createSource();
         },
-        closeEventSource: function () {
+        closeEventSource: function() {
             if (this.eventSourceObject != null || this.eventSourceObject != undefined) {
                 this.eventSourceObject.close();
                 this.eventSourceObject = undefined;
@@ -146,10 +140,10 @@ myAppServices.factory('CreateEventSource', ['$rootScope', '$location', 'RequestD
 }]);
 
 // Factory : Check hashtag for bad words
-myAppServices.factory('filterHashtags', ['$rootScope', function ($rootScope) {
+myAppServices.factory('filterHashtags', ['$rootScope', function($rootScope) {
 
     return {
-        preventBadHashtags: function (hashtag) {
+        preventBadHashtags: function(hashtag) {
 
             var badHashtag = false;
 
@@ -185,64 +179,82 @@ myAppServices.factory('filterHashtags', ['$rootScope', function ($rootScope) {
 }])
 
 // User Services
-myAppServices.factory('User', function ($rootScope, $cookies, $cookieStore, RequestData, $location, $window, $state) {
+myAppServices.factory('User', function($rootScope, $cookies, $cookieStore, RequestData, $location, $window, $state) {
 
     return {
 
-        getTwitterAuth: function (redirectTo, eventHashtag) {
+        getTwitterAuth: function(redirectTo, eventHashtag) {
             var requestAction = "GET";
             var requestData = ""
 
             var apiUrl = '/api/events/login/twitter?eventyzer=true';
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
-                .then(function (response) {
+                .then(function(response) {
                     var openUrl = response.data.url;
                     $window.location.href = openUrl;
                 });
         },
 
-        signUp: function (userData) {
-            console.log("hello")
+        signUp: function(userID, userTwitterHandler, userEmailAddress, userFirstName, userLastName) {
+
+            var requestAction = "POST";
+
+            var apiUrl = '/api/events/signup/eventyzer';
+
+            var requestData = {
+                twitterId: userID,
+                twitterHandle: userTwitterHandler,
+                email: userEmailAddress,
+                firstName: userFirstName,
+                lastName: userLastName
+            };
+
+            RequestData.fetchData(requestAction, apiUrl, requestData)
+                .success(function(response) {
+                    $window.location.href = $rootScope.baseUrl;
+                }).error(function(error,response) {
+                    console.log(error)
+                });
         },
-        
-        getUserData: function () {
+
+        getUserData: function() {
             var apiUrl = '/api/twitterUsers' + '?authToken=' + $cookies.userAuthentication;
             var requestAction = "GET";
             var requestData = "";
             RequestData.fetchData(requestAction, apiUrl, requestData)
-                .success(function (response) {
+                .success(function(response) {
                     $rootScope.authoUserName = response.screenName;
                     $rootScope.authoUserID = response.id;
                     $rootScope.authoUserPicture = response.originalProfileImageURLHttps;
-                }).error(function (response) {
+                }).error(function(response) {
                     $rootScope.logedInUser = false;
                     $cookieStore.remove("userAuthentication");
                 });
         },
 
-        setUserAuth: function () {
-            
+        setUserAuth: function() {
+
             $rootScope.logedInUser = false;
-            
-             var locationUrl = $location.absUrl();
-             var homeAuthToken = locationUrl.substring(locationUrl.indexOf("=") + 1, locationUrl.indexOf("&"));
-            
+
+            var locationUrl = $location.absUrl();
+            var homeAuthToken = locationUrl.substring(locationUrl.indexOf("=") + 1, locationUrl.indexOf("&"));
+
             if ($state.current.name == "home" && homeAuthToken != "") {
                 $rootScope.authToken = homeAuthToken;
                 $cookies.userAuthentication = $rootScope.authToken;
                 $rootScope.logedInUser = true;
                 return !$rootScope.logedInUser;
             }
-            
+
             if ($location.search().authToken != undefined) {
-                
+
                 $rootScope.authToken = $location.search().authToken;
                 $cookies.userAuthentication = $rootScope.authToken;
                 $rootScope.logedInUser = true;
                 return !$rootScope.logedInUser;
             }
-            
+
             if ($cookies.userAuthentication == undefined) {
                 $rootScope.logedInUser = false;
                 return $rootScope.logedInUser;
@@ -253,11 +265,11 @@ myAppServices.factory('User', function ($rootScope, $cookies, $cookieStore, Requ
             }
         },
 
-        getUserAuth: function () {
+        getUserAuth: function() {
             return $rootScope.logedInUser;
         },
 
-        userSignOut: function () {
+        userSignOut: function() {
             $cookieStore.remove("userAuthentication");
             $rootScope.logedInUser = false;
         }
