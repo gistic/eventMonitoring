@@ -155,7 +155,7 @@ public class LoginResource {
                 uri = UriBuilder.fromUri(
                         "http://" + baseDomain + "/event-monitoring/#/signUp"
                                 + "?authToken=" + accessToken
-                                + "&userId=" + userIdFromDb
+                                + "&userId=" + userIdFromTwitter
                                 + "&screenName=" + screenName
                 ).build();
             } else {
