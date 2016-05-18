@@ -153,7 +153,7 @@ public class LoginResource {
                 //TODO: redirect to signup page
 
                 uri = UriBuilder.fromUri(
-                        "http://" + baseDomain + "/event-monitoring/sign-up/"
+                        "http://" + baseDomain + "/event-monitoring/#/signUp"
                                 + "?authToken=" + accessToken
                                 + "&userId=" + userIdFromDb
                                 + "&screenName=" + screenName
