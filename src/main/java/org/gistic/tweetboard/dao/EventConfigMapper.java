@@ -16,11 +16,12 @@ public class EventConfigMapper implements ResultSetMapper<EventConfig> {
     public EventConfig map(int i, ResultSet r, StatementContext statementContext) throws SQLException {
         EventConfig eventConfig = new EventConfig();
         eventConfig.setBackgroundColor(r.getString("bg_colour"));
-        eventConfig.setHashtags(getStringArray(r.getString("hashtags_j_array")));
+        //eventConfig.setHashtags(getStringArray(r.getString("hashtags_j_array")));
         eventConfig.setModerated(Boolean.getBoolean(r.getString("moderated")));
         //eventConfig.setRetweetEnabled(r.getString(""));
         eventConfig.setScreens(getStringArray(r.getString("screens_j_array")));
-        eventConfig.setScreenTimes(getIntsArray(r.getString("screen_time_j_array")));
+        int[] screenTimes = getIntsArray(r.getString("screen_time_j_array"));
+        eventConfig.setScreenTimes(screenTimes);
         eventConfig.setSize(r.getString("screen_size"));
         return  eventConfig;
         //return new UEventConfigser(r.getLong("user_id"), r.getString("access_token"), r.getString("access_token_secret"));

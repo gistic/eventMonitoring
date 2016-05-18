@@ -107,14 +107,18 @@ public class TweetDaoImpl extends TweetDaoConstants implements TweetDao {
         try (Jedis jedis = JedisPoolContainer.getInstance()) {
             jedis.hset(uuid, BG_COLOR_KEY, userEventConfig.getBackgroundColor());
             jedis.hset(uuid, SIZE_KEY, userEventConfig.getSize());
-            jedis.hset(uuid, SCREENS_KEY, "[" + StringUtils.join(userEventConfig.getScreens(), ",") + "]");
+            String screens = StringUtils.join(userEventConfig.getScreens(), ",");
+            jedis.hset(uuid, SCREENS_KEY, "[" + screens + "]");
             if (accessToken == null) accessToken = "";
             jedis.hset(uuid, EVENT_ACCESS_TOKEN, accessToken);
             Date d =new Date();
             String time = d.toGMTString();
             jedis.hset(uuid, START_TIME_KEY, time);
             jedis.hset(uuid, HASHTAGS_KEY, "[" + StringUtils.join(hashTags, ",") + "]");
-            jedis.hset(uuid, SCREENTIMES_KEY, "[" + StringUtils.join(userEventConfig.getScreenTimes(), ",") + "]");
+//            String screenTimes = StringUtils.join(userEventConfig.getScreenTimes() + ",");
+//            jedis.hset(uuid, SCREENTIMES_KEY, "[" + screenTimes + "]");
+            String screenTimes = Arrays.toString(userEventConfig.getScreenTimes());
+            jedis.hset(uuid, SCREENTIMES_KEY, screenTimes);
         } catch (JedisException jE) {
             jE.printStackTrace();
         }

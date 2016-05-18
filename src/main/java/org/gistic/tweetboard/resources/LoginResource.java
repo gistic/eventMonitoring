@@ -162,7 +162,7 @@ public class LoginResource {
                 //TODO: redirect to home page logged in      //create new event for eventyzer with auth
 
                 uri = UriBuilder.fromUri(
-                        "http://" + baseDomain + "/event-monitoring/"
+                        "http://" + baseDomain + "/event-monitoring/index.html"
                                 + "?authToken=" + accessToken
                                 + "&userId=" + userIdFromTwitter
                                 + "&screenName=" + screenName
