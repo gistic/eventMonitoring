@@ -17,6 +17,7 @@ angular.module('trackHashtagApp', [
     'EventHandlerController',
     'KeywordsController',
     'FbPagesController',
+    'EmailsController',
     'HashHajjController',
 
     'oitozero.ngSweetAlert',
@@ -137,7 +138,22 @@ angular.module('trackHashtagApp', [
             url: '/create',
             templateUrl: 'views/views-components/fb-pages-create.html',
             controller: 'FbPagesController'
-        }
+        },
+        "emails":{
+            url: '/emails',
+            templateUrl: 'views/views-components/emails.html',
+            controller: 'EmailsController'
+        },
+        "emails.index":{
+            url: '/index',
+            templateUrl: 'views/views-components/emails-list.html',
+            controller: 'EmailsController'
+        },
+        "emails.create":{
+            url: '/create',
+            templateUrl: 'views/views-components/emails-create.html',
+            controller: 'EmailsController'
+        },
     };
 
     for (var path in window.routes) {
@@ -165,6 +181,79 @@ angular.module('trackHashtagApp', [
 
 angular.module('trackHashtagApp').run(['$templateCache', function($templateCache) {
   'use strict';
+
+  $templateCache.put('views/views-components/emails-create.html',
+    "<div class=\"container\">\n" +
+    "    <h1>Email Create</h1><br /><br />\n" +
+    "\n" +
+    "    <form novalidate=\"novalidate\" class=\"form-horizontal\">\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inputFirstName\">First Name:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <input type=\"text\" id=\"inputFirstName\" ng-model=\"email.firstName\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inputLastName\">Last name:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <input type=\"text\" id=\"inputLastName\" ng-model=\"email.lastName\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <label class=\"control-label\" for=\"inpurtEmail\">Email:</label>\n" +
+    "            <div class=\"controls\">\n" +
+    "                <input type=\"text\" id=\"inpurtEmail\" ng-model=\"email.email\"/>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "        <div class=\"control-group\">\n" +
+    "            <div class=\"controls\">\n" +
+    "                <a ng-click=\"saveEmail()\" class=\"btn btn-small btn-primary\">Save Email</a>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "    </form>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/views-components/emails-list.html',
+    "<div class=\"wrapper\">\n" +
+    "    <!-- Header -->\n" +
+    "    <div ng-include=\"'views/views-components/header.html'\"></div>\n" +
+    "    \n" +
+    "    <main class=\"container dashboard\">\n" +
+    "    \n" +
+    "        <h3 class=\"clearfix\">\n" +
+    "            Manage Emails\n" +
+    "            <div class=\"pull-right\">\n" +
+    "                <a ui-sref=\"emails.create\" class=\"btn btn-info\">Create new Email</a>\n" +
+    "            </div>\n" +
+    "        </h3>\n" +
+    "        <hr>\n" +
+    "        <table class=\"table table-striped\">\n" +
+    "            <thead>\n" +
+    "                <tr>\n" +
+    "                    <th>FUll Name</th>\n" +
+    "                    <th>Email</th>\n" +
+    "                </tr>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "                <tr ng-repeat=\"email in emails\">\n" +
+    "                    <td>{{ email.firstName }} {{ email.lastName }}</td>\n" +
+    "                    <td>{{ email.email }}</td>\n" +
+    "                    <td><a ng-click=\"deleteEmail(email.email_id)\" class=\"btn btn-small btn-danger\">Delete</a></td>\n" +
+    "                </tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "        \n" +
+    "    </main>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/views-components/emails.html',
+    "<div ui-view></div>"
+  );
+
 
   $templateCache.put('views/views-components/facebook.html',
     "<h2>Facebook!</h2>\n" +

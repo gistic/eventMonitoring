@@ -1,8 +1,11 @@
 package org.gistic.tweetboard;
 
 import com.bendb.dropwizard.redis.JedisFactory;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
+import io.dropwizard.db.DataSourceFactory;
+
 import io.dropwizard.bundles.assets.AssetsBundleConfiguration;
 import io.dropwizard.bundles.assets.AssetsConfiguration;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -91,4 +94,18 @@ public class TweetBoardConfiguration extends Configuration implements AssetsBund
     private boolean v2;
 
     public boolean isV2() { return v2; }
+    
+    @Valid
+    @NotNull
+    @JsonProperty("database")
+    private DataSourceFactory database = new DataSourceFactory();
+
+    public DataSourceFactory getDataSourceFactory() {
+        return database;
+    }
+    
+    public void setDatabase(DataSourceFactory database) {
+        this.database = database;
+    }
+
 }

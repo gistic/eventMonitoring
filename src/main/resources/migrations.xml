@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="maboelnour">
+        <createTable tableName="emails">
+            <column name="email_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="2" author="maboelnour">
+        <createTable tableName="keywords">
+            <column name="keyword_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="keyword" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="related_words" type="varchar(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period" type="int" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+
+    <changeSet id="3" author="maboelnour">
+        <createTable tableName="emails_keywords">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="keyword_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="maboelnour" id="4">
+   		<addForeignKeyConstraint baseColumnNames="keyword_id"
+            baseTableName="emails_keywords"
+            constraintName="fk_keyword"
+            deferrable="true"
+            initiallyDeferred="true"
+            onDelete="CASCADE"
+            onUpdate="RESTRICT"
+            referencedColumnNames="keyword_id"
+            referencedTableName="keywords"/>
+	</changeSet>
+
+	<changeSet author="maboelnour" id="5">
+    	<addForeignKeyConstraint baseColumnNames="email_id"
+            baseTableName="emails_keywords"
+            constraintName="fk_email"
+            deferrable="true"
+            initiallyDeferred="true"
+            onDelete="CASCADE"
+            onUpdate="RESTRICT"
+            referencedColumnNames="email_id"
+            referencedTableName="emails"/>
+	</changeSet>
+	
+	<changeSet id="6" author="maboelnour">
+        <createTable tableName="events_keywords">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="keyword_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_id" type="varchar(500)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet author="maboelnour" id="7">
+   		<addForeignKeyConstraint baseColumnNames="keyword_id"
+            baseTableName="events_keywords"
+            constraintName="fk_events_keyword"
+            deferrable="true"
+            initiallyDeferred="true"
+            onDelete="CASCADE"
+            onUpdate="RESTRICT"
+            referencedColumnNames="keyword_id"
+            referencedTableName="keywords"/>
+	</changeSet>
+    
+	
+</databaseChangeLog>

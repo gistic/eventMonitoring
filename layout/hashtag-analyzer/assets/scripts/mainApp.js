@@ -7,6 +7,7 @@ angular.module('trackHashtagApp', [
 
     'ui.bootstrap',
     'ui.router',
+    'checklist-model',
 
     //'myAppDirectives', // Custome application dependencies [Directives - Filters - Services]
     'trackHashtagApp.directives',
@@ -15,8 +16,10 @@ angular.module('trackHashtagApp', [
 
     'StartNewEvent',
     'EventHandlerController',
+    'KeywordController',
     'KeywordsController',
     'FbPagesController',
+    'EmailsController',
     'HashHajjController',
 
     'oitozero.ngSweetAlert',
@@ -123,6 +126,11 @@ angular.module('trackHashtagApp', [
             templateUrl: 'views/views-components/keywords-create.html',
             controller: 'KeywordsController'
         },
+        "keywords.configure":{
+            url: '/:keyword_id/configure',
+            templateUrl: 'views/views-components/keywords-configure.html',
+            controller: 'KeywordController'
+        },
         "fbPages":{
             url: '/fbPages',
             templateUrl: 'views/views-components/fb-pages.html',
@@ -137,6 +145,21 @@ angular.module('trackHashtagApp', [
             url: '/create',
             templateUrl: 'views/views-components/fb-pages-create.html',
             controller: 'FbPagesController'
+        },
+        "emails":{
+            url: '/emails',
+            templateUrl: 'views/views-components/emails.html',
+            controller: 'EmailsController'
+        },
+        "emails.index":{
+            url: '/index',
+            templateUrl: 'views/views-components/emails-list.html',
+            controller: 'EmailsController'
+        },
+        "emails.create":{
+            url: '/create',
+            templateUrl: 'views/views-components/emails-create.html',
+            controller: 'EmailsController'
         }
     };
 

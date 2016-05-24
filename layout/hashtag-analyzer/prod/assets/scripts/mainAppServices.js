@@ -72,6 +72,18 @@ angular.module('trackHashtagApp.services')
     }
 
 }])
+angular.module('trackHashtagApp.services').factory('EmailsFactory', ['$resource', function ($resource) {
+ 	return $resource('/api/emails', {}, {
+        query: { method: 'GET', isArray: true },
+        create: { method: 'POST' },
+    })
+}]);
+
+angular.module('trackHashtagApp.services').factory('EmailFactory', ['$resource', function ($resource) {
+   return $resource('/api/emails/:email_id', {}, {
+        delete: { method: 'DELETE', params: {email_id: '@email_id'} }
+    })
+}]);
 'use strict';
 
 angular.module('trackHashtagApp.services')

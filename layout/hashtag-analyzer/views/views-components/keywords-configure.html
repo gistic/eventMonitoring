@@ -1,0 +1,23 @@
+<div class="container">
+    <h1>Keyword Configure</h1><br /><br />
+
+    <form novalidate="novalidate" class="form-horizontal">
+        Period:
+        <select ng-model="keyword_period" ng-options="period.value as period.name for period in keyword_periods">
+    </select>
+        <br /><br />
+        <label ng-repeat="emailObj in emails">
+            <input type="checkbox" checklist-model="selected_emails" checklist-value="emailObj.email_id"> {{emailObj.email}}
+            <br />
+        </label>
+        <br /><br /><br />
+        <div class="control-group">
+            <div class="controls">
+                <a ng-click="saveKeywordConfig()" class="btn btn-small btn-primary">Save</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+

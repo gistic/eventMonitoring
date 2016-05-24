@@ -44,7 +44,7 @@ public class NewsDataLogic {
 			
 			for (String spider : spiders) {
 				
-				ArrayList<String> newKeywords = (new KeywordsDataLogic(new KeywordsDao())).getRelatedWords(keywords); // check if it's registered with a system keyword
+				ArrayList<String> newKeywords = (new KeywordsDataLogic()).getRelatedWords(keywords); // check if it's registered with a system keyword
 
 				String newKeywordsString = String.join(",", newKeywords).replace("\"", "");
 				
@@ -54,7 +54,6 @@ public class NewsDataLogic {
 				httpCon.setRequestMethod("POST");
 		
 				String urlParameters = "project=newspiders&spider="+spider+"&euuid="+uuid+"&keywords="+newKeywordsString;
-//				System.out.println(newKeywordsString);
 				
 				try (Jedis jedis = JedisPoolContainer.getInstance()) {
 		        	
