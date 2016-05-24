@@ -2,18 +2,18 @@ var HashHajjController = angular.module('HashHajjController', ['trackHashtagApp.
 
 HashHajjController.controller('HashHajjController', ['$rootScope', '$scope', function($rootScope, $scope) {
 
-    $scope.colorChoice;
-    $scope.colorChoices = [{
-        "background": "#333333",
-        "links": "#0fcb9d",
-        "accent": "#a17c43",
-        className: 'HajjBlack'
-    }, {
-        "background": "#0fcb9d",
-        "links": "#a17c43",
-        "accent": "#333333",
-        className: 'HajjGreen'
-    }];
+    // $scope.colorChoice;
+    // $scope.colorChoices = [{
+    //     "background": "#333333",
+    //     "links": "#0fcb9d",
+    //     "accent": "#a17c43",
+    //     className: 'HajjBlack'
+    // }, {
+    //     "background": "#0fcb9d",
+    //     "links": "#a17c43",
+    //     "accent": "#333333",
+    //     className: 'HajjGreen'
+    // }];
 
 }]);
 
@@ -23,6 +23,7 @@ var EmailsController = angular.module('EmailsController', []);
 EmailsController.controller('EmailsController', ['$scope', '$state', 'EmailsFactory', 'EmailFactory', '$location',
     function ($scope, $state, EmailsFactory, EmailFactory, $location) {
 
+        $scope.emails = EmailsFactory.query();
 
         // callback for ng-click 'deleteFbPage':
         $scope.deleteEmail = function (email_id) {
@@ -1568,45 +1569,100 @@ EventHandlerController.controller('EventMainController',
 var FbPagesController = angular.module('FbPagesController', []);
 
 
-FbPagesController.controller('FbPagesController', ['$scope', '$state', 'FbPagesFactory', 'FbPageFactory', '$location',
-    function ($scope, $state, FbPagesFactory, FbPageFactory, $location) {
+FbPagesController.controller('FbPagesController', ['$scope', '$state', 'FbPagesFactory', 'FbPageFactory', '$location', function($scope, $state, FbPagesFactory, FbPageFactory, $location) {
 
 
-        // callback for ng-click 'deleteFbPage':
-        $scope.deleteFbPage = function (fbPage) {
+    // callback for ng-click 'deleteFbPage':
+    $scope.deleteFbPage = function(fbPage) {
 
-            var result = confirm("Sure to delete?");
-            if (result) {
-                
-                //Logic to delete the item
-                FbPageFactory.delete({fb_page: fbPage});
-                
-                $scope.fbPages = FbPagesFactory.query();
-                $scope.fbPages = FbPagesFactory.query();
-            }
+        var result = confirm("Sure to delete?");
+        if (result) {
 
-        };
+            //Logic to delete the item
+            FbPageFactory.delete({ fb_page: fbPage });
 
-        // callback for ng-click 'createNewFbPage':
-        $scope.createNewFbPage = function () {
-            $location.path('/fb_pages/create');
-        };
-
-        // callback for ng-click 'saveNewFbPage':
-        $scope.saveNewFbPage = function () {
-            FbPagesFactory.create($scope.fbPage);
-            // $location.path('/fb_pages/index');
-            $state.go('fbPages.index');
+            $scope.fbPages = FbPagesFactory.query();
+            $scope.fbPages = FbPagesFactory.query();
         }
 
-        $scope.fbPages = FbPagesFactory.query();
-    }]);
+    };
+
+    // callback for ng-click 'createNewFbPage':
+    $scope.createNewFbPage = function() {
+        $location.path('/fb_pages/create');
+    };
+
+    // callback for ng-click 'saveNewFbPage':
+    $scope.saveNewFbPage = function() {
+        FbPagesFactory.create($scope.fbPage);
+        // $location.path('/fb_pages/index');
+        $state.go('fbPages.index');
+    }
+
+    $scope.fbPages = FbPagesFactory.query();
+
+}]);
+
+
+var KeywordController = angular.module('KeywordController', []);
+
+
+KeywordController.controller('KeywordController', ['$scope','$state', '$stateParams', 'KeywordsFactory', 'KeywordEmailsFactory', 'KeywordPeriodFactory', 'KeywordFactory', 'EmailsFactory', 'EmailFactory', '$location',
+    function ($scope, $state, $stateParams, KeywordsFactory, KeywordEmailsFactory, KeywordPeriodFactory, KeywordFactory, EmailsFactory, EmailFactory, $location) {
+    	$scope.emails = EmailsFactory.query();
+    	$scope.registered_emails = [];
+    	$scope.registered_emails.push();
+    	KeywordPeriodFactory.get_period($stateParams.keyword_id).then(function(result) {
+	    	$scope.keyword_period = result.data;
+    	}, function(error) {
+    		//error
+    	});
+
+    	KeywordEmailsFactory.get_emails($stateParams.keyword_id).then(function(result) {
+	    	$scope.selected_emails = result.data;
+    	}, function(error) {
+    		//error
+    	});
+
+
+    	
+
+    	$scope.keyword_periods = [
+		    {'name': 'None',
+		     'value': 0},
+		    {'name': 'Daily',
+		     'value': 1},
+		    {'name': 'Weekly',
+		     'value': 2},
+	     	{'name': 'Monthly',
+		     'value': 3}
+	  	];
+
+	  	// $scope.selected_emails = [1];
+
+
+		$scope.saveKeywordConfig = function() {
+			var config = {};
+			config["period"] = $scope.keyword_period;
+			config["emails"] = $scope.selected_emails;
+
+			KeywordPeriodFactory.update($stateParams.keyword_id, config).then(function(result) {
+				// success callback
+			}, function(error) {
+				console.log('Fail : ', error);
+			});
+			$state.go('keywords.index');
+		}
+
+ 	}]);
+
+  //Setting first option as selected in configuration select
+
 var KeywordsController = angular.module('KeywordsController', []);
 
 
-KeywordsController.controller('KeywordsController', ['$scope', 'KeywordsFactory', 'KeywordFactory', '$location',
-    function ($scope, KeywordsFactory, KeywordFactory, $location) {
-
+KeywordsController.controller('KeywordsController', ['$scope','$state', 'KeywordsFactory', 'KeywordFactory', 'EmailsFactory', '$location',
+    function ($scope, $state, KeywordsFactory, KeywordFactory, EmailsFactory, $location) {
 
         // callback for ng-click 'deleteKeyword':
         $scope.deleteKeyword = function (keyword) {
@@ -1630,6 +1686,11 @@ KeywordsController.controller('KeywordsController', ['$scope', 'KeywordsFactory'
         $scope.saveNewKeyword = function () {
             KeywordsFactory.create($scope.keyword);
             $location.path('/keywords/index');
+        }
+
+        $scope.configureKeywords = function (keyword_id) {
+            console.log(keyword_id);
+            $state.go('keywords.configure', {'keyword_id': keyword_id });
         }
 
         $scope.keywords = KeywordsFactory.query();

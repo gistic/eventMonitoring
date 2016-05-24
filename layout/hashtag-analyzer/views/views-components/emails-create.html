@@ -1,29 +1,62 @@
-<div class="container">
-    <h1>Email Create</h1><br /><br />
-
-    <form novalidate="novalidate" class="form-horizontal">
-        <div class="control-group">
-            <label class="control-label" for="inputFirstName">First Name:</label>
-            <div class="controls">
-                <input type="text" id="inputFirstName" ng-model="email.firstName"/>
+<div class="wrapper">
+    <!-- Header -->
+    <div ng-include="'views/views-components/header.html'"></div>
+    <main class="container dashboard">
+        <h3 class="clearfix">
+            Add Email
+            <div class="pull-right">
+                <a ui-sref="fbPages.create" class="btn btn-link">Back to all list</a>
             </div>
+        </h3>
+        <hr>
+        <div class="container">
+            <form novalidate="novalidate" class="form-horizontal">
+                <div class="form-group control-group">
+                    <label class="control-label" for="inputFirstName">First Name:</label>
+                    <div class="controls">
+                        <input type="text" id="inputFirstName" ng-model="email.firstName" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group control-group">
+                    <label class="control-label" for="inputLastName">Last name:</label>
+                    <div class="controls">
+                        <input type="text" id="inputLastName" ng-model="email.lastName" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group control-group">
+                    <label class="control-label" for="inpurtEmail">Email:</label>
+                    <div class="controls">
+                        <input type="text" id="inpurtEmail" ng-model="email.email" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group control-group">
+                    <div class="controls">
+                        <a ng-click="saveEmail()" class="btn btn-small btn-primary">Save Email</a>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="inputLastName">Last name:</label>
-            <div class="controls">
-                <input type="text" id="inputLastName" ng-model="email.lastName"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inpurtEmail">Email:</label>
-            <div class="controls">
-                <input type="text" id="inpurtEmail" ng-model="email.email"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <a ng-click="saveEmail()" class="btn btn-small btn-primary">Save Email</a>
-            </div>
-        </div>
-    </form>
+    </main>
 </div>
+<!-- Footer -->
+<footer class="navbar-fixed-bottom">
+    <div class="container clearfix">
+        <div class="media footer-copyright pull-left">
+            <div class="media-left media-middle">
+                <a href="#">
+                    <img alt="" src="assets/images/hashtails-homepage-grids-gallery.png" srcset="assets/images/gistic-footer-logo.png 1x, assets/images/gistic-footer-logo@2x.png 2x">
+                </a>
+            </div>
+            <div class="media-body">
+                <span>Hashtails ™ (1.3) for KACST GIS Technology Innovation Center at Umm Al-Qura University</span>
+            </div>
+        </div>
+        <div class="pull-right">
+            <p>
+                For custom soultions and feedback:
+                <a href="hashtails@gistic.org">hashtails@gistic.org</a>
+            </p>
+        </div>
+    </div>
+</footer>
+<!-- END OF / Footer -->
