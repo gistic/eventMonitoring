@@ -4,6 +4,7 @@ var eventViewsApp = angular.module('eventViewsApp', [
     'eventAdminApp',
     'ngRoute',
     'ngAnimate',
+    'ngCookies',
     'ngFx',
     'highcharts-ng',
     'ngTagsInput',

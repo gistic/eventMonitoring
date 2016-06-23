@@ -7,3 +7,13 @@ input[type=search].form-control {
 	background: lighten($gray-light, 10%);
     box-shadow: none;
 }
+
+.sign-up-page {
+	.form-control {
+		border: 1px solid #dedede;
+		@include border-radius(3px);
+	}
+	.btn {
+		@include border-radius(3px);
+	}
+}

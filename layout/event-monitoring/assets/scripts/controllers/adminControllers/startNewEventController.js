@@ -19,6 +19,7 @@ startNewEventController.controller('StartNewEventController', ['$rootScope', '$s
     $scope.loading = false;
 
     $scope.showSearchInput = function() {
+        $rootScope.keywords = [];
         $scope.showSearchInput = !$scope.showSearchInput;
     }
 
@@ -49,19 +50,25 @@ startNewEventController.controller('StartNewEventController', ['$rootScope', '$s
             $scope.validHashtag = filterHashtags.preventBadHashtags(eventHashtag);
         });
 
-        if (!$scope.validHashtag) {
-            $scope.$broadcast();
+        if ($rootScope.logedInUser) {
+            if (!$scope.validHashtag) {
+                $scope.$broadcast();
 
-            RequestData.startEvent($rootScope.keywords)
-                .success(function(response) {
+                RequestData.startEvent($rootScope.keywords)
+                    .success(function(response) {
 
-                    $scope.loading = true;
+                        $scope.loading = true;
 
-                    $rootScope.eventID = response.uuid;
-                    $state.transitionTo('admin', {
-                        uuid: $scope.eventID
-                    });
-                })
+                        $rootScope.eventID = response.uuid;
+                        $state.transitionTo('admin', {
+                            uuid: $scope.eventID
+                        });
+                    })
+            }
+        } else {
+            $scope.twitterLogIn();
         }
+
+
     };
 }]);

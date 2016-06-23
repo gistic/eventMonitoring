@@ -87,11 +87,9 @@ header {
         margin-top: $margin * 3;
         margin-left: auto;
         margin-right: auto;
-        @include size(40%,
-        auto);
+        @include size(40%,auto);
         @include phone {
-            @include size(80%,
-            auto);
+            @include size(80%,auto);
         }
         input {
             @include border-radius(5px);

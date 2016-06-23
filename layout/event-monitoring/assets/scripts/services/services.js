@@ -61,7 +61,6 @@ myAppServices.factory('RequestData', ['$rootScope', '$http', '$location', '$wind
 
 }]);
 
-
 // Factory : Get views layout data for : Colors - Sizes - Screens
 myAppServices.factory('RequestViewsLayoutData', ['$rootScope', '$location', '$window', 'filterFilter', 'RequestData', function($rootScope, $location, $window, filterFilter, RequestData) {
 
@@ -212,8 +211,8 @@ myAppServices.factory('User', function($rootScope, $cookies, $cookieStore, Reque
 
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function(response) {
-                    $window.location.href = $rootScope.baseUrl;
-                }).error(function(error,response) {
+                    $window.location.href = '/';
+                }).error(function(error, response) {
                     console.log(error)
                 });
         },

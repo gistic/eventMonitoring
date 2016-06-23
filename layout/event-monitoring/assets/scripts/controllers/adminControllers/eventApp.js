@@ -102,7 +102,8 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             $scope.tweetsQueue = [],
             $scope.onHoldTweets = [],
             $scope.tweet = {},
-            $scope.tweetsCount = 0;
+            $scope.tweetsCount = 0,
+            $scope.remainingTweetsCount = 0;
 
 
         // Listen to new message
@@ -117,12 +118,10 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
                 $scope.$apply(function() {
 
-                    if ($scope.tweetsQueue.length < 20) {
-                        $scope.tweetsQueue.push($scope.tweet);
-                        $scope.tweetsCount = $rootScope.totalTweetsFromServer + $scope.tweetsQueue.length;
-                    } else {
+                    if ($scope.tweetsQueue.length >= 2) {
                         $scope.onHoldTweets.unshift($scope.tweet);
-                        $scope.tweetsCount = $rootScope.totalTweetsFromServer + $scope.onHoldTweets.length + $scope.tweetsQueue.length;
+                    } else {
+                        $scope.tweetsQueue.push($scope.tweet);
                     }
 
                 }, false);
@@ -136,30 +135,41 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
         $scope.startEventSource();
         $scope.pagesShown = 1;
-        $scope.pageSize = 20;
+        $scope.pageSize = 25;
 
         // Tweet queue limit
         $scope.tweetsQueueLimit = function() {
             return $scope.pageSize * $scope.pagesShown;
         };
 
-        // Show load more button
         $scope.loadMoreButton = function() {
-            return $scope.pagesShown < ($scope.tweetsCount / $scope.pageSize);
+            $scope.remainingTweetsCount = $scope.onHoldTweets.length;
+            $scope.tweetsShowned = $scope.pageSize * $scope.pagesShown;
+            if ($scope.onHoldTweets.length != 0) {
+                return true;
+            }
         }
 
         $scope.loadMoreTweets = function() {
-
-            for (var i = 0; i < $scope.pageSize; i++) {
-                $scope.tweetsQueue.unshift($scope.onHoldTweets[i]);
-                $scope.pagesShown++;
+            if ($scope.onHoldTweets.length <= 25) {
+                $scope.tweetsQueue = $scope.onHoldTweets.concat($scope.tweetsQueue);
+                $scope.pagesShown = $scope.pagesShown + $scope.onHoldTweets.length % $scope.pageSize;
+            } else {
+                var queueLength = $scope.tweetsQueue.length;
+                for (var i = 0; i < $scope.onHoldTweets.length; i++) {
+                    if (i < $scope.pageSize) {
+                        $scope.tweetsQueue.push($scope.onHoldTweets[$scope.onHoldTweets.length - i - 1]);
+                    }
+                }
+                // $scope.tweetsQueue.splice(0, queueLength);
             }
+            $scope.onHoldTweets = [];
+
+            $scope.remainingTweetsCount = $scope.tweetsQueue.length - ($scope.pageSize * $scope.pagesShown);
 
             $location.hash('toApproveDiv');
             $anchorScroll();
-
         };
-
 
         // Remove Tweet From List
         $scope.removedTweetsCount = 0;
@@ -331,11 +341,6 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
             // show the notification
             notification.show();
             $state.transitionTo('home');
-            // var eventID = $rootScope.eventID;
-            // var requestAction = "DELETE";
-            // var apiUrl = '/api/events/' + eventID;
-            // var requestData = "";
-            // RequestData.fetchData(requestAction, apiUrl, requestData).then(function (response) {})
         }
     }
 ]);

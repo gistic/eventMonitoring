@@ -219,11 +219,13 @@
             </ul>
         </div>
         <section class="tweets-queue" id="toApproveDiv">
+            
             <button class="btn btn-load-more" ng-click="loadMoreTweets()" ng-show="loadMoreButton()" type="button">
                 <strong>
                     <i class="fa fa-arrow-up"></i>
                 </strong> {{remainingTweetsCount}} New Tweets
             </button>
+
             <article class="media clearfix tweet" data-user-id="{{tweet.user.id_str}}" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit() track by $index">
                 <div class="pull-left">
                     <img class="media-object" lazy-load ng-src="{{tweet.user.original_profile_image_urlhttps}}" on-error-src="{{defultImage}}" />
@@ -269,6 +271,7 @@
                     </div>
                 </div>
             </article>
+            
         </section>
     </section>
 </main>

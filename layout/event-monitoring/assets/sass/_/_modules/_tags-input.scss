@@ -7,10 +7,16 @@ tags-input {
     width: 500px;
     vertical-align: middle;
     .tags {
+        border:none;
+        box-shadow: none;
         .tag-item {
             .remove-button {
                 color: $white;
             }
+        }
+        &.focused {
+            border:none;
+            box-shadow: none;
         }
     }
 }
