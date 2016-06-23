@@ -104,7 +104,7 @@ public class SignupResource {
                                      @QueryParam("code") String code) {
 
         URI uri = UriBuilder.fromUri(
-                "http://" + baseDomain + "/event-monitoring?email-activation=true"
+                "http://" + baseDomain + "/event-monitoring/?emailActivation=true"
 //                          + "success/"
 //                        + "?authToken=" + accessToken
 //                        + "&userId=" + userId
@@ -123,7 +123,7 @@ public class SignupResource {
         }
 
         uri = UriBuilder.fromUri(
-                "http://" + baseDomain + "/event-monitoring?email-activation=fail"
+                "http://" + baseDomain + "/event-monitoring/?emailActivation=fail"
 //                        + "fail/"
 //                        + "?authToken=" + accessToken
 //                        + "&userId=" + userId
