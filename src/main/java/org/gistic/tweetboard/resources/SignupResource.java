@@ -1,13 +1,12 @@
 package org.gistic.tweetboard.resources;
 
+import io.dropwizard.auth.Auth;
 import org.gistic.tweetboard.ConfigurationSingleton;
 import org.gistic.tweetboard.TwitterConfiguration;
 import org.gistic.tweetboard.dao.*;
-import org.gistic.tweetboard.representations.Event;
-import org.gistic.tweetboard.representations.EventMeta;
-import org.gistic.tweetboard.representations.EventUuid;
-import org.gistic.tweetboard.representations.UserSignupDetails;
+import org.gistic.tweetboard.representations.*;
 import org.gistic.tweetboard.security.EmailCode;
+import org.gistic.tweetboard.security.User;
 import org.gistic.tweetboard.util.GmailSender;
 import org.json.JSONArray;
 import org.postgresql.util.PSQLException;
@@ -36,6 +35,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import javax.ws.rs.core.Response;
 
@@ -133,6 +133,52 @@ public class SignupResource {
         return Response.seeOther(uri).build();
 
     }
+
+    @GET
+    @Path("/userConfigDefaults")
+    public EventConfig getUserEventConfigDefaults(@DefaultValue("undefined") @QueryParam("authToken") String authToken,
+                                           @Auth(required = true) User user, @DefaultValue("false") @QueryParam("eventyzer") String eventyzerFlag) {
+        if (user == null) {
+            //invalid token
+            throw new WebApplicationException(
+                    Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+                            .entity("{'error':'incorrect token'}")
+                            .build()
+            );
+            //} else if (user.isNoUser()) {
+        } else if (eventyzerFlag.equals("true") && user.getEventyzerFlag()) {
+            //for tweetboard v1.0
+            return authDbDao.getUserEventConfigDefault(new AuthDaoImpl().getUserId(authToken));
+        } else {
+            //valid token tweetboard v2.0
+
+        }
+        return null;
+    }
+
+    @POST
+    @Path("/userConfigDefaults")
+    public void setUserEventConfigDefaults(@DefaultValue("undefined") @QueryParam("authToken") String authToken,
+                                           @Auth(required = true) User user, @DefaultValue("false") @QueryParam("eventyzer") String eventyzerFlag, EventConfig eventConfig) {
+        if (user == null) {
+            //invalid token
+            throw new WebApplicationException(
+                    Response.status(HttpURLConnection.HTTP_BAD_REQUEST)
+                            .entity("{'error':'incorrect token'}")
+                            .build()
+            );
+            //} else if (user.isNoUser()) {
+        } else if (eventyzerFlag.equals("true") && user.getEventyzerFlag()) {
+            //for tweetboard v1.0
+//            new AuthDaoImpl().getUserId(authToken)
+            authDbDao.updateEventConfigDefault(eventConfig.getBackgroundColor(), Arrays.toString(eventConfig.getScreens()), Arrays.toString(eventConfig.getScreenTimes()), eventConfig.getSize(), eventConfig.isModerated(), new AuthDaoImpl().getUserId(authToken));
+        } else {
+            //valid token tweetboard v2.0
+
+        }
+    }
+
+
 
 //    @GET
 //    @Path("/login/twitter/proxyToken")
