@@ -1,42 +1,76 @@
 var uploadLogoApp = angular.module('uploadLogoApp', []);
 
 
-uploadLogoApp.controller('AppController', ['$scope', 'FileUploader', '$location', function ($scope, FileUploader, $location) {
+uploadLogoApp.controller('AppController', ['$scope', '$rootScope', 'FileUploader', '$location', '$cookies', function($scope, $rootScope, FileUploader, $location, $cookies) {
 
     $scope.eventID = $location.search().uuid;
-    var apiUrl = '/api/events/' + $scope.eventID + '/logo';
+
+    console.log($cookies.authoUserID)
 
     var uploader = $scope.uploader = new FileUploader({
-        url: apiUrl,
-        withCredentials: false,
-        queueLimit: 1
+        url: '/api/events/' + $scope.eventID + '/logo'
+    });
+
+    var profileUploader = $scope.profileUploader = new FileUploader({
+        url: '/api/events/' + $cookies.authoUserID + '/logo'
+    });
+
+    var uploadLeftLogo = $scope.uploadLeftLogo = new FileUploader({
+        url: '/api/events/' + $scope.eventID + '/logo2'
+    });
+
+    var profileUploadLeftLogo = $scope.profileUploadLeftLogo = new FileUploader({
+        url: '/api/events/' + $cookies.authoUserID + '/logo2'
     });
 
     // FILTERS
 
     uploader.filters.push({
         name: 'imageFilter',
-        fn: function (item /*{File|FileLikeObject}*/ , options) {
+        fn: function(item /*{File|FileLikeObject}*/ , options) {
             var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-    console.info('uploader', uploader);
-}]);
 
+    profileUploader.filters.push({
+        name: 'imageFilter',
+        fn: function(item /*{File|FileLikeObject}*/ , options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+
+    uploadLeftLogo.filters.push({
+        name: 'imageFilter',
+        fn: function(item /*{File|FileLikeObject}*/ , options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+
+    profileUploadLeftLogo.filters.push({
+        name: 'imageFilter',
+        fn: function(item /*{File|FileLikeObject}*/ , options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+
+}]);
 
 /**
  * The ng-thumb directive
  * @author: nerv
  * @version: 0.1.2, 2014-01-09
  */
-uploadLogoApp.directive('ngThumb', ['$window', function ($window) {
+uploadLogoApp.directive('ngThumb', ['$window', function($window) {
     var helper = {
         support: !!($window.FileReader && $window.CanvasRenderingContext2D),
-        isFile: function (item) {
+        isFile: function(item) {
             return angular.isObject(item) && item instanceof $window.File;
         },
-        isImage: function (file) {
+        isImage: function(file) {
             var type = '|' + file.type.slice(file.type.lastIndexOf('/') + 1) + '|';
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
@@ -45,7 +79,7 @@ uploadLogoApp.directive('ngThumb', ['$window', function ($window) {
     return {
         restrict: 'A',
         template: '<canvas/>',
-        link: function (scope, element, attributes) {
+        link: function(scope, element, attributes) {
             if (!helper.support) return;
 
             var params = scope.$eval(attributes.ngThumb);
@@ -76,4 +110,4 @@ uploadLogoApp.directive('ngThumb', ['$window', function ($window) {
             }
         }
     };
-    }]);
+}]);

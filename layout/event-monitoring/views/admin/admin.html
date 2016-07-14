@@ -1,15 +1,50 @@
 <!-- HEADER -->
-<header class="container clearfix header-admin">
-    <h2 class="logo pull-left ">
-    <a ui-sref="home">Eventyzer</a>
-  </h2>
-    <nav class="pull-right header-buttons">
-        <a class="btn" ng-click="goLive()" ng-href="" target="_blank">
-      Presentation
-      <i class="icon-controller-play"></i>
-    </a>
-    </nav>
+<header class="clearfix header-admin">
+
+    <div class="container">
+
+        <a class="logo" ui-sref="home">
+            <span class="navbar-brand">
+                <strong class="icon icon-small icon-bird"></strong> Eventyzer
+            </span>
+        </a>
+
+        <div class="navs pull-right clearfix">
+        
+            <ul class="list-inline pull-left">
+                <li class="nav-user dropdown" ng-show="logedInUser">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
+                        <img lazy-load ng-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a ng-href="https://twitter.com/intent/user?user_id={{authoUserID}}" target="_blank">Go to profile</a>
+                        </li>
+                        <li>
+                            <a ng-click="logOutUser()">Logout</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a ng-click="twitterLogIn()" ng-hide="logedInUser" class="btn btn-block btn-social btn-twitter btn-rounded">
+                        <i class="icon-twitter"></i> Sign in with Twitter
+                    </a>
+                </li>
+
+            </ul>
+
+            <a class="btn" ng-click="goLive()" ng-href="" target="_blank">
+              Presentation
+              <i class="icon-controller-play"></i>
+            </a>
+
+        </div>
+
+    </div>
 </header>
+
 <aside class="container-fluid">
     <!-- Admin Statistics -->
     <section class="admin-stats text-center row">
@@ -35,16 +70,18 @@
         </article>
     </section>
 </aside>
-<main class="container keywords-tags">
+
+<aside class="container keywords-tags">
     <div class="row">
-        <form class="form-inline">
-            <div class="form-group">
-                <label for="keywords">Keywords</label>
-                {{keywords}}
-            </div>
-        </form>
+        <h3>
+            <span for="keywords">Keywords</span>
+            <ul class="inline-list">
+                <li ng-repeat="keyword in keywords">{{keyword}}</li>
+            </ul>
+        </h3>
     </div>
-</main>
+</aside>
+
 <main class="container">
     <!-- UI Customization -->
     <section class="panel panel-default admin-customization">
@@ -71,60 +108,100 @@
                 </article>
             </div>
             <div class="row">
-                <article class="col-md-12 custom-option">
-                    <!-- Example: nv-file-drop="" uploader="{Object}" options="{Object}" filters="{String}" -->
+                <article class="col-md-12 custom-option upload-logos">
+
+
+                <div class="row">
                     <div ng-controller="AppController" nv-file-drop="" uploader="uploader">
-                        <div class="">
-                            <div class="row">
-                                <div class="col-md-24">
-                                    <div class="form-group">
-                                        <label>Upload logos</label>
-                                        <input type="file" nv-file-select="" uploader="uploader" multiple  />
-                                    </div>
-                                </div>
-                                <div class="col-md-24">
-                                    <div ng-repeat="item in uploader.queue">
-                                        <div>
-                                            <strong>{{ item.file.name }}</strong>
-                                            <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100, width:100 }"></div>
-                                        </div>
-                                        <div ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB
-                                        </div>
-                                        <div ng-show="uploader.isHTML5">
-                                            <div class="progress">
-                                                <div class="progress-bar" ng-style="{ 'width': item.progress + '%' }" role="progressbar"></div>
+
+                        <h6>Right logo</h6>
+                        <input type="file" nv-file-select="" uploader="uploader" />
+                        <div class="col-md-24">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="50%">Name</th>
+                                        <th ng-show="uploader.isHTML5">Progress</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in uploader.queue">
+                                        <td>
+                                            <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 50, height:50 }"></div>
+                                            <span ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</span>
+                                        </td>
+                                        <td ng-show="uploader.isHTML5">
+                                            <div class="progress" style="margin-bottom: 0;">
+                                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
                                             </div>
-                                        </div>
-                                        <div class="text-center">
-                                            <span ng-show="item.isSuccess">
-                                                <i class="fa fa-ok"></i>
-                                            </span>
-                                            <span ng-show="item.isError">
-                                                <i class="fa fa-remove"></i>
-                                            </span>
-                                        </div>
-                                        <div nowrap>
-                                            <button class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess" type="button">
-                                                <span class="fa fa-upload"></span> Upload
+                                        </td>
+                                        <td nowrap>
+                                            <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                Upload
                                             </button>
-                                            <button class="btn btn-danger btn-xs" ng-click="item.remove()" type="button">
-                                                <span class="fa fa-trash"></span> Remove
+                                            <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                Remove
                                             </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div ng-controller="AppController" nv-file-drop="" uploader="uploadLeftLogo">
+
+                            <h6>Left logo</h6>
+                            <input type="file" nv-file-select="" uploader="uploadLeftLogo" />
+                            <div class="col-md-24">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th width="50%">Name</th>
+                                            <th ng-show="uploadLeftLogo.isHTML5">Progress</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in uploadLeftLogo.queue">
+                                            <td>
+                                                <div ng-show="uploadLeftLogo.isHTML5" ng-thumb="{ file: item._file, height: 50, height:50 }"></div>
+                                                <span ng-show="uploadLeftLogo.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</span>
+                                            </td>
+                                            <td ng-show="uploadLeftLogo.isHTML5">
+                                                <div class="progress" style="margin-bottom: 0;">
+                                                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                                </div>
+                                            </td>
+                                            <td nowrap>
+                                                <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
+                                                    Upload
+                                                </button>
+                                                <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                    Remove
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+
                 </article>
                 <article class="col-md-12 custom-option">
                     <h6>Screens</h6>
                     <ul class="row">
-                        <li class="" ng-repeat="(key, value) in layoutScreens">
+                        <li class="col-md-8" ng-repeat="(key, value) in layoutScreens">
                             <div class="checkbox">
-                                <label class="col-md-6">
+                                <label class="">
                                     <input ng-checked="value.selected==true" ng-model="value.selected" type="checkbox" /> {{value.name}}
-                                    <input type="text" name="" id="">
                                 </label>
                             </div>
                         </li>
@@ -138,6 +215,8 @@
             </div>
         </div>
     </section>
+    <!-- ENDOF UI Customization -->
+    <!-- Admin Moderation -->
     <section class="container admin-moderation">
         <div class="row clearfix moderation-header">
             <h3 class="text-center clearfix">Moderation
@@ -219,13 +298,11 @@
             </ul>
         </div>
         <section class="tweets-queue" id="toApproveDiv">
-            
             <button class="btn btn-load-more" ng-click="loadMoreTweets()" ng-show="loadMoreButton()" type="button">
                 <strong>
                     <i class="fa fa-arrow-up"></i>
                 </strong> {{remainingTweetsCount}} New Tweets
             </button>
-
             <article class="media clearfix tweet" data-user-id="{{tweet.user.id_str}}" id="{{tweet.id_str}}" ng-repeat="tweet in tweetsQueue | limitTo : tweetsQueueLimit() track by $index">
                 <div class="pull-left">
                     <img class="media-object" lazy-load ng-src="{{tweet.user.original_profile_image_urlhttps}}" on-error-src="{{defultImage}}" />
@@ -271,7 +348,7 @@
                     </div>
                 </div>
             </article>
-            
         </section>
     </section>
+    <!-- ENDOF Admin Moderation -->
 </main>

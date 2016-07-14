@@ -10,7 +10,7 @@
         border-bottom: none;
     }
     .panel-body {
-        padding: $padding * 3 $padding * 6;
+        padding: $padding * 3;
         @include phone {
             padding: $padding;
         }
@@ -19,7 +19,7 @@
         }
     }
     h6 {
-        margin-bottom: $margin*3;
+        margin-bottom: $margin * 3;
         @include font-size($font-large);
         font-weight: 400;
     }
@@ -125,7 +125,6 @@
     background: $layout-orange;
 }
 
-
 .layout-custom-size {
     li {
         .size {
@@ -146,5 +145,41 @@
                 color: $gray;
             }
         }
+    }
+}
+
+.upload-logos {
+    .table {
+        tr {
+            td {
+                vertical-align: center !important;
+            }
+        }
+    }
+}
+
+.profile-page {
+    .admin-customization {
+        background: $white;
+        .custom-option {
+            &:nth-child(2n+1) {
+                border-right: 1px solid #f7f7f7;
+            }
+        }
+        .first-row {
+            &:nth-child(n) {
+                border-bottom: 1px solid #f7f7f7;
+                @include phone {
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+    .moderation-header {
+        margin-top: 20px;
+    }
+    .switch.small .on, 
+    .switch.small .off {
+        top: 16%;
     }
 }

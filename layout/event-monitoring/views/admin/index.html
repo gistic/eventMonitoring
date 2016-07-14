@@ -1,45 +1,47 @@
 <div class="wrapper" ng-init="initHomepage()">
-    
-    <!-- Nav -->
+
     <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
+
+    <div class="container">
+
+        <a ui-sref="home">
             <span class="navbar-brand">
                 <strong class="icon icon-small icon-bird"></strong> Eventyzer
             </span>
+        </a>
 
-            <div class="navs pull-right clearfix">
-            
-                <ul class="list-inline pull-left">
-                    <li class="nav-user dropdown" ng-show="logedInUser">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
-                            <img lazy-load ng-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                                <a ng-href="https://twitter.com/intent/user?user_id={{authoUserID}}" target="_blank">Go to profile</a>
-                            </li>
-                            <li>
-                                <a ng-click="logOutUser()">Logout</a>
-                            </li>
-                        </ul>
-                    </li>
+        <div class="navs pull-right clearfix">
+        
+            <ul class="list-inline pull-left">
+                <li class="nav-user dropdown" ng-show="logedInUser">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="" role="button" aria-expanded="false">
+                        <img lazy-load ng-src="{{authoUserPicture}}" on-error-src="{{defultImage}}" class="" /> {{authoUserName}}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a ui-sref="userProfile">Your profile</a>
+                        </li>
+                        <li>
+                            <a ng-click="logOutUser()">Logout</a>
+                        </li>
+                    </ul>
+                </li>
 
-                    <li>
-                        <a ng-click="twitterLogIn()" ng-hide="logedInUser" class="btn btn-block btn-social btn-twitter btn-rounded">
-                            <i class="icon-twitter"></i> Sign in with Twitter
-                        </a>
-                    </li>
+                <li>
+                    <a ng-click="twitterLogIn()" ng-hide="logedInUser" class="btn btn-block btn-social btn-twitter btn-rounded">
+                        <i class="icon-twitter"></i> Sign in with Twitter
+                    </a>
+                </li>
 
-                </ul>
-
-            </div>
+            </ul>
 
         </div>
-    </nav>
+
+    </div>
+</nav>
 
     <!-- Header -->
-
     <header id="header" class="header-homepage">
         <div class="overlay"></div>
         <div class="header-content">

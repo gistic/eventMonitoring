@@ -1,5 +1,5 @@
 .admin-stats {
-	background: lighten($black, 20%);
+	background: rgba(51, 51, 51, 0.85);
 	padding: $padding*2 0;
 	strong {
         @include font-size($font-huge);

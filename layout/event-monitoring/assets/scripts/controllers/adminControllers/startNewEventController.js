@@ -3,7 +3,6 @@ var startNewEventController = angular.module('startNewEventController', []);
 /* Controller : Start new event */
 startNewEventController.controller('StartNewEventController', ['$rootScope', '$scope', '$http', '$state', 'RequestData', 'filterHashtags', 'User', function($rootScope, $scope, $http, $state, RequestData, filterHashtags, User) {
 
-
     $scope.initHomepage = function() {
         User.setUserAuth();
         if ($rootScope.logedInUser) {

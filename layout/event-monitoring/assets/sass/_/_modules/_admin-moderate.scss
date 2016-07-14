@@ -16,3 +16,16 @@
 		position: relative;
 	}
 }
+
+.keywords-tags {
+    margin-top: $margin * 3;
+    span {
+        font-size: 11px;
+    }
+    ul {
+        display: inline-block;
+        li {
+            text-transform: uppercase;
+        }
+    }
+}

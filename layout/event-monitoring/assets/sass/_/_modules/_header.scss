@@ -37,11 +37,19 @@ header {
 }
 
 .header-admin {
+    background: #333333;
+    border-bottom: none !important;
+    .logo {
+        color: $white;
+    }
     .input-group {
         @include phone {
             text-align: center;
             display: inline-block;
         }
+    }
+    .navs {
+        line-height: 50px;
     }
 }
 
@@ -140,7 +148,7 @@ header {
         li {
             a {
                 color: $gray;
-                padding: $padding / 2 $padding / 3;
+                padding: $padding - 5;
                 &:hover,
                 &:focus {
                     background: #015fb7;

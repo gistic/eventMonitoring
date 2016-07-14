@@ -195,7 +195,7 @@ myAppServices.factory('User', function($rootScope, $cookies, $cookieStore, Reque
                 });
         },
 
-        signUp: function(userID, userTwitterHandler, userEmailAddress, userFirstName, userLastName) {
+        signUp: function(authToken, userID, userTwitterHandler, userEmailAddress, userFirstName, userLastName) {
 
             var requestAction = "POST";
 
@@ -209,9 +209,11 @@ myAppServices.factory('User', function($rootScope, $cookies, $cookieStore, Reque
                 lastName: userLastName
             };
 
+            $cookies.userAuthentication = authToken;
+
             RequestData.fetchData(requestAction, apiUrl, requestData)
                 .success(function(response) {
-                    $window.location.href = '/';
+                    $state.transitionTo('home');
                 }).error(function(error, response) {
                     console.log(error)
                 });
@@ -225,6 +227,7 @@ myAppServices.factory('User', function($rootScope, $cookies, $cookieStore, Reque
                 .success(function(response) {
                     $rootScope.authoUserName = response.screenName;
                     $rootScope.authoUserID = response.id;
+                    $cookies.authoUserID = $rootScope.authoUserID;
                     $rootScope.authoUserPicture = response.originalProfileImageURLHttps;
                 }).error(function(response) {
                     $rootScope.logedInUser = false;

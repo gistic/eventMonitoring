@@ -1,8 +1,15 @@
 var eventApp = angular.module('eventApp', []);
 
 // Controller : Populate the recieved data and update admin page
-eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', '$timeout', 'RequestData', 'RequestViewsLayoutData', 'CreateEventSource',
-    function($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, $timeout, RequestData, RequestViewsLayoutData, CreateEventSource) {
+eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$location', '$window', '$anchorScroll', '$state', '$timeout', 'RequestData', 'RequestViewsLayoutData', 'CreateEventSource', 'User',
+    function($rootScope, $scope, $http, $location, $window, $anchorScroll, $state, $timeout, RequestData, RequestViewsLayoutData, CreateEventSource, User) {
+
+        // $scope.initHomepage = function() {
+            User.setUserAuth();
+            if ($rootScope.logedInUser) {
+            User.getUserData();
+            }
+        // }
 
         $scope.preventDefault = function($event) {
             $event.preventDefault();
@@ -118,7 +125,7 @@ eventApp.controller('EventMainController', ['$rootScope', '$scope', '$http', '$l
 
                 $scope.$apply(function() {
 
-                    if ($scope.tweetsQueue.length >= 2) {
+                    if ($scope.tweetsQueue.length >= 25) {
                         $scope.onHoldTweets.unshift($scope.tweet);
                     } else {
                         $scope.tweetsQueue.push($scope.tweet);

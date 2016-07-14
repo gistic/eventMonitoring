@@ -1,20 +1,20 @@
 var liveStreamController = angular.module('liveStreamController', []);
 
 // Controller : Get new tweets - EventSource
-liveStreamController.controller('LiveStreamController', ['$scope', 'CreateEventSource', function ($scope, CreateEventSource) {
+liveStreamController.controller('LiveStreamController', ['$scope', 'CreateEventSource', '$timeout', function ($scope, CreateEventSource, $timeout) {
 
         $scope.init = function () {
 
-            var source = CreateEventSource.getSourceObject();
-
-            var tweets = {};
+            var source = CreateEventSource.getSourceObject(), tweets = {};
             $scope.allTweets = [];
 
             source.addEventListener('approved-tweets', function (response) {
                 $scope.tweet = JSON.parse(response.data);
-                $scope.$apply(function () {
-                    $scope.allTweets.push($scope.tweet);
-                });
+                $timeout(function() {
+                    $scope.$apply(function () {
+                        $scope.allTweets.push($scope.tweet);
+                    });
+                }, 3000);
             });
         }
 

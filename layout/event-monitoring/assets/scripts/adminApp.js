@@ -15,6 +15,7 @@ var eventAdminApp = angular.module('eventAdminApp', [
     'blockedUsersController',
     'superAdminController',
     'UserSignUpController',
+    'UserProfileController',
     'uploadLogoApp',
     'startNewEventController',
     'eventApp'
@@ -32,6 +33,11 @@ eventAdminApp.run(function ($window, $location, $rootScope, $state) {
     };
 
     $rootScope.keywords = [];
+
+    $rootScope.dashboardState = false;
+    if ($location.$$path == "/admin") {
+        $rootScope.dashboardState = true;
+    }
 })
 
 eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {
@@ -56,6 +62,11 @@ eventAdminApp.config(function ($stateProvider, $urlRouterProvider) {
             url: '/signUp',
             templateUrl: 'views/admin/sign-up.html',
             controller: 'UserSignUpController'
+        },
+        "userProfile": {
+            url: '/userProfile?authToken',
+            templateUrl: 'views/admin/user-profile.html',
+            controller: 'UserProfileController'
         }
     };
 
